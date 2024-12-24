@@ -1,0 +1,914 @@
+2024-12-21 18:12:13.012 +02:00 [INF] Registered 5 endpoints in 3,391 milliseconds.
+2024-12-21 18:12:15.232 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:12:17.001 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:12:17.133 +02:00 [ERR] Hosting failed to start
+System.IO.IOException: Failed to bind to address https://127.0.0.1:57679: address already in use.
+ ---> Microsoft.AspNetCore.Connections.AddressInUseException: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+ ---> System.Net.Sockets.SocketException (10048): Only one usage of each socket address (protocol/network address/port) is normally permitted.
+   at System.Net.Sockets.Socket.UpdateStatusAfterSocketErrorAndThrowException(SocketError error, Boolean disconnectOnFailure, String callerName)
+   at System.Net.Sockets.Socket.DoBind(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   at System.Net.Sockets.Socket.Bind(EndPoint localEP)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportOptions.CreateDefaultBoundListenSocket(EndPoint endpoint)
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketConnectionListener.Bind()
+   at Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory.BindAsync(EndPoint endpoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.TransportManager.BindAsync(EndPoint endPoint, ConnectionDelegate connectionDelegate, EndpointConfig endpointConfig, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.<>c__DisplayClass28_0`1.<<StartAsync>g__OnBind|0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.BindEndpointAsync(ListenOptions endpoint, AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.LocalhostListenOptions.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.AddressBinder.AddressesStrategy.BindAsync(AddressBindContext context, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.BindAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl.StartAsync[TContext](IHttpApplication`1 application, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2024-12-21 18:13:00.306 +02:00 [INF] Registered 5 endpoints in 1,903 milliseconds.
+2024-12-21 18:13:01.972 +02:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:13:02.845 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:13:02.967 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:13:02.970 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:13:03.003 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:13:03.004 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:13:03.006 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:13:11.490 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/ - null null
+2024-12-21 18:13:11.643 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/ - 404 0 null 157.8242ms
+2024-12-21 18:13:11.649 +02:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:57679/, Response status code: 404
+2024-12-21 18:13:27.610 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/swagger - null null
+2024-12-21 18:13:27.636 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/swagger - 302 0 null 26.0223ms
+2024-12-21 18:13:27.639 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/swagger/index.html - null null
+2024-12-21 18:13:27.683 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/swagger/index.html - 200 null text/html; charset=utf-8 43.7512ms
+2024-12-21 18:13:27.705 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/_framework/aspnetcore-browser-refresh.js - null null
+2024-12-21 18:13:27.709 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/_vs/browserLink - null null
+2024-12-21 18:13:27.716 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/_framework/aspnetcore-browser-refresh.js - 200 13784 application/javascript; charset=utf-8 11.4667ms
+2024-12-21 18:13:28.477 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/_vs/browserLink - 200 null text/javascript; charset=UTF-8 768.2585ms
+2024-12-21 18:13:28.496 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/swagger/v1/swagger.json - null null
+2024-12-21 18:13:28.516 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/swagger/v1/swagger.json - 200 null application/json; charset=utf-8 19.8227ms
+2024-12-21 18:13:34.118 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:13:34.122 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:13:34.143 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:13:34.144 +02:00 [INF] Property Skip : null
+2024-12-21 18:13:34.145 +02:00 [INF] Property Take : null
+2024-12-21 18:13:34.146 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:13:34.146 +02:00 [INF] Property Skip : null
+2024-12-21 18:13:34.148 +02:00 [INF] Property Take : null
+2024-12-21 18:13:41.498 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id, FirstName, LastName, FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:13:41.519 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'FurryFriends.Infrastructure.Data.AppDbContext'.
+System.InvalidOperationException: The required column 'Name' was not present in the results of a 'FromSql' operation.
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.BuildIndexMap(IReadOnlyList`1 columnNames, DbDataReader dataReader)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidOperationException: The required column 'Name' was not present in the results of a 'FromSql' operation.
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.BuildIndexMap(IReadOnlyList`1 columnNames, DbDataReader dataReader)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2024-12-21 18:17:31.548 +02:00 [INF] Registered 5 endpoints in 2,181 milliseconds.
+2024-12-21 18:17:32.802 +02:00 [INF] Executed DbCommand (15ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:17:36.718 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:17:36.846 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:17:36.851 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:17:36.889 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:17:36.900 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:17:36.905 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:17:46.921 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:17:46.945 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:17:46.963 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:17:46.964 +02:00 [INF] Property Skip : null
+2024-12-21 18:17:46.965 +02:00 [INF] Property Take : null
+2024-12-21 18:17:46.966 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:17:46.967 +02:00 [INF] Property Skip : null
+2024-12-21 18:17:46.968 +02:00 [INF] Property Take : null
+2024-12-21 18:17:52.285 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:18:01.789 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 14820 ms
+2024-12-21 18:18:01.791 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 14824 ms
+2024-12-21 18:18:01.799 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:18:01.802 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 14886.6488ms
+2024-12-21 18:18:39.453 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors/1 - null null
+2024-12-21 18:18:39.479 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors/{ContributorId:int}'
+2024-12-21 18:18:39.504 +02:00 [INF] Handling GetContributorQuery
+2024-12-21 18:18:39.506 +02:00 [INF] Property ContributorId : 1
+2024-12-21 18:18:39.507 +02:00 [INF] Handling GetContributorQuery
+2024-12-21 18:18:39.508 +02:00 [INF] Property ContributorId : 1
+2024-12-21 18:18:39.598 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[@__contributorId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+WHERE "c"."Id" = @__contributorId_0
+LIMIT 1
+2024-12-21 18:18:39.635 +02:00 [INF] Handled GetContributorQuery with Ardalis.Result.Result`1[FurryFriends.UseCases.Contributors.ContributorDTO] in 126 ms
+2024-12-21 18:18:39.637 +02:00 [INF] Handled GetContributorQuery with Ardalis.Result.Result`1[FurryFriends.UseCases.Contributors.ContributorDTO] in 129 ms
+2024-12-21 18:18:39.640 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors/{ContributorId:int}'
+2024-12-21 18:18:39.641 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors/1 - 200 null application/json; charset=utf-8 188.609ms
+2024-12-21 18:18:46.291 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors/2 - null null
+2024-12-21 18:18:46.295 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors/{ContributorId:int}'
+2024-12-21 18:18:46.298 +02:00 [INF] Handling GetContributorQuery
+2024-12-21 18:18:46.299 +02:00 [INF] Property ContributorId : 2
+2024-12-21 18:18:46.300 +02:00 [INF] Handling GetContributorQuery
+2024-12-21 18:18:46.301 +02:00 [INF] Property ContributorId : 2
+2024-12-21 18:18:46.305 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[@__contributorId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+WHERE "c"."Id" = @__contributorId_0
+LIMIT 1
+2024-12-21 18:18:46.307 +02:00 [INF] Handled GetContributorQuery with Ardalis.Result.Result`1[FurryFriends.UseCases.Contributors.ContributorDTO] in 4 ms
+2024-12-21 18:18:46.310 +02:00 [INF] Handled GetContributorQuery with Ardalis.Result.Result`1[FurryFriends.UseCases.Contributors.ContributorDTO] in 9 ms
+2024-12-21 18:18:46.312 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors/{ContributorId:int}'
+2024-12-21 18:18:46.316 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors/2 - 200 null application/json; charset=utf-8 25.1501ms
+2024-12-21 18:19:02.746 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:19:02.754 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:19:02.756 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:19:02.756 +02:00 [INF] Property Skip : null
+2024-12-21 18:19:02.757 +02:00 [INF] Property Take : null
+2024-12-21 18:19:02.759 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:19:02.759 +02:00 [INF] Property Skip : null
+2024-12-21 18:19:02.761 +02:00 [INF] Property Take : null
+2024-12-21 18:19:47.052 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:20:46.650 +02:00 [INF] Registered 5 endpoints in 2,103 milliseconds.
+2024-12-21 18:20:48.280 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:20:53.901 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:20:54.032 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:20:54.035 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:20:54.070 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:20:54.071 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:20:54.074 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:21:22.020 +02:00 [INF] Registered 5 endpoints in 19,204 milliseconds.
+2024-12-21 18:21:24.431 +02:00 [INF] Executed DbCommand (17ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:21:28.115 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:22:01.266 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:25:34.605 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:25:43.755 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:26:26.453 +02:00 [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2024-12-21 18:26:26.460 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+LIMIT 1
+2024-12-21 18:27:05.272 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:27:28.575 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "Contributors"
+WHERE "Id" = @p0
+RETURNING 1;
+2024-12-21 18:27:28.579 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "Contributors"
+WHERE "Id" = @p0
+RETURNING 1;
+2024-12-21 18:27:32.387 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:27:41.434 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (Size = 4), @p2='?' (Size = 4)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Contributors" ("Status", "FirstName", "LastName")
+VALUES (@p0, @p1, @p2)
+RETURNING "Id", "FullName";
+2024-12-21 18:27:41.440 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (Size = 4), @p2='?' (Size = 3)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Contributors" ("Status", "FirstName", "LastName")
+VALUES (@p0, @p1, @p2)
+RETURNING "Id", "FullName";
+2024-12-21 18:27:48.124 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:28:24.442 +02:00 [INF] Registered 5 endpoints in 4,076 milliseconds.
+2024-12-21 18:28:26.684 +02:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:29:12.328 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:29:12.546 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:29:12.550 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:29:12.601 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:29:12.618 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:29:12.619 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:29:20.572 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:29:20.604 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:29:20.621 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:29:20.623 +02:00 [INF] Property Skip : null
+2024-12-21 18:29:20.624 +02:00 [INF] Property Take : null
+2024-12-21 18:29:20.625 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:29:20.626 +02:00 [INF] Property Skip : null
+2024-12-21 18:29:20.627 +02:00 [INF] Property Take : null
+2024-12-21 18:29:23.888 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:29:23.892 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3265 ms
+2024-12-21 18:29:23.893 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3268 ms
+2024-12-21 18:29:23.898 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:29:23.901 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 3337.4696ms
+2024-12-21 18:29:43.709 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:29:43.712 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:29:43.713 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:29:43.714 +02:00 [INF] Property Skip : null
+2024-12-21 18:29:43.715 +02:00 [INF] Property Take : null
+2024-12-21 18:29:43.716 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:29:43.716 +02:00 [INF] Property Skip : null
+2024-12-21 18:29:43.717 +02:00 [INF] Property Take : null
+2024-12-21 18:29:47.577 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:29:47.583 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3865 ms
+2024-12-21 18:29:47.587 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3871 ms
+2024-12-21 18:29:47.593 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:29:47.596 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 3887.1807ms
+2024-12-21 18:29:50.098 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:29:50.101 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:29:50.103 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:29:50.103 +02:00 [INF] Property Skip : null
+2024-12-21 18:29:50.104 +02:00 [INF] Property Take : null
+2024-12-21 18:29:50.105 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:29:50.108 +02:00 [INF] Property Skip : null
+2024-12-21 18:29:50.109 +02:00 [INF] Property Take : null
+2024-12-21 18:30:06.563 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:31:11.804 +02:00 [INF] Registered 5 endpoints in 3,484 milliseconds.
+2024-12-21 18:31:13.004 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:31:13.924 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:31:14.043 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:31:14.046 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:31:14.080 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:31:14.084 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:31:14.085 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:31:18.758 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:31:18.783 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:31:18.804 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:31:18.805 +02:00 [INF] Property Skip : null
+2024-12-21 18:31:18.806 +02:00 [INF] Property Take : null
+2024-12-21 18:31:18.807 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:31:18.808 +02:00 [INF] Property Skip : null
+2024-12-21 18:31:18.809 +02:00 [INF] Property Take : null
+2024-12-21 18:31:23.965 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:32:49.382 +02:00 [INF] Registered 5 endpoints in 1,941 milliseconds.
+2024-12-21 18:32:50.585 +02:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:32:52.023 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:32:52.139 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:32:52.143 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:32:52.178 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:32:52.181 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:32:52.184 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:32:55.663 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:32:55.687 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:32:55.723 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:32:55.726 +02:00 [INF] Property Skip : null
+2024-12-21 18:32:55.727 +02:00 [INF] Property Take : null
+2024-12-21 18:32:55.729 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:32:55.730 +02:00 [INF] Property Skip : null
+2024-12-21 18:32:55.731 +02:00 [INF] Property Take : null
+2024-12-21 18:32:59.122 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:33:29.100 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:33:29.104 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 33371 ms
+2024-12-21 18:33:29.106 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 33376 ms
+2024-12-21 18:33:29.110 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:33:29.113 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 33455.6631ms
+2024-12-21 18:33:42.423 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:33:42.425 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:33:42.427 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:33:42.428 +02:00 [INF] Property Skip : null
+2024-12-21 18:33:42.430 +02:00 [INF] Property Take : null
+2024-12-21 18:33:42.431 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:33:42.432 +02:00 [INF] Property Skip : null
+2024-12-21 18:33:42.434 +02:00 [INF] Property Take : null
+2024-12-21 18:33:45.508 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:36:20.004 +02:00 [INF] Registered 5 endpoints in 3,215 milliseconds.
+2024-12-21 18:36:33.166 +02:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:36:40.104 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:39:28.675 +02:00 [INF] Registered 5 endpoints in 2,159 milliseconds.
+2024-12-21 18:39:29.826 +02:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:39:45.221 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:40:05.682 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "Contributors"
+WHERE "Id" = @p0
+RETURNING 1;
+2024-12-21 18:40:05.690 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+DELETE FROM "Contributors"
+WHERE "Id" = @p0
+RETURNING 1;
+2024-12-21 18:40:12.293 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (Size = 4), @p2='?' (Size = 4), @p3='?', @p4='?', @p5='?' (Size = 12)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Contributors" ("Status", "FirstName", "LastName", "PhoneNumber_CountryCode", "PhoneNumber_Extension", "PhoneNumber_Number")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5)
+RETURNING "Id", "FullName";
+2024-12-21 18:40:12.302 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (Size = 4), @p2='?' (Size = 3), @p3='?', @p4='?', @p5='?' (Size = 12)], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Contributors" ("Status", "FirstName", "LastName", "PhoneNumber_CountryCode", "PhoneNumber_Extension", "PhoneNumber_Number")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5)
+RETURNING "Id", "FullName";
+2024-12-21 18:40:14.572 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:40:14.575 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:40:14.627 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:40:14.629 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:40:14.630 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:40:19.776 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:40:19.798 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:40:19.814 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:40:19.815 +02:00 [INF] Property Skip : null
+2024-12-21 18:40:19.817 +02:00 [INF] Property Take : null
+2024-12-21 18:40:19.818 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:40:19.819 +02:00 [INF] Property Skip : null
+2024-12-21 18:40:19.819 +02:00 [INF] Property Take : null
+2024-12-21 18:40:25.163 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:40:25.191 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:40:25.195 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 5374 ms
+2024-12-21 18:40:25.196 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 5378 ms
+2024-12-21 18:40:25.201 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:40:25.205 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 5434.5102ms
+2024-12-21 18:40:38.039 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:40:38.042 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:40:38.043 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:40:38.044 +02:00 [INF] Property Skip : null
+2024-12-21 18:40:38.044 +02:00 [INF] Property Take : null
+2024-12-21 18:40:38.045 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:40:38.046 +02:00 [INF] Property Skip : null
+2024-12-21 18:40:38.047 +02:00 [INF] Property Take : null
+2024-12-21 18:40:40.860 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:41:04.264 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:42:09.923 +02:00 [INF] Registered 5 endpoints in 5,593 milliseconds.
+2024-12-21 18:42:11.995 +02:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:42:14.471 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:42:14.625 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:42:14.631 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:42:14.676 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:42:14.679 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:42:14.680 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:42:18.575 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:42:18.601 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:42:18.624 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:42:18.626 +02:00 [INF] Property Skip : null
+2024-12-21 18:42:18.628 +02:00 [INF] Property Take : null
+2024-12-21 18:42:18.630 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:42:18.631 +02:00 [INF] Property Skip : null
+2024-12-21 18:42:18.632 +02:00 [INF] Property Take : null
+2024-12-21 18:42:24.107 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:42:24.749 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+LastName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:42:24.762 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'FurryFriends.Infrastructure.Data.AppDbContext'.
+System.InvalidOperationException: The required column 'FullName' was not present in the results of a 'FromSql' operation.
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.BuildIndexMap(IReadOnlyList`1 columnNames, DbDataReader dataReader)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidOperationException: The required column 'FullName' was not present in the results of a 'FromSql' operation.
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.BuildIndexMap(IReadOnlyList`1 columnNames, DbDataReader dataReader)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2024-12-21 18:42:55.327 +02:00 [INF] Registered 5 endpoints in 274 milliseconds.
+2024-12-21 18:42:58.362 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:42:59.083 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:42:59.204 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:42:59.209 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:42:59.240 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:42:59.241 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:42:59.242 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:43:02.731 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:43:02.752 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:43:02.769 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:43:02.770 +02:00 [INF] Property Skip : null
+2024-12-21 18:43:02.771 +02:00 [INF] Property Take : null
+2024-12-21 18:43:02.772 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:43:02.772 +02:00 [INF] Property Skip : null
+2024-12-21 18:43:02.773 +02:00 [INF] Property Take : null
+2024-12-21 18:43:06.364 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:43:07.339 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:44:51.262 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:45:38.241 +02:00 [INF] Registered 5 endpoints in 306 milliseconds.
+2024-12-21 18:45:40.919 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:45:41.743 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:45:41.868 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:45:41.871 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:45:41.903 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:45:41.904 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:45:41.905 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:45:46.145 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:45:46.172 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:45:46.192 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:45:46.192 +02:00 [INF] Property Skip : null
+2024-12-21 18:45:46.193 +02:00 [INF] Property Take : null
+2024-12-21 18:45:46.194 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:45:46.195 +02:00 [INF] Property Skip : null
+2024-12-21 18:45:46.197 +02:00 [INF] Property Take : null
+2024-12-21 18:45:49.170 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:45:49.233 +02:00 [ERR] Failed executing DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  Name_FirstName+Name_LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:45:49.249 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'FurryFriends.Infrastructure.Data.AppDbContext'.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_FirstName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_FirstName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2024-12-21 18:46:06.789 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:46:06.791 +02:00 [ERR] An unhandled exception has occurred while executing the request.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_FirstName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at FurryFriends.Infrastructure.Data.Queries.ListContributorsQueryService.ListAsync() in C:\Dev\FurryFriends\src\FurryFriends.Infrastructure\Data\Queries\ListContributorsQueryService.cs:line 15
+   at FurryFriends.UseCases.Contributors.List.ListContributorsHandler.Handle(ListContributorsQuery request, CancellationToken cancellationToken) in C:\Dev\FurryFriends\src\FurryFriends.UseCases\Contributors\List\ListContributorsHandler.cs:line 8
+   at Ardalis.SharedKernel.LoggingBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at Ardalis.SharedKernel.LoggingBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken)
+   at FurryFriends.Web.Contributors.List.HandleAsync(CancellationToken cancellationToken) in C:\Dev\FurryFriends\src\FurryFriends.Web\Contributors\List.cs:line 22
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at FastEndpoints.Endpoint`2.ExecAsync(CancellationToken ct)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at NSwag.AspNetCore.Middlewares.SwaggerUiIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.RedirectToIndexMiddleware.Invoke(HttpContext context)
+   at NSwag.AspNetCore.Middlewares.OpenApiDocumentMiddleware.Invoke(HttpContext context)
+   at Ardalis.ListStartupServices.ShowAllServicesMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2024-12-21 18:46:08.503 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 500 null text/plain; charset=utf-8 22365.0221ms
+2024-12-21 18:46:15.632 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:46:15.641 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:46:15.644 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:46:15.648 +02:00 [INF] Property Skip : null
+2024-12-21 18:46:15.651 +02:00 [INF] Property Take : null
+2024-12-21 18:46:15.655 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:46:15.657 +02:00 [INF] Property Skip : null
+2024-12-21 18:46:15.659 +02:00 [INF] Property Take : null
+2024-12-21 18:46:18.600 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:47:10.129 +02:00 [INF] Registered 5 endpoints in 314 milliseconds.
+2024-12-21 18:47:13.326 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:47:17.531 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:47:17.700 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:47:17.707 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:47:17.760 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:47:17.763 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:47:17.764 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:47:21.698 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:47:21.720 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:47:21.737 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:47:21.738 +02:00 [INF] Property Skip : null
+2024-12-21 18:47:21.738 +02:00 [INF] Property Take : null
+2024-12-21 18:47:21.740 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:47:21.741 +02:00 [INF] Property Skip : null
+2024-12-21 18:47:21.742 +02:00 [INF] Property Take : null
+2024-12-21 18:47:24.905 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:47:25.614 +02:00 [ERR] Failed executing DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  Name_FirstName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:47:25.625 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'FurryFriends.Infrastructure.Data.AppDbContext'.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_FirstName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_FirstName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2024-12-21 18:48:16.710 +02:00 [INF] Registered 5 endpoints in 310 milliseconds.
+2024-12-21 18:48:17.156 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:48:17.273 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:48:17.394 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:48:17.397 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:48:17.431 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:48:17.433 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:48:17.434 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:48:32.575 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:48:32.597 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:48:32.614 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:48:32.615 +02:00 [INF] Property Skip : null
+2024-12-21 18:48:32.616 +02:00 [INF] Property Take : null
+2024-12-21 18:48:32.617 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:48:32.617 +02:00 [INF] Property Skip : null
+2024-12-21 18:48:32.618 +02:00 [INF] Property Take : null
+2024-12-21 18:48:50.349 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:49:03.568 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:49:04.136 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:49:33.980 +02:00 [INF] Registered 5 endpoints in 275 milliseconds.
+2024-12-21 18:49:34.408 +02:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:49:34.521 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:49:34.639 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:49:34.645 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:49:34.679 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:49:34.681 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:49:34.682 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:49:58.620 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:49:58.641 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:49:58.659 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:49:58.660 +02:00 [INF] Property Skip : null
+2024-12-21 18:49:58.661 +02:00 [INF] Property Take : null
+2024-12-21 18:49:58.662 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:49:58.663 +02:00 [INF] Property Skip : null
+2024-12-21 18:49:58.664 +02:00 [INF] Property Take : null
+2024-12-21 18:50:01.717 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:50:01.763 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+' '+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:50:01.766 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3101 ms
+2024-12-21 18:50:01.767 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3105 ms
+2024-12-21 18:50:01.772 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:50:01.775 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 3161.4724ms
+2024-12-21 18:50:08.229 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:50:08.232 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:50:08.234 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:50:08.235 +02:00 [INF] Property Skip : null
+2024-12-21 18:50:08.236 +02:00 [INF] Property Take : null
+2024-12-21 18:50:08.237 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:50:08.238 +02:00 [INF] Property Skip : null
+2024-12-21 18:50:08.239 +02:00 [INF] Property Take : null
+2024-12-21 18:50:12.615 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:50:13.876 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  FirstName+' '+LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:51:08.717 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:51:42.044 +02:00 [INF] Registered 5 endpoints in 284 milliseconds.
+2024-12-21 18:51:42.489 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:51:42.604 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:51:42.718 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:51:42.721 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:51:42.753 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:51:42.754 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:51:42.755 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:51:44.442 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:51:44.463 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:51:44.480 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:51:44.481 +02:00 [INF] Property Skip : null
+2024-12-21 18:51:44.482 +02:00 [INF] Property Take : null
+2024-12-21 18:51:44.483 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:51:44.485 +02:00 [INF] Property Skip : null
+2024-12-21 18:51:44.486 +02:00 [INF] Property Take : null
+2024-12-21 18:51:49.847 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:51:50.410 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  LastName as FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:52:43.711 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 59224 ms
+2024-12-21 18:52:43.723 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 59239 ms
+2024-12-21 18:52:43.729 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:52:43.732 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 59295.4137ms
+2024-12-21 18:57:18.939 +02:00 [INF] Registered 5 endpoints in 339 milliseconds.
+2024-12-21 18:57:19.347 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 18:57:19.464 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 18:57:19.596 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 18:57:19.603 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 18:57:19.640 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 18:57:19.643 +02:00 [INF] Hosting environment: Development
+2024-12-21 18:57:19.645 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 18:57:27.489 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 18:57:27.520 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 18:57:27.540 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:57:27.541 +02:00 [INF] Property Skip : null
+2024-12-21 18:57:27.544 +02:00 [INF] Property Take : null
+2024-12-21 18:57:27.546 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 18:57:27.546 +02:00 [INF] Property Skip : null
+2024-12-21 18:57:27.547 +02:00 [INF] Property Take : null
+2024-12-21 18:57:30.738 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 18:57:31.442 +02:00 [ERR] Failed executing DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (Name_LastName || ' ' || Name_FirstName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 18:57:31.456 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'FurryFriends.Infrastructure.Data.AppDbContext'.
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_LastName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such column: Name_LastName'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements()+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.FromSqlQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2024-12-21 19:10:03.661 +02:00 [INF] Registered 5 endpoints in 292 milliseconds.
+2024-12-21 19:10:04.089 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 19:10:04.214 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 19:10:04.331 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 19:10:04.334 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 19:10:04.368 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 19:10:04.369 +02:00 [INF] Hosting environment: Development
+2024-12-21 19:10:04.370 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 19:10:11.073 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:10:11.094 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:10:11.109 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:10:11.110 +02:00 [INF] Property Skip : null
+2024-12-21 19:10:11.114 +02:00 [INF] Property Take : null
+2024-12-21 19:10:11.115 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:10:11.116 +02:00 [INF] Property Skip : null
+2024-12-21 19:10:11.117 +02:00 [INF] Property Take : null
+2024-12-21 19:10:14.539 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 19:10:14.606 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (LastName || ' ' || FirstName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:10:14.611 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3492 ms
+2024-12-21 19:10:14.612 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 3497 ms
+2024-12-21 19:10:14.618 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:10:14.621 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 3553.458ms
+2024-12-21 19:11:39.007 +02:00 [INF] Registered 5 endpoints in 316 milliseconds.
+2024-12-21 19:11:39.427 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 19:11:39.541 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 19:11:39.664 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 19:11:39.668 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 19:11:39.700 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 19:11:39.701 +02:00 [INF] Hosting environment: Development
+2024-12-21 19:11:39.702 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 19:11:41.095 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:11:41.122 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:11:41.137 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:11:41.138 +02:00 [INF] Property Skip : null
+2024-12-21 19:11:41.139 +02:00 [INF] Property Take : null
+2024-12-21 19:11:41.140 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:11:41.141 +02:00 [INF] Property Skip : null
+2024-12-21 19:11:41.141 +02:00 [INF] Property Take : null
+2024-12-21 19:11:42.632 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+2024-12-21 19:11:42.678 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:11:42.683 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 1540 ms
+2024-12-21 19:11:42.684 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 1543 ms
+2024-12-21 19:11:42.689 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:11:42.695 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 1605.6912ms
+2024-12-21 19:12:40.425 +02:00 [INF] Registered 5 endpoints in 280 milliseconds.
+2024-12-21 19:12:40.858 +02:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT COUNT(*) FROM "sqlite_master" WHERE "type" = 'table' AND "rootpage" IS NOT NULL;
+2024-12-21 19:12:40.969 +02:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT EXISTS (
+    SELECT 1
+    FROM "Contributors" AS "c")
+2024-12-21 19:12:41.092 +02:00 [INF] Now listening on: https://localhost:57679
+2024-12-21 19:12:41.095 +02:00 [INF] No action descriptors found. This may indicate an incorrectly configured application or missing application parts. To learn more, visit https://aka.ms/aspnet/mvc/app-parts
+2024-12-21 19:12:41.126 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-12-21 19:12:41.129 +02:00 [INF] Hosting environment: Development
+2024-12-21 19:12:41.130 +02:00 [INF] Content root path: C:\Dev\FurryFriends\src\FurryFriends.Web
+2024-12-21 19:12:45.639 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:45.663 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:45.680 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:45.681 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:45.682 +02:00 [INF] Property Take : null
+2024-12-21 19:12:45.682 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:45.683 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:45.684 +02:00 [INF] Property Take : null
+2024-12-21 19:12:45.833 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:45.838 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 152 ms
+2024-12-21 19:12:45.840 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 157 ms
+2024-12-21 19:12:45.845 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:45.849 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 216.0331ms
+2024-12-21 19:12:48.568 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:48.573 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:48.578 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:48.581 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:48.583 +02:00 [INF] Property Take : null
+2024-12-21 19:12:48.588 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:48.591 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:48.593 +02:00 [INF] Property Take : null
+2024-12-21 19:12:48.630 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:48.632 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 36 ms
+2024-12-21 19:12:48.634 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 45 ms
+2024-12-21 19:12:48.635 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:48.636 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 68.0668ms
+2024-12-21 19:12:50.184 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:50.190 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:50.193 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:50.194 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:50.196 +02:00 [INF] Property Take : null
+2024-12-21 19:12:50.198 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:50.199 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:50.200 +02:00 [INF] Property Take : null
+2024-12-21 19:12:50.205 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:50.208 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 6 ms
+2024-12-21 19:12:50.210 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 12 ms
+2024-12-21 19:12:50.212 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:50.213 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 29.0351ms
+2024-12-21 19:12:51.190 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:51.193 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:51.194 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:51.195 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:51.195 +02:00 [INF] Property Take : null
+2024-12-21 19:12:51.196 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:51.197 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:51.198 +02:00 [INF] Property Take : null
+2024-12-21 19:12:51.199 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:51.201 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 2 ms
+2024-12-21 19:12:51.202 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 5 ms
+2024-12-21 19:12:51.203 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:51.204 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 14.331ms
+2024-12-21 19:12:52.152 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:52.156 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:52.157 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:52.157 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:52.158 +02:00 [INF] Property Take : null
+2024-12-21 19:12:52.159 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:52.160 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:52.161 +02:00 [INF] Property Take : null
+2024-12-21 19:12:52.162 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:52.163 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 1 ms
+2024-12-21 19:12:52.165 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 5 ms
+2024-12-21 19:12:52.166 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:52.167 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 14.5259ms
+2024-12-21 19:12:53.063 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:53.065 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:53.065 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:53.066 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:53.067 +02:00 [INF] Property Take : null
+2024-12-21 19:12:53.068 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:53.069 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:53.069 +02:00 [INF] Property Take : null
+2024-12-21 19:12:53.071 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:53.073 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 2 ms
+2024-12-21 19:12:53.074 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 5 ms
+2024-12-21 19:12:53.075 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:53.076 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 13.7091ms
+2024-12-21 19:12:53.849 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors - null null
+2024-12-21 19:12:53.856 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:53.857 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:53.858 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:53.860 +02:00 [INF] Property Take : null
+2024-12-21 19:12:53.861 +02:00 [INF] Handling ListContributorsQuery
+2024-12-21 19:12:53.861 +02:00 [INF] Property Skip : null
+2024-12-21 19:12:53.865 +02:00 [INF] Property Take : null
+2024-12-21 19:12:53.869 +02:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors
+2024-12-21 19:12:53.872 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 4 ms
+2024-12-21 19:12:53.874 +02:00 [INF] Handled ListContributorsQuery with Ardalis.Result.Result`1[System.Collections.Generic.IEnumerable`1[FurryFriends.UseCases.Contributors.ContributorDTO]] in 13 ms
+2024-12-21 19:12:53.877 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors'
+2024-12-21 19:12:53.879 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors - 200 null application/json; charset=utf-8 29.5666ms
+2024-12-21 19:13:12.807 +02:00 [INF] Request starting HTTP/2 GET https://localhost:57679/Contributors/5 - null null
+2024-12-21 19:13:12.811 +02:00 [INF] Executing endpoint 'HTTP: GET /Contributors/{ContributorId:int}'
+2024-12-21 19:13:12.833 +02:00 [INF] Handling GetContributorQuery
+2024-12-21 19:13:12.835 +02:00 [INF] Property ContributorId : 5
+2024-12-21 19:13:12.836 +02:00 [INF] Handling GetContributorQuery
+2024-12-21 19:13:12.836 +02:00 [INF] Property ContributorId : 5
+2024-12-21 19:13:12.879 +02:00 [INF] Executed DbCommand (2ms) [Parameters=[@__contributorId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT "c"."Id", "c"."Status", "c"."FirstName", "c"."FullName", "c"."LastName", "c"."PhoneNumber_CountryCode", "c"."PhoneNumber_Extension", "c"."PhoneNumber_Number"
+FROM "Contributors" AS "c"
+WHERE "c"."Id" = @__contributorId_0
+LIMIT 1
+2024-12-21 19:13:12.917 +02:00 [INF] Handled GetContributorQuery with Ardalis.Result.Result`1[FurryFriends.UseCases.Contributors.ContributorDTO] in 79 ms
+2024-12-21 19:13:12.919 +02:00 [INF] Handled GetContributorQuery with Ardalis.Result.Result`1[FurryFriends.UseCases.Contributors.ContributorDTO] in 83 ms
+2024-12-21 19:13:12.923 +02:00 [INF] Executed endpoint 'HTTP: GET /Contributors/{ContributorId:int}'
+2024-12-21 19:13:12.924 +02:00 [INF] Request finished HTTP/2 GET https://localhost:57679/Contributors/5 - 200 null application/json; charset=utf-8 116.7417ms
+2024-12-21 21:20:54.748 +02:00 [INF] Application is shutting down...
