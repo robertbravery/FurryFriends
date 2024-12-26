@@ -1,14 +1,12 @@
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using FluentValidation;
 using FurryFriends.UseCases.Users.Create;
-using FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
-namespace FurryFriends.Web.Endpoints;
+namespace FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
-public class Create(IMediator _mediator, IValidator<CreateUserRequest> _validator)
+public class CreateUser(IMediator _mediator, IValidator<CreateUserRequest> _validator)
   : Endpoint<CreateUserRequest, Result<CreateUserResponse>>
 {
-
   public override void Configure()
   {
     Post(CreateUserRequest.Route);
@@ -17,13 +15,25 @@ public class Create(IMediator _mediator, IValidator<CreateUserRequest> _validato
     {
       s.Summary = "Create a new User";
       s.Description = "Creates a new user by providing a username and email. This endpoint allows anonymous access.";
-      // s.ExampleRequest = new CreateUserRequest { Username = "newuser", Email = "user@example.com" };
+
+      s.ExampleRequest = new CreateUserRequest
+      {
+        Name = "John Smith",
+        Email = "john.smith@example.com",
+        CountryCode = "1",
+        AreaCode = "555",
+        Number = "1234567",
+        Street = "123 Main St",
+        City = "Springfield",
+        State = "IL",
+        PostalCode = "62701"
+      };
     });
   }
   public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
   {
     Guard(request);
-    var result  = await _validator.ValidateAsync(request);
+    var result = await _validator.ValidateAsync(request);
 
     if (!result.IsValid)
     {
@@ -31,7 +41,7 @@ public class Create(IMediator _mediator, IValidator<CreateUserRequest> _validato
 
 
       return;
-    }    
+    }
 
     var userCommand = new CreateUserCommand(
       request.Name,

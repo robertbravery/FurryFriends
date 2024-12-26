@@ -3,11 +3,12 @@ using System;
 using FurryFriends.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FurryFriends.Infrastructure.Data.Migrations
+namespace FurryFriends.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -15,16 +16,22 @@ namespace FurryFriends.Infrastructure.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("FurryFriends.Core.ContributorAggregate.Contributor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -35,16 +42,16 @@ namespace FurryFriends.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -59,19 +66,19 @@ namespace FurryFriends.Infrastructure.Data.Migrations
                     b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
                         {
                             b1.Property<int>("ContributorId")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("int");
 
                             b1.Property<string>("AreaCode")
                                 .IsRequired()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("CountryCode")
                                 .IsRequired()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<string>("Number")
                                 .IsRequired()
-                                .HasColumnType("TEXT");
+                                .HasColumnType("nvarchar(max)");
 
                             b1.HasKey("ContributorId");
 
@@ -84,23 +91,23 @@ namespace FurryFriends.Infrastructure.Data.Migrations
                     b.OwnsOne("FurryFriends.Core.ValueObjects.Name", "Name", b1 =>
                         {
                             b1.Property<int>("ContributorId")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("int");
 
                             b1.Property<string>("FirstName")
                                 .IsRequired()
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("FirstName");
 
                             b1.Property<string>("FullName")
                                 .IsRequired()
                                 .ValueGeneratedOnAddOrUpdate()
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("FullName")
                                 .HasComputedColumnSql("FirstName + ' ' + LastName");
 
                             b1.Property<string>("LastName")
                                 .IsRequired()
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(max)")
                                 .HasColumnName("LastName");
 
                             b1.HasKey("ContributorId");
@@ -122,24 +129,24 @@ namespace FurryFriends.Infrastructure.Data.Migrations
                     b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("AreaCode")
                                 .IsRequired()
                                 .HasMaxLength(3)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(3)")
                                 .HasColumnName("PhoneAreaCode");
 
                             b1.Property<string>("CountryCode")
                                 .IsRequired()
                                 .HasMaxLength(3)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(3)")
                                 .HasColumnName("PhoneCountryCode");
 
                             b1.Property<string>("Number")
                                 .IsRequired()
                                 .HasMaxLength(15)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(15)")
                                 .HasColumnName("PhoneNumber");
 
                             b1.HasKey("UserId");
@@ -153,30 +160,30 @@ namespace FurryFriends.Infrastructure.Data.Migrations
                     b.OwnsOne("FurryFriends.Core.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("UserId")
-                                .HasColumnType("TEXT");
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("City")
                                 .IsRequired()
                                 .HasMaxLength(50)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(50)")
                                 .HasColumnName("City");
 
                             b1.Property<string>("StateProvinceRegion")
                                 .IsRequired()
                                 .HasMaxLength(30)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(30)")
                                 .HasColumnName("StateProvinceRegion");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
                                 .HasMaxLength(100)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(100)")
                                 .HasColumnName("Street");
 
                             b1.Property<string>("ZipCode")
                                 .IsRequired()
                                 .HasMaxLength(5)
-                                .HasColumnType("TEXT")
+                                .HasColumnType("nvarchar(5)")
                                 .HasColumnName("ZipCode");
 
                             b1.HasKey("UserId");

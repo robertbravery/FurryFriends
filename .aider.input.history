@@ -1,3 +1,99 @@
 
 # 2024-12-24 10:49:20.851994
 +n
+
+# 2024-12-24 11:03:45.172621
++y
+
+# 2024-12-24 11:05:10.220990
++explain my current code base
+
+# 2024-12-24 11:05:30.314190
++hello
+
+# 2024-12-24 11:06:09.819118
++/add src\FurryFriends.Core\ValueObjects\PhoneNumber.cs
++n
+
+# 2024-12-24 11:06:15.646303
++N
+
+# 2024-12-24 11:06:56.330700
++explain the PhoneNumber.cs
+
+# 2024-12-24 11:07:04.438358
++Y
+
+# 2024-12-24 11:07:55.213203
++model
+
+# 2024-12-24 11:29:13.776650
++aider --list-models gemini/
+
+# 2024-12-24 11:29:38.767877
++n
+
+# 2024-12-24 11:29:53.397769
++s
+
+# 2024-12-24 11:34:32.620263
++/ls
+
+# 2024-12-24 11:35:17.377150
++/architect
+
+# 2024-12-24 11:36:19.114857
++what tech stack does this repo use
+
+# 2024-12-24 11:42:44.113541
++/ls
+
+# 2024-12-24 11:42:58.534693
++/ch
+
+# 2024-12-24 11:43:11.057610
++/chat-mode
+
+# 2024-12-24 11:43:24.495775
++/ask
+
+# 2024-12-24 11:44:08.281150
++what tech stack is being used in FurryFriends 
+
+# 2024-12-24 11:45:24.856401
++what tech stack is being used in src\FurryFriends.Web\Contributors\Create.cs
+
+# 2024-12-24 11:45:31.616795
++y
+
+# 2024-12-24 11:47:07.374377
++n
+
+# 2024-12-24 11:50:52.498790
++/add .aider.input.history
++/drop .aider.input.history
++/add .aider.chat.history.md
++/drop .aider.chat.history.md
++/add .editorconfig
++/drop .editorconfig
++/add .gitignore
++/add src\FurryFriends.Web\Contributors\Create.cs
++/drop src\FurryFriends.Web\Contributors\Create.cs
++/drop .gitignore
++/add src\FurryFriends.Web\Contributors\Create.cs
++/drop src\FurryFriends.Web\Contributors\Create.cs
++/add src\FurryFriends.Web\Contributors\Create.cs
++/drop src\FurryFriends.Web\Contributors\Create.cs
++/add src\FurryFriends.Web\Contributors\Create.cs
++/drop src\FurryFriends.Web\Contributors\Create.cs
++/add src\FurryFriends.Web\Contributors\Create.cs
++What other Cases need to be added.
+
+# 2024-12-24 11:50:58.727622
++n
+
+# 2024-12-24 11:51:23.073415
++N
+
+# 2024-12-24 11:51:52.949621
++\code

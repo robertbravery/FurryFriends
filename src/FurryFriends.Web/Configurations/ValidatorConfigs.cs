@@ -1,8 +1,7 @@
-using FluentValidation;
+﻿using FluentValidation;
 using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Users.Create;
-using FurryFriends.Web.Endpoints;
 using FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
 namespace FurryFriends.Web.Configurations;
