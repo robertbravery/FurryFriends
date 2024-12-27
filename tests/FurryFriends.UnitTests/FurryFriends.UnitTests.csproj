@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" />
+    <PackageReference Include="FastEndpoints.Testing" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Moq" />
@@ -40,6 +42,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FurryFriends.Core\FurryFriends.Core.csproj" />
     <ProjectReference Include="..\..\src\FurryFriends.UseCases\FurryFriends.UseCases.csproj" />
+    <ProjectReference Include="..\..\src\FurryFriends.Web\FurryFriends.Web.csproj" />
   </ItemGroup>
 
 </Project>

@@ -14,10 +14,20 @@ public class ListUsersHandler : IQueryHandler<ListUsersQuery, Result<(List<User>
   public async Task<Result<(List<User> Users, int TotalCount)>> Handle(ListUsersQuery query, CancellationToken cancellationToken)
   {
     var spec = new ListUserSpec(query.SearchString, query.PageSize, query.PageNumber);
-    var users = await _repository.ListAsync(spec, cancellationToken);
-    var totalCount = await _repository.CountAsync(spec, cancellationToken);
-
-    return Result<(List<User> Users, int TotalCount)>.Success((users, totalCount));
+    try
+    {
+      var users = await _repository.ListAsync(spec, cancellationToken);
+      if (users == null)
+      {
+        return Result<(List<User> Users, int TotalCount)>.Error("Failed to retrieve users");
+      }
+      var totalCount = await _repository.CountAsync(spec, cancellationToken);
+      return Result<(List<User> Users, int TotalCount)>.Success((users, totalCount));
+    }
+    catch (Exception ex)
+    {
+      return Result<(List<User> Users, int TotalCount)>.Error(ex.Message);
+    }
   }
 }
 
