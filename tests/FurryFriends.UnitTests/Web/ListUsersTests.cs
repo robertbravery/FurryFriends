@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Ardalis.Result;
 using FastEndpoints;
 using FurryFriends.Core.Entities;
@@ -11,7 +7,6 @@ using FurryFriends.UseCases.Users.List;
 using FurryFriends.Web.Endpoints.UserEndpoints.List;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using Xunit;
 
 public class ListUsersTests
 {

@@ -1,55 +1,52 @@
-﻿using FurryFriends.UseCases.Users.List;
+﻿using Azure;
+using FurryFriends.UseCases.Users.List;
 
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.List;
 
-public class ListUser : Endpoint<ListUsersRequest, Result<ListUsersResponse>>
+public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediator) 
+  : BaseEndpoint<ListUsersRequest, Result<ListUsersResponse>>(httpContextAccessor)
 {
-  private readonly IHttpContextAccessor _httpContextAccessor;
-  private readonly IMediator _mediator;
-
-  public ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediator)
-  {
-    _httpContextAccessor = httpContextAccessor;
-    _mediator = mediator; 
-  }
+  private readonly IMediator _mediator = mediator;
 
   public override void Configure()
   {
-    Get(ListUsersRequest.Route); // Specify the route
-    AllowAnonymous(); // Adjust as needed
+    Get(ListUsersRequest.Route);
+    AllowAnonymous();
     Summary(s =>
     {
-      s.Summary = "List Users";
-      s.Description = "Retrieves a list of all users";
+      s.Summary = "Retrieve List of Users";
+      s.Description = "Returns a list of users based on search criteria";
+      s.Response<ListUsersResponse>(200, "Users retrieved successfully");
+      s.Response<Response>(400, "Failed to retrieve users");
+      s.Response<Response>(401, "Unauthorized");
     });
   }
 
   public override async Task<Result> HandleAsync(ListUsersRequest request, CancellationToken cancellationToken)
   {
-    var query = new ListUsersQuery(request.SearchTerm, request.Page, request.PageSize);
+    var userListQuery = new ListUsersQuery(request.SearchTerm, request.Page, request.PageSize);
+    var userListResult = await _mediator.Send(userListQuery, cancellationToken);
 
-    var users = await _mediator.Send(query, cancellationToken);
-    if (!users.IsSuccess)
+    if (!userListResult.IsSuccess)
     {
-      if (_httpContextAccessor.HttpContext is not null)
-      {
-          _httpContextAccessor.HttpContext.Response.StatusCode = 400;
-      }
-    Response = Result<ListUsersResponse>.Error("Failed to retrieve users");
-      return Result.Invalid(new List<ValidationError> {
-            new ValidationError
+      Response = Result<ListUsersResponse>.Error("Failed to retrieve users");
+      return Result.Invalid(new List<ValidationError>
             {
-                Identifier = "Users",
-                ErrorMessage = "Failed to retrieve users"
-            }
-        });
+                new() {
+                    Identifier = "Users",
+                    ErrorMessage = "Failed to retrieve users"
+                }
+            });
     }
-    var x = users.Value.Users.ToList().ConvertAll(c => new UserListResponseDto(c.Id, c.Name, c.Email, c.Address.City));
-    var totalCount = users.Value.TotalCount;
 
-    Response = new ListUsersResponse(x, request.Page, request.PageSize, totalCount);
+    var userListResponse = userListResult.Value.Users
+        .Select(user => new UserListResponseDto(user.Id, user.Name, user.Email, user.Address.City))
+        .ToList();
+
+    var totalCount = userListResult.Value.TotalCount;
+
+    Response = new ListUsersResponse(userListResponse, request.Page, request.PageSize, totalCount);
     return Result.Success();
   }
-
 }
