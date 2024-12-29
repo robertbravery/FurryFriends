@@ -1,13 +1,15 @@
 ﻿using Ardalis.ListStartupServices;
 using FurryFriends.Infrastructure.Email;
+using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Web.Configurations;
 
 public static class OptionConfigs
 {
+
   public static IServiceCollection AddOptionConfigs(this IServiceCollection services,
                                                     IConfiguration configuration,
-                                                    Microsoft.Extensions.Logging.ILogger logger,
+                                                    ILogger logger,
                                                     WebApplicationBuilder builder)
   {
     services.Configure<MailserverConfiguration>(configuration.GetSection("Mailserver"))
@@ -30,7 +32,7 @@ public static class OptionConfigs
       });
     }
 
-    logger.LogInformation("{Project} were configured", "Options");
+    logger.Information("{Project} were configured", "Options");
 
     return services;
   }

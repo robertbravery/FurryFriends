@@ -3,6 +3,7 @@ using Moq;
 using FluentAssertions;
 using FurryFriends.Core.Entities;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.UnitTests.Core.UserAggregate;
 
@@ -14,7 +15,7 @@ public class UserAggregateTests
   public UserAggregateTests()
   {
     _validAddress = new Address("123 Main St", "City", "State", "12345");
-    _validPhone = PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    _validPhone = PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator()).Result.Value;
   }
 
   [Fact]
@@ -38,12 +39,12 @@ public class UserAggregateTests
   [InlineData("")]
   [InlineData(" ")]
   [InlineData("invalid-email")]
-  public void CreateUser_WithInvalidEmail_ShouldThrowValidationException(string invalidEmail)
+  public async Task CreateUser_WithInvalidEmail_ShouldThrowValidationException(string invalidEmail)
   {
     // Arrange
     var firstName = "John";
     //var lastName = "Doe";
-    var phoneNumber = PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    var phoneNumber = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
     var address = new Address("123 Main St", "Anytown", "CA", "12345");
 
     // Act
@@ -55,12 +56,12 @@ public class UserAggregateTests
 
 
   [Fact]
-  public void UpdateEmail_WithValidEmail_ShouldUpdateSuccessfully()
+  public async Task UpdateEmail_WithValidEmail_ShouldUpdateSuccessfully()
   {
     // Arrange
     var email = "old@example.com";
     var firstName = "John";
-    var phoneNumber = PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    var phoneNumber = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
     var address = new Address("123 Main St", "Anytown", "CA", "12345");
     var user = new User(firstName, email, phoneNumber, address);
     var newEmail = "new@example.com";
@@ -103,13 +104,13 @@ public class UserAggregateTests
   }
 
   [Fact]
-  public void UpdateDetails_WithValidInputs_UpdatesUserDetails()
+  public async Task UpdateDetails_WithValidInputs_UpdatesUserDetails()
   {
     // Arrange
     var user = new User("John Doe", "john@example.com", _validPhone, _validAddress);
     var newName = "Jane Doe";
     var newEmail = "jane@example.com";
-    var newPhone = PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    var newPhone = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
     var newAddress = new Address("456 Oak St", "NewCity", "NewState", "54321");
 
     // Act

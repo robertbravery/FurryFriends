@@ -4,7 +4,7 @@ using FurryFriends.UseCases.Users.List;
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.List;
 
-public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediator) 
+public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediator)
   : BaseEndpoint<ListUsersRequest, Result<ListUsersResponse>>(httpContextAccessor)
 {
   private readonly IMediator _mediator = mediator;
@@ -13,6 +13,8 @@ public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediat
   {
     Get(ListUsersRequest.Route);
     AllowAnonymous();
+    Options(o => o.WithName("ListUsers_" + Guid.NewGuid().ToString())); // Ensure unique name
+
     Summary(s =>
     {
       s.Summary = "Retrieve List of Users";

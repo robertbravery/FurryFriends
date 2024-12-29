@@ -20,7 +20,16 @@ public class Contributor : EntityBase, IAggregateRoot
   public ContributorStatus Status { get; private set; } = ContributorStatus.NotSet;
   public PhoneNumber? PhoneNumber { get; private set; }
 
-  public void SetPhoneNumber(string phoneNumber, IValidator<PhoneNumber> validator) => PhoneNumber = PhoneNumber.Create(string.Empty, phoneNumber, string.Empty,  validator);
+  public async Task<Result> SetPhoneNumber(string phoneNumber, IValidator<PhoneNumber> validator)
+  {
+    var result = await PhoneNumber.Create(string.Empty, phoneNumber, string.Empty, validator);
+    if (result.IsSuccess)
+    {
+      PhoneNumber = result.Value;
+      return Result.Success();
+    }
+    return Result.Error(new ErrorList(result.Errors.ToArray()));
+  }
 
   public void UpdateName(Name name)
   {

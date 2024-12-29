@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
+using FurryFriends.Core.ValueObjects.Validators;
 namespace FurryFriends.Core.ValueObjects;
 
-  public class PhoneNumber : ValueObject
+public class PhoneNumber : ValueObject
   {
       public string CountryCode { get; private set; } = default!;
       public string AreaCode { get; private set; } = default!;
@@ -18,12 +18,12 @@ namespace FurryFriends.Core.ValueObjects;
           Number = number;
       }
 
-      public static Result<PhoneNumber> Create(string countryCode, string areaCode,string number, IValidator<PhoneNumber> validator)
+      public static async Task<Result<PhoneNumber>> Create(string countryCode, string areaCode,string number, IValidator<PhoneNumber> validator)
       {
           
           var phoneNumber = new PhoneNumber(countryCode, areaCode, number);
 
-          var validationResult = validator.Validate(phoneNumber);
+          var validationResult = await validator.ValidateAsync(phoneNumber);
           if (validationResult.IsValid)
           {
               return Result.Success(phoneNumber);
@@ -41,24 +41,5 @@ namespace FurryFriends.Core.ValueObjects;
           yield return CountryCode;
           yield return AreaCode;
           yield return Number;
-      }
-  }
-
-  public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
-  {
-      // Define validation rules here...
-  }
-
-  public class PhoneNumberResult
-  {
-      public bool IsValid { get; private set; }
-      public PhoneNumber? PhoneNumber { get; private set; }
-      public string[] Errors { get; private set; }
-
-      public PhoneNumberResult(bool isValid, PhoneNumber? phoneNumber, string[] errors)
-      {
-          IsValid = isValid;
-          PhoneNumber = phoneNumber;
-          Errors = errors;
       }
   }

@@ -17,6 +17,8 @@ public class Update(IMediator _mediator)
   {
     Put(UpdateContributorRequest.Route);
     AllowAnonymous();
+    Options(o => o.WithName("UpdateContributor_" + Guid.NewGuid().ToString())); // Ensure unique name
+
   }
 
   public override async Task HandleAsync(

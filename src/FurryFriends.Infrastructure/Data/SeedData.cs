@@ -1,5 +1,6 @@
 ﻿using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.Infrastructure.Data;
 
@@ -26,8 +27,8 @@ public static class SeedData
     Contributor Contributor1 = new(Name.Create("Snow", "Frog", "Snow Frog", new NameValidator()).Value);
     Contributor Contributor2 = new(Name.Create("Snow", "Dog", "Snow Dog", new NameValidator()).Value);
     var validator = new PhoneNumberValidator();
-    Contributor1.SetPhoneNumber("123-456-7890", validator);
-    Contributor2.SetPhoneNumber("987-654-3210", validator);
+    await Contributor1.SetPhoneNumber("123-456-7890", validator);
+    await Contributor2.SetPhoneNumber("987-654-3210", validator);
     dbContext.Contributors.AddRange([Contributor1, Contributor2]);
     await dbContext.SaveChangesAsync();
 

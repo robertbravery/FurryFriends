@@ -1,13 +1,15 @@
 ﻿using FurryFriends.Core.Entities;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.UnitTests.TestHelpers;
 
 public static class UserHelpers
 {
-  public static List<User> GetTestUsers()
+  public static async Task<List<User>> GetTestUsers()
   {
-    var phoneNumber = PhoneNumber.Create("027", "011", "1234567890",new PhoneNumberValidator());
+    var phoneNumberResult = await PhoneNumber.Create("027", "011", "1234567890",new PhoneNumberValidator());
+    var phoneNumber = phoneNumberResult.Value;
 
     return new List<User>
       {

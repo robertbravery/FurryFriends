@@ -21,6 +21,7 @@ public class Create(IMediator _mediator)
       //s.Summary = "Create a new Contributor.";
       //s.Description = "Create a new Contributor. A valid name is required.";
       s.ExampleRequest = new CreateContributorRequest { Name = "Contributor Name" };
+       Options(o => o.WithName("CreateContributor_" + Guid.NewGuid().ToString())); // Ensure unique name
     });
   }
 

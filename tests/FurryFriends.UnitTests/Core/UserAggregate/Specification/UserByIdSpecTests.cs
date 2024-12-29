@@ -3,6 +3,7 @@ using FurryFriends.Core.Entities;
 using Ardalis.Result;
 using FurryFriends.Core.UserAggregate.Specifications;
 using FurryFriends.UnitTests.TestHelpers;
+using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.UnitTests.Core.UserAggregate.Specification;
 
@@ -15,8 +16,8 @@ public class UserSpecificationTests
   public UserSpecificationTests()
   {
     _validator = new PhoneNumberValidator();
-    _phoneNumber = PhoneNumber.Create("027", "011", "1234567890", _validator);
-    _users = UserHelpers.GetTestUsers();
+    _phoneNumber = PhoneNumber.Create("027", "011", "1234567890", _validator).GetAwaiter().GetResult();
+    _users = UserHelpers.GetTestUsers().GetAwaiter().GetResult();
   }
 
   [Fact]

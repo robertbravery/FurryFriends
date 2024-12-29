@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using FurryFriends.Core.Entities;
 
 namespace FurryFriends.Core.UserAggregate.Specifications;
-public class ListUserSpec : Specification<User>
+public class ListUserSpecification : Specification<User>
 {
-  public ListUserSpec(string? searchString, int? pageSize, int? pageNumber)
+  public ListUserSpecification(string? searchString, int? pageSize, int? pageNumber)
   {
     Query
       .OrderBy(x => x.Name);

@@ -15,6 +15,8 @@ public class List(IMediator _mediator) : EndpointWithoutRequest<ContributorListR
   {
     Get("/Contributors");
     AllowAnonymous();
+        Options(o => o.WithName("ListContributors_" + Guid.NewGuid().ToString())); // Ensure unique name
+
   }
 
   public override async Task HandleAsync(CancellationToken cancellationToken)

@@ -15,6 +15,7 @@ public class Delete(IMediator _mediator)
   {
     Delete(DeleteContributorRequest.Route);
     AllowAnonymous();
+    Options(o => o.WithName("DeleteContributor_" + Guid.NewGuid().ToString())); // Ensure unique name
   }
 
   public override async Task HandleAsync(

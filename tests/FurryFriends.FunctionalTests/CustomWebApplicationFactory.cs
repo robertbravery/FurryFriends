@@ -1,4 +1,6 @@
-﻿using FurryFriends.Infrastructure.Data;
+using FurryFriends.Infrastructure.Data;
+using FurryFriends.UseCases.Contributors.Create;
+using Microsoft.EntityFrameworkCore;
 
 namespace FurryFriends.FunctionalTests;
 
@@ -12,7 +14,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
   /// <returns></returns>
   protected override IHost CreateHost(IHostBuilder builder)
   {
-    builder.UseEnvironment("Development"); // will not send real emails
+    builder.UseEnvironment("Testing"); // will not send real emails
     var host = builder.Build();
     host.Start();
 
@@ -31,7 +33,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 
       // Reset Sqlite database for each test run
       // If using a real database, you'll likely want to remove this step.
-      db.Database.EnsureDeleted();
+    //   db.Database.EnsureDeleted();
 
       // Ensure the database is created.
       db.Database.EnsureCreated();
@@ -60,26 +62,33 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
     builder
         .ConfigureServices(services =>
         {
-          // Configure test dependencies here
+          // Remove the app's ApplicationDbContext registration.
+          var descriptors = services.Where(
+            d => d.ServiceType == typeof(AppDbContext) ||
+                 d.ServiceType == typeof(DbContextOptions<AppDbContext>))
+                .ToList();
 
-          //// Remove the app's ApplicationDbContext registration.
-          //var descriptor = services.SingleOrDefault(
-          //d => d.ServiceType ==
-          //    typeof(DbContextOptions<AppDbContext>));
+          foreach(var descriptor in descriptors)
+          {
+            services.Remove(descriptor);
+          }
 
-          //if (descriptor != null)
-          //{
-          //  services.Remove(descriptor);
-          //}
+          // This should be set for each individual test run
+          string inMemoryCollectionName = Guid.NewGuid().ToString();
 
-          //// This should be set for each individual test run
-          //string inMemoryCollectionName = Guid.NewGuid().ToString();
+          // Add ApplicationDbContext using an in-memory database for testing.
+          services.AddDbContext<AppDbContext>(options =>
+          {
+            options.UseInMemoryDatabase(inMemoryCollectionName).LogTo(s => Console.WriteLine(s));
+          });
 
-          //// Add ApplicationDbContext using an in-memory database for testing.
-          //services.AddDbContext<AppDbContext>(options =>
-          //{
-          //  options.UseInMemoryDatabase(inMemoryCollectionName);
-          //});
+          // Add MediatR
+          services.AddMediatR(cfg =>
+          {
+            cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly,
+              typeof(CreateContributorCommand).Assembly,
+              typeof(AppDbContext).Assembly);
+          });
         });
   }
 }

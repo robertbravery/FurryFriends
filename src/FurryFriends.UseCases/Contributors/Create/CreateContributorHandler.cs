@@ -18,7 +18,7 @@ public class CreateContributorHandler(IRepository<Contributor> _repository, IVal
     var newContributor = new Contributor(name);
     if (!string.IsNullOrEmpty(request.PhoneNumber))
     {
-      newContributor.SetPhoneNumber(request.PhoneNumber, validator);
+      await newContributor.SetPhoneNumber(request.PhoneNumber, validator);
     }
     var createdItem = await _repository.AddAsync(newContributor, cancellationToken);
 

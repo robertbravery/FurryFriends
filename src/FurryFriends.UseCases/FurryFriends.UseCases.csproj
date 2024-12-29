@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Result" />
+    <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="MediatR" />
   </ItemGroup>
 

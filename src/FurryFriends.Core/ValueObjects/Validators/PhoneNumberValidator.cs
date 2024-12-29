@@ -1,17 +1,16 @@
 using FluentValidation;
 namespace FurryFriends.Core.ValueObjects.Validators;
 
-public class PhoneNumberValidator : AbstractValidator<string>
-{
-  private const string PhoneFormat = @"^\+?(\d{1,3})[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{4})(?:[-.\s]?(ext|x)\s*(\d{2,5}))?$";
-  public PhoneNumberValidator()
+  public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
   {
-    RuleFor(phoneNumber => phoneNumber)
-      .NotEmpty()
-      .WithMessage("Phone number cannot be empty.");
-    RuleFor(phoneNumber => phoneNumber)
-        .Matches(PhoneFormat)
-        .WithMessage("Invalid phone number format.");
+    
+     public PhoneNumberValidator()
+    {
+        RuleFor(x => x.CountryCode).NotEmpty().WithMessage("Country code is required.");
+        RuleFor(x => x.AreaCode).NotEmpty().WithMessage("Area code is required.");
+        RuleFor(x => x.Number).NotEmpty().WithMessage("Number is required.");
 
+
+    }
   }
-}
+

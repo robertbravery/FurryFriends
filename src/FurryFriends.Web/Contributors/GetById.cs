@@ -15,6 +15,8 @@ public class GetById(IMediator _mediator)
   {
     Get(GetContributorByIdRequest.Route);
     AllowAnonymous();
+    Options(o => o.WithName("GetContributorById_" + Guid.NewGuid().ToString())); // Ensure unique name
+
   }
 
   public override async Task HandleAsync(GetContributorByIdRequest request,

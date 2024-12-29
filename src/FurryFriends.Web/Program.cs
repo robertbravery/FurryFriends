@@ -1,41 +1,74 @@
 ﻿using FurryFriends.Web.Configurations;
 using FurryFriends.UseCases.Configurations;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var logger = Log.Logger = new LoggerConfiguration()
-  .Enrich.FromLogContext()
-  .WriteTo.Console()
-  .CreateLogger();
+builder.AddServiceDefaults();
 
-logger.Information("Starting web host");
+builder.Services.AddLogging(logging =>
+{
+  logging.AddConsole();
+  logging.AddOpenTelemetry();
+});
 
-builder.AddLoggerConfigs();
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation())
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation());
 
-var appLogger = new SerilogLoggerFactory(logger)
-    .CreateLogger<Program>();
 
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+//builder.Host.UseSerilog(logger);
+
+// Register services
 builder.Services
-  .AddOptionConfigs(builder.Configuration, appLogger, builder)
-  .AddValidatorConfigs()
-  .AddUseCasesValidators()
-  .AddMediatrConfigs();
+    .AddOptionConfigs(builder.Configuration, logger, builder)
+    .AddValidatorConfigs()
+    .AddUseCaseValidators()
+    .AddMediatrConfigs();
 
-builder.Services.AddServiceConfigs(appLogger, builder);
+builder.Services.AddServiceConfigs(logger, builder);
 
+// Add FastEndpoints
 builder.Services.AddFastEndpoints()
                 .SwaggerDocument(o =>
                 {
                   o.ShortSchemaNames = true;
                 });
 
-builder.AddServiceDefaults();
-
 var app = builder.Build();
 
 await app.UseAppMiddlewareAndSeedDatabase();
 
+app.UseFastEndpoints(c =>
+{
+  c.Endpoints.RoutePrefix = "api";
+  c.Errors.UseProblemDetails(x =>
+  {
+    x.AllowDuplicateErrors = true;
+    x.IndicateErrorCode = true;
+    x.IndicateErrorSeverity = true;
+    x.TypeValue = "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1";
+    x.TitleValue = "One or more validation errors occurred.";
+    x.TitleTransformer = pd => pd.Status switch
+    {
+      400 => "Validation Error",
+      404 => "Not Found",
+      _ => "One or more errors occurred!"
+    };
+  });
+});
+
 app.Run();
 
-// Make the implicit Program.cs class public, so integration tests can reference the correct assembly for host building
 public partial class Program { }

@@ -3,7 +3,7 @@ using FurryFriends.Core.UserAggregate.Specifications;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.Users.List;
-public class ListUsersHandler : IQueryHandler<ListUsersQuery, Result<(List<User> Users, int TotalCount)>>
+public class ListUsersHandler : IQueryHandler<ListUsersQuery, Result<(List<User> users, int TotalCount)>>
 {
   private readonly IRepository<User> _repository;
   private readonly ILogger<ListUsersHandler> _logger;
@@ -14,26 +14,26 @@ public class ListUsersHandler : IQueryHandler<ListUsersQuery, Result<(List<User>
     _logger = logger;
   }
 
-  public async Task<Result<(List<User> Users, int TotalCount)>> Handle(ListUsersQuery query, CancellationToken cancellationToken)
+  public async Task<Result<(List<User> users, int TotalCount)>> Handle(ListUsersQuery query, CancellationToken cancellationToken)
   {
-    var spec = new ListUserSpec(query.SearchString, query.PageSize, query.PageNumber);
+    var userSpecification = new ListUserSpecification(query.SearchString, query.PageSize, query.PageNumber);
     try
     {
-      _logger.LogInformation("Attempting to retrieve users using specification: {Specification}", spec);
-      var users = await _repository.ListAsync(spec, cancellationToken);
+      _logger.LogInformation("Retrieving users using specification: {Specification}", userSpecification);
+      var users = await _repository.ListAsync(userSpecification, cancellationToken);
       if (users == null)
       {
         _logger.LogError("Failed to retrieve users");
-        return Result<(List<User> Users, int TotalCount)>.Error("Failed to retrieve users");
+        return Result<(List<User> users, int totalCount)>.Error("Failed to retrieve users");
       }
-      _logger.LogInformation("Successfully retrieved users. Retrieving total count...");
-      var totalCount = await _repository.CountAsync(spec, cancellationToken);
-      return Result<(List<User> Users, int TotalCount)>.Success((users, totalCount));
+      _logger.LogInformation("Retrieving total count...");
+      var totalCountResult = await _repository.CountAsync(userSpecification, cancellationToken);
+      return Result<(List<User> users, int totalCount)>.Success((users, totalCountResult));
     }
     catch (Exception ex)
     {
       _logger.LogError(ex, "An error occurred while handling ListUsersQuery: {ErrorMessage}", ex.Message);
-      return Result<(List<User> Users, int TotalCount)>.Error(ex.Message);
+      return Result<(List<User> users, int totalCount)>.Error(ex.Message);
     }
   }
 }

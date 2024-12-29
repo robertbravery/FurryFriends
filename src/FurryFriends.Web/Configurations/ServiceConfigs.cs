@@ -1,14 +1,15 @@
 ﻿using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure;
 using FurryFriends.Infrastructure.Email;
+using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Web.Configurations;
 
 public static class ServiceConfigs
 {
-  public static IServiceCollection AddServiceConfigs(this IServiceCollection services, Microsoft.Extensions.Logging.ILogger logger, WebApplicationBuilder builder)
+  public static IServiceCollection AddServiceConfigs(this IServiceCollection services, ILogger logger, WebApplicationBuilder builder)
   {
-    services.AddInfrastructureServices(builder.Configuration, logger)
+    services.AddInfrastructureServices(builder.Configuration, logger, builder.Environment.EnvironmentName)
             .AddMediatrConfigs();
 
 
@@ -27,7 +28,7 @@ public static class ServiceConfigs
       services.AddScoped<IEmailSender, MimeKitEmailSender>();
     }
 
-    logger.LogInformation("{Project} services registered", "Mediatr and Email Sender");
+    logger.Information("{Project} services registered", "Mediatr and Email Sender");
 
     return services;
   }

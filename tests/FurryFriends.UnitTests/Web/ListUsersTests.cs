@@ -3,6 +3,7 @@ using Ardalis.Result;
 using FastEndpoints;
 using FurryFriends.Core.Entities;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCases.Users.List;
 using FurryFriends.Web.Endpoints.UserEndpoints.List;
 using Microsoft.AspNetCore.Http;
@@ -37,8 +38,8 @@ public class ListUsersTests
         // Arrange
         var request = new ListUsersRequest { SearchTerm = "test", Page = 1, PageSize = 10 };
         var phoneNumberValidator = new PhoneNumberValidator();
-        var phoneNumber1 = PhoneNumber.Create("1", "123", "4567890", phoneNumberValidator).Value;
-        var phoneNumber2 = PhoneNumber.Create("1", "098", "7654321", phoneNumberValidator).Value;
+        var phoneNumber1 = (await PhoneNumber.Create("1", "123", "4567890", phoneNumberValidator)).Value;
+        var phoneNumber2 = (await PhoneNumber.Create("1", "098", "7654321", phoneNumberValidator)).Value;
         var users = new List<User>
         {
             new User("John Doe", "john.doe@example.com", phoneNumber1, new Address("123 Street", "City", "State", "12345")),
