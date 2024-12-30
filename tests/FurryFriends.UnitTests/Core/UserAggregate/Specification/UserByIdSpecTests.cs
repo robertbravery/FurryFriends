@@ -10,13 +10,11 @@ namespace FurryFriends.UnitTests.Core.UserAggregate.Specification;
 public class UserSpecificationTests
 {
   private PhoneNumberValidator _validator;
-  private Result<PhoneNumber> _phoneNumber;
   private List<User> _users;
 
   public UserSpecificationTests()
   {
     _validator = new PhoneNumberValidator();
-    _phoneNumber = PhoneNumber.Create("027", "011", "1234567890", _validator).GetAwaiter().GetResult();
     _users = UserHelpers.GetTestUsers().GetAwaiter().GetResult();
   }
 
@@ -30,7 +28,9 @@ public class UserSpecificationTests
     var result = spec.Evaluate(_users);
 
     // Assert
-    Assert.True(result.Count() == 1);
+    result.Should().NotBeEmpty();
+    result.Should().HaveCount(1);
+    result.First().Email.Should().Be(targetEmail);
   }
 
   [Fact]
@@ -43,6 +43,6 @@ public class UserSpecificationTests
     var result = spec.Evaluate(_users);
 
     // Assert
-    Assert.False(result == null);
+    result.Should().BeEmpty();
   }
 }

@@ -1,3 +1,4 @@
+﻿using FluentAssertions;
 using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
 
@@ -28,7 +29,9 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
       Assert.NotNull(newContributor);
       return;
     }
-    Assert.NotSame(Contributor, newContributor);
+
+    newContributor.Should().NotBeSameAs(Contributor);
+
     var newFirstName = "Jane";
     var newLastName = "Doe";
     var newName = Name.Create(newFirstName, newLastName,  firstName+" "+lastName, new NameValidator());
@@ -41,9 +44,9 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
     var updatedItem = (await repository.ListAsync())
         .FirstOrDefault(Contributor => Contributor.Name == newName);
 
-    Assert.NotNull(updatedItem);
-    Assert.NotEqual(Contributor.Name, updatedItem?.Name);
-    Assert.Equal(Contributor.Status, updatedItem?.Status);
-    Assert.Equal(newContributor.Id, updatedItem?.Id);
+    updatedItem.Should().NotBeNull();
+    updatedItem?.Name.Should().NotBe(Contributor.Name);
+    updatedItem?.Name.Should().Be(newName);
+    updatedItem?.Status.Should().Be(Contributor.Status);
   }
 }

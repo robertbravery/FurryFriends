@@ -39,13 +39,13 @@ public class ListUsersTests : TestBase
     // Assert
     //var response = _listUsers.Response;
     var response = ep.Response;
-    Assert.NotNull(response);
+    response.Should().NotBeNull();
     if (response != null)
     {
-      Assert.Equal(users.Count, response.TotalCount);
-      Assert.Equal(users.Count, response.RowsData.Count);
-      Assert.Equal(users[0].Name, response.RowsData[0].Name);
-      Assert.Equal(users[1].Name, response.RowsData[1].Name);
+      response.TotalCount.Should().Be(users.Count);
+      response.RowsData.Should().HaveCount(users.Count);
+      response.RowsData[0].Name.Should().Be(users[0].Name);
+      response.RowsData[1].Name.Should().Be(users[1].Name);
     }
   }
 
@@ -83,7 +83,7 @@ public class ListUsersTests : TestBase
 
     // Assert
     _mediatorMock.Verify(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>()), Times.Once);
-    Assert.True(ep.HttpContext.Response.StatusCode == StatusCodes.Status404NotFound);
+    ep.HttpContext.Response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
 
   }
 }
