@@ -28,7 +28,7 @@ var logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateLogger();
 
-//builder.Host.UseSerilog(logger);
+//builder.Services.AddHttpContextAccessor();
 
 // Register services
 builder.Services

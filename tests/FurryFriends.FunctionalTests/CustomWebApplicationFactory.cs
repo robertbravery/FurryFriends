@@ -1,4 +1,4 @@
-using FurryFriends.Infrastructure.Data;
+﻿using FurryFriends.Infrastructure.Data;
 using FurryFriends.UseCases.Contributors.Create;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +33,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 
       // Reset Sqlite database for each test run
       // If using a real database, you'll likely want to remove this step.
-    //   db.Database.EnsureDeleted();
+      db.Database.EnsureDeleted();
 
       // Ensure the database is created.
       db.Database.EnsureCreated();
@@ -68,7 +68,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
                  d.ServiceType == typeof(DbContextOptions<AppDbContext>))
                 .ToList();
 
-          foreach(var descriptor in descriptors)
+          foreach (var descriptor in descriptors)
           {
             services.Remove(descriptor);
           }

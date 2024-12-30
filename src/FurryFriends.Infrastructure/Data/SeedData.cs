@@ -1,4 +1,6 @@
-﻿using FurryFriends.Core.ContributorAggregate;
+﻿using System.Runtime.InteropServices;
+using FurryFriends.Core.ContributorAggregate;
+using FurryFriends.Core.Entities;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
@@ -37,8 +39,15 @@ public static class SeedData
   private static async Task PopulateUserTestDataAsync(AppDbContext dbContext)
   {
     var validator = new PhoneNumberValidator();
-    var phoneNumberValidator1 = PhoneNumber.Create("027", "011", "123-4567", validator);
-    var phoneNumberValidator = PhoneNumber.Create("027", "011", "789-1234", validator);
+    var phoneNumber1 = await PhoneNumber.Create("027", "011", "123-4567", validator);
+    var phoneNumber2 = await PhoneNumber.Create("027", "011", "789-1234", validator);
+    var address1 = Address.Create("123 Test St", "Test City", "Test State", "12345");
+    var address2 = Address.Create("456 Test St", "Test City", "Test State", "12345");
+
+    var user1 = new User("Test User", "test@u.com", phoneNumber1, address1);
+    var user2 = new User("Test User 2", "test2@u.com", phoneNumber2, address2);
+    dbContext.Users.AddRange([user1, user2]);
+
     await dbContext.SaveChangesAsync();
 
   }

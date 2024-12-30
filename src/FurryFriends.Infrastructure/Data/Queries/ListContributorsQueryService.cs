@@ -1,5 +1,6 @@
 ﻿using FurryFriends.UseCases.Contributors;
 using FurryFriends.UseCases.Contributors.List;
+using Microsoft.EntityFrameworkCore;
 
 namespace FurryFriends.Infrastructure.Data.Queries;
 
@@ -10,15 +11,13 @@ public class ListContributorsQueryService(AppDbContext _db) : IListContributorsQ
 
   public async Task<IEnumerable<ContributorDTO>> ListAsync()
   {
-    // NOTE: This will fail if testing with EF InMemory provider!
-    // var result = await _db.Database.SqlQuery<ContributorDTO>(
-    //   $"SELECT Id,  (FirstName || ' ' || LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors") // don't fetch other big columns
-    //   .ToListAsync();
 
-    var result = await _db.Database.SqlQuery<ContributorDTO>(
-      $"SELECT Id,  (FirstName + ' ' + LastName) AS FullName, PhoneNumber_Number AS PhoneNumber FROM Contributors") // don't fetch other big columns
-      .ToListAsync();
+    var result = await _db.Contributors.AsNoTracking()
+        .ToListAsync();
 
-    return result;
+    var mappedResult = result.Select(c => new ContributorDTO(c.Id, c.Name.FullName, c.PhoneNumber?.Number))
+    .ToList();
+
+    return mappedResult;
   }
 }

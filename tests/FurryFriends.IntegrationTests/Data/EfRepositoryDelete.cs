@@ -1,4 +1,4 @@
-using FurryFriends.Core.ContributorAggregate;
+﻿using FurryFriends.Core.ContributorAggregate;
 using FluentValidation;
 using FurryFriends.Core.ValueObjects;
 
@@ -18,8 +18,8 @@ public class EfRepositoryDelete : BaseEfRepoTestFixture
   {
     // add a Contributor
     var repository = GetRepository();
-    var firstName = "John";
-    var lastName = "Doe";
+    var firstName = "Joe";
+    var lastName = "Soap";
     var initialName = Name.Create(firstName, lastName, firstName+" "+lastName, _nameValidator).Value;
     var Contributor = new Contributor(initialName);
     await repository.AddAsync(Contributor);

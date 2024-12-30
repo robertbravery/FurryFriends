@@ -3,11 +3,11 @@
 // For endpoints without request/response types
 public abstract class BaseEndpoint : EndpointWithoutRequest
 {
-  protected readonly IHttpContextAccessor _httpContextAccessor;
+  protected readonly IHttpContextAccessor _httpContextAccessor = default!;
 
-  protected BaseEndpoint(IHttpContextAccessor httpContextAccessor)
+  protected BaseEndpoint()
   {
-    _httpContextAccessor = httpContextAccessor;
+    //_httpContextAccessor = httpContextAccessor;
   }
 }
 
@@ -16,10 +16,10 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, TRe
     where TRequest : class
     where TResponse : class
 {
-  protected readonly IHttpContextAccessor _httpContextAccessor;
+  protected readonly IHttpContextAccessor _httpContextAccessor = default!;
 
-  protected BaseEndpoint(IHttpContextAccessor httpContextAccessor)
+  protected BaseEndpoint()
   {
-    _httpContextAccessor = httpContextAccessor;
+    //_httpContextAccessor = httpContextAccessor;
   }
 }

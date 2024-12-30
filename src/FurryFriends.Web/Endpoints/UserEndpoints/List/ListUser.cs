@@ -1,13 +1,17 @@
-﻿using Azure;
+﻿using Ardalis.Result;
+using Azure;
 using FurryFriends.UseCases.Users.List;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.List;
 
-public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediator)
-  : BaseEndpoint<ListUsersRequest, Result<ListUsersResponse>>(httpContextAccessor)
+public class ListUser(IMediator mediator, ILogger<ListUser> logger)
+  : Endpoint<ListUsersRequest, ListUsersResponse>()
 {
   private readonly IMediator _mediator = mediator;
+  private readonly ILogger<ListUser> _logger = logger;
 
   public override void Configure()
   {
@@ -25,21 +29,16 @@ public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediat
     });
   }
 
-  public override async Task<Result> HandleAsync(ListUsersRequest request, CancellationToken cancellationToken)
+  public override async Task HandleAsync(ListUsersRequest request, CancellationToken cancellationToken)
   {
     var userListQuery = new ListUsersQuery(request.SearchTerm, request.Page, request.PageSize);
     var userListResult = await _mediator.Send(userListQuery, cancellationToken);
 
-    if (!userListResult.IsSuccess)
+    if (!userListResult.IsSuccess) 
     {
-      Response = Result<ListUsersResponse>.Error("Failed to retrieve users");
-      return Result.Invalid(new List<ValidationError>
-            {
-                new() {
-                    Identifier = "Users",
-                    ErrorMessage = "Failed to retrieve users"
-                }
-            });
+      _logger.LogError(userListResult.Errors.ToString());
+      await SendNotFoundAsync(cancellationToken); 
+      return;
     }
 
     var userListResponse = userListResult.Value.Users
@@ -47,8 +46,9 @@ public class ListUser(IHttpContextAccessor httpContextAccessor, IMediator mediat
         .ToList();
 
     var totalCount = userListResult.Value.TotalCount;
+    string[] hideColumns = { "Id"};
 
-    Response = new ListUsersResponse(userListResponse, request.Page, request.PageSize, totalCount);
-    return Result.Success();
+    Response = new ListUsersResponse(userListResponse, request.Page, request.PageSize, totalCount, hideColumns);
+    
   }
 }

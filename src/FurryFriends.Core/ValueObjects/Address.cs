@@ -29,6 +29,8 @@ public class Address : ValueObject
     ZipCode = zipCode;
   }
 
+  public static Address Create(string street, string city, string state, string zipCode) => new(street, city, state, zipCode);
+
   protected override IEnumerable<object> GetEqualityComponents()
   {
     yield return Street;
