@@ -2,9 +2,9 @@
 
 namespace FurryFriends.Core.UserAggregate.Specifications;
 
-public class GetUserByEmailSpec : SingleResultSpecification<User>
+public class GetUserByEmailSpecification : SingleResultSpecification<User>
 {
-  public GetUserByEmailSpec(string email) =>
+  public GetUserByEmailSpecification(string email) =>
     Query
         .Where(w => w.Email == email);
 }

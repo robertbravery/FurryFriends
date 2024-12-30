@@ -23,7 +23,7 @@ public class UserSpecificationTests
   {
     // Arrange
     var targetEmail = "bob.wilson@example.com";
-    var spec = new GetUserByEmailSpec(targetEmail);
+    var spec = new GetUserByEmailSpecification(targetEmail);
     // Act
     var result = spec.Evaluate(_users);
 
@@ -37,7 +37,7 @@ public class UserSpecificationTests
   public void GetUserByEmailSpec_DoesNotMatchDifferentEmail()
   {
     // Arrange
-    var spec = new GetUserByEmailSpec("different@example.com");
+    var spec = new GetUserByEmailSpecification("different@example.com");
 
     // Act
     var result = spec.Evaluate(_users);

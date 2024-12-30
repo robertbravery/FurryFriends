@@ -35,9 +35,5 @@
     <ProjectReference Include="..\FurryFriends.ServiceDefaults\FurryFriends.ServiceDefaults.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Endpoints\UserEndpoints\Get\" />
-  </ItemGroup>
-
 </Project>
 
