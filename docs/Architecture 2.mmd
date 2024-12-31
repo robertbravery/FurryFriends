@@ -1,0 +1,52 @@
+flowchart LR
+    subgraph Infrastructure
+        Database[Database]
+        WebServer[Web Server]
+    end
+
+    subgraph Application
+        UseCases[Use Cases]
+        Repositories[Repositories]
+        Services[Services]
+    end
+
+    subgraph Domain
+        UserAggregate[User Aggregate]
+        PhoneNumberAggregate[PhoneNumber Aggregate]
+        AddressAggregate[Address Aggregate]
+        PhotoAggregate[Photo Aggregate]
+        TestimonialAggregate[Testimonial Aggregate]
+        AllergyAggregate[Allergy Aggregate]
+        CertificationAggregate[Certification Aggregate]
+        ExperienceAggregate[Experience Aggregate]
+        AvailabilityAggregate[Availability Aggregate]
+        ServiceAggregate[Service Aggregate]
+        SpecialtyAggregate[Specialty Aggregate]
+        InsuranceAggregate[Insurance Aggregate]
+        ReviewAggregate[Review Aggregate]
+    end
+
+    subgraph Presentation
+        API[API]
+        WebUI[Web UI]
+    end
+
+    UseCases -->|Request| Services
+    Services -->|Response| UseCases
+    Services -->|Repository| Repositories
+    Repositories -->|Database| Database
+    API -->|Request| Services
+    WebUI -->|Request| API
+    Database -->|Data| Repositories
+    UserAggregate -->|Aggregate Root| PhoneNumberAggregate
+    UserAggregate -->|Aggregate Root| AddressAggregate
+    UserAggregate -->|Aggregate Root| PhotoAggregate
+    UserAggregate -->|Aggregate Root| TestimonialAggregate
+    UserAggregate -->|Aggregate Root| AllergyAggregate
+    UserAggregate -->|Aggregate Root| CertificationAggregate
+    UserAggregate -->|Aggregate Root| ExperienceAggregate
+    UserAggregate -->|Aggregate Root| AvailabilityAggregate
+    UserAggregate -->|Aggregate Root| ServiceAggregate
+    UserAggregate -->|Aggregate Root| SpecialtyAggregate
+    UserAggregate -->|Aggregate Root| InsuranceAggregate
+    UserAggregate -->|Aggregate Root| ReviewAggregate

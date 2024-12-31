@@ -1,0 +1,72 @@
+
+classDiagram
+class Photo {
+    +String Url
+    +String Caption
+    +Boolean IsProfilePhoto
+}
+
+class ServiceArea {
+    +List~String~ ZipCodes
+    +Int RadiusInMiles
+}
+
+class Schedule {
+    +List~TimeSlot~ RegularSlots
+    +List~DateTimeOffset~ BlockedDates
+}
+
+class Testimonial {
+    +Guid ClientId
+    +String Content
+    +DateTimeOffset Date
+    +Int Rating
+}
+
+class Badge {
+    +String Name
+    +String Description
+    +DateTimeOffset AwardedDate
+}
+
+class Certification {
+    +String Name
+    +String IssuingOrganization
+    +DateTimeOffset IssueDate
+    +DateTimeOffset? ExpiryDate
+}
+
+class PreferredWorkingHours {
+    +TimeSpan EarliestStart
+    +TimeSpan LatestEnd
+    +List~DayOfWeek~ WorkingDays
+}
+
+class ServiceType {
+    <<enumeration>>
+    Walking
+    DayCare
+    Boarding
+    HomeSitting
+    Training
+    Grooming
+}
+
+class PetType {
+    <<enumeration>>
+    Dog
+    Cat
+    Bird
+    Fish
+    Reptile
+    SmallAnimal
+}
+
+User "1" *-- "many" Photo
+User "1" *-- "1" ServiceArea
+User "1" *-- "1" Schedule
+User "1" *-- "many" Testimonial
+User "1" *-- "many" Badge
+User "1" *-- "many" Certification
+User "1" *-- "1" PreferredWorkingHours
+User "1" *-- "many" PetType

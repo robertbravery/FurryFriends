@@ -1,0 +1,145 @@
+classDiagram
+    class User {
+        -Guid Id
+        -String Name
+        -String Email
+        -PhoneNumber PhoneNumber
+        -Address Address
+        -String Biography
+        -List~Photo~ Photos
+        -DateOfBirth DateOfBirth
+        -Gender Gender
+        -Boolean IsVerified
+        -ServiceArea ServiceArea
+        -Schedule Availability
+        -Money HourlyRate
+        -List~PetType~ AcceptedPetTypes
+        -Int YearsOfExperience
+        -Boolean HasInsurance
+        -Boolean HasFirstAidCertification
+        -Rating OverallRating
+        -List~Testimonial~ Testimonials
+        -List~Badge~ Badges
+        -Int MaxPetsPerWalk
+        -List~ServiceType~ OfferedServices
+        -PreferredWorkingHours PreferredHours
+        
+        +Create(Name, Email, Phone, Address)$ User
+        +UpdateProfile(ProfileUpdateInfo) Result
+        +AddPhoto(Photo) Result
+        +SetServiceArea(ZipCodes, Radius) Result
+        +UpdateAvailability(Schedule) Result
+        +SetHourlyRate(Money) Result
+        +AddCertification(Certification) Result
+        +AddTestimonial(Testimonial) Result
+        +UpdateServices(List~ServiceType~) Result
+        +MarkAsVerified() Result
+        +UpdateBackgroundCheck(BackgroundCheck) Result
+        +CalculateRating() Rating
+        +IsAvailableFor(DateTime, Duration) bool
+        +CanHandlePetType(PetType) bool
+    }
+
+    class DomainEvents {
+        <<abstract>>
+        UserCreated
+        UserVerified
+        PhotoAdded
+        TestimonialReceived
+        CertificationAdded
+        BackgroundCheckUpdated
+        ServiceAreaChanged
+        AvailabilityChanged
+        RatingUpdated
+    }
+
+    class Address {
+        -String Street
+        -String City
+        -String State
+        -String ZipCode
+        -String Country
+        +Create(Street, City, State, ZipCode, Country)$ Result~Address~
+        +Validate() bool
+    }
+
+    class PhoneNumber {
+        -String CountryCode
+        -String Number
+        +Create(CountryCode, Number)$ Result~PhoneNumber~
+        +Format() String
+        +Validate() bool
+    }
+
+    class Schedule {
+        -List~TimeSlot~ RegularSlots
+        -List~DateTimeOffset~ BlockedDates
+        +AddTimeSlot(TimeSlot) Result
+        +RemoveTimeSlot(TimeSlot) Result
+        +BlockDate(DateTimeOffset) Result
+        +IsAvailable(DateTime, Duration) bool
+    }
+
+    class TimeSlot {
+        -DayOfWeek Day
+        -TimeSpan StartTime
+        -TimeSpan EndTime
+        +Create(Day, Start, End)$ Result~TimeSlot~
+        +OverlapsWith(TimeSlot) bool
+    }
+
+    class BackgroundCheck {
+        -String ReferenceNumber
+        -DateTimeOffset CheckDate
+        -BackgroundCheckStatus Status
+        -DateTimeOffset ExpiryDate
+        +IsValid() bool
+        +IsExpired() bool
+    }
+
+    class ServiceArea {
+        -List~String~ ZipCodes
+        -Int RadiusInMiles
+        +AddZipCode(String) Result
+        +RemoveZipCode(String) Result
+        +IsInServiceArea(String) bool
+    }
+
+    class Rating {
+        -Decimal Value
+        -Int TotalReviews
+        +Calculate(List~Testimonial~) Rating
+        +Update(Int) void
+    }
+
+    class Testimonial {
+        -Guid ClientId
+        -String Content
+        -DateTimeOffset Date
+        -Int Rating
+        +Create(ClientId, Content, Rating)$ Result~Testimonial~
+        +Validate() bool
+    }
+
+    
+    note for User "Invariants:
+        1. Email must be valid
+        2. Phone must be valid
+        3. Age must be >= 18
+        4. HourlyRate must be > 0
+        5. MaxPetsPerWalk must be > 0
+        6. Must have at least one ServiceType
+        7. Must have valid insurance if offering certain services
+        8. Background check must be valid and not expired
+        9. Rating must be between 1 and 5"
+
+   
+    User "1" *-- "1" Address
+    User "1" *-- "1" PhoneNumber
+    User "1" *-- "1" Schedule
+    User "1" *-- "1" ServiceArea
+    User "1" *-- "1" BackgroundCheck
+    User "1" *-- "1" Rating
+    User "1" *-- "many" Testimonial
+    Schedule "1" *-- "many" TimeSlot
+    User ..> DomainEvents

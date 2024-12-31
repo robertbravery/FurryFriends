@@ -1,0 +1,61 @@
+graph TB
+    subgraph "Presentation Layer"
+        WA[Web API]
+        MVC[MVC UI]
+    end
+
+    subgraph "Application Layer"
+        US[User Service]
+        PS[Pet Service]
+        BS[Booking Service]
+        subgraph "Application Services"
+            AUTH[Authentication Service]
+            NOTIF[Notification Service]
+            PAY[Payment Service]
+        end
+    end
+
+    subgraph "Domain Layer"
+        subgraph "Aggregates"
+            UA[User Aggregate]
+            PA[Pet Aggregate]
+            BA[Booking Aggregate]
+        end
+        subgraph "Domain Services"
+            BGS[Background Check Service]
+            AS[Availability Service]
+            RCS[Rating Calculation Service]
+        end
+        subgraph "Value Objects"
+            VO1[Address]
+            VO2[PhoneNumber]
+            VO3[Schedule]
+            VO4[Money]
+        end
+    end
+
+    subgraph "Infrastructure Layer"
+        DB[(Database)]
+        CACHE[(Cache)]
+        subgraph "External Services"
+            EMAIL[Email Service]
+            SMS[SMS Service]
+            MAPS[Maps API]
+            PAYMENT[Payment Gateway]
+        end
+    end
+
+    WA --> US
+    MVC --> US
+    US --> UA
+    PS --> PA
+    BS --> BA
+    UA --> BGS
+    UA --> AS
+    UA --> RCS
+    US --> DB
+    US --> CACHE
+    US --> EMAIL
+    US --> SMS
+    US --> MAPS
+    US --> PAYMENT
