@@ -1,10 +1,10 @@
-using MediatR;
-using FluentValidation;
+﻿using FluentValidation;
 using FurryFriends.Core.Entities;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Users.Create;
-using FurryFriends.Core.ValueObjects.Validators;
+
 namespace FurryFriends.UseCases.Users;
+
 public class CreateUserHandler(IRepository<User> userRepository, IValidator<CreateUserCommand> commandValidator, IValidator<PhoneNumber> phoneNumberValidator) 
 : ICommandHandler<CreateUserCommand, Result<Guid>>
 {
@@ -17,7 +17,7 @@ public class CreateUserHandler(IRepository<User> userRepository, IValidator<Crea
     var validationResult = await _validator.ValidateAsync(command);
     if (!validationResult.IsValid)
     {
-      throw new ValidationException(validationResult.Errors);
+      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", validationResult.Errors)));
     }
     var phoneNumberResult = await PhoneNumber.Create(command.CountryCode, command.AreaCode, command.Number, _phoneNumberValidator);
     if (!phoneNumberResult.IsSuccess)

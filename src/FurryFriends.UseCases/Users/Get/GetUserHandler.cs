@@ -15,7 +15,7 @@ public class GetUserHandler(IReadRepository<User> _repository) : IQueryHandler<G
   {
     var spec = new GetUserByEmailSpecification(request.Email);
     var entity = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
-    if (entity == null) return Result.NotFound();
+    if (entity == null) return Result.NotFound("User Not Found");
 
     return new UserDto(entity.Id, entity.Email, entity.Name, entity.PhoneNumber.ToString(), entity.Address.City);
   }

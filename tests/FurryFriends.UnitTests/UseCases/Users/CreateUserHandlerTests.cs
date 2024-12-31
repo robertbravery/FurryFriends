@@ -1,7 +1,6 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
+﻿using Bogus;
 using FurryFriends.Core.Entities;
-using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCases.Users;
 using FurryFriends.UseCases.Users.Create;
 using Moq;
@@ -11,39 +10,30 @@ namespace FurryFriends.UseCases.Tests.Users;
 public class CreateUserHandlerTests
 {
   private readonly Mock<IRepository<User>> _userRepositoryMock;
-  private readonly Mock<IValidator<CreateUserCommand>> _commandValidatorMock;
-  private readonly Mock<IValidator<PhoneNumber>> _phoneNumberValidatorMock;
   private readonly CreateUserHandler _handler;
 
   public CreateUserHandlerTests()
   {
     _userRepositoryMock = new Mock<IRepository<User>>();
-    _commandValidatorMock = new Mock<IValidator<CreateUserCommand>>();
-    _phoneNumberValidatorMock = new Mock<IValidator<PhoneNumber>>();
-    _handler = new CreateUserHandler(_userRepositoryMock.Object, _commandValidatorMock.Object, _phoneNumberValidatorMock.Object);
+    _handler = new CreateUserHandler(_userRepositoryMock.Object, new CreateUserCommandValidator(), new PhoneNumberValidator());
   }
 
   [Fact]
   public async Task Handle_ShouldReturnUserId_WhenCommandIsValid()
   {
     // Arrange
+    var f = new Faker();
     var command = new CreateUserCommand(
-        "John Doe",
-        "john.doe@example.com",
-        "1",
-        "123",
-        "4567890",
-        "123 Main St",
-        "Anytown",
-        "CA",
-        "12345"
+        f.Name.FullName(),
+        f.Internet.Email(),
+        f.Phone.PhoneNumber("0##"),
+        f.Phone.PhoneNumber("###"),
+        f.Phone.PhoneNumber("###-####"),
+        f.Address.StreetAddress(),
+        f.Address.City(),
+        f.Address.State(),
+        f.Address.ZipCode("####")
     );
-
-    _commandValidatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(new ValidationResult());
-
-    _phoneNumberValidatorMock.Setup(v => v.ValidateAsync(It.IsAny<PhoneNumber>(), It.IsAny<CancellationToken>()))
-        .ReturnsAsync(new ValidationResult());
 
     _userRepositoryMock.Setup(r => r.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
         .ReturnsAsync((User user, CancellationToken ct) => user);
@@ -57,32 +47,113 @@ public class CreateUserHandlerTests
   }
 
   [Fact]
-  public async Task Handle_ShouldThrowValidationException_WhenCommandIsInvalid()
+  public async Task Handle_ShouldReturnErrorWhenNameIsEmpty()
   {
     // Arrange
-    var command = new CreateUserCommand
-    (
-         "John Doe",
-        "john.doe@example.com",
-        "1",
-        "123",
-        "4567890",
-        "123 Main St",
-        "Anytown",
-        "CA",
-        "12345"
+    //var expectedErrorMessage = "Name cannot be empty";
+    var f = new Faker();
+    var command = new CreateUserCommand(
+        string.Empty,
+        f.Internet.Email(),
+        f.Phone.PhoneNumber("0##"),
+        f.Phone.PhoneNumber("###"),
+        f.Phone.PhoneNumber("###-####"),
+        f.Address.StreetAddress(),
+        f.Address.City(),
+        f.Address.State(),
+        f.Address.ZipCode("####")
     );
 
-    var validationResult = new ValidationResult(new[]
-    {
-            new ValidationFailure("Name", "Name cannot be empty")
-        });
+    //Act
+    var result = await _handler.Handle(command, CancellationToken.None);
 
-    _commandValidatorMock.Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-        .ReturnsAsync(validationResult);
-
-    // Act and Assert
-    Func<Task> act =async  () => { await _handler.Handle(command, CancellationToken.None); };
-    await act.Should().ThrowAsync<ValidationException>();
+    //Assert
+    result.IsSuccess.Should().BeFalse();
+    result.ValidationErrors.Should().NotBeEmpty();
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("Name cannot be empty");
   }
+
+  [Fact]
+  public async Task Handle_ShouldReturnErrorWhenCountryCodeIsEmpty()
+  {
+    // Arrange
+    //var expectedErrorMessage = "Name cannot be empty";
+    var f = new Faker();
+    var command = new CreateUserCommand(
+        f.Name.FullName(),
+        f.Internet.Email(),
+        string.Empty,
+        f.Phone.PhoneNumber("###"),
+        f.Phone.PhoneNumber(),
+        f.Address.StreetAddress(),
+        f.Address.City(),
+        f.Address.State(),
+        f.Address.ZipCode("####")
+    );
+
+    //Act
+    var result = await _handler.Handle(command, CancellationToken.None);
+
+    //Assert
+    result.IsSuccess.Should().BeFalse();
+    result.ValidationErrors.Should().NotBeEmpty();
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("Country code cannot be empty");
+  }
+
+  [Fact]
+  public async Task Handle_ShouldReturnErrorWhenPhoneAreaCodeIsEmpty()
+  {
+    // Arrange
+    //var expectedErrorMessage = "Name cannot be empty";
+    var f = new Faker();
+    var command = new CreateUserCommand(
+        f.Name.FullName(),
+        f.Internet.Email(),
+        f.Phone.PhoneNumber("###"),
+        string.Empty,
+        f.Phone.PhoneNumber(),
+        f.Address.StreetAddress(),
+        f.Address.City(),
+        f.Address.State(),
+        f.Address.ZipCode("####")
+    );
+
+    //Act
+    var result = await _handler.Handle(command, CancellationToken.None);
+
+    //Assert
+    result.IsSuccess.Should().BeFalse();
+    result.ValidationErrors.Should().NotBeEmpty();
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("Area code cannot be empty");
+  }
+
+
+  [Fact]
+  public async Task Handle_ShouldReturnErrorWhenPhoneNumberIsEmpty()
+  {
+    // Arrange
+    //var expectedErrorMessage = "Name cannot be empty";
+    var f = new Faker();
+    var command = new CreateUserCommand(
+        f.Name.FullName(),
+        f.Internet.Email(),
+        f.Phone.PhoneNumber("0##"),
+        f.Phone.PhoneNumber("###"),
+        string.Empty,
+        f.Address.StreetAddress(),
+        f.Address.City(),
+        f.Address.State(),
+        f.Address.ZipCode("####")
+    );
+
+    //Act
+    var result = await _handler.Handle(command, CancellationToken.None);
+
+    //Assert
+    result.IsSuccess.Should().BeFalse();
+    result.ValidationErrors.Should().NotBeEmpty();
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("Phone number cannot be empty");
+  }
+
+ 
 }

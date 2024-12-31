@@ -35,5 +35,9 @@
     <ProjectReference Include="..\FurryFriends.ServiceDefaults\FurryFriends.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
 </Project>
 

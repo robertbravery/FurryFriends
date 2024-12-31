@@ -1,8 +1,7 @@
-using System.Text.RegularExpressions;
-using Ardalis.GuardClauses;
+﻿using System.Text.RegularExpressions;
 
 namespace FurryFriends.Core.GuardClauses;
-    public static class GuardClausesExtensions
+public static class GuardClausesExtensions
     {
         public static void InvalidEmail(this IGuardClause guardClause, string email, string parameterName)
         {

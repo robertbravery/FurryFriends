@@ -1,5 +1,5 @@
-using System;
+﻿using System;
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
-public class CreateUserResponse();
+public record CreateUserResponse(Guid UserId);

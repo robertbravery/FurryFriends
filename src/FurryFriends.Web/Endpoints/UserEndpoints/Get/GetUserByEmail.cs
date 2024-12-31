@@ -1,10 +1,9 @@
 ﻿using Azure;
-using FurryFriends.Web.Endpoints.UserEndpoints.Create;
-using FurryFriends.Web.Endpoints.UserEndpoints.List;
+using FurryFriends.Web.Endpoints.UserEndpoints.Records;
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.Get;
 
-public class GetUserByEmail(IMediator _mediator) : Endpoint<GetUserByEmailRequest, GetUserByEmailResponse>
+public class GetUserByEmail(IMediator _mediator) : Endpoint<GetUserByEmailRequest, ResponseBase<UserRecord>>
 {
   public override void Configure()
   {
@@ -15,23 +14,28 @@ public class GetUserByEmail(IMediator _mediator) : Endpoint<GetUserByEmailReques
     {
       s.Summary = "Get User By Email";
       s.Description = "Returns a user by email";
-      s.Response<ListUsersResponse>(200, "User retrieved successfully");
+      s.Response<GetUserByEmailResponse>(200, "Get User By Email");
       s.Response<Response>(400, "Failed to retrieve user");
       s.Response<Response>(401, "Unauthorized");
+      s.Response<Response>(404, "Not Found");
     });
   }
 
   public override async Task HandleAsync(GetUserByEmailRequest req, CancellationToken ct)
   {
     var query = new GetUserQuery(req.Email);
-    var user = await _mediator.Send(query, ct);
-    if (user is null)
+    var result = await _mediator.Send(query, ct);
+    if (result.Value is null || !result.IsSuccess || result.IsNotFound())
     {
-      await SendNotFoundAsync(ct);
+      //The api call was a success but the data returned is null or not found
+      var notFoundResponse = GetUserByEmailResponse.NotFound(req.Email);
+      await SendAsync(notFoundResponse, 404, ct);
+      return;
     }
     else
     {
-      await SendOkAsync(new GetUserByEmailResponse(user.Value.Id, user.Value.Name, user.Value.PhoneNumber, user.Value.Address), ct);
+      var userDto = new UserRecord(result.Value.Id, result.Value.Name, result.Value.Email, result.Value.PhoneNumber, result.Value.Address);
+      Response = new GetUserByEmailResponse(userDto);
     }
   }
 }

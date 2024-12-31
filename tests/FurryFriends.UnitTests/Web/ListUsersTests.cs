@@ -9,9 +9,11 @@ using FurryFriends.Web.Endpoints.UserEndpoints.List;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
+namespace FurryFriends.UnitTests.Web;
+
 public class ListUsersTests : TestBase
 {
-  private readonly Mock<IMediator> _mediatorMock;  
+  private readonly Mock<IMediator> _mediatorMock;
   private ILogger<ListUser> _logggerMock;
 
   public ListUsersTests()
@@ -58,10 +60,10 @@ public class ListUsersTests : TestBase
     var address1 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
     var address2 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
     var users = new List<User>
-        {
-            new (Fake.Name.FullName(), Fake.Internet.Email(), phoneNumber1, address1),
-            new (Fake.Name.FullName(), Fake.Internet.Email(), phoneNumber2, address1),
-        };
+      {
+          new (Fake.Name.FullName(), Fake.Internet.Email(), phoneNumber1, address1),
+          new (Fake.Name.FullName(), Fake.Internet.Email(), phoneNumber2, address1),
+      };
     return users;
   }
 
@@ -76,10 +78,7 @@ public class ListUsersTests : TestBase
     var ep = Factory.Create<ListUser>(_mediatorMock.Object, _logggerMock);
 
     // Act
-    //await _listUsers.HandleAsync(request, CancellationToken.None);
     await ep.HandleAsync(request, CancellationToken.None);
-
-
 
     // Assert
     _mediatorMock.Verify(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>()), Times.Once);

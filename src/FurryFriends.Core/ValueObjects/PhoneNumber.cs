@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FurryFriends.Core.ValueObjects.Validators;
 namespace FurryFriends.Core.ValueObjects;
 
 public class PhoneNumber : ValueObject

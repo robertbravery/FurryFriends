@@ -44,6 +44,20 @@ public class CreateUser(IMediator _mediator)
       request.State,
       request.PostalCode);
 
-    await _mediator.Send(userCommand, cancellationToken);
+    var result = await _mediator.Send(userCommand, cancellationToken);
+
+    if(result == null)
+    {
+      await SendErrorsAsync(StatusCodes.Status500InternalServerError, cancellationToken);
+      return;
+    }
+    if(!result.IsSuccess)
+    {
+      AddError(result.ValidationErrors.First().ErrorMessage);
+      await SendErrorsAsync(StatusCodes.Status400BadRequest,cancellationToken);
+      return;
+    }
+
+    Response = new CreateUserResponse(result.Value);
   }
 }

@@ -9,8 +9,8 @@ public CreateUserCommandValidator()
         {
             RuleFor(cmd => cmd.Name)
                 .NotEmpty().WithMessage("Name cannot be empty")
-                .MaximumLength(5)
-                .MinimumLength(30).WithMessage("Name must be 5-30 characters long");;
+                .MaximumLength(30)
+                .MinimumLength(5).WithMessage("Name must be 5-30 characters long");;
             RuleFor(cmd => cmd.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
                 .EmailAddress().WithMessage("Invalid email address");
