@@ -34,7 +34,7 @@ public class CreateUser(IMediator _mediator)
   public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
   {
     var userCommand = new CreateUserCommand(
-      request.FirstName, 
+      request.FirstName,
       request.LastName,
       request.Email,
       request.CountryCode,
@@ -42,6 +42,7 @@ public class CreateUser(IMediator _mediator)
       request.Street,
       request.City,
       request.State,
+      request.Country, 
       request.PostalCode);
 
     var result = await _mediator.Send(userCommand, cancellationToken);

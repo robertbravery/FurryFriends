@@ -29,6 +29,14 @@ public class Name : ValueObject
   }
   public override string ToString() { return FullName; }
 
+  public bool Equals(Name other)
+  {
+    if (ReferenceEquals(null, other)) return false;
+    if (ReferenceEquals(this, other)) return true;
+
+    return FirstName == other.FirstName && LastName == other.LastName;
+  }
+
   public override bool Equals(object? obj)
   {
     if (obj is Name other)
@@ -40,12 +48,6 @@ public class Name : ValueObject
 
   public override int GetHashCode()
   {
-    unchecked
-    {
-      int hash = 17;
-      hash = hash * 23 + FirstName.GetHashCode();
-      hash = hash * 23 + LastName.GetHashCode();
-      return hash;
-    }
+    return HashCode.Combine(FirstName, LastName);
   }
 }

@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.Entities;
+﻿using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
@@ -13,35 +13,35 @@ public static class UserHelpers
     var validator = new NameValidator();
     return new List<User>
       {
-          new(
+          User.Create(
               Name.Create("John", "Smith", validator),
               "john.smith@example.com",
               phoneNumber,
-              new Address("123 Main St", "Seattle", "WA", "98101")),
+              Address.Create("123 Main St", "Seattle", "WA", "US", "98101")),
 
-          new(
+          User.Create(
               Name.Create("Jane", "Doe", validator), 
               "jane.doe@example.com",
               phoneNumber,
-              new Address("456 Oak Ave", "Portland", "OR", "97201")),
+              Address.Create("456 Oak Ave", "Portland", "OR", "Us", "97201")),
 
-          new(
+          User.Create(
               Name.Create("Bob", "Wilson", validator),
               "bob.wilson@example.com",
               phoneNumber,
-              new Address("789 Pine St", "Seattle", "WA", "98102")),
+              Address.Create("789 Pine St", "Seattle", "WA", "US", "98102")),
 
-          new(
+          User.Create(
               Name.Create("Alice", "Brown", validator),
               "alice.brown@example.com",
               phoneNumber,
-              new Address("321 Cedar Rd", "Bellevue", "WA", "98004")),
+              Address.Create("321 Cedar Rd", "Bellevue", "WA", "US", "98004")),
 
-          new(
+          User.Create(
               Name.Create("Charlie", "Davis", validator),
               "charlie.davis@example.com",
               phoneNumber,
-              new Address("654 Elm St", "Seattle", "WA", "98103"))
+              Address.Create("654 Elm St", "Seattle", "WA", "US", "98103"))
       };
   }
 }

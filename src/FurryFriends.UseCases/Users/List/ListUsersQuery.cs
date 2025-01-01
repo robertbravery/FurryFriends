@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.Entities;
+﻿using FurryFriends.Core.UserAggregate;
 using FurryFriends.UseCases.Contributors;
 
 namespace FurryFriends.UseCases.Users.List;

@@ -1,7 +1,4 @@
-﻿using Xunit;
-using Moq;
-using FluentAssertions;
-using FurryFriends.Core.Entities;
+﻿using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
@@ -14,7 +11,7 @@ public class UserAggregateTests
 
   public UserAggregateTests()
   {
-    _validAddress = new Address("123 Main St", "City", "State", "12345");
+    _validAddress = Address.Create("123 Main St", "City", "State", "US", "12345");
     _validPhone = PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator()).Result.Value;
   }
 
@@ -29,7 +26,7 @@ public class UserAggregateTests
     var name = Name.Create(firstName, lastName, new NameValidator());
 
     // Act
-    var userAggregate = new User(name, email, _validPhone, _validAddress);
+    var userAggregate = User.Create(name, email, _validPhone, _validAddress);
 
     // Assert
     userAggregate.Email.Should().Be(email);
@@ -46,12 +43,12 @@ public class UserAggregateTests
     var firstName = "John";
     var lastName = "Doe";
     var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
-    var address = new Address("123 Main St", "Anytown", "CA", "12345");
+    var address = Address.Create("123 Main St", "Anytown", "CA", "US","12345");
     var name = Name.Create(firstName, lastName, new NameValidator());
 
     // Act
     // Act and Assert
-    var action = () => new User(name, invalidEmail, phoneNumber, address);
+    var action = () => User.Create(name, invalidEmail, phoneNumber, address);
     action.Should().Throw<Exception>()
         .WithMessage("*email*");
   }
@@ -65,9 +62,9 @@ public class UserAggregateTests
     var firstName = "John";
     var lastName = "Doe";
     var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
-    var address = new Address("123 Main St", "Anytown", "CA", "12345");
+    var address = Address.Create("123 Main St", "Anytown", "CA", "US", "12345");
     var name = Name.Create(firstName, lastName, new NameValidator());
-    var user = new User(name, email, phoneNumber, address);
+    var user = User.Create(name, email, phoneNumber, address);
     var newEmail = "new@example.com";
 
     // Act
@@ -85,7 +82,7 @@ public class UserAggregateTests
   {
     // Arrange
     var name = Name.Create("John", "Doe", new NameValidator()); 
-    var user = new User(name, "john@example.com", _validPhone, _validAddress);
+    var user = User.Create(name, "john@example.com", _validPhone, _validAddress);
 
     // Act
     var action = () => user.UpdateEmail(invalidEmail);
@@ -118,9 +115,9 @@ public class UserAggregateTests
     var newName = Name.Create("Jane", "Doe", new NameValidator());
     var newEmail = "jane@example.com";
     var name = Name.Create("John", "Doe", new NameValidator());
-    var user = new User(name, "john@example.com", _validPhone, _validAddress);
+    var user = User.Create(name, "john@example.com", _validPhone, _validAddress);
     var newPhone = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
-    var newAddress = new Address("456 Oak St", "NewCity", "NewState", "54321");
+    var newAddress = Address.Create("456 Oak St", "NewCity", "NewState", "US", "54321");
 
     // Act
     user.UpdateDetails(name, newEmail, newPhone, newAddress);
@@ -137,7 +134,7 @@ public class UserAggregateTests
   {
     // Arrange
     var name = Name.Create("John", "Doe", new NameValidator());
-    var user = new User(name, "john@example.com", _validPhone, _validAddress);
+    var user = User.Create(name, "john@example.com", _validPhone, _validAddress);
     var newEmail = "newemail@example.com";
 
     // Act

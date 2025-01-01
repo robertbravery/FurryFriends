@@ -4,7 +4,6 @@ namespace FurryFriends.Core.ValueObjects;
 public class PhoneNumber : ValueObject
 {
   public string CountryCode { get; private set; } = default!;
-  //public string AreaCode { get; private set; } = default!;
   public string Number { get; private set; } = default!;
   public PhoneNumber()
   {
@@ -14,7 +13,6 @@ public class PhoneNumber : ValueObject
   private PhoneNumber(string countryCode,  string number)
   {
     CountryCode = countryCode;
-    //AreaCode = areaCode;
     Number = number;
   }
 
@@ -47,5 +45,22 @@ public class PhoneNumber : ValueObject
   public override string ToString()
   {
     return $"{CountryCode} {Number}";
+  }
+  public bool Equals(PhoneNumber other)
+  {
+    if (ReferenceEquals(null, other)) return false;
+    if (ReferenceEquals(this, other)) return true;
+
+    return CountryCode == other.CountryCode && Number == other.Number;
+  }
+
+  public override bool Equals(object? obj)
+  {
+    return obj is PhoneNumber phoneNumber && Equals(phoneNumber);
+  }
+
+  public override int GetHashCode()
+  {
+    return HashCode.Combine(CountryCode, Number);
   }
 }

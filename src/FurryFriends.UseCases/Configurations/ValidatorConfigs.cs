@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FurryFriends.Core.ContributorAggregate;
+using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCases.Users.Create;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ public static class ValidatorConfigs
         services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<PhoneNumberValidator>();
         services.AddValidatorsFromAssemblyContaining<NameValidator>();
+    services.AddTransient<IValidator<Address>, AddressValidator>();
 
         return services;
     }

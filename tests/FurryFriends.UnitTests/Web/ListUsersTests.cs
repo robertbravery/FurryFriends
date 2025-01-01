@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using FastEndpoints;
 using FastEndpoints.Testing;
-using FurryFriends.Core.Entities;
+using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCases.Users.List;
@@ -27,7 +27,6 @@ public class ListUsersTests : TestBase
   public async Task HandleAsync_ShouldReturnUsers_WhenUsersExist()
   {
     // Arrange
-
     var request = new ListUsersRequest { SearchTerm = "test", Page = 1, PageSize = 10 };
     var users = await GetFakeUsers();
     var result = Result<(List<User> Users, int TotalCount)>.Success((users, users.Count));
@@ -58,15 +57,15 @@ public class ListUsersTests : TestBase
     
     var phoneNumber1 = (await PhoneNumber.Create("1", "011-123-4567", phoneNumberValidator)).Value;
     var phoneNumber2 = (await PhoneNumber.Create("1", "011-123-4567", phoneNumberValidator)).Value;
-    var address1 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
-    var address2 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
+    var address1 = Address.Create(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.Country(), Fake.Address.ZipCode());
+    var address2 = Address.Create(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.Country(), Fake.Address.ZipCode());
     var name1 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
     var name2 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
 
     var users = new List<User>
       {
-          new (name1, Fake.Internet.Email(), phoneNumber1, address1),
-          new (name2, Fake.Internet.Email(), phoneNumber2, address1),
+          User.Create (name1, Fake.Internet.Email(), phoneNumber1, address1),
+          User.Create(name2, Fake.Internet.Email(), phoneNumber2, address2),
       };
     return users;
   }

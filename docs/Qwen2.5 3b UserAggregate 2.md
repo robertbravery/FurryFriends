@@ -24,7 +24,8 @@ namespace Domain.Entities.Users
         public string Email { get; private set; }
         public PhoneNumber PhoneNumber { get; private set; }
         public Address Address { get; private set; }
-        public List<Photo> Photos { get; set; }
+        public virtual Photo BioPicture { get; private set; }
+        public virtual ICollection<Photo> Photos { get; set; }
         public DateTime DateOfBirth { get; private set; }
         public Gender Gender { get; private set; }
         public bool IsVerified { get; set; }

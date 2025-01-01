@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ardalis.SharedKernel;
 using FurryFriends.Core.ContributorAggregate.Specifications;
-using FurryFriends.Core.Entities;
+using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.UserAggregate.Specifications;
 
 namespace FurryFriends.UseCases.Users.Get;

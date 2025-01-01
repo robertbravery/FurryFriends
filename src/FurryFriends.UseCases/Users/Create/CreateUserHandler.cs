@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FurryFriends.Core.Entities;
+using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Users.Create;
 
@@ -25,9 +25,9 @@ public class CreateUserHandler(IRepository<User> userRepository, IValidator<Crea
     {
         return Result<Guid>.Invalid(new ValidationError(string.Join(", ", phoneNumberResult.Errors)));
     }
-    var address = new Address(command.Street, command.City, command.State, command.ZipCode);
+    var address = Address.Create(command.Street, command.City, command.State,command.State, command.ZipCode);
     var name = Name.Create(command.FirstName, command.LastName, _nameValidator);
-    var user = new User(name, command.Email, phoneNumberResult.Value, address);
+    var user = User.Create(name, command.Email, phoneNumberResult.Value, address);
     await _userRepository.AddAsync(user);
     return user.Id;
   }

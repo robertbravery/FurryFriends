@@ -1,33 +1,40 @@
 ﻿using FurryFriends.Core.GuardClauses;
 using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.Core.Entities;
+namespace FurryFriends.Core.UserAggregate;
 
-public class User : IAggregateRoot
+public class User : EntityBase<Guid>, IAggregateRoot
 {
-  public Guid Id { get; private set; } = default!;
+
   public Name Name { get; private set; } = default!;
   public string Email { get; private set; } = default!;
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
+  public virtual Photo BioPicture { get; private set; } = default!;
+  public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 
-  public User()
+  private User()
   {
 
   }
-  public User(Name name, string email, PhoneNumber phoneNumber, Address address)
-  {
-    // Guard clauses to ensure valid input
-    Guard.Against.NullOrWhiteSpace(name.FirstName, nameof(name.FirstName));
-    Guard.Against.NullOrWhiteSpace(email, nameof(email));
-    Guard.Against.InvalidEmail(email, nameof(email));
-    Guard.Against.Null(address, nameof(address));
+  private User(Name name, string email, PhoneNumber phoneNumber, Address address)
+  {   
 
     Id = Guid.NewGuid();
     Name = name;
     Email = email;
     PhoneNumber = phoneNumber;
     Address = address;
+  }
+
+  public static User Create(Name name, string email, PhoneNumber phoneNumber, Address address)
+  {
+    // TODO: Use Fluent validation
+    Guard.Against.NullOrWhiteSpace(name.FirstName, nameof(name.FirstName));
+    Guard.Against.NullOrWhiteSpace(email, nameof(email));
+    Guard.Against.InvalidEmail(email, nameof(email));
+    Guard.Against.Null(address, nameof(address));
+    return new User(name, email, phoneNumber, address);
   }
 
   public void UpdateDetails(Name name, string email, PhoneNumber phoneNumber, Address address)
@@ -63,7 +70,17 @@ public class User : IAggregateRoot
   {
     Guard.Against.NullOrEmpty(newUserName.FirstName, nameof(newUserName.FirstName));
     Guard.Against.StringTooLong(newUserName.FirstName, 30, nameof(newUserName.FirstName));
-    Guard.Against.StringTooShort(newUserName.FirstName,5, nameof(newUserName.FirstName));
+    Guard.Against.StringTooShort(newUserName.FirstName, 5, nameof(newUserName.FirstName));
     Name = newUserName;
+  }
+
+  public void AddBioPicture(Photo photo)
+  {
+    BioPicture = photo;
+  }
+
+  public void AddPhoto(Photo photo)
+  {
+    Photos.Add(photo);
   }
 }

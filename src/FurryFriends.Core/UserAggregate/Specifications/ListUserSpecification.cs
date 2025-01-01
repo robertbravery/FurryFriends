@@ -1,6 +1,4 @@
-﻿using FurryFriends.Core.Entities;
-
-namespace FurryFriends.Core.UserAggregate.Specifications;
+﻿namespace FurryFriends.Core.UserAggregate.Specifications;
 public class ListUserSpecification : Specification<User>
 {
   public ListUserSpecification(string? searchString, int? pageSize, int? pageNumber)

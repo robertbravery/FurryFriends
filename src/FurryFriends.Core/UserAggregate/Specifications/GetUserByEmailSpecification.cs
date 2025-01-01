@@ -1,6 +1,4 @@
-﻿using FurryFriends.Core.Entities;
-
-namespace FurryFriends.Core.UserAggregate.Specifications;
+﻿namespace FurryFriends.Core.UserAggregate.Specifications;
 
 public class GetUserByEmailSpecification : SingleResultSpecification<User>
 {

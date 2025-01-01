@@ -1,9 +1,9 @@
 ﻿using FurryFriends.Core.ValueObjects;
-using FurryFriends.Core.Entities;
 using Ardalis.Result;
 using FurryFriends.Core.UserAggregate.Specifications;
 using FurryFriends.UnitTests.TestHelpers;
 using FurryFriends.Core.ValueObjects.Validators;
+using FurryFriends.Core.UserAggregate;
 
 namespace FurryFriends.UnitTests.Core.UserAggregate.Specification;
 

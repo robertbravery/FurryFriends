@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Core.ContributorAggregate;
-using FurryFriends.Core.Entities;
+using FurryFriends.Core.UserAggregate;
 
 namespace FurryFriends.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options,

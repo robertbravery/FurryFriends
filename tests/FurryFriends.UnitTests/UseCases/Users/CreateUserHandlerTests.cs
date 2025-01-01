@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using FurryFriends.Core.Entities;
+using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCases.Users;
 using FurryFriends.UseCases.Users.Create;
@@ -24,7 +24,7 @@ public class CreateUserHandlerTests
     // Arrange
     var f = new Faker();
     var command = new CreateUserCommand(
-        f.Name.FirstName(), 
+        f.Name.FirstName(),
         f.Name.LastName(),
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
@@ -32,7 +32,7 @@ public class CreateUserHandlerTests
         f.Address.StreetAddress(),
         f.Address.City(),
         f.Address.State(),
-        f.Address.ZipCode("####")
+        f.Address.Country(), f.Address.ZipCode("####")
     );
 
     _userRepositoryMock.Setup(r => r.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
@@ -54,14 +54,14 @@ public class CreateUserHandlerTests
     var f = new Faker();
     var command = new CreateUserCommand(
         string.Empty,
-        f.Name.LastName(), 
+        f.Name.LastName(),
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
         f.Phone.PhoneNumber("###-###-####"),
         f.Address.StreetAddress(),
         f.Address.City(),
         f.Address.State(),
-        f.Address.ZipCode("####")
+        f.Address.Country(), f.Address.ZipCode("####")
     );
 
     //Act
@@ -81,14 +81,14 @@ public class CreateUserHandlerTests
     var f = new Faker();
     var command = new CreateUserCommand(
         f.Name.FirstName(),
-        f.Name.LastName(), 
+        f.Name.LastName(),
         f.Internet.Email(),
         string.Empty,
         f.Phone.PhoneNumber(),
         f.Address.StreetAddress(),
         f.Address.City(),
         f.Address.State(),
-        f.Address.ZipCode("####")
+        f.Address.Country(), f.Address.ZipCode("####")
     );
 
     //Act
@@ -110,14 +110,14 @@ public class CreateUserHandlerTests
     var f = new Faker();
     var command = new CreateUserCommand(
         f.Name.FirstName(),
-        f.Name.LastName(), 
+        f.Name.LastName(),
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
         string.Empty,
         f.Address.StreetAddress(),
         f.Address.City(),
         f.Address.State(),
-        f.Address.ZipCode("####")
+        f.Address.Country(), f.Address.ZipCode("####")
     );
 
     //Act

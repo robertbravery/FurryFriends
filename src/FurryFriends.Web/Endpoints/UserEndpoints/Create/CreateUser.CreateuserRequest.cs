@@ -36,6 +36,9 @@ public class CreateUserRequest
   [Required(ErrorMessage = "State is required.")]
   public string State { get; set; } = default!;
 
+  [Required(ErrorMessage = "Country is required.")]
+  public string Country { get; set; } = default!;
+
   [Required(ErrorMessage = "Postal code is required.")]
   public string PostalCode { get; set; } = default!;
 }

@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.Entities;
+﻿using FurryFriends.Core.UserAggregate;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 

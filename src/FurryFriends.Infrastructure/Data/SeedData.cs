@@ -1,6 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using FurryFriends.Core.ContributorAggregate;
-using FurryFriends.Core.Entities;
+﻿using FurryFriends.Core.ContributorAggregate;
+using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
@@ -41,12 +40,12 @@ public static class SeedData
     var validator = new PhoneNumberValidator();
     var phoneNumber1 = await PhoneNumber.Create("027", "011-123-4567", validator);
     var phoneNumber2 = await PhoneNumber.Create("027", "011-123-4567", validator);
-    var address1 = Address.Create("123 Test St", "Test City", "Test State", "12345");
-    var address2 = Address.Create("456 Test St", "Test City", "Test State", "12345");
+    var address1 = Address.Create("123 Test St", "Test City", "Test State", "US", "12345");
+    var address2 = Address.Create("456 Test St", "Test City", "Test State", "US", "12345");
     var name1 = Name.Create("Snow", "Frog", new NameValidator()).Value;
     var name2 = Name.Create("Snow", "Dog", new NameValidator()).Value;
-    var user1 = new User(name1, "test@u.com", phoneNumber1, address1);
-    var user2 = new User(name2, "test2@u.com", phoneNumber2, address2);
+    var user1 = User.Create(name1, "test@u.com", phoneNumber1, address1);
+    var user2 = User.Create(name2, "test2@u.com", phoneNumber2, address2);
     dbContext.Users.AddRange([user1, user2]);
 
     await dbContext.SaveChangesAsync();
