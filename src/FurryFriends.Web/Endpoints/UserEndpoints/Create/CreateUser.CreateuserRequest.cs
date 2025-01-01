@@ -6,8 +6,11 @@ public class CreateUserRequest
 {
   public const string Route = "/Users";
 
-  [Required(ErrorMessage = "Name is required.")]
-  public string Name { get; set; } = default!;
+  [Required(ErrorMessage = "First Name is required.")]
+  public string FirstName { get; set; } = default!;
+
+  [Required(ErrorMessage = "Last Name is required.")]
+  public string LastName { get; set; } = default!;
 
 
   [Required(ErrorMessage = "Email is required.")]

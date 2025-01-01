@@ -5,7 +5,7 @@ namespace FurryFriends.UnitTests.UseCases.Contributors;
 
 public class CreateContributorHandlerHandle
 {
-  private readonly Name _testName = Name.Create("test", "test", "test test", new NameValidator()).Value;
+  private readonly Name _testName = Name.Create("test", "test", new NameValidator()).Value;
   private readonly IRepository<Contributor> _repository = Substitute.For<IRepository<Contributor>>();
 private readonly IValidator<PhoneNumber> _phoneNumberValidator = Substitute.For<IValidator<PhoneNumber>>();
 

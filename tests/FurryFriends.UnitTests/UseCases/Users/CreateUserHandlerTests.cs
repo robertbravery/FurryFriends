@@ -15,7 +15,7 @@ public class CreateUserHandlerTests
   public CreateUserHandlerTests()
   {
     _userRepositoryMock = new Mock<IRepository<User>>();
-    _handler = new CreateUserHandler(_userRepositoryMock.Object, new CreateUserCommandValidator(), new PhoneNumberValidator());
+    _handler = new CreateUserHandler(_userRepositoryMock.Object, new CreateUserCommandValidator(), new NameValidator(), new PhoneNumberValidator());
   }
 
   [Fact]
@@ -24,7 +24,8 @@ public class CreateUserHandlerTests
     // Arrange
     var f = new Faker();
     var command = new CreateUserCommand(
-        f.Name.FullName(),
+        f.Name.FirstName(), 
+        f.Name.LastName(),
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
         f.Phone.PhoneNumber("###"),
@@ -54,6 +55,7 @@ public class CreateUserHandlerTests
     var f = new Faker();
     var command = new CreateUserCommand(
         string.Empty,
+        f.Name.LastName(), 
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
         f.Phone.PhoneNumber("###"),
@@ -80,7 +82,8 @@ public class CreateUserHandlerTests
     //var expectedErrorMessage = "Name cannot be empty";
     var f = new Faker();
     var command = new CreateUserCommand(
-        f.Name.FullName(),
+        f.Name.FirstName(),
+        f.Name.LastName(), 
         f.Internet.Email(),
         string.Empty,
         f.Phone.PhoneNumber("###"),
@@ -107,7 +110,8 @@ public class CreateUserHandlerTests
     //var expectedErrorMessage = "Name cannot be empty";
     var f = new Faker();
     var command = new CreateUserCommand(
-        f.Name.FullName(),
+        f.Name.FirstName(),
+        f.Name.LastName(), 
         f.Internet.Email(),
         f.Phone.PhoneNumber("###"),
         string.Empty,
@@ -135,7 +139,8 @@ public class CreateUserHandlerTests
     //var expectedErrorMessage = "Name cannot be empty";
     var f = new Faker();
     var command = new CreateUserCommand(
-        f.Name.FullName(),
+        f.Name.FirstName(),
+        f.Name.LastName(), 
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
         f.Phone.PhoneNumber("###"),

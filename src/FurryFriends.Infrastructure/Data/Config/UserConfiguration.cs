@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FurryFriends.Core.Entities;
 
 namespace FurryFriends.Infrastructure.Data.Config;
@@ -14,7 +14,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.Property(u => u.Email).IsRequired().HasMaxLength(256);
     builder.HasIndex(u => u.Email).IsUnique();
 
-     builder.OwnsOne(c => c.PhoneNumber, n =>
+    builder.OwnsOne(c => c.Name, n =>
+    {
+      n.Property(p => p.FirstName).HasColumnName("FirstName");
+      n.Property(p => p.LastName).HasColumnName("LastName");
+    });
+
+    builder.OwnsOne(c => c.PhoneNumber, n =>
     {
       n.Property(p => p.CountryCode).HasColumnName("PhoneCountryCode").HasMaxLength(3);
       n.Property(p => p.AreaCode).HasColumnName("PhoneAreaCode").HasMaxLength(3);

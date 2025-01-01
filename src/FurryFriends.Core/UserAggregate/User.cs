@@ -6,7 +6,7 @@ namespace FurryFriends.Core.Entities;
 public class User : IAggregateRoot
 {
   public Guid Id { get; private set; } = default!;
-  public string Name { get; private set; } = default!;
+  public Name Name { get; private set; } = default!;
   public string Email { get; private set; } = default!;
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
@@ -15,10 +15,10 @@ public class User : IAggregateRoot
   {
 
   }
-  public User(string name, string email, PhoneNumber phoneNumber, Address address)
+  public User(Name name, string email, PhoneNumber phoneNumber, Address address)
   {
     // Guard clauses to ensure valid input
-    Guard.Against.NullOrWhiteSpace(name, nameof(name));
+    Guard.Against.NullOrWhiteSpace(name.FirstName, nameof(name.FirstName));
     Guard.Against.NullOrWhiteSpace(email, nameof(email));
     Guard.Against.InvalidEmail(email, nameof(email));
     Guard.Against.Null(address, nameof(address));
@@ -30,10 +30,10 @@ public class User : IAggregateRoot
     Address = address;
   }
 
-  public void UpdateDetails(string name, string email, PhoneNumber phoneNumber, Address address)
+  public void UpdateDetails(Name name, string email, PhoneNumber phoneNumber, Address address)
   {
     // Guard clauses to ensure valid input
-    Guard.Against.NullOrEmpty(name, nameof(name));
+    Guard.Against.NullOrEmpty(name.FirstName, nameof(name.FullName));
     Guard.Against.NullOrEmpty(email, nameof(email));
     Guard.Against.InvalidEmail(email, nameof(email));
     Guard.Against.Null(address, nameof(address));
@@ -59,11 +59,11 @@ public class User : IAggregateRoot
     // Deactivation logic can be added here
   }
 
-  public void UpdateUsername(string newUserName)
+  public void UpdateUsername(Name newUserName)
   {
-    Guard.Against.NullOrEmpty(newUserName, nameof(newUserName));
-    Guard.Against.StringTooLong(newUserName, 30, nameof(newUserName));
-    Guard.Against.StringTooShort(newUserName,5, nameof(newUserName));
+    Guard.Against.NullOrEmpty(newUserName.FirstName, nameof(newUserName.FirstName));
+    Guard.Against.StringTooLong(newUserName.FirstName, 30, nameof(newUserName.FirstName));
+    Guard.Against.StringTooShort(newUserName.FirstName,5, nameof(newUserName.FirstName));
     Name = newUserName;
   }
 }

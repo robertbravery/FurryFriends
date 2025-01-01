@@ -7,10 +7,14 @@ public class CreateUserCommandValidator: AbstractValidator<CreateUserCommand>
 {
 public CreateUserCommandValidator()
         {
-            RuleFor(cmd => cmd.Name)
-                .NotEmpty().WithMessage("Name cannot be empty")
+            RuleFor(cmd => cmd.FirstName)
+                .NotEmpty().WithMessage("First Name cannot be empty")
                 .MaximumLength(30)
-                .MinimumLength(5).WithMessage("Name must be 5-30 characters long");;
+                .MinimumLength(5).WithMessage("Name must be 5-30 characters long");
+            RuleFor(cmd => cmd.LastName)
+                .NotEmpty().WithMessage("Last Name cannot be empty")
+                .MaximumLength(30)
+                .MinimumLength(5).WithMessage("Last Name must be 5-30 characters long");
             RuleFor(cmd => cmd.Email)
                 .NotEmpty().WithMessage("Email cannot be empty")
                 .EmailAddress().WithMessage("Invalid email address");

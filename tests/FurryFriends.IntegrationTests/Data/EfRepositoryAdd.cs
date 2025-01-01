@@ -9,7 +9,7 @@ public class EfRepositoryAdd : BaseEfRepoTestFixture
   [Fact]
   public async Task AddsContributorAndSetsId()
   {
-    var testContributorName = Name.Create("Jane", "Doe", "John Doe", new NameValidator()).Value; //"test Contributor";
+    var testContributorName = Name.Create("Jane", "Doe", new NameValidator()).Value; //"test Contributor";
     var testContributorStatus = ContributorStatus.NotSet;
     var repository = GetRepository();
     var Contributor = new Contributor(testContributorName);

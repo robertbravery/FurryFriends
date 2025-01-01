@@ -46,23 +46,27 @@ public class ListUsersTests : TestBase
     {
       response.TotalCount.Should().Be(users.Count);
       response.RowsData.Should().HaveCount(users.Count);
-      response.RowsData[0].Name.Should().Be(users[0].Name);
-      response.RowsData[1].Name.Should().Be(users[1].Name);
+      response.RowsData[0].Name.Should().Be(users[0].Name.FullName);
+      response.RowsData[1].Name.Should().Be(users[1].Name.FullName);
     }
   }
 
   private async Task<List<User>> GetFakeUsers()
   {
     var phoneNumberValidator = new PhoneNumberValidator();
-    ;
+    var nameValidator = new NameValidator();
+    
     var phoneNumber1 = (await PhoneNumber.Create("1", "123", "4567890", phoneNumberValidator)).Value;
     var phoneNumber2 = (await PhoneNumber.Create("1", "098", "7654321", phoneNumberValidator)).Value;
     var address1 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
     var address2 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
+    var name1 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
+    var name2 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
+
     var users = new List<User>
       {
-          new (Fake.Name.FullName(), Fake.Internet.Email(), phoneNumber1, address1),
-          new (Fake.Name.FullName(), Fake.Internet.Email(), phoneNumber2, address1),
+          new (name1, Fake.Internet.Email(), phoneNumber1, address1),
+          new (name2, Fake.Internet.Email(), phoneNumber2, address1),
       };
     return users;
   }

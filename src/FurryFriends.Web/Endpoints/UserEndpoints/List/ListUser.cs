@@ -42,7 +42,7 @@ public class ListUser(IMediator mediator, ILogger<ListUser> logger)
     }
 
     var userListResponse = userListResult.Value.Users
-        .Select(user => new UserListResponseDto(user.Id, user.Name, user.Email, user.Address.City))
+        .Select(user => new UserListResponseDto(user.Id, user.Name.FullName, user.Email, user.Address.City))
         .ToList();
 
     var totalCount = userListResult.Value.TotalCount;

@@ -19,7 +19,8 @@ public class CreateUser(IMediator _mediator)
 
       s.ExampleRequest = new CreateUserRequest
       {
-        Name = "John Smith",
+        FirstName = "John",
+        LastName = "Smith",
         Email = "john.smith@example.com",
         CountryCode = "1",
         AreaCode = "555",
@@ -34,7 +35,8 @@ public class CreateUser(IMediator _mediator)
   public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
   {
     var userCommand = new CreateUserCommand(
-      request.Name,
+      request.FirstName, 
+      request.LastName,
       request.Email,
       request.CountryCode,
       request.AreaCode,

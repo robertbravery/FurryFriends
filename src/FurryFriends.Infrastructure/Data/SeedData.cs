@@ -26,8 +26,8 @@ public static class SeedData
 
   private static async Task PopulateContributorTestDataAsync(AppDbContext dbContext)
   {
-    Contributor Contributor1 = new(Name.Create("Snow", "Frog", "Snow Frog", new NameValidator()).Value);
-    Contributor Contributor2 = new(Name.Create("Snow", "Dog", "Snow Dog", new NameValidator()).Value);
+    Contributor Contributor1 = new(Name.Create("Snow", "Frog", new NameValidator()).Value);
+    Contributor Contributor2 = new(Name.Create("Snow", "Dog", new NameValidator()).Value);
     var validator = new PhoneNumberValidator();
     await Contributor1.SetPhoneNumber("123-456-7890", validator);
     await Contributor2.SetPhoneNumber("987-654-3210", validator);
@@ -43,9 +43,10 @@ public static class SeedData
     var phoneNumber2 = await PhoneNumber.Create("027", "011", "789-1234", validator);
     var address1 = Address.Create("123 Test St", "Test City", "Test State", "12345");
     var address2 = Address.Create("456 Test St", "Test City", "Test State", "12345");
-
-    var user1 = new User("Test User", "test@u.com", phoneNumber1, address1);
-    var user2 = new User("Test User 2", "test2@u.com", phoneNumber2, address2);
+    var name1 = Name.Create("Snow", "Frog", new NameValidator()).Value;
+    var name2 = Name.Create("Snow", "Dog", new NameValidator()).Value;
+    var user1 = new User(name1, "test@u.com", phoneNumber1, address1);
+    var user2 = new User(name2, "test2@u.com", phoneNumber2, address2);
     dbContext.Users.AddRange([user1, user2]);
 
     await dbContext.SaveChangesAsync();

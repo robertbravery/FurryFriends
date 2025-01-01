@@ -14,8 +14,6 @@ public class ContributorConfiguration : IEntityTypeConfiguration<Contributor>
     {
       n.Property(p => p.FirstName).HasColumnName("FirstName");
       n.Property(p => p.LastName).HasColumnName("LastName");
-      n.Property(p => p.FullName).HasComputedColumnSql("FirstName + ' ' + LastName");
-      n.Property(p => p.FullName).HasColumnName("FullName");
     });
 
     builder.OwnsOne(builder => builder.PhoneNumber);

@@ -20,7 +20,7 @@ public class UpdateContributorHandler(
     var firstName = string.IsNullOrEmpty(nameParts[0]) ? "Unknown" : nameParts[0];
     var lastName = string.IsNullOrEmpty(nameParts[1]) ? "Unknown" : nameParts[1];
     var fullName = string.Join(" ", nameParts);
-    var name = Name.Create(firstName, lastName, fullName, _nameValidator).Value;
+    var name = Name.Create(firstName, lastName, _nameValidator).Value;
     existingContributor.UpdateName(name);
 
     await _repository.UpdateAsync(existingContributor, cancellationToken);

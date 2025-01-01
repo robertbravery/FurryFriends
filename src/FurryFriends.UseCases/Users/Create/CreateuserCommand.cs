@@ -1,13 +1,13 @@
-using FurryFriends.Core.ValueObjects;
+﻿using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.UseCases.Users.Create;
 
   public record CreateUserCommand
   (
-      string Name,
+      string FirstName,
+      string LastName,
       string Email,
       string CountryCode,
       string AreaCode,
-      string Number,
-      string Street, string City, string State, string ZipCode
+      string Number, string Street, string City, string State, string ZipCode
   ) : ICommand<Result<Guid>>;

@@ -25,14 +25,15 @@ public class UserAggregateTests
 
     var email = "test@example.com";
     var firstName = "John";
-
+    var lastName = "Doe";
+    var name = Name.Create(firstName, lastName, new NameValidator());
 
     // Act
-    var userAggregate = new User(firstName, email, _validPhone, _validAddress);
+    var userAggregate = new User(name, email, _validPhone, _validAddress);
 
     // Assert
     userAggregate.Email.Should().Be(email);
-    userAggregate.Name.Should().Be(firstName);
+    userAggregate.Name.FirstName.Should().Be(firstName);
   }
 
   [Theory]
@@ -43,13 +44,14 @@ public class UserAggregateTests
   {
     // Arrange
     var firstName = "John";
-    //var lastName = "Doe";
+    var lastName = "Doe";
     var phoneNumber = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
     var address = new Address("123 Main St", "Anytown", "CA", "12345");
+    var name = Name.Create(firstName, lastName, new NameValidator());
 
     // Act
     // Act and Assert
-    var action = () => new User(firstName, invalidEmail, phoneNumber, address);
+    var action = () => new User(name, invalidEmail, phoneNumber, address);
     action.Should().Throw<Exception>()
         .WithMessage("*email*");
   }
@@ -61,9 +63,11 @@ public class UserAggregateTests
     // Arrange
     var email = "old@example.com";
     var firstName = "John";
+    var lastName = "Doe";
     var phoneNumber = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
     var address = new Address("123 Main St", "Anytown", "CA", "12345");
-    var user = new User(firstName, email, phoneNumber, address);
+    var name = Name.Create(firstName, lastName, new NameValidator());
+    var user = new User(name, email, phoneNumber, address);
     var newEmail = "new@example.com";
 
     // Act
@@ -80,7 +84,8 @@ public class UserAggregateTests
   public void UpdateEmail_WithInvalidEmail_ThrowsException(string invalidEmail)
   {
     // Arrange
-    var user = new User("John Doe", "john@example.com", _validPhone, _validAddress);
+    var name = Name.Create("John", "Doe", new NameValidator()); 
+    var user = new User(name, "john@example.com", _validPhone, _validAddress);
 
     // Act
     var action = () => user.UpdateEmail(invalidEmail);
@@ -95,29 +100,33 @@ public class UserAggregateTests
   [InlineData(" ")]
   public void Constructor_WithInvalidName_ThrowsException(string invalidName)
   {
+    // Arrange
+
+
     // Act
-    var action = () => new User(invalidName, "valid@email.com", _validPhone, _validAddress);
+    var name = Name.Create(invalidName, invalidName, new NameValidator());
 
     // Assert
-    action.Should().Throw<ArgumentException>()
-        .WithParameterName("name");
+    name.IsSuccess.Should().BeFalse();
+    name.Errors.First().Should().Contain("First name");
   }
 
   [Fact]
   public async Task UpdateDetails_WithValidInputs_UpdatesUserDetails()
   {
     // Arrange
-    var user = new User("John Doe", "john@example.com", _validPhone, _validAddress);
-    var newName = "Jane Doe";
+    var newName = Name.Create("Jane", "Doe", new NameValidator());
     var newEmail = "jane@example.com";
+    var name = Name.Create("John", "Doe", new NameValidator());
+    var user = new User(name, "john@example.com", _validPhone, _validAddress);
     var newPhone = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
     var newAddress = new Address("456 Oak St", "NewCity", "NewState", "54321");
 
     // Act
-    user.UpdateDetails(newName, newEmail, newPhone, newAddress);
+    user.UpdateDetails(name, newEmail, newPhone, newAddress);
 
     // Assert
-    user.Name.Should().Be(newName);
+    user.Name.FullName.Should().Be(name.Value.FullName);
     user.Email.Should().Be(newEmail);
     user.PhoneNumber.Should().Be(newPhone);
     user.Address.Should().Be(newAddress);
@@ -127,7 +136,8 @@ public class UserAggregateTests
   public void UpdateEmail_WithValidEmail_UpdatesEmail()
   {
     // Arrange
-    var user = new User("John Doe", "john@example.com", _validPhone, _validAddress);
+    var name = Name.Create("John", "Doe", new NameValidator());
+    var user = new User(name, "john@example.com", _validPhone, _validAddress);
     var newEmail = "newemail@example.com";
 
     // Act
@@ -142,20 +152,19 @@ public class UserAggregateTests
   [InlineData("")]
   [InlineData("a")] // Too short
   [InlineData("veryverylongusernameexceedingmaxlength")] // Too long
-  public void CreateUser_WithInvalidUsername_ShouldThrowValidationException(string invalidUsername) 
+  public void CreateUser_WithInvalidUsername_ShouldReturnValidationError(string invalidUsername) 
   { 
     // Arrange
-    var email = "john@example.com";
-    var phoneNumber = _validPhone;
-    var address = _validAddress;
-    var user = new User("John Doe", email, _validPhone, _validAddress);
+    var nameValidator = new NameValidator();
 
-    // Act
-    var action = () => user.UpdateUsername(invalidUsername);
+    //act
+    var name = Name.Create(invalidUsername, invalidUsername, nameValidator);
 
     // Assert
-    action.Should().Throw<ArgumentException>()
-        .WithParameterName("newUserName");
+    name.IsSuccess.Should().BeFalse();
+    name.Errors.First().Should().Contain("First name");
+
+
   }
 
 
