@@ -20,7 +20,7 @@ public class CreateUserHandler(IRepository<User> userRepository, IValidator<Crea
     {
       return Result<Guid>.Invalid(new ValidationError(string.Join(", ", validationResult.Errors)));
     }
-    var phoneNumberResult = await PhoneNumber.Create(command.CountryCode, command.AreaCode, command.Number, _phoneNumberValidator);
+    var phoneNumberResult = await PhoneNumber.Create(command.CountryCode, command.Number, _phoneNumberValidator);
     if (!phoneNumberResult.IsSuccess)
     {
         return Result<Guid>.Invalid(new ValidationError(string.Join(", ", phoneNumberResult.Errors)));

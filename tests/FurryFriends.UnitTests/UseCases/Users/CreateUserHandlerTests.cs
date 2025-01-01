@@ -28,8 +28,7 @@ public class CreateUserHandlerTests
         f.Name.LastName(),
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
-        f.Phone.PhoneNumber("###"),
-        f.Phone.PhoneNumber("###-####"),
+        f.Phone.PhoneNumber("###-###-####"),
         f.Address.StreetAddress(),
         f.Address.City(),
         f.Address.State(),
@@ -58,8 +57,7 @@ public class CreateUserHandlerTests
         f.Name.LastName(), 
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
-        f.Phone.PhoneNumber("###"),
-        f.Phone.PhoneNumber("###-####"),
+        f.Phone.PhoneNumber("###-###-####"),
         f.Address.StreetAddress(),
         f.Address.City(),
         f.Address.State(),
@@ -86,7 +84,6 @@ public class CreateUserHandlerTests
         f.Name.LastName(), 
         f.Internet.Email(),
         string.Empty,
-        f.Phone.PhoneNumber("###"),
         f.Phone.PhoneNumber(),
         f.Address.StreetAddress(),
         f.Address.City(),
@@ -103,34 +100,7 @@ public class CreateUserHandlerTests
     result.ValidationErrors.First().ErrorMessage.Should().Contain("Country code cannot be empty");
   }
 
-  [Fact]
-  public async Task Handle_ShouldReturnErrorWhenPhoneAreaCodeIsEmpty()
-  {
-    // Arrange
-    //var expectedErrorMessage = "Name cannot be empty";
-    var f = new Faker();
-    var command = new CreateUserCommand(
-        f.Name.FirstName(),
-        f.Name.LastName(), 
-        f.Internet.Email(),
-        f.Phone.PhoneNumber("###"),
-        string.Empty,
-        f.Phone.PhoneNumber(),
-        f.Address.StreetAddress(),
-        f.Address.City(),
-        f.Address.State(),
-        f.Address.ZipCode("####")
-    );
-
-    //Act
-    var result = await _handler.Handle(command, CancellationToken.None);
-
-    //Assert
-    result.IsSuccess.Should().BeFalse();
-    result.ValidationErrors.Should().NotBeEmpty();
-    result.ValidationErrors.First().ErrorMessage.Should().Contain("Area code cannot be empty");
-  }
-
+  
 
   [Fact]
   public async Task Handle_ShouldReturnErrorWhenPhoneNumberIsEmpty()
@@ -143,7 +113,6 @@ public class CreateUserHandlerTests
         f.Name.LastName(), 
         f.Internet.Email(),
         f.Phone.PhoneNumber("0##"),
-        f.Phone.PhoneNumber("###"),
         string.Empty,
         f.Address.StreetAddress(),
         f.Address.City(),

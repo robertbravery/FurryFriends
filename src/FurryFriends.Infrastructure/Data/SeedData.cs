@@ -39,8 +39,8 @@ public static class SeedData
   private static async Task PopulateUserTestDataAsync(AppDbContext dbContext)
   {
     var validator = new PhoneNumberValidator();
-    var phoneNumber1 = await PhoneNumber.Create("027", "011", "123-4567", validator);
-    var phoneNumber2 = await PhoneNumber.Create("027", "011", "789-1234", validator);
+    var phoneNumber1 = await PhoneNumber.Create("027", "011-123-4567", validator);
+    var phoneNumber2 = await PhoneNumber.Create("027", "011-123-4567", validator);
     var address1 = Address.Create("123 Test St", "Test City", "Test State", "12345");
     var address2 = Address.Create("456 Test St", "Test City", "Test State", "12345");
     var name1 = Name.Create("Snow", "Frog", new NameValidator()).Value;

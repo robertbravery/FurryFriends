@@ -1,5 +1,4 @@
-﻿using System;
-using FurryFriends.Core.Entities;
+﻿using FurryFriends.Core.Entities;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
@@ -23,7 +22,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.OwnsOne(c => c.PhoneNumber, n =>
     {
       n.Property(p => p.CountryCode).HasColumnName("PhoneCountryCode").HasMaxLength(3);
-      n.Property(p => p.AreaCode).HasColumnName("PhoneAreaCode").HasMaxLength(3);
       n.Property(p => p.Number).HasColumnName("PhoneNumber").HasMaxLength(15);
     });
 

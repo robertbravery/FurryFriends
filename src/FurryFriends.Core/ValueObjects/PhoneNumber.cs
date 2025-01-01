@@ -4,24 +4,29 @@ namespace FurryFriends.Core.ValueObjects;
 public class PhoneNumber : ValueObject
 {
   public string CountryCode { get; private set; } = default!;
-  public string AreaCode { get; private set; } = default!;
+  //public string AreaCode { get; private set; } = default!;
   public string Number { get; private set; } = default!;
   public PhoneNumber()
   {
-
+    
   }
-  private PhoneNumber(string countryCode, string areaCode, string number)
+
+  private PhoneNumber(string countryCode,  string number)
   {
     CountryCode = countryCode;
-    AreaCode = areaCode;
+    //AreaCode = areaCode;
     Number = number;
   }
 
-  public static async Task<Result<PhoneNumber>> Create(string countryCode, string areaCode, string number, IValidator<PhoneNumber> validator)
+  public static async Task<Result<PhoneNumber>> Create(string countryCode,  string number, IValidator<PhoneNumber> validator)
   {
 
-    var phoneNumber = new PhoneNumber(countryCode, areaCode, number);
+    var phoneNumber = new PhoneNumber(countryCode, number);
+    return await Validate(validator, phoneNumber);
+  }
 
+  private static async Task<Result<PhoneNumber>> Validate(IValidator<PhoneNumber> validator, PhoneNumber phoneNumber)
+  {
     var validationResult = await validator.ValidateAsync(phoneNumber);
     if (validationResult.IsValid)
     {
@@ -36,12 +41,11 @@ public class PhoneNumber : ValueObject
   protected override IEnumerable<object> GetEqualityComponents()
   {
     yield return CountryCode;
-    yield return AreaCode;
     yield return Number;
   }
 
   public override string ToString()
   {
-    return $"{CountryCode} {AreaCode} {Number}";
+    return $"{CountryCode} {Number}";
   }
 }

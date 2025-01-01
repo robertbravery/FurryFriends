@@ -15,7 +15,7 @@ public class UserAggregateTests
   public UserAggregateTests()
   {
     _validAddress = new Address("123 Main St", "City", "State", "12345");
-    _validPhone = PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator()).Result.Value;
+    _validPhone = PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator()).Result.Value;
   }
 
   [Fact]
@@ -45,7 +45,7 @@ public class UserAggregateTests
     // Arrange
     var firstName = "John";
     var lastName = "Doe";
-    var phoneNumber = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
     var address = new Address("123 Main St", "Anytown", "CA", "12345");
     var name = Name.Create(firstName, lastName, new NameValidator());
 
@@ -64,7 +64,7 @@ public class UserAggregateTests
     var email = "old@example.com";
     var firstName = "John";
     var lastName = "Doe";
-    var phoneNumber = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
     var address = new Address("123 Main St", "Anytown", "CA", "12345");
     var name = Name.Create(firstName, lastName, new NameValidator());
     var user = new User(name, email, phoneNumber, address);
@@ -119,7 +119,7 @@ public class UserAggregateTests
     var newEmail = "jane@example.com";
     var name = Name.Create("John", "Doe", new NameValidator());
     var user = new User(name, "john@example.com", _validPhone, _validAddress);
-    var newPhone = await PhoneNumber.Create("027", "011", "123-4567", new PhoneNumberValidator());
+    var newPhone = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
     var newAddress = new Address("456 Oak St", "NewCity", "NewState", "54321");
 
     // Act

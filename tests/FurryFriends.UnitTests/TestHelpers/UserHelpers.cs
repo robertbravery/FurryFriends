@@ -8,7 +8,7 @@ public static class UserHelpers
 {
   public static async Task<List<User>> GetTestUsers()
   {
-    var phoneNumberResult = await PhoneNumber.Create("027", "011", "1234567890",new PhoneNumberValidator());
+    var phoneNumberResult = await PhoneNumber.Create("027", "011-123-4567",new PhoneNumberValidator());
     var phoneNumber = phoneNumberResult.Value;
     var validator = new NameValidator();
     return new List<User>

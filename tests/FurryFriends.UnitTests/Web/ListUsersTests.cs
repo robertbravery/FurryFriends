@@ -56,8 +56,8 @@ public class ListUsersTests : TestBase
     var phoneNumberValidator = new PhoneNumberValidator();
     var nameValidator = new NameValidator();
     
-    var phoneNumber1 = (await PhoneNumber.Create("1", "123", "4567890", phoneNumberValidator)).Value;
-    var phoneNumber2 = (await PhoneNumber.Create("1", "098", "7654321", phoneNumberValidator)).Value;
+    var phoneNumber1 = (await PhoneNumber.Create("1", "011-123-4567", phoneNumberValidator)).Value;
+    var phoneNumber2 = (await PhoneNumber.Create("1", "011-123-4567", phoneNumberValidator)).Value;
     var address1 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
     var address2 = new Address(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.ZipCode());
     var name1 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
