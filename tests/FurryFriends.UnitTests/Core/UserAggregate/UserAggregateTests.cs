@@ -18,12 +18,11 @@ public class UserAggregateTests
   [Fact]
   public void CreateUser_WithValidData_ShouldCreateUserSuccessfully()
   {
-    // Arrange
-
-    var email = "test@example.com";
+    // Arrange    
     var firstName = "John";
     var lastName = "Doe";
     var name = Name.Create(firstName, lastName, new NameValidator());
+    var email = Email.Create("test@example.com");
 
     // Act
     var userAggregate = User.Create(name, email, _validPhone, _validAddress);
@@ -37,20 +36,15 @@ public class UserAggregateTests
   [InlineData("")]
   [InlineData(" ")]
   [InlineData("invalid-email")]
-  public async Task CreateUser_WithInvalidEmail_ShouldThrowValidationException(string invalidEmail)
+  public void CreateUser_WithInvalidEmail_ShouldNotBeSuccessfull(string invalidEmail)
   {
-    // Arrange
-    var firstName = "John";
-    var lastName = "Doe";
-    var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
-    var address = Address.Create("123 Main St", "Anytown", "CA", "US","12345");
-    var name = Name.Create(firstName, lastName, new NameValidator());
-
     // Act
-    // Act and Assert
-    var action = () => User.Create(name, invalidEmail, phoneNumber, address);
-    action.Should().Throw<Exception>()
-        .WithMessage("*email*");
+    var emailResult = Email.Create(invalidEmail);
+
+    // assert    
+    emailResult.IsSuccess.Should().BeFalse();
+    emailResult.Errors.First().Should().Contain("Invalid email address");
+    
   }
 
 
@@ -58,14 +52,14 @@ public class UserAggregateTests
   public async Task UpdateEmail_WithValidEmail_ShouldUpdateSuccessfully()
   {
     // Arrange
-    var email = "old@example.com";
     var firstName = "John";
     var lastName = "Doe";
     var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
     var address = Address.Create("123 Main St", "Anytown", "CA", "US", "12345");
     var name = Name.Create(firstName, lastName, new NameValidator());
+    var email = Email.Create("old@example.com");
     var user = User.Create(name, email, phoneNumber, address);
-    var newEmail = "new@example.com";
+    var newEmail = Email.Create("new@example.com");
 
     // Act
     user.UpdateEmail(newEmail);
@@ -81,15 +75,16 @@ public class UserAggregateTests
   public void UpdateEmail_WithInvalidEmail_ThrowsException(string invalidEmail)
   {
     // Arrange
-    var name = Name.Create("John", "Doe", new NameValidator()); 
-    var user = User.Create(name, "john@example.com", _validPhone, _validAddress);
+    var emailResult = Email.Create("john@example.com");
 
     // Act
-    var action = () => user.UpdateEmail(invalidEmail);
+    var invalidEmailResult = Email.Create(invalidEmail);
+
 
     // Assert
-    action.Should().Throw<ArgumentException>()
-        .WithParameterName("newEmail");
+    emailResult.IsSuccess.Should().BeTrue();
+    invalidEmailResult.IsSuccess.Should().BeFalse();
+    invalidEmailResult.Errors.First().Should().Contain("Invalid email address");
   }
 
   [Theory]
@@ -113,9 +108,10 @@ public class UserAggregateTests
   {
     // Arrange
     var newName = Name.Create("Jane", "Doe", new NameValidator());
-    var newEmail = "jane@example.com";
+    var newEmail = Email.Create("jane@example.com");
     var name = Name.Create("John", "Doe", new NameValidator());
-    var user = User.Create(name, "john@example.com", _validPhone, _validAddress);
+    var oldEmail = Email.Create("john@example.com");
+    var user = User.Create(name, oldEmail, _validPhone, _validAddress);
     var newPhone = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
     var newAddress = Address.Create("456 Oak St", "NewCity", "NewState", "US", "54321");
 
@@ -134,8 +130,9 @@ public class UserAggregateTests
   {
     // Arrange
     var name = Name.Create("John", "Doe", new NameValidator());
-    var user = User.Create(name, "john@example.com", _validPhone, _validAddress);
-    var newEmail = "newemail@example.com";
+    var oldEmail = Email.Create("john@example.com");
+    var user = User.Create(name, oldEmail, _validPhone, _validAddress);
+    var newEmail = Email.Create("newemail@example.com");
 
     // Act
     user.UpdateEmail(newEmail);

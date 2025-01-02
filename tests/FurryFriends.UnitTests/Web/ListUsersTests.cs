@@ -61,11 +61,13 @@ public class ListUsersTests : TestBase
     var address2 = Address.Create(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.Country(), Fake.Address.ZipCode());
     var name1 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
     var name2 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
+    var emaail1 = Email.Create(Fake.Internet.Email());
+    var emaail2 = Email.Create(Fake.Internet.Email());
 
     var users = new List<User>
       {
-          User.Create (name1, Fake.Internet.Email(), phoneNumber1, address1),
-          User.Create(name2, Fake.Internet.Email(), phoneNumber2, address2),
+          User.Create (name1,emaail1 , phoneNumber1, address1),
+          User.Create(name2, emaail2, phoneNumber2, address2),
       };
     return users;
   }

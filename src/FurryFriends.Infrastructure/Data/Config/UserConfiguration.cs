@@ -10,8 +10,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.HasKey(u => u.Id);
 
     builder.Property(u => u.Id).IsRequired().ValueGeneratedOnAdd().HasColumnType("uniqueidentifier"); // Adjust based on your hashing algorithm
-    builder.Property(u => u.Email).IsRequired().HasMaxLength(256);
-    builder.HasIndex(u => u.Email).IsUnique();
+    //builder.Property(u => u.Email).IsRequired().HasMaxLength(256);
+    //builder.HasIndex(u => u.Email).IsUnique();
+
+    builder.OwnsOne(p=> p.Email, e=> e.Property(p => p.EmailAddress).HasColumnName("Email").HasMaxLength(256));
 
     builder.OwnsOne(c => c.Name, n =>
     {

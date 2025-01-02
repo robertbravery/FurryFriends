@@ -18,9 +18,10 @@ public class UserBioPictureTests
     var name = Name.Create("John", "Doe", nameValidator);
     var phone = PhoneNumber.Create("021", "123-456-7890", phoneValidator).GetAwaiter().GetResult();
     var address = Address.Create("123 Main St", "City", "State", "US", "12345");
+    var email = Email.Create("john@example.com");
 
     _userRepositoryMock = new Mock<IRepository<User>>();
-    _testUser = User.Create(name, "john@example.com", phone, address);
+    _testUser = User.Create(name, email, phone, address);
   }
 
   [Fact]
@@ -30,7 +31,8 @@ public class UserBioPictureTests
     var name = Name.Create("John", "Doe", new NameValidator());
     var address = Address.Create("123 Main St", "City", "State", "US", "12345");
     var phone = await PhoneNumber.Create("021", "123-456-7890", new PhoneNumberValidator());
-    var user = User.Create(name, "john@example.com", phone, address);
+    var email = Email.Create("john@example.com");
+    var user = User.Create(name, email, phone, address);
     var photo = new Photo("http://localhost/test.jpg", "Some Description");
 
     // Act
@@ -47,7 +49,8 @@ public class UserBioPictureTests
     var name = Name.Create("John", "Doe", new NameValidator());
     var address = Address.Create("123 Main St", "City", "State", "US", "12345");
     var phone = await PhoneNumber.Create("021", "123-456-7890", new PhoneNumberValidator());
-    var user = User.Create(name, "john@example.com", phone, address);
+    var email = Email.Create("john@example.com"); 
+    var user = User.Create(name, email, phone, address);
     Photo nullPhoto = null!;
 
     // Act & Assert
@@ -62,7 +65,8 @@ public class UserBioPictureTests
     var name = Name.Create("John", "Doe", new NameValidator());
     var address = Address.Create("123 Main St", "City", "State", "US", "12345");
     var phone = await PhoneNumber.Create("021", "123-456-7890", new PhoneNumberValidator());
-    var user = User.Create(name, "john@example.com", phone, address);
+    var email = Email.Create("john@example.com");
+    var user = User.Create(name, email, phone, address);
     var initialPhoto = new Photo("http://localhost/initial.jpg", "Some Description");
     var newPhoto = new Photo("http://localhost/new.jpg", "Some Description");
 

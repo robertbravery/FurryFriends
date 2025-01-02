@@ -15,31 +15,31 @@ public static class UserHelpers
       {
           User.Create(
               Name.Create("John", "Smith", validator),
-              "john.smith@example.com",
+              Email.Create("john.smith@example.com"),
               phoneNumber,
               Address.Create("123 Main St", "Seattle", "WA", "US", "98101")),
 
           User.Create(
               Name.Create("Jane", "Doe", validator), 
-              "jane.doe@example.com",
+              Email.Create("jane.doe@example.com"),
               phoneNumber,
               Address.Create("456 Oak Ave", "Portland", "OR", "Us", "97201")),
 
           User.Create(
               Name.Create("Bob", "Wilson", validator),
-              "bob.wilson@example.com",
+              Email.Create("bob.wilson@example.com"),
               phoneNumber,
               Address.Create("789 Pine St", "Seattle", "WA", "US", "98102")),
 
           User.Create(
               Name.Create("Alice", "Brown", validator),
-              "alice.brown@example.com",
+              Email.Create("alice.brown@example.com"),
               phoneNumber,
               Address.Create("321 Cedar Rd", "Bellevue", "WA", "US", "98004")),
 
           User.Create(
               Name.Create("Charlie", "Davis", validator),
-              "charlie.davis@example.com",
+              Email.Create("charlie.davis@example.com"),
               phoneNumber,
               Address.Create("654 Elm St", "Seattle", "WA", "US", "98103"))
       };

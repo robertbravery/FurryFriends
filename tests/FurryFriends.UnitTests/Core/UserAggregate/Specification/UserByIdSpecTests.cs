@@ -30,7 +30,7 @@ public class UserSpecificationTests
     // Assert
     result.Should().NotBeEmpty();
     result.Should().HaveCount(1);
-    result.First().Email.Should().Be(targetEmail);
+    result.First().Email.EmailAddress.Should().Be(targetEmail);
   }
 
   [Fact]

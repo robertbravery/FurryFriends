@@ -26,7 +26,8 @@ public class CreateUserHandler(IRepository<User> userRepository, IValidator<Crea
     }
     var address = Address.Create(command.Street, command.City, command.State, command.State, command.ZipCode);
     var name = Name.Create(command.FirstName, command.LastName, _nameValidator);
-    var user = User.Create(name, command.Email, phoneNumberResult.Value, address);
+    var email = Email.Create(command.Email);
+    var user = User.Create(name, email, phoneNumberResult.Value, address);
     await _userRepository.AddAsync(user);
     return user.Id;
   }

@@ -44,8 +44,10 @@ public static class SeedData
     var address2 = Address.Create("456 Test St", "Test City", "Test State", "US", "12345");
     var name1 = Name.Create("Snow", "Frog", new NameValidator()).Value;
     var name2 = Name.Create("Snow", "Dog", new NameValidator()).Value;
-    var user1 = User.Create(name1, "test@u.com", phoneNumber1, address1);
-    var user2 = User.Create(name2, "test2@u.com", phoneNumber2, address2);
+    var email1 = Core.ValueObjects.Email.Create("test@u.com");
+    var email2 = Core.ValueObjects.Email.Create("test2@u.com");
+    var user1 = User.Create(name1, email1, phoneNumber1, address1);
+    var user2 = User.Create(name2, email2, phoneNumber2, address2);
     dbContext.Users.AddRange([user1, user2]);
 
     await dbContext.SaveChangesAsync();

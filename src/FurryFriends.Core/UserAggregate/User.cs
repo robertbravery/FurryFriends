@@ -7,7 +7,7 @@ public class User : EntityBase<Guid>, IAggregateRoot
 {
 
   public Name Name { get; private set; } = default!;
-  public string Email { get; private set; } = default!;
+  public Email Email { get; private set; } = default!;
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
   //public virtual Photo BioPicture { get; private set; } = default!;
@@ -17,7 +17,7 @@ public class User : EntityBase<Guid>, IAggregateRoot
   {
 
   }
-  private User(Name name, string email, PhoneNumber phoneNumber, Address address)
+  private User(Name name, Email email, PhoneNumber phoneNumber, Address address)
   {    
 
     Id = Guid.NewGuid();
@@ -27,22 +27,22 @@ public class User : EntityBase<Guid>, IAggregateRoot
     Address = address;
   }
 
-  public static User Create(Name name, string email, PhoneNumber phoneNumber, Address address)
+  public static User Create(Name name, Email email, PhoneNumber phoneNumber, Address address)
   {
     // TODO: Use Fluent validation
     Guard.Against.NullOrWhiteSpace(name.FirstName, nameof(name.FirstName));
-    Guard.Against.NullOrWhiteSpace(email, nameof(email));
-    Guard.Against.InvalidEmail(email, nameof(email));
+    Guard.Against.NullOrWhiteSpace(email.EmailAddress, nameof(email));
+    Guard.Against.InvalidEmail(email.EmailAddress, nameof(email));
     Guard.Against.Null(address, nameof(address));
     return new User(name, email, phoneNumber, address);
   }
 
-  public void UpdateDetails(Name name, string email, PhoneNumber phoneNumber, Address address)
+  public void UpdateDetails(Name name, Email email, PhoneNumber phoneNumber, Address address)
   {
     // Guard clauses to ensure valid input
     Guard.Against.NullOrEmpty(name.FirstName, nameof(name.FullName));
-    Guard.Against.NullOrEmpty(email, nameof(email));
-    Guard.Against.InvalidEmail(email, nameof(email));
+    Guard.Against.NullOrEmpty(email.EmailAddress, nameof(email));
+    Guard.Against.InvalidEmail(email.EmailAddress, nameof(email));
     Guard.Against.Null(address, nameof(address));
 
     Name = name;
@@ -55,9 +55,9 @@ public class User : EntityBase<Guid>, IAggregateRoot
   /// Updates the email address of the user.
   /// </summary>
   /// <param name="newEmail">The new email address.</param>
-  public void UpdateEmail(string newEmail)
+  public void UpdateEmail(Email newEmail)
   {
-    Guard.Against.InvalidEmail(newEmail, nameof(newEmail));
+    Guard.Against.InvalidEmail(newEmail.EmailAddress, nameof(newEmail));
     Email = newEmail;
   }
 
