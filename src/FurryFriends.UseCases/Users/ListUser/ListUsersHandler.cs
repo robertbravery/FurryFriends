@@ -2,7 +2,7 @@
 using FurryFriends.Core.UserAggregate.Specifications;
 using Microsoft.Extensions.Logging;
 
-namespace FurryFriends.UseCases.Users.List;
+namespace FurryFriends.UseCases.Users.ListUser;
 public class ListUsersHandler : IQueryHandler<ListUsersQuery, Result<(List<User> users, int TotalCount)>>
 {
   private readonly IRepository<User> _repository;

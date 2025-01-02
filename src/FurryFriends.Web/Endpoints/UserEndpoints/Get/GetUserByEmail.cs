@@ -1,4 +1,5 @@
 ﻿using Azure;
+using FurryFriends.UseCases.Users.GetUser;
 using FurryFriends.Web.Endpoints.UserEndpoints.Records;
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.Get;

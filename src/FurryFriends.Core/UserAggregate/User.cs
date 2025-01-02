@@ -10,7 +10,7 @@ public class User : EntityBase<Guid>, IAggregateRoot
   public string Email { get; private set; } = default!;
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
-  public virtual Photo BioPicture { get; private set; } = default!;
+  //public virtual Photo BioPicture { get; private set; } = default!;
   public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 
   private User()
@@ -18,7 +18,7 @@ public class User : EntityBase<Guid>, IAggregateRoot
 
   }
   private User(Name name, string email, PhoneNumber phoneNumber, Address address)
-  {   
+  {    
 
     Id = Guid.NewGuid();
     Name = name;
@@ -74,13 +74,9 @@ public class User : EntityBase<Guid>, IAggregateRoot
     Name = newUserName;
   }
 
-  public void AddBioPicture(Photo photo)
-  {
-    BioPicture = photo;
-  }
-
   public void AddPhoto(Photo photo)
   {
+    Guard.Against.Null(photo, nameof(photo));
     Photos.Add(photo);
   }
 }

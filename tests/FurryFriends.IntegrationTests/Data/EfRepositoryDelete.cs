@@ -24,13 +24,15 @@ public class EfRepositoryDelete : BaseEfRepoTestFixture
     var lastName = "Soap";
     var initialName = Name.Create(firstName, lastName, _nameValidator).Value;
     var Contributor = new Contributor(initialName);
-    await repository.AddAsync(Contributor);
+    var canellationToken = new CancellationToken();
+
+    await repository.AddAsync(Contributor, canellationToken);
 
     // delete the item
-    await repository.DeleteAsync(Contributor);
+    await repository.DeleteAsync(Contributor, canellationToken);
 
     // verify it's no longer there
-    var result = await repository.ListAsync();
+    var result = await repository.ListAsync(canellationToken);
 
     result.Should().NotContain(c=> c.Name.FullName == initialName.FullName);
   }

@@ -1,3 +1,3 @@
-﻿using FurryFriends.UseCases.Users.Get;
+﻿namespace FurryFriends.UseCases.Users.GetUser;
 
 public record GetUserQuery(string Email) : IQuery<Result<UserDto>>;

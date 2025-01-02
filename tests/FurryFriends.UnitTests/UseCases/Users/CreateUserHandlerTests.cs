@@ -1,8 +1,7 @@
 ﻿using Bogus;
 using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects.Validators;
-using FurryFriends.UseCases.Users;
-using FurryFriends.UseCases.Users.Create;
+using FurryFriends.UseCases.Users.CreateUser;
 using Moq;
 
 namespace FurryFriends.UseCases.Tests.Users;

@@ -1,6 +1,4 @@
-﻿using FastEndpoints;
-using FurryFriends.UseCases.Users.List;
-namespace FurryFriends.Web.Endpoints.UserEndpoints.List;
+﻿namespace FurryFriends.Web.Endpoints.UserEndpoints.List;
 
 
 public class ListUsersResponse(

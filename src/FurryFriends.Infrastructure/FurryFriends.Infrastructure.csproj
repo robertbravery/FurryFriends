@@ -22,8 +22,4 @@
     <ProjectReference Include="..\FurryFriends.Core\FurryFriends.Core.csproj" />
     <ProjectReference Include="..\FurryFriends.UseCases\FurryFriends.UseCases.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-  </ItemGroup>
 </Project>

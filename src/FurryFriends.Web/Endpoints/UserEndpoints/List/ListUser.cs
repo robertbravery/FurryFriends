@@ -1,8 +1,5 @@
-﻿using Ardalis.Result;
-using Azure;
-using FurryFriends.UseCases.Users.List;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using FurryFriends.UseCases.Users.ListUser;
 
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.List;

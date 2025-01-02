@@ -4,7 +4,7 @@ using FastEndpoints.Testing;
 using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
-using FurryFriends.UseCases.Users.List;
+using FurryFriends.UseCases.Users.ListUser;
 using FurryFriends.Web.Endpoints.UserEndpoints.List;
 using Microsoft.AspNetCore.Http;
 using Moq;

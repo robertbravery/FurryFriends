@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.Web.Endpoints;
+﻿namespace FurryFriends.Web.Endpoints.Base;
 
 // For endpoints without request/response types
 public abstract class BaseEndpoint : EndpointWithoutRequest
@@ -7,7 +7,6 @@ public abstract class BaseEndpoint : EndpointWithoutRequest
 
   protected BaseEndpoint()
   {
-    //_httpContextAccessor = httpContextAccessor;
   }
 }
 
@@ -20,6 +19,5 @@ public abstract class BaseEndpoint<TRequest, TResponse> : Endpoint<TRequest, TRe
 
   protected BaseEndpoint()
   {
-    //_httpContextAccessor = httpContextAccessor;
   }
 }

@@ -2,7 +2,7 @@
 using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
-using FurryFriends.UseCases.Users.Create;
+using FurryFriends.UseCases.Users.CreateUser;
 
 namespace FurryFriends.Web.Configurations;
 

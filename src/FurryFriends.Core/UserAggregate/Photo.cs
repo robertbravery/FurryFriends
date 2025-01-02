@@ -1,10 +1,16 @@
 ﻿using FurryFriends.Core.Common;
+using FurryFriends.Core.UserAggregate.Enums;
 
 namespace FurryFriends.Core.UserAggregate;
-public class Photo : AuditableEntity, IEquatable<Photo>
+public class Photo : AuditableEntity<Guid>, IEquatable<Photo>
 {
+  public Guid UserId { get; set; }
   public string Url { get; private set; } = default!;
+  public PhotoType PhotoType { get; set; }
   public string? Description { get; set; } = default!;
+
+  public virtual User User { get; set; } = default!;
+
 
   // Constructor and methods
   public Photo()

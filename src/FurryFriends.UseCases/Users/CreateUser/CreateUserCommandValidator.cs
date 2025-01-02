@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentValidation;
 
-namespace FurryFriends.UseCases.Users.Create;
+namespace FurryFriends.UseCases.Users.CreateUser;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {

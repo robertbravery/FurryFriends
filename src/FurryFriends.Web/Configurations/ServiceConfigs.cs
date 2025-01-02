@@ -1,6 +1,7 @@
 ﻿using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure;
 using FurryFriends.Infrastructure.Email;
+using FurryFriends.UseCases.Configurations;
 using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Web.Configurations;
@@ -11,6 +12,7 @@ public static class ServiceConfigs
   {
     services.AddInfrastructureServices(builder.Configuration, logger, builder.Environment.EnvironmentName)
             .AddMediatrConfigs();
+    services.AddUseCaseServices();
 
 
     if (builder.Environment.IsDevelopment())

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FurryFriends.UseCases.Users.Create;
+using FurryFriends.UseCases.Users.CreateUser;
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
