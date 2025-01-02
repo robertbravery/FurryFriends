@@ -1,4 +1,7 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using System.Threading;
+using FurryFriends.Core.UserAggregate;
+using FurryFriends.Core.UserAggregate.Specifications;
+using MediatR;
 
 namespace FurryFriends.UseCases.Services;
 public class UserService : IUserService
@@ -27,5 +30,15 @@ public class UserService : IUserService
   public Task<User> CreateUserAsync(User user)
   {
     throw new NotImplementedException();
+  }
+
+  public async Task<Result<User>> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+  {
+    var spec = new GetUserByEmailSpecification(email);
+    var entity = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
+    if (entity == null) 
+      return Result.NotFound("User Not Found");
+
+    return entity;
   }
 }

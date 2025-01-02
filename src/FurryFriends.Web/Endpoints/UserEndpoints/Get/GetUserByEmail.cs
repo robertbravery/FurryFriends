@@ -35,7 +35,14 @@ public class GetUserByEmail(IMediator _mediator) : Endpoint<GetUserByEmailReques
     }
     else
     {
-      var userDto = new UserRecord(result.Value.Id, result.Value.Name, result.Value.Email, result.Value.PhoneNumber, result.Value.Address);
+      var userDto = new UserRecord(
+        result.Value.Id,
+        result.Value.Name,
+        result.Value.Email,
+        result.Value.PhoneNumber,
+        result.Value.Address,
+        result.Value.BioPicture,
+        result.Value.Photos);
       Response = new GetUserByEmailResponse(userDto);
     }
   }

@@ -15,8 +15,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     builder.OwnsOne(c => c.Name, n =>
     {
-      n.Property(p => p.FirstName).HasColumnName("FirstName");
-      n.Property(p => p.LastName).HasColumnName("LastName");
+      n.Property(p => p.FirstName).HasColumnName("FirstName").HasColumnOrder(1);
+      n.Property(p => p.LastName).HasColumnName("LastName").HasColumnOrder(2);
     });
 
     builder.OwnsOne(c => c.PhoneNumber, n =>
