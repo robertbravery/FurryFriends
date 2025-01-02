@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects.Validators;
+using FurryFriends.UnitTests.TestHelpers;
 using FurryFriends.UseCases.Users.CreateUser;
 using Moq;
 
@@ -33,9 +34,10 @@ public class CreateUserHandlerTests
         f.Address.State(),
         f.Address.Country(), f.Address.ZipCode("####")
     );
+    var user = (await  UserHelpers.GetTestUsers()).First();
 
     _userRepositoryMock.Setup(r => r.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()))
-        .ReturnsAsync((User user, CancellationToken ct) => user);
+        .ReturnsAsync(user);
 
 
     // Act
@@ -69,7 +71,7 @@ public class CreateUserHandlerTests
     //Assert
     result.IsSuccess.Should().BeFalse();
     result.ValidationErrors.Should().NotBeEmpty();
-    result.ValidationErrors.First().ErrorMessage.Should().Contain("Name cannot be empty");
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("First name cannot be null or whitespace");
   }
 
   [Fact]
@@ -96,7 +98,7 @@ public class CreateUserHandlerTests
     //Assert
     result.IsSuccess.Should().BeFalse();
     result.ValidationErrors.Should().NotBeEmpty();
-    result.ValidationErrors.First().ErrorMessage.Should().Contain("Country code cannot be empty");
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("Country code is required");
   }
 
   
@@ -125,7 +127,7 @@ public class CreateUserHandlerTests
     //Assert
     result.IsSuccess.Should().BeFalse();
     result.ValidationErrors.Should().NotBeEmpty();
-    result.ValidationErrors.First().ErrorMessage.Should().Contain("Phone number cannot be empty");
+    result.ValidationErrors.First().ErrorMessage.Should().Contain("Valid Phonenumber is required");
   }
 
  

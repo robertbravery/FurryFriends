@@ -60,4 +60,3 @@ public class Email: ValueObject
     return EmailAddress;
   }
 }
-

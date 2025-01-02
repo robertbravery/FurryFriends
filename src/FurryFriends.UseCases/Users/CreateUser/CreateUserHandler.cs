@@ -25,10 +25,26 @@ public class CreateUserHandler(IRepository<User> userRepository, IValidator<Crea
       return Result<Guid>.Invalid(new ValidationError(string.Join(", ", phoneNumberResult.Errors)));
     }
     var address = Address.Create(command.Street, command.City, command.State, command.State, command.ZipCode);
+    if (!address.IsSuccess)
+    {
+      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", address.Errors)));
+    }
     var name = Name.Create(command.FirstName, command.LastName, _nameValidator);
+    if (!name.IsSuccess)
+    {
+      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", name.Errors)));
+    }
     var email = Email.Create(command.Email);
+    if (!email.IsSuccess)
+    {
+      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", email.Errors)));
+    }
     var user = User.Create(name, email, phoneNumberResult.Value, address);
-    await _userRepository.AddAsync(user);
-    return user.Id;
+    //if (!user.IsSuccess)
+    //{
+    //  return Result<Guid>.Invalid(new ValidationError(string.Join(", ", user.Errors)));
+    //}
+    var addedUser = await _userRepository.AddAsync(user);
+    return addedUser.Id;
   }
 }
