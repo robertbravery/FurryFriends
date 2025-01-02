@@ -1,4 +1,5 @@
 ﻿using FurryFriends.Core.UserAggregate;
+using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
@@ -11,9 +12,19 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     builder.Property(u => u.Id).IsRequired().ValueGeneratedOnAdd().HasColumnType("uniqueidentifier"); // Adjust based on your hashing algorithm
     //builder.Property(u => u.Email).IsRequired().HasMaxLength(256);
-    //builder.HasIndex(u => u.Email).IsUnique();
 
-    builder.OwnsOne(p=> p.Email, e=> e.Property(p => p.EmailAddress).HasColumnName("Email").HasMaxLength(256));
+    builder.OwnsOne(p => p.Email, e =>
+    {
+      e.Property(p => p.EmailAddress)
+          .HasColumnName("Email")
+          .HasMaxLength(256)
+          .IsRequired();
+
+      e.HasIndex(p => p.EmailAddress)
+          .IsUnique();
+    });
+
+    //builder.HasIndex(u => u.Email).IsUnique();
 
     builder.OwnsOne(c => c.Name, n =>
     {
@@ -36,6 +47,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
       a.Property(p => p.ZipCode).HasColumnName("ZipCode").HasMaxLength(5);
 
     });
+
+    builder.OwnsOne(g => g.Gender, g => 
+      g.Property(p => p.Gender)
+      .HasColumnName("Gender")
+      .HasConversion<int>()
+      .IsRequired()
+      .HasDefaultValue(GenderType.GenderCategory.Other));
 
     builder.HasMany(u => u.Photos)
       .WithOne(p => p.User)

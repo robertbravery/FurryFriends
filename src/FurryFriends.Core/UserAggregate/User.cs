@@ -10,6 +10,7 @@ public class User : EntityBase<Guid>, IAggregateRoot
   public Email Email { get; private set; } = default!;
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
+  public GenderType Gender { get; private set; } = GenderType.Create(GenderType.GenderCategory.Other);
   public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
 
 

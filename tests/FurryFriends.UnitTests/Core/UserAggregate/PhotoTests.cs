@@ -40,4 +40,3 @@ public class PhotoTests
     photo.Url.Should().Be(validUrl);
   }
 }
-
