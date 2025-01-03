@@ -39,11 +39,11 @@ public class ListUser(IMediator mediator, ILogger<ListUser> logger)
     }
 
     var userListResponse = userListResult.Value.Users
-        .Select(user => new UserListResponseDto(user.Id, user.Name.FullName, user.Email.EmailAddress, user.Address.City))
+        .Select(user => new UserListResponseDto(user.Id, user.Name.FullName, user.Email.EmailAddress, user.Address.City,string.Empty)) //Note: Not going to list all the user service areas
         .ToList();
 
     var totalCount = userListResult.Value.TotalCount;
-    string[] hideColumns = { "Id"};
+    string[] hideColumns = { "Id", "Location"};
 
     Response = new ListUsersResponse(userListResponse, request.Page, request.PageSize, totalCount, hideColumns);
     

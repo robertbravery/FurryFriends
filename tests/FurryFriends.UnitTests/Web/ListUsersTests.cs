@@ -4,6 +4,8 @@ using FastEndpoints.Testing;
 using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
+using FurryFriends.UseCases.Services.DataTransferObjects;
+using FurryFriends.UseCases.Users.GetUser;
 using FurryFriends.UseCases.Users.ListUser;
 using FurryFriends.Web.Endpoints.UserEndpoints.List;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +31,8 @@ public class ListUsersTests : TestBase
     // Arrange
     var request = new ListUsersRequest { SearchTerm = "test", Page = 1, PageSize = 10 };
     var users = await GetFakeUsers();
-    var result = Result<(List<User> Users, int TotalCount)>.Success((users, users.Count));
+    var userListDto = new UserListDto(users, users.Count);
+    var result = Result<UserListDto>.Success(userListDto);
 
     _mediatorMock.Setup(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(result);
     var ep = Factory.Create<ListUser>(_mediatorMock.Object, _logggerMock);
@@ -79,14 +82,14 @@ public class ListUsersTests : TestBase
     var request = new ListUsersRequest { SearchTerm = null, Page = 1, PageSize = 10 };
     var expectedResult = Result<(List<User> Users, int TotalCount)>.Error("Failed to retrieve users");
 
-    _mediatorMock.Setup(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
+    _mediatorMock.Setup(m => m.Send(It.IsAny<UserListDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
     var ep = Factory.Create<ListUser>(_mediatorMock.Object, _logggerMock);
 
     // Act
     await ep.HandleAsync(request, CancellationToken.None);
 
     // Assert
-    _mediatorMock.Verify(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+    _mediatorMock.Verify(m => m.Send(It.IsAny<UserListDto>(), It.IsAny<CancellationToken>()), Times.Once);
     ep.HttpContext.Response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
 
   }

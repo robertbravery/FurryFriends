@@ -6,5 +6,6 @@ public record UserDto(
   string Name,
   string PhoneNumber,
   string Address,
-  PhotoDto? BioPicture,
+  List<string>? ServiceLocation,
+  PhotoDto? BioPicture, 
   List<PhotoDto>? Photos);

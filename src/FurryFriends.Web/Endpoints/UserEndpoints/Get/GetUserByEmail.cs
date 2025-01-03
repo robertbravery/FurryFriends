@@ -41,6 +41,7 @@ public class GetUserByEmail(IMediator _mediator) : Endpoint<GetUserByEmailReques
         result.Value.Email,
         result.Value.PhoneNumber,
         result.Value.Address,
+        result.Value.ServiceLocation,
         result.Value.BioPicture,
         result.Value.Photos);
       Response = new GetUserByEmailResponse(userDto);

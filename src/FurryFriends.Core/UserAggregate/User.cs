@@ -11,7 +11,8 @@ public class User : EntityBase<Guid>, IAggregateRoot
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
   public GenderType Gender { get; private set; } = GenderType.Create(GenderType.GenderCategory.Other);
-  public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
+  public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>(); 
+  public virtual ICollection<ServiceArea> ServiceAreas { get; set; } = new HashSet<ServiceArea>();
 
 
   private User()
