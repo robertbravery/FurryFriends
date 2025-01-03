@@ -80,16 +80,16 @@ public class ListUsersTests : TestBase
   {
     // Arrange
     var request = new ListUsersRequest { SearchTerm = null, Page = 1, PageSize = 10 };
-    var expectedResult = Result<(List<User> Users, int TotalCount)>.Error("Failed to retrieve users");
+    var expectedResult = Result<UserListDto>.Error("Failed to retrieve users");
 
-    _mediatorMock.Setup(m => m.Send(It.IsAny<UserListDto>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
+    _mediatorMock.Setup(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);
     var ep = Factory.Create<ListUser>(_mediatorMock.Object, _logggerMock);
 
     // Act
     await ep.HandleAsync(request, CancellationToken.None);
 
     // Assert
-    _mediatorMock.Verify(m => m.Send(It.IsAny<UserListDto>(), It.IsAny<CancellationToken>()), Times.Once);
+    _mediatorMock.Verify(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>()), Times.Once);
     ep.HttpContext.Response.StatusCode.Should().Be(StatusCodes.Status404NotFound);
 
   }
