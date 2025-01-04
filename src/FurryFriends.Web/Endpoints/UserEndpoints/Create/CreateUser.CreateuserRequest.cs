@@ -4,7 +4,7 @@ namespace FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
 public class CreateUserRequest
 {
-  public const string Route = "/Users";
+  public const string Route = "/User";
 
   [Required(ErrorMessage = "First Name is required.")]
   public string FirstName { get; set; } = default!;

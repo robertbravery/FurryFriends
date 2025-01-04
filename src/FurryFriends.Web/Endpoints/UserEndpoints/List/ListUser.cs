@@ -26,7 +26,7 @@ public class ListUser(IMediator mediator, ILogger<ListUser> logger)
     });
   }
 
-  public override async Task HandleAsync(ListUsersRequest request, CancellationToken cancellationToken)
+  public override async Task HandleAsync( ListUsersRequest request, CancellationToken cancellationToken)
   {
     var userListQuery = new ListUsersQuery(request.SearchTerm, request.Page, request.PageSize);
     var userListResult = await _mediator.Send(userListQuery, cancellationToken);

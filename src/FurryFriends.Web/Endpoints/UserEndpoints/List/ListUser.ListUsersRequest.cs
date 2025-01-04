@@ -2,10 +2,8 @@
 
 public class ListUsersRequest : IRequest<ListUsersResponse>
 {
-  public const string Route = "/users/{page:int?}/{pageSize:int?}";
+  public const string Route = "/user/list";
   public string? SearchTerm { get; set; }
   public int Page { get; set; } = 1;
   public int PageSize { get; set; } = 10;
-
-  // You can add any query parameters or filters here
 }

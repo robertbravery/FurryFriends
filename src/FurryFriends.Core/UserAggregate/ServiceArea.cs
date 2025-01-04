@@ -15,6 +15,7 @@ public class ServiceArea : AuditableEntity<Guid>, IEquatable<ServiceArea>
     {
         UserID = userID;
         LocalityID = localityID;
+        Id = Guid.NewGuid();
     }
 
   public static ServiceArea Create(Guid userID,  Guid localityID)

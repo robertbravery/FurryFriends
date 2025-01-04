@@ -28,7 +28,7 @@ public class ListUserByLocation(IMediator mediator, ILogger<ListUser> logger)
 
   public override async Task HandleAsync(ListUsersByLocationRequest request, CancellationToken cancellationToken)
   {
-    var userListQuery = new ListUsersByLocationQuery(request.SearchTerm, request.Location, request.Page, request.PageSize);
+    var userListQuery = new ListUsersByLocationQuery(request.SearchTerm, request.LocationId, request.Page, request.PageSize);
     var userListResult = await _mediator.Send(userListQuery, cancellationToken);
 
     if (!userListResult.IsSuccess) 

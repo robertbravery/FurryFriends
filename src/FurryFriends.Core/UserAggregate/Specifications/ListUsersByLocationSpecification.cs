@@ -20,5 +20,6 @@ public class ListUsersByLocationSpecification : Specification<User>
       .Skip((page - 1) * pageSize)
       .Take(pageSize)
       .Include(i=> i.ServiceAreas.Where(sa => sa.LocalityID == localityId)).ThenInclude(i=> i.Locality);
+      //.Include(i=> i.ServiceAreas).ThenInclude(i => i.Locality);
   }
 }
