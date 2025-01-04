@@ -8,8 +8,7 @@ public class PhoneNumberValidator : AbstractValidator<PhoneNumber>
   {
     RuleFor(x => x.CountryCode).NotEmpty().WithMessage("Country code is required.");
     RuleFor(x => x.Number).NotEmpty().WithMessage("Valid Phonenumber is required.");
-
-
   }
 }
+
 

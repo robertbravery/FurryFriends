@@ -1,5 +1,6 @@
 ﻿using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.UserAggregate.Specifications;
+using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.DataTransferObjects;
 using FurryFriends.UseCases.Users.ListUser;
 
@@ -56,5 +57,19 @@ public class UserService : IUserService
     var users = await _repository.ListAsync(spec);
     var totalCount = await _repository.CountAsync(spec);
     return new UserListDto(users, totalCount);
+  }
+
+  public async Task<Result> UpdateUserHourlyRateAsync(Guid userId, decimal hourlyRate, string currency, CancellationToken cancellationToken)
+  {
+    var user = await _repository.GetByIdAsync(userId, cancellationToken);
+    if (user == null)
+    {
+      return Result.Error("User not found.");
+    }
+    var compensation = Compensation.Create(hourlyRate, currency);
+    user.UpdateCompensation(compensation);
+    await _repository.UpdateAsync(user, cancellationToken);
+
+    return Result.Success();
   }
 }

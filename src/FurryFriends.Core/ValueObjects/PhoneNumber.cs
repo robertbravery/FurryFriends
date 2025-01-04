@@ -64,3 +64,4 @@ public class PhoneNumber : ValueObject
     return HashCode.Combine(CountryCode, Number);
   }
 }
+

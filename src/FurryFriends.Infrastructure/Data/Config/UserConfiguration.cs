@@ -61,6 +61,22 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
       .IsRequired(false)
       .OnDelete(DeleteBehavior.Cascade);
 
+    builder.OwnsOne(u => u.Compensation, c =>
+    {
+      c.Property(p => p.HourlyRate)
+          .HasColumnName("HourlyRate")
+          .HasColumnType("decimal(18,2)")
+          .IsRequired();
+
+      c.Property(p => p.Currency)
+          .HasColumnName("Currency")
+          .HasColumnType("char")
+          .HasMaxLength(3)
+          .IsFixedLength()
+          .IsRequired();
+    });
+
+
     builder.HasMany(sa => sa.ServiceAreas)
         .WithOne(u => u.User)
         .HasForeignKey(sa => sa.UserID).OnDelete(DeleteBehavior.Cascade);

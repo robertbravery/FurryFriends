@@ -11,6 +11,7 @@ public class User : EntityBase<Guid>, IAggregateRoot
   public PhoneNumber PhoneNumber { get; private set; } = default!;
   public Address Address { get; private set; } = default!;
   public GenderType Gender { get; private set; } = GenderType.Create(GenderType.GenderCategory.Other);
+  public Compensation Compensation { get; private set; } = default!;
   public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>(); 
   public virtual ICollection<ServiceArea> ServiceAreas { get; set; } = new HashSet<ServiceArea>();
 
@@ -80,5 +81,12 @@ public class User : EntityBase<Guid>, IAggregateRoot
   {
     Guard.Against.Null(photo, nameof(photo));
     Photos.Add(photo);
+  }
+
+  public void UpdateCompensation(Compensation compensation)
+  {
+    Guard.Against.Null(compensation, nameof(compensation));
+    Guard.Against.NegativeOrZero(compensation.HourlyRate, nameof(compensation.HourlyRate));
+    Compensation = compensation;
   }
 }
