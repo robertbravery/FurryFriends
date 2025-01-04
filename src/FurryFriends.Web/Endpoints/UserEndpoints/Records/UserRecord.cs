@@ -8,5 +8,6 @@ public record UserRecord(Guid Id,
     string Email = default!,
     string PhoneNumber = default!,
     string City = default!,
+    List<string>? Locations = default!,
     PhotoDto? BioPicture = default!,
     List<PhotoDto>? Photos = default!);

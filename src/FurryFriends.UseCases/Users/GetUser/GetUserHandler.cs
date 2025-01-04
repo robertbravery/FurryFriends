@@ -12,7 +12,15 @@ public class GetUserHandler( IUserService _userService) : IQueryHandler<GetUserQ
     var entity = entityResult.Value;
     var bioPicture = GetBioPicture(entity);
     var photos = GetPhotoList(entity);
-    return new UserDto(entity.Id, entity.Email.EmailAddress, entity.Name.FullName, entity.PhoneNumber.ToString(), entity.Address.City, bioPicture, photos);
+    return new UserDto(
+      entity.Id,
+      entity.Email.EmailAddress,
+      entity.Name.FullName,
+      entity.PhoneNumber.ToString(),
+      entity.Address.City,
+      entity.ServiceAreas.Select(x => x.Locality.LocalityName)?.ToList(),
+      bioPicture,
+      photos);
   }
 
   private static List<PhotoDto>? GetPhotoList(User entity)

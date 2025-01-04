@@ -60,5 +60,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
       .HasForeignKey(p => p.UserId)
       .IsRequired(false)
       .OnDelete(DeleteBehavior.Cascade);
+
+    builder.HasMany(sa => sa.ServiceAreas)
+        .WithOne(u => u.User)
+        .HasForeignKey(sa => sa.UserID).OnDelete(DeleteBehavior.Cascade);
   }
 }

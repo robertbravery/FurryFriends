@@ -10,6 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
   public DbSet<Contributor> Contributors => Set<Contributor>();
   public DbSet<User> Users => Set<User>();
   public DbSet<Photo> Photos => Set<Photo>();
+  public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
 
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -4,6 +4,7 @@ using FurryFriends.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250103122245_AddLocationServiceAreaAggregate")]
+    partial class AddLocationServiceAreaAggregate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,10 +156,16 @@ namespace FurryFriends.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CountryID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("LocalityID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RegionID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -167,7 +176,11 @@ namespace FurryFriends.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CountryID");
+
                     b.HasIndex("LocalityID");
+
+                    b.HasIndex("RegionID");
 
                     b.HasIndex("UserID");
 
@@ -271,10 +284,22 @@ namespace FurryFriends.Infrastructure.Migrations
 
             modelBuilder.Entity("FurryFriends.Core.UserAggregate.ServiceArea", b =>
                 {
+                    b.HasOne("FurryFriends.Core.LocationAggregate.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FurryFriends.Core.LocationAggregate.Locality", "Locality")
                         .WithMany()
                         .HasForeignKey("LocalityID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("FurryFriends.Core.LocationAggregate.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionID")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("FurryFriends.Core.UserAggregate.User", "User")
@@ -283,7 +308,11 @@ namespace FurryFriends.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Country");
+
                     b.Navigation("Locality");
+
+                    b.Navigation("Region");
 
                     b.Navigation("User");
                 });
