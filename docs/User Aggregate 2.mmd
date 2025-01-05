@@ -124,12 +124,7 @@ classDiagram
     class ServiceArea { 
         -Guid Id 
         -Guid UserID 
-        -Guid CountryID 
-        -Guid RegionID 
-        -Guid LocalityID 
-        -User User 
-        -Country Country 
-        -Region Region 
+        -Guid LocalityID         
         -Locality Locality 
     }
 
@@ -175,13 +170,12 @@ classDiagram
     User "1" *-- "1" Rating
     User "1" --> "0..n" ServiceArea : has 
     ServiceArea "1" --> "1" User : belongs to 
-    ServiceArea "1" --> "1" Country : belongs to 
-    ServiceArea "1" --> "1" Region : belongs to 
     ServiceArea "1" --> "1" Locality : belongs to 
     Country "1" --> "0..n" Region : has 
     Region "1" --> "0..n" Locality : has 
+    Locality "1" --> "0..n" ServiceArea : has 
     Region "1" --> "1" Country : belongs to 
     Locality "1" --> "1" Region : belongs to
-    User "1" *-- "many" Testimonial
     Schedule "1" *-- "many" TimeSlot
+    User "1" *-- "many" Testimonial
     User ..> DomainEvents
