@@ -1,5 +1,6 @@
 ﻿using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
@@ -11,18 +12,45 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.HasKey(u => u.Id);
 
     builder.Property(u => u.Id).IsRequired().ValueGeneratedOnAdd().HasColumnType("uniqueidentifier"); // Adjust based on your hashing algorithm
-    //builder.Property(u => u.Email).IsRequired().HasMaxLength(256);
+    builder.Property(u => u.Biography)
+    .HasMaxLength(2000)
+    .HasColumnType("nvarchar(2000)");
+    builder.Property(u => u.Biography)
+      .HasMaxLength(2000)
+      .HasColumnType("nvarchar(2000)");
+
+    builder.Property(u => u.DateOfBirth)
+      .IsRequired()
+      .HasColumnType("datetime2");
+
+    builder.Property(u => u.IsActive)
+      .IsRequired();
+
+    builder.Property(u => u.IsVerified)
+      .IsRequired();
+
+    builder.Property(u => u.YearsOfExperience)
+      .IsRequired();
+
+    builder.Property(u => u.HasInsurance)
+      .IsRequired();
+
+    builder.Property(u => u.HasFirstAidCertificatation)
+      .IsRequired();
+
+    builder.Property(u => u.DailyPetWalkLimit)
+      .IsRequired();
 
     builder.OwnsOne(p => p.Email, e =>
-    {
-      e.Property(p => p.EmailAddress)
-          .HasColumnName("Email")
-          .HasMaxLength(256)
-          .IsRequired();
+        {
+          e.Property(p => p.EmailAddress)
+              .HasColumnName("Email")
+              .HasMaxLength(256)
+              .IsRequired();
 
-      e.HasIndex(p => p.EmailAddress)
-          .IsUnique();
-    });
+          e.HasIndex(p => p.EmailAddress)
+              .IsUnique();
+        });
 
     //builder.HasIndex(u => u.Email).IsUnique();
 
@@ -48,12 +76,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
     });
 
-    builder.OwnsOne(g => g.Gender, g => 
+    builder.OwnsOne(g => g.Gender, g =>
       g.Property(p => p.Gender)
       .HasColumnName("Gender")
       .HasConversion<int>()
       .IsRequired()
-      .HasDefaultValue(GenderType.GenderCategory.Other));
+      .HasDefaultValue(GenderType.GenderCategory.NotSelected)
+      .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw)); // Set sentinel value;
 
     builder.HasMany(u => u.Photos)
       .WithOne(p => p.User)
@@ -64,16 +93,16 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     builder.OwnsOne(u => u.Compensation, c =>
     {
       c.Property(p => p.HourlyRate)
-          .HasColumnName("HourlyRate")
-          .HasColumnType("decimal(18,2)")
-          .IsRequired();
+              .HasColumnName("HourlyRate")
+              .HasColumnType("decimal(18,2)")
+              .IsRequired();
 
       c.Property(p => p.Currency)
-          .HasColumnName("Currency")
-          .HasColumnType("char")
-          .HasMaxLength(3)
-          .IsFixedLength()
-          .IsRequired();
+              .HasColumnName("Currency")
+              .HasColumnType("char")
+              .HasMaxLength(3)
+              .IsFixedLength()
+              .IsRequired();
     });
 
 

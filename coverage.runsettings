@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage">
+        <Configuration>
+          <CodeCoverage>
+            <ModulePaths>
+              <Exclude>
+                <ModulePath>.*\\Migrations\\.*</ModulePath>
+                <ModulePath>.*Microsoft.Extensions.ServiceDiscovery.dll</ModulePath>
+                <ModulePath>.*FluentValidation.dll</ModulePath>
+                <ModulePath>.*unittests.dll</ModulePath>
+                <!-- Add other DLLs you want to exclude here -->
+              </Exclude>
+            </ModulePaths>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

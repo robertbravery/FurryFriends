@@ -4,47 +4,80 @@ using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.UseCases.Users.CreateUser;
 
-public class CreateUserHandler(IRepository<User> userRepository, IValidator<CreateUserCommand> commandValidator, IValidator<Name> nameValidator, IValidator<PhoneNumber> phoneNumberValidator)
-: ICommandHandler<CreateUserCommand, Result<Guid>>
+public class CreateUserHandler : ICommandHandler<CreateUserCommand, Result<Guid>>
 {
-  private readonly IRepository<User> _userRepository = userRepository;
-  private readonly IValidator<CreateUserCommand> _validator = commandValidator;
-  private readonly IValidator<Name> _nameValidator = nameValidator;
-  private readonly IValidator<PhoneNumber> _phoneNumberValidator = phoneNumberValidator;
+  private readonly IRepository<User> _userRepository;
+  private readonly IValidator<CreateUserCommand> _validator;
+  private readonly IValidator<Name> _nameValidator;
+  private readonly IValidator<PhoneNumber> _phoneNumberValidator;
+
+  public CreateUserHandler(IRepository<User> userRepository, IValidator<CreateUserCommand> commandValidator, IValidator<Name> nameValidator, IValidator<PhoneNumber> phoneNumberValidator)
+  {
+    _userRepository = userRepository;
+    _validator = commandValidator;
+    _nameValidator = nameValidator;
+    _phoneNumberValidator = phoneNumberValidator;
+  }
 
   public async Task<Result<Guid>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
   {
-    var validationResult = await _validator.ValidateAsync(command);
+    var validationResult = await _validator.ValidateAsync(command, cancellationToken);
     if (!validationResult.IsValid)
     {
-      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", validationResult.Errors)));
+      return Result<Guid>.Invalid(validationResult.Errors.Select(e => new ValidationError(e.ErrorMessage)).ToList());
     }
+
     var phoneNumberResult = await PhoneNumber.Create(command.CountryCode, command.Number, _phoneNumberValidator);
     if (!phoneNumberResult.IsSuccess)
     {
-      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", phoneNumberResult.Errors)));
+      return Result<Guid>.Invalid(phoneNumberResult.Errors.Select(e => new ValidationError(e)).ToList());
     }
-    var address = Address.Create(command.Street, command.City, command.State, command.State, command.ZipCode);
-    if (!address.IsSuccess)
+
+    var addressResult = Address.Create(command.Street, command.City, command.State, command.Country, command.ZipCode);
+    if (!addressResult.IsSuccess)
     {
-      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", address.Errors)));
+      return Result<Guid>.Invalid(addressResult.Errors.Select(e => new ValidationError(e)).ToList());
     }
-    var name = Name.Create(command.FirstName, command.LastName, _nameValidator);
-    if (!name.IsSuccess)
+
+    var nameResult = Name.Create(command.FirstName, command.LastName, _nameValidator);
+    if (!nameResult.IsSuccess)
     {
-      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", name.Errors)));
+      return Result<Guid>.Invalid(nameResult.Errors.Select(e => new ValidationError(e)).ToList());
     }
-    var email = Email.Create(command.Email);
-    if (!email.IsSuccess)
+
+    var emailResult = Email.Create(command.Email);
+    if (!emailResult.IsSuccess)
     {
-      return Result<Guid>.Invalid(new ValidationError(string.Join(", ", email.Errors)));
+      return Result<Guid>.Invalid(emailResult.Errors.Select(e => new ValidationError(e)).ToList());
     }
-    var user = User.Create(name, email, phoneNumberResult.Value, address);
-    //if (!user.IsSuccess)
-    //{
-    //  return Result<Guid>.Invalid(new ValidationError(string.Join(", ", user.Errors)));
-    //}
-    var addedUser = await _userRepository.AddAsync(user);
-    return addedUser.Id;
+
+    var genderResult = GenderType.Create(command.Gender);
+    if (!genderResult.IsSuccess)
+    {
+      return Result<Guid>.Invalid(genderResult.Errors.Select(e => new ValidationError(e)).ToList());
+    }
+
+    var compensationResult = Compensation.Create(command.HourlyRate, command.Currency);
+    if (!compensationResult.IsSuccess)
+    {
+      return Result<Guid>.Invalid(compensationResult.Errors.Select(e => new ValidationError(e)).ToList());
+    }
+
+    var user = User.Create(nameResult.Value, emailResult.Value, phoneNumberResult.Value, addressResult.Value);
+    user.UpdateGender(genderResult.Value);
+    user.UpdateBiography(command.Biography);
+    user.UpdateDateOfBirth(command.DateOfBirth);
+    user.UpdateIsActive(command.IsActive);
+    user.UpdateIsVerified(command.IsVerified);
+    user.UpdateYearsOfExperience(command.YearsOfExperience);
+    user.UpdateHasInsurance(command.HasInsurance);
+    user.UpdateHasFirstAidCertification(command.HasFirstAidCertification);
+    user.UpdateDailyPetWalkLimit(command.DailyPetWalkLimit);
+    user.UpdateCompensation(compensationResult.Value);
+
+    var addedUser = await _userRepository.AddAsync(user, cancellationToken);
+
+    return Result<Guid>.Success(addedUser.Id);
   }
 }
+

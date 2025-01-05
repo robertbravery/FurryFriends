@@ -31,34 +31,45 @@ public class CreateUser(IMediator _mediator)
       };
     });
   }
-  public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
-  {
-    var userCommand = new CreateUserCommand(
-      request.FirstName,
-      request.LastName,
-      request.Email,
-      request.CountryCode,
-      request.Number,
-      request.Street,
-      request.City,
-      request.State,
-      request.Country, 
-      request.PostalCode);
-
-    var result = await _mediator.Send(userCommand, cancellationToken);
-
-    if(result == null)
+    public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
     {
-      await SendErrorsAsync(StatusCodes.Status500InternalServerError, cancellationToken);
-      return;
-    }
-    if(!result.IsSuccess)
-    {
-      AddError(result.ValidationErrors.First().ErrorMessage);
-      await SendErrorsAsync(StatusCodes.Status400BadRequest,cancellationToken);
-      return;
-    }
+        var userCommand = new CreateUserCommand(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            request.CountryCode,
+            request.Number,
+            request.Street,
+            request.City,
+            request.State,
+            request.Country,
+            request.PostalCode, // Add this line to fix the error
+            request.Gender,
+            request.Biography,
+            request.DateOfBirth,
+            request.HourlyRate,
+            request.Currency,
+            request.IsActive,
+            request.IsVerified,
+            request.YearsOfExperience,
+            request.HasInsurance,
+            request.HasFirstAidCertification,
+            request.DailyPetWalkLimit);
 
-    Response = new CreateUserResponse(result.Value);
-  }
+        var result = await _mediator.Send(userCommand, cancellationToken);
+
+        if (result == null)
+        {
+            await SendErrorsAsync(StatusCodes.Status500InternalServerError, cancellationToken);
+            return;
+        }
+        if (!result.IsSuccess)
+        {
+            AddError(result.ValidationErrors.First().ErrorMessage);
+            await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
+            return;
+        }
+
+        Response = new CreateUserResponse(result.Value);
+    }
 }

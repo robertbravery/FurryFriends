@@ -6,6 +6,7 @@ public class GenderType: ValueObject
 
   public enum GenderCategory
   {
+    NotSelected=0,
     Male=1,
     Female=2,
     Other=3
