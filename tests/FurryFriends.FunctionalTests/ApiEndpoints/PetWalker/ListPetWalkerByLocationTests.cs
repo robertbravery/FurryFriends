@@ -1,14 +1,14 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using FurryFriends.Web.Endpoints.UserEndpoints.List;
+using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 
 namespace FurryFriends.FunctionalTests.ApiEndpoints.PetWalker;
 
 public class ListPetWalkerByLocationTests(CustomWebApplicationFactory<Program> factory) : IClassFixture<CustomWebApplicationFactory<Program>>
 {
   private readonly HttpClient _client = factory.CreateClient();
-  private const string URL = "/user/location";
+  private const string URL = "/petwalker/location";
 
   [Fact]
   public async Task ReturnsUsersForValidLocation()
@@ -20,7 +20,7 @@ public class ListPetWalkerByLocationTests(CustomWebApplicationFactory<Program> f
 
     // Act
     var response = await _client.GetAsync(endpoint, TestContext.Current.CancellationToken);
-    var result = await response.Content.ReadFromJsonAsync<ListUsersByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
+    var result = await response.Content.ReadFromJsonAsync<ListPetWalkerByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
     // Assert
     response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -39,7 +39,7 @@ public class ListPetWalkerByLocationTests(CustomWebApplicationFactory<Program> f
 
     // Act
     var response = await _client.GetAsync(endpoint, TestContext.Current.CancellationToken);
-    var result = await response.Content.ReadFromJsonAsync<ListUsersByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
+    var result = await response.Content.ReadFromJsonAsync<ListPetWalkerByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
     // Assert
     response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -73,7 +73,7 @@ public class ListPetWalkerByLocationTests(CustomWebApplicationFactory<Program> f
 
     // Act
     var response = await _client.GetAsync(endpoint, TestContext.Current.CancellationToken);
-    var result = await response.Content.ReadFromJsonAsync<ListUsersByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
+    var result = await response.Content.ReadFromJsonAsync<ListPetWalkerByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
     // Assert
     response.StatusCode.Should().Be(HttpStatusCode.OK);
     result!.RowsData.Should().BeEmpty();
@@ -88,7 +88,7 @@ public class ListPetWalkerByLocationTests(CustomWebApplicationFactory<Program> f
 
     // Act
     var response = await _client.GetAsync(endpoint, TestContext.Current.CancellationToken);
-    var result = await response.Content.ReadFromJsonAsync<ListUsersByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
+    var result = await response.Content.ReadFromJsonAsync<ListPetWalkerByLocationResponse>(cancellationToken: TestContext.Current.CancellationToken);
 
     // Assert
     response.StatusCode.Should().Be(HttpStatusCode.OK);

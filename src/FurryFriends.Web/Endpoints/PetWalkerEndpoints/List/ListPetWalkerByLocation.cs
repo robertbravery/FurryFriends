@@ -1,19 +1,18 @@
 ﻿using Azure;
 using FurryFriends.UseCases.Users.ListUser;
-using FurryFriends.Web.Endpoints.UserEndpoints.List;
 
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 
 public class ListPetWalkerByLocation(IMediator mediator, ILogger<ListPetWalker> logger)
-  : Endpoint<ListUsersByLocationRequest, ListUsersByLocationResponse>()
+  : Endpoint<ListPetWalkerByLocationRequest, ListPetWalkerByLocationResponse>()
 {
   private readonly IMediator _mediator = mediator;
   private readonly ILogger<ListPetWalker> _logger = logger;
 
   public override void Configure()
   {
-    Get(ListUsersByLocationRequest.Route);
+    Get(ListPetWalkerByLocationRequest.Route);
     AllowAnonymous();
     Options(o => o.WithName("ListUsersByLocation_" + Guid.NewGuid().ToString())); // Ensure unique name
 
@@ -21,13 +20,13 @@ public class ListPetWalkerByLocation(IMediator mediator, ILogger<ListPetWalker> 
     {
       s.Summary = "Retrieve List of Users by Location";
       s.Description = "Returns a list of users based on search criteria and or filtered by location";
-      s.Response<ListUsersResponse>(200, "Users retrieved successfully");
+      s.Response<ListPetWalkerResponse>(200, "Users retrieved successfully");
       s.Response<Response>(400, "Failed to retrieve users");
       s.Response<Response>(401, "Unauthorized");
     });
   }
 
-  public override async Task HandleAsync(ListUsersByLocationRequest request, CancellationToken cancellationToken)
+  public override async Task HandleAsync(ListPetWalkerByLocationRequest request, CancellationToken cancellationToken)
   {
     var userListQuery = new ListUsersByLocationQuery(request.SearchTerm, request.LocationId, request.Page, request.PageSize);
     var userListResult = await _mediator.Send(userListQuery, cancellationToken);
@@ -46,7 +45,7 @@ public class ListPetWalkerByLocation(IMediator mediator, ILogger<ListPetWalker> 
     var totalCount = userListResult.Value.TotalCount;
     string[] hideColumns = { "Id", "Location" };
 
-    Response = new ListUsersByLocationResponse(userListResponse, request.Page, request.PageSize, totalCount, hideColumns);
+    Response = new ListPetWalkerByLocationResponse(userListResponse, request.Page, request.PageSize, totalCount, hideColumns);
 
   }
 }

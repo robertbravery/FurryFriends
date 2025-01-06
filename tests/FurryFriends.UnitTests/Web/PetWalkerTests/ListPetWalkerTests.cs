@@ -7,7 +7,6 @@ using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCases.Services.DataTransferObjects;
 using FurryFriends.UseCases.Users.ListUser;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
-using FurryFriends.Web.Endpoints.UserEndpoints.List;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
@@ -29,7 +28,7 @@ public class ListPetWalkerTests : TestBase
   public async Task HandleAsync_ShouldReturnUsers_WhenUsersExist()
   {
     // Arrange
-    var request = new ListUsersRequest { SearchTerm = "test", Page = 1, PageSize = 10 };
+    var request = new ListPetWalkerRequest { SearchTerm = "test", Page = 1, PageSize = 10 };
     var users = await GetFakeUsers();
     var userListDto = new UserListDto(users, users.Count);
     var result = Result<UserListDto>.Success(userListDto);
@@ -79,7 +78,7 @@ public class ListPetWalkerTests : TestBase
   public async Task HandleAsync_ShouldReturnError_WhenUsersDoNotExist()
   {
     // Arrange
-    var request = new ListUsersRequest { SearchTerm = null, Page = 1, PageSize = 10 };
+    var request = new ListPetWalkerRequest { SearchTerm = null, Page = 1, PageSize = 10 };
     var expectedResult = Result<UserListDto>.Error("Failed to retrieve users");
 
     _mediatorMock.Setup(m => m.Send(It.IsAny<ListUsersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(expectedResult);

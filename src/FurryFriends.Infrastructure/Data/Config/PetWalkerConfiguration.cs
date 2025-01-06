@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
-public class UserConfiguration : IEntityTypeConfiguration<PetWalker>
+public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
 {
   public void Configure(EntityTypeBuilder<PetWalker> builder)
   {

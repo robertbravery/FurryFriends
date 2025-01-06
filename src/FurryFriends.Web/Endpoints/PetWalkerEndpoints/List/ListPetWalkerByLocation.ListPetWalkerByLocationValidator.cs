@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.Web.Endpoints.UserEndpoints.List;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 
-public class ListUserByLocationValidator : Validator<ListUsersByLocationRequest>
+public class ListPetWalkerByLocationValidator : Validator<ListPetWalkerByLocationRequest>
 {
-  public ListUserByLocationValidator()
+  public ListPetWalkerByLocationValidator()
   {
     RuleFor(x => x.Page)
         .GreaterThan(0)

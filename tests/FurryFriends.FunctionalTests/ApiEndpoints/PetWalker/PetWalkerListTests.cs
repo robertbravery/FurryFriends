@@ -1,4 +1,4 @@
-﻿using FurryFriends.Web.Endpoints.UserEndpoints.List;
+﻿using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 
 namespace FurryFriends.FunctionalTests.ApiEndpoints.PetWalker;
 
@@ -11,14 +11,14 @@ public class PetWalkerListTests(CustomWebApplicationFactory<Program> factory) : 
   public async Task ReturnsTwoUsers()
   {
     //arrange
-    var url = "/user/list";
+    var url = "/petwalker/list";
     var page = 1;
     var pageSize = 2;
     var expectedCount = 2;
     var endpoint = $"{url}?page={page}&pageSize={pageSize}";
 
     //act
-    var result = await _client.GetAndDeserializeAsync<ListUsersResponse>(endpoint);
+    var result = await _client.GetAndDeserializeAsync<ListPetWalkerResponse>(endpoint);
 
     //assert
     Assert.NotNull(result);

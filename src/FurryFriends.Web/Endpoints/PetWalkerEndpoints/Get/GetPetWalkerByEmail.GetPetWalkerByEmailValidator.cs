@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.Web.Endpoints.UserEndpoints.Get;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
 
-public class GetUserValidator : Validator<GetUserByEmailRequest>
+public class GetPetWalkerValidator : Validator<GetPetWalkerByEmailRequest>
 {
-  public GetUserValidator()
+  public GetPetWalkerValidator()
   {
     RuleFor(x => x.Email).NotEmpty().EmailAddress()
       .WithMessage("Empty email.")
