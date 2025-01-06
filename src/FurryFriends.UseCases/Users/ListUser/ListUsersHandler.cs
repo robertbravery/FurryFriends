@@ -1,6 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
-using FurryFriends.Core.UserAggregate.Specifications;
-using FurryFriends.UseCases.Services;
+﻿using FurryFriends.UseCases.Services;
 using FurryFriends.UseCases.Services.DataTransferObjects;
 using Microsoft.Extensions.Logging;
 

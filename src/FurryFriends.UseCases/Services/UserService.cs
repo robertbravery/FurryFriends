@@ -1,5 +1,5 @@
-﻿using FurryFriends.Core.UserAggregate;
-using FurryFriends.Core.UserAggregate.Specifications;
+﻿using FurryFriends.Core.PetWalkerAggregate.Specifications;
+using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.DataTransferObjects;
 using FurryFriends.UseCases.Users.ListUser;
@@ -7,20 +7,20 @@ using FurryFriends.UseCases.Users.ListUser;
 namespace FurryFriends.UseCases.Services;
 public class UserService : IUserService
 {
-  private readonly IRepository<User> _repository;
+  private readonly IRepository<PetWalker> _repository;
 
-  public UserService(IRepository<User> repository)
+  public UserService(IRepository<PetWalker> repository)
   {
     _repository = repository;
   }
 
   public async Task AddBioPictureAsync(Photo photo, Guid userId)
   {
-    var user = await _repository.GetByIdAsync(userId) 
+    var user = await _repository.GetByIdAsync(userId)
       ?? throw new InvalidOperationException("User not found.");
 
     // Update the user's bio picture
-    user.AddPhoto(photo); 
+    user.AddPhoto(photo);
 
     // Save changes to the repository
     await _repository.UpdateAsync(user);
@@ -28,16 +28,16 @@ public class UserService : IUserService
     // Optionally, you can fire a domain event or log the update
   }
 
-  public Task<User> CreateUserAsync(User user)
+  public Task<PetWalker> CreateUserAsync(PetWalker user)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<Result<User>> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+  public async Task<Result<PetWalker>> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
   {
-    var spec = new GetUserByEmailSpecification(email);
+    var spec = new GetPetWalkerByEmailSpecification(email);
     var entity = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
-    if (entity == null) 
+    if (entity == null)
       return Result.NotFound("User Not Found");
 
     return entity;
@@ -45,7 +45,7 @@ public class UserService : IUserService
 
   public async Task<Result<UserListDto>> ListUsersAsync(ListUsersQuery query)
   {
-    var spec = new ListUserSpecification(query.SearchString, query.PageNumber, query.PageSize);
+    var spec = new ListPetWalkerSpecification(query.SearchString, query.PageNumber, query.PageSize);
     var users = await _repository.ListAsync(spec);
     var totalCount = await _repository.CountAsync(spec);
     return new UserListDto(users, totalCount);
@@ -53,7 +53,7 @@ public class UserService : IUserService
 
   public async Task<Result<UserListDto>> ListUserUserByLocationAsync(ListUsersByLocationQuery query)
   {
-    var spec = new ListUsersByLocationSpecification(query.SearchString, query.Location, query.PageNumber, query.PageSize);
+    var spec = new ListPetWalkerByLocationSpecification(query.SearchString, query.Location, query.PageNumber, query.PageSize);
     var users = await _repository.ListAsync(spec);
     var totalCount = await _repository.CountAsync(spec);
     return new UserListDto(users, totalCount);

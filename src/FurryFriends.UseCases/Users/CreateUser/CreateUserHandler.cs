@@ -6,12 +6,12 @@ namespace FurryFriends.UseCases.Users.CreateUser;
 
 public class CreateUserHandler : ICommandHandler<CreateUserCommand, Result<Guid>>
 {
-  private readonly IRepository<User> _userRepository;
+  private readonly IRepository<PetWalker> _userRepository;
   private readonly IValidator<CreateUserCommand> _validator;
   private readonly IValidator<Name> _nameValidator;
   private readonly IValidator<PhoneNumber> _phoneNumberValidator;
 
-  public CreateUserHandler(IRepository<User> userRepository, IValidator<CreateUserCommand> commandValidator, IValidator<Name> nameValidator, IValidator<PhoneNumber> phoneNumberValidator)
+  public CreateUserHandler(IRepository<PetWalker> userRepository, IValidator<CreateUserCommand> commandValidator, IValidator<Name> nameValidator, IValidator<PhoneNumber> phoneNumberValidator)
   {
     _userRepository = userRepository;
     _validator = commandValidator;
@@ -63,7 +63,7 @@ public class CreateUserHandler : ICommandHandler<CreateUserCommand, Result<Guid>
       return Result<Guid>.Invalid(compensationResult.Errors.Select(e => new ValidationError(e)).ToList());
     }
 
-    var user = User.Create(nameResult.Value, emailResult.Value, phoneNumberResult.Value, addressResult.Value);
+    var user = PetWalker.Create(nameResult.Value, emailResult.Value, phoneNumberResult.Value, addressResult.Value);
     user.UpdateGender(genderResult.Value);
     user.UpdateBiography(command.Biography);
     user.UpdateDateOfBirth(command.DateOfBirth);

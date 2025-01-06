@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class UserConfiguration : IEntityTypeConfiguration<PetWalker>
 {
-  public void Configure(EntityTypeBuilder<User> builder)
+  public void Configure(EntityTypeBuilder<PetWalker> builder)
   {
     builder.ToTable("Users");
     builder.HasKey(u => u.Id);

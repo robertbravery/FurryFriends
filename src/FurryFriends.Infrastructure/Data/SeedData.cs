@@ -46,8 +46,8 @@ public static class SeedData
     var name2 = Name.Create("Snow", "Dog", new NameValidator()).Value;
     var email1 = Core.ValueObjects.Email.Create("test1@u.com");
     var email2 = Core.ValueObjects.Email.Create("test2@u.com");
-    var user1 = User.Create(name1, email1, phoneNumber1, address1);
-    var user2 = User.Create(name2, email2, phoneNumber2, address2);
+    var user1 = PetWalker.Create(name1, email1, phoneNumber1, address1);
+    var user2 = PetWalker.Create(name2, email2, phoneNumber2, address2);
 
     var location1 = ServiceArea.Create(user1.Id, Guid.Parse("df2f290d-d72f-4a7e-9254-8c1aae7ba370"));
     var location2 = ServiceArea.Create(user1.Id, Guid.Parse("44eec69e-c38a-4111-8825-bdc52a9303af"));

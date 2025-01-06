@@ -2,4 +2,4 @@
 
 namespace FurryFriends.UseCases.Services.DataTransferObjects;
 
-public record UserListDto(List<User> Users, int TotalCount);
+public record UserListDto(List<PetWalker> Users, int TotalCount);

@@ -23,13 +23,13 @@ public class GetUserHandler( IUserService _userService) : IQueryHandler<GetUserQ
       photos);
   }
 
-  private static List<PhotoDto>? GetPhotoList(User entity)
+  private static List<PhotoDto>? GetPhotoList(PetWalker entity)
   {
     var photos = entity.Photos.Where(x => x.PhotoType == PhotoType.PetWalkerPhoto)
       .Select(x => new PhotoDto(x.Url, x.Description)).ToList();
     return photos;
   }
-  private static PhotoDto? GetBioPicture(User entity)
+  private static PhotoDto? GetBioPicture(PetWalker entity)
   {    
     var photo = entity.Photos.FirstOrDefault(x => x.PhotoType == PhotoType.BioPic);
     if (photo == null) return null;
