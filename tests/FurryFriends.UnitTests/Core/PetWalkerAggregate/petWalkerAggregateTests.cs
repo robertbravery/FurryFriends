@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
@@ -25,11 +25,11 @@ public class petWalkerAggregateTests
     var email = Email.Create("test@example.com");
 
     // Act
-    var userAggregate = PetWalker.Create(name, email, _validPhone, _validAddress);
+    var petWalkerAggregate = PetWalker.Create(name, email, _validPhone, _validAddress);
 
     // Assert
-    userAggregate.Email.Should().Be(email);
-    userAggregate.Name.FirstName.Should().Be(firstName);
+    petWalkerAggregate.Email.Should().Be(email);
+    petWalkerAggregate.Name.FirstName.Should().Be(firstName);
   }
 
   [Theory]

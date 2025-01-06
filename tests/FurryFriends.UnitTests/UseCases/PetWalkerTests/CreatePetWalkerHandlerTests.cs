@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using FurryFriends.Core.UserAggregate;
+using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UnitTests.TestHelpers;
@@ -16,7 +16,7 @@ public class CreatePetWalkerHandlerTests
   public CreatePetWalkerHandlerTests()
   {
     _userRepositoryMock = new Mock<IRepository<PetWalker>>();
-    _handler = new CreateUserHandler(_userRepositoryMock.Object, new CreateUserCommandValidator(), new NameValidator(), new PhoneNumberValidator());
+    _handler = new CreateUserHandler(_userRepositoryMock.Object, new CreatePetWalkerCommandValidator(), new NameValidator(), new PhoneNumberValidator());
   }
 
   [Fact]
@@ -24,7 +24,7 @@ public class CreatePetWalkerHandlerTests
   {
     // Arrange
     var f = new Faker();
-    var command = new CreateUserCommand(
+    var command = new CreatePetWalkerCommand(
         f.Name.FirstName(),
         f.Name.LastName(),
         f.Internet.Email(),
@@ -65,7 +65,7 @@ public class CreatePetWalkerHandlerTests
   {
     // Arrange
     var f = new Faker();
-    var command = new CreateUserCommand(
+    var command = new CreatePetWalkerCommand(
         string.Empty,
         f.Name.LastName(),
         f.Internet.Email(),
@@ -102,7 +102,7 @@ public class CreatePetWalkerHandlerTests
   {
     // Arrange
     var f = new Faker();
-    var command = new CreateUserCommand(
+    var command = new CreatePetWalkerCommand(
         f.Name.FirstName(),
         f.Name.LastName(),
         f.Internet.Email(),
@@ -140,7 +140,7 @@ public class CreatePetWalkerHandlerTests
   {
     // Arrange
     var f = new Faker();
-    var command = new CreateUserCommand(
+    var command = new CreatePetWalkerCommand(
         f.Name.FirstName(),
         f.Name.LastName(),
         f.Internet.Email(),

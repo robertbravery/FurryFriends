@@ -2,7 +2,7 @@
 
 public class UpdateUserHourlyRateRequest
 {
-    public const string Route = "/User/UpdateHourlyRate";
+    public const string Route = "/PetWalker/UpdateHourlyRate";
     [Required]
     public Guid UserId { get; set; }
     [Required]

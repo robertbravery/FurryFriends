@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 
 public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 {

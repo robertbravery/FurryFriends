@@ -11,8 +11,4 @@
     <ProjectReference Include="..\FurryFriends.Core\FurryFriends.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\DataTransferObjects\" />
-  </ItemGroup>
-
 </Project>

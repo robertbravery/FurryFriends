@@ -1,14 +1,14 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
-public class UserConfiguration : IEntityTypeConfiguration<PetWalker>
+public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
 {
   public void Configure(EntityTypeBuilder<PetWalker> builder)
   {
-    builder.ToTable("Users");
+    builder.ToTable("PetWalkers");
     builder.HasKey(u => u.Id);
 
     builder.Property(u => u.Id).IsRequired().ValueGeneratedOnAdd().HasColumnType("uniqueidentifier"); // Adjust based on your hashing algorithm

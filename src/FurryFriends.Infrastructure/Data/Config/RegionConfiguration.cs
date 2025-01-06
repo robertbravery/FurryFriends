@@ -2,7 +2,6 @@
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
-
 public class RegionConfiguration : IEntityTypeConfiguration<Region>
 {
   public void Configure(EntityTypeBuilder<Region> builder)

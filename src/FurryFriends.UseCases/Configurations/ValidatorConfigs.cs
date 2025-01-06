@@ -12,12 +12,12 @@ public static class ValidatorConfigs
 {
   public static IServiceCollection AddUseCaseValidators(this IServiceCollection services)
   {
-    services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
+    services.AddValidatorsFromAssemblyContaining<CreatePetWalkerCommandValidator>();
     services.AddValidatorsFromAssemblyContaining<PhoneNumberValidator>();
     services.AddValidatorsFromAssemblyContaining<NameValidator>();
     services.AddTransient<IValidator<Address>, AddressValidator>();
     services.AddTransient<IValidator<Compensation>, CompensationValidator>();
-    services.AddTransient<IValidator<UpdateUserHourlyRateCommand>, UpdateUserHourlyRateCommandValidator>();
+    services.AddTransient<IValidator<UpdatePetWalkerHourlyRateCommand>, UpdatePetWalkerHourlyRateCommandValidator>();
 
 
     return services;

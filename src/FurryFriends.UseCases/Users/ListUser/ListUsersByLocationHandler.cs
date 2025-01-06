@@ -1,25 +1,25 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.UseCases.Services;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.Users.ListUser;
-public class ListUsersByLocationHandler : IQueryHandler<ListUsersByLocationQuery, Result<(List<PetWalker> users, int TotalCount)>>
+public class ListUsersByLocationHandler : IQueryHandler<ListPetWalkerByLocationQuery, Result<(List<PetWalker> users, int TotalCount)>>
 {
-  private readonly IUserService _userService;
+  private readonly IPetWalkerService _petWalkerService;
   private readonly ILogger<ListUsersByLocationHandler> _logger;
 
-  public ListUsersByLocationHandler(IUserService userService, ILogger<ListUsersByLocationHandler> logger)
+  public ListUsersByLocationHandler(IPetWalkerService petWalkerService, ILogger<ListUsersByLocationHandler> logger)
   {
-    _userService = userService;
+    _petWalkerService = petWalkerService;
     _logger = logger;
   }
 
-  public async Task<Result<(List<PetWalker> users, int TotalCount)>> Handle(ListUsersByLocationQuery query, CancellationToken cancellationToken)
+  public async Task<Result<(List<PetWalker> users, int TotalCount)>> Handle(ListPetWalkerByLocationQuery query, CancellationToken cancellationToken)
   {
     try
     {
 
-      var users = await _userService.ListUserUserByLocationAsync(query);
+      var users = await _petWalkerService.ListPetWalkersByLocationAsync(query);
       if (users == null)
       {
         _logger.LogError("Failed to retrieve users");

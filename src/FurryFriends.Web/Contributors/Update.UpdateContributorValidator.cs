@@ -1,6 +1,5 @@
-﻿using FurryFriends.Infrastructure.Data.Config;
-using FastEndpoints;
-using FluentValidation;
+﻿using FluentValidation;
+using FurryFriends.Infrastructure.Data.Config;
 
 namespace FurryFriends.Web.Contributors;
 

@@ -1,6 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
-
-namespace FurryFriends.Core.PetWalkerAggregate.Specifications;
+﻿namespace FurryFriends.Core.PetWalkerAggregate.Specifications;
 public class ListPetWalkerSpecification : Specification<PetWalker>
 {
   public ListPetWalkerSpecification(string? searchString, int? pageNumber = 1, int? pageSize = 10)

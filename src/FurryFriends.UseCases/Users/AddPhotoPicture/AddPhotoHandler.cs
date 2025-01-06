@@ -3,9 +3,9 @@ using FurryFriends.UseCases.Services;
 using Serilog;
 
 namespace FurryFriends.UseCases.Users.AddPhotoPicture;
-public class AddPhotoHandler(IUserService userService, IValidator<AddPhotoCommand> validator, ILogger logger) : ICommandHandler<AddPhotoCommand, Result>
+public class AddPhotoHandler(IPetWalkerService petWalkerService, IValidator<AddPhotoCommand> validator, ILogger logger) : ICommandHandler<AddPhotoCommand, Result>
 {
-  private readonly IUserService _userService = userService;
+  private readonly IPetWalkerService _userService = petWalkerService;
   private readonly IValidator<AddPhotoCommand> _validator = validator;
   private readonly ILogger _logger = logger;
 

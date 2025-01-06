@@ -1,13 +1,13 @@
-﻿using FurryFriends.Core.UserAggregate;
-using FurryFriends.Core.UserAggregate.Enums;
+﻿using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.Core.PetWalkerAggregate.Enums;
 using FurryFriends.UseCases.Services;
 
 namespace FurryFriends.UseCases.Users.GetUser;
-public class GetUserHandler( IUserService _userService) : IQueryHandler<GetUserQuery, Result<UserDto>>
+public class GetUserHandler( IPetWalkerService _userService) : IQueryHandler<GetUserQuery, Result<UserDto>>
 {
   public async Task<Result<UserDto>> Handle(GetUserQuery query, CancellationToken cancellationToken)
   {
-    var entityResult = await _userService.GetUserByEmailAsync(query.Email, cancellationToken);
+    var entityResult = await _userService.GetPetWalkerByEmailAsync(query.Email, cancellationToken);
     if(!entityResult.IsSuccess) return Result.NotFound("User Not Found with the given email"); ;
     var entity = entityResult.Value;
     var bioPicture = GetBioPicture(entity);

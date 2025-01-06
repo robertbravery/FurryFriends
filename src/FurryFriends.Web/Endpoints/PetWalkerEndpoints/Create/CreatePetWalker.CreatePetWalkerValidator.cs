@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.Web.Endpoints.UserEndpoints.Create;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
-public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
+public class CreatePetWalkerRequestValidator : AbstractValidator<CreatePetWalkerRequest>
 {
-  public CreateUserRequestValidator()
+  public CreatePetWalkerRequestValidator()
   {
     RuleFor(x => x.FirstName).NotEmpty().WithMessage("First Name is required.");
     RuleFor(x => x.LastName).NotEmpty().WithMessage("Last Name is required.");

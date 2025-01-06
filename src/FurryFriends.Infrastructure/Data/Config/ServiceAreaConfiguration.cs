@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 
 namespace FurryFriends.Infrastructure.Data.Config;
 
@@ -12,7 +12,7 @@ public class ServiceAreaConfiguration : IEntityTypeConfiguration<ServiceArea>
 
     builder.Property(sa => sa.UserID).IsRequired();
     builder.Property(sa => sa.LocalityID).IsRequired();
-    
+
 
     builder.HasOne(sa => sa.Locality)
         .WithMany()

@@ -2,11 +2,11 @@
 using FurryFriends.Core.GuardClauses;
 using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.Core.UserAggregate;
+namespace FurryFriends.Core.PetWalkerAggregate;
 
 public class PetWalker : UserEntityBase
 {
-  
+
   public GenderType Gender { get; private set; } = GenderType.Create(GenderType.GenderCategory.Other).Value;
   public string? Biography { get; private set; }
   public DateTime DateOfBirth { get; private set; }

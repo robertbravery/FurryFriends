@@ -2,7 +2,7 @@
 
 namespace FurryFriends.UseCases.Users.CreateUser;
 
-public record CreateUserCommand
+public record CreatePetWalkerCommand
 (
     string FirstName,
     string LastName,

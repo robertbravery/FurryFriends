@@ -1,7 +1,7 @@
 ﻿using FurryFriends.Core.Common;
-using FurryFriends.Core.UserAggregate.Enums;
+using FurryFriends.Core.PetWalkerAggregate.Enums;
 
-namespace FurryFriends.Core.UserAggregate;
+namespace FurryFriends.Core.PetWalkerAggregate;
 public class Photo : AuditableEntity<Guid>, IEquatable<Photo>
 {
   public Guid UserId { get; set; }
@@ -15,7 +15,7 @@ public class Photo : AuditableEntity<Guid>, IEquatable<Photo>
   // Constructor and methods
   public Photo()
   {
-   
+
   }
 
   public Photo(string url, string? description = null)

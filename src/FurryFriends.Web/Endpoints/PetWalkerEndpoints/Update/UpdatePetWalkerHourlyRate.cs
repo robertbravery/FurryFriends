@@ -28,7 +28,7 @@ public class UpdatePetWalkerHourlyRate(IMediator _mediator)
 
   public override async Task HandleAsync(UpdateUserHourlyRateRequest request, CancellationToken cancellationToken)
   {
-    var updateCommand = new UpdateUserHourlyRateCommand(
+    var updateCommand = new UpdatePetWalkerHourlyRateCommand(
       request.UserId,
       request.HourlyRate,
       request.Currency);

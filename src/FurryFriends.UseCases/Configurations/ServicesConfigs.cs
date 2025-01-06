@@ -8,7 +8,7 @@ public static class ServicesConfigs
 {
   public static IServiceCollection AddUseCaseServices(this IServiceCollection services)
   {
-    services.AddScoped<IUserService, UserService>();
+    services.AddScoped<IPetWalkerService, PetWalkerService>();
     services.AddScoped<ILogger>(provider => Serilog.Log.Logger);
 
     return services;

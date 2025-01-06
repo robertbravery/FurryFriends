@@ -1,6 +1,6 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 
-namespace FurryFriends.UnitTests.Core.UserAggregate;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregate;
 
 public class PhotoTests
 {

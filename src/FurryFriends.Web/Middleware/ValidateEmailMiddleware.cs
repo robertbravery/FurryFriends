@@ -17,7 +17,7 @@ public class ValidateEmailMiddleware
     var path = context.Request.Path.Value;
 
     // Check if the request is for the /users/{email} endpoint
-    const string UserPath = "/user/email/";
+    const string UserPath = "/PetWalker/email/";
     if (path != null && path.StartsWith(UserPath) )
     {
       var email = path.Substring(UserPath.Length);

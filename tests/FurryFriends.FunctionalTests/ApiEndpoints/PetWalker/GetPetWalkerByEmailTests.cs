@@ -1,13 +1,13 @@
-﻿using FurryFriends.Web.Endpoints.UserEndpoints.Get;
-using System.Net;
+﻿using System.Net;
 using FluentAssertions;
+using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
 
 namespace FurryFriends.FunctionalTests.ApiEndpoints.PetWalker;
 
 public class GetPetWalkerByEmailTests(CustomWebApplicationFactory<Program> factory) : IClassFixture<CustomWebApplicationFactory<Program>>
 {
   private readonly HttpClient _client = factory.CreateClient();
-  private const string URL = "/user/email/";
+  private const string URL = "/PetWalker/email/";
 
   [Fact]
   public async Task ReturnsUserByEmail()
@@ -18,7 +18,7 @@ public class GetPetWalkerByEmailTests(CustomWebApplicationFactory<Program> facto
 
     // Act
     var response = await _client.GetAsync(endpoint, TestContext.Current.CancellationToken);
-    var result = await _client.GetAndDeserializeAsync<GetUserByEmailResponse>(endpoint);
+    var result = await _client.GetAndDeserializeAsync<GetPetWalkerByEmailResponse>(endpoint);
 
     // Assert
     response.StatusCode.Should().Be(HttpStatusCode.OK);

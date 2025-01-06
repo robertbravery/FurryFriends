@@ -12,7 +12,7 @@ public static class ValidatorConfigs
   {
     services.AddSingleton<IValidator<Name>, NameValidator>();
     services.AddSingleton<IValidator<PhoneNumber>, PhoneNumberValidator>();
-    services.AddSingleton<IValidator<CreateUserCommand>, CreateUserCommandValidator>();
+    services.AddSingleton<IValidator<CreatePetWalkerCommand>, CreatePetWalkerCommandValidator>();
     services.AddSingleton<IValidator<Compensation>, CompensationValidator>();
 
     return services;

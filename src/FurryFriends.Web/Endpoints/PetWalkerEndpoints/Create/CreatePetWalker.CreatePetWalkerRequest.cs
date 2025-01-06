@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using FurryFriends.Core.ValueObjects;
+﻿using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.Web.Endpoints.UserEndpoints.Create;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
-public class CreateUserRequest
+public class CreatePetWalkerRequest
 {
-  public const string Route = "/User";
+  public const string Route = "/PetWalker";
 
   public string FirstName { get; set; } = default!;
 

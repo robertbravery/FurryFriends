@@ -1,15 +1,16 @@
-﻿using FurryFriends.Core.PetWalkerAggregate.Specifications;
-using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.DataTransferObjects;
 using FurryFriends.UseCases.Users.ListUser;
 
 namespace FurryFriends.UseCases.Services;
-public class UserService : IUserService
+
+public class PetWalkerService : IPetWalkerService
 {
   private readonly IRepository<PetWalker> _repository;
 
-  public UserService(IRepository<PetWalker> repository)
+  public PetWalkerService(IRepository<PetWalker> repository)
   {
     _repository = repository;
   }
@@ -28,12 +29,12 @@ public class UserService : IUserService
     // Optionally, you can fire a domain event or log the update
   }
 
-  public Task<PetWalker> CreateUserAsync(PetWalker user)
+  public Task<PetWalker> CreatePetWalkerAsync(PetWalker user)
   {
     throw new NotImplementedException();
   }
 
-  public async Task<Result<PetWalker>> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+  public async Task<Result<PetWalker>> GetPetWalkerByEmailAsync(string email, CancellationToken cancellationToken)
   {
     var spec = new GetPetWalkerByEmailSpecification(email);
     var entity = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
@@ -43,23 +44,23 @@ public class UserService : IUserService
     return entity;
   }
 
-  public async Task<Result<UserListDto>> ListUsersAsync(ListUsersQuery query)
+  public async Task<Result<PetWalkerListDto>> ListPetWalkersAsync(ListPetWalkerQuery query)
   {
     var spec = new ListPetWalkerSpecification(query.SearchString, query.PageNumber, query.PageSize);
     var users = await _repository.ListAsync(spec);
     var totalCount = await _repository.CountAsync(spec);
-    return new UserListDto(users, totalCount);
+    return new PetWalkerListDto(users, totalCount);
   }
 
-  public async Task<Result<UserListDto>> ListUserUserByLocationAsync(ListUsersByLocationQuery query)
+  public async Task<Result<PetWalkerListDto>> ListPetWalkersByLocationAsync(ListPetWalkerByLocationQuery query)
   {
     var spec = new ListPetWalkerByLocationSpecification(query.SearchString, query.Location, query.PageNumber, query.PageSize);
     var users = await _repository.ListAsync(spec);
     var totalCount = await _repository.CountAsync(spec);
-    return new UserListDto(users, totalCount);
+    return new PetWalkerListDto(users, totalCount);
   }
 
-  public async Task<Result> UpdateUserHourlyRateAsync(Guid userId, decimal hourlyRate, string currency, CancellationToken cancellationToken)
+  public async Task<Result> UpdatePetWalkerHourlyRateAsync(Guid userId, decimal hourlyRate, string currency, CancellationToken cancellationToken)
   {
     var user = await _repository.GetByIdAsync(userId, cancellationToken);
     if (user == null)

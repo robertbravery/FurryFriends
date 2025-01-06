@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace FurryFriends.UseCases.Users.CreateUser;
 
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+public class CreatePetWalkerCommandValidator : AbstractValidator<CreatePetWalkerCommand>
 {
-  public CreateUserCommandValidator()
+  public CreatePetWalkerCommandValidator()
   {
     //RuleFor(cmd => cmd.FirstName)
     //    .NotEmpty().WithMessage("First Name cannot be empty")

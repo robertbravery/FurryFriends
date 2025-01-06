@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Core.ContributorAggregate;
-using FurryFriends.Core.UserAggregate;
+using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
@@ -20,7 +20,7 @@ public static class SeedData
 
     await SeedData.PopulateContributorTestDataAsync(dbContext);
     await SeedData.PopulateUserTestDataAsync(dbContext);
-    
+
   }
 
   private static async Task PopulateContributorTestDataAsync(AppDbContext dbContext)
@@ -54,13 +54,13 @@ public static class SeedData
     var location3 = ServiceArea.Create(user2.Id, Guid.Parse("df2f290d-d72f-4a7e-9254-8c1aae7ba371"));
     var location4 = ServiceArea.Create(user2.Id, Guid.Parse("44eec69e-c38a-4111-8825-bdc52a9303ae"));
 
-      user1.ServiceAreas.Add(location1);
-      user1.ServiceAreas.Add(location2);
-      user2.ServiceAreas.Add(location3);
-      user2.ServiceAreas.Add(location4);
-   
+    user1.ServiceAreas.Add(location1);
+    user1.ServiceAreas.Add(location2);
+    user2.ServiceAreas.Add(location3);
+    user2.ServiceAreas.Add(location4);
 
-    dbContext.Users.AddRange([user1, user2]);
+
+    dbContext.PetWalkers.AddRange([user1, user2]);
     dbContext.AddRange([location1, location2, location3, location4]);
     await dbContext.SaveChangesAsync();
 

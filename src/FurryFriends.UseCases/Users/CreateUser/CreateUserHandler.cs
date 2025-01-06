@@ -1,25 +1,25 @@
 ﻿using FluentValidation;
-using FurryFriends.Core.UserAggregate;
+using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.UseCases.Users.CreateUser;
 
-public class CreateUserHandler : ICommandHandler<CreateUserCommand, Result<Guid>>
+public class CreateUserHandler : ICommandHandler<CreatePetWalkerCommand, Result<Guid>>
 {
-  private readonly IRepository<PetWalker> _userRepository;
-  private readonly IValidator<CreateUserCommand> _validator;
+  private readonly IRepository<PetWalker> _petWalkerRepository;
+  private readonly IValidator<CreatePetWalkerCommand> _validator;
   private readonly IValidator<Name> _nameValidator;
   private readonly IValidator<PhoneNumber> _phoneNumberValidator;
 
-  public CreateUserHandler(IRepository<PetWalker> userRepository, IValidator<CreateUserCommand> commandValidator, IValidator<Name> nameValidator, IValidator<PhoneNumber> phoneNumberValidator)
+  public CreateUserHandler(IRepository<PetWalker> petWalkerRepository, IValidator<CreatePetWalkerCommand> commandValidator, IValidator<Name> nameValidator, IValidator<PhoneNumber> phoneNumberValidator)
   {
-    _userRepository = userRepository;
+    _petWalkerRepository = petWalkerRepository;
     _validator = commandValidator;
     _nameValidator = nameValidator;
     _phoneNumberValidator = phoneNumberValidator;
   }
 
-  public async Task<Result<Guid>> Handle(CreateUserCommand command, CancellationToken cancellationToken)
+  public async Task<Result<Guid>> Handle(CreatePetWalkerCommand command, CancellationToken cancellationToken)
   {
     var validationResult = await _validator.ValidateAsync(command, cancellationToken);
     if (!validationResult.IsValid)
@@ -75,7 +75,7 @@ public class CreateUserHandler : ICommandHandler<CreateUserCommand, Result<Guid>
     user.UpdateDailyPetWalkLimit(command.DailyPetWalkLimit);
     user.UpdateCompensation(compensationResult.Value);
 
-    var addedUser = await _userRepository.AddAsync(user, cancellationToken);
+    var addedUser = await _petWalkerRepository.AddAsync(user, cancellationToken);
 
     return Result<Guid>.Success(addedUser.Id);
   }

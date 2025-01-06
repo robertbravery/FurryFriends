@@ -1,5 +1,5 @@
-﻿using FurryFriends.Core.PetWalkerAggregate.Specifications;
-using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.UnitTests.TestHelpers;
 
 namespace FurryFriends.UnitTests.Core.PetWalkerAggregate.Specification;

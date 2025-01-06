@@ -1,6 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
-
-namespace FurryFriends.Core.PetWalkerAggregate.Specifications;
+﻿namespace FurryFriends.Core.PetWalkerAggregate.Specifications;
 
 public class GetPetWalkerByEmailSpecification : SingleResultSpecification<PetWalker>
 {

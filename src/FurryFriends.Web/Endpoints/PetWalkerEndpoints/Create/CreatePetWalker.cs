@@ -1,15 +1,14 @@
 ﻿using FluentValidation;
 using FurryFriends.UseCases.Users.CreateUser;
-using FurryFriends.Web.Endpoints.UserEndpoints.Create;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
 public class CreatePetWalker(IMediator _mediator)
-  : Endpoint<CreateUserRequest, Result<CreateUserResponse>>
+  : Endpoint<CreatePetWalkerRequest, Result<CreatePetWalkerResponse>>
 {
   public override void Configure()
   {
-    Post(CreateUserRequest.Route);
+    Post(CreatePetWalkerRequest.Route);
     AllowAnonymous();
     Options(o => o.WithName("CreateUser_" + Guid.NewGuid().ToString())); // Ensure unique name
 
@@ -18,7 +17,7 @@ public class CreatePetWalker(IMediator _mediator)
       s.Summary = "Create a new User";
       s.Description = "Creates a new user by providing a username and email. This endpoint allows anonymous access.";
 
-      s.ExampleRequest = new CreateUserRequest
+      s.ExampleRequest = new CreatePetWalkerRequest
       {
         FirstName = "John",
         LastName = "Smith",
@@ -32,9 +31,9 @@ public class CreatePetWalker(IMediator _mediator)
       };
     });
   }
-  public override async Task HandleAsync(CreateUserRequest request, CancellationToken cancellationToken)
+  public override async Task HandleAsync(CreatePetWalkerRequest request, CancellationToken cancellationToken)
   {
-    var userCommand = new CreateUserCommand(
+    var userCommand = new CreatePetWalkerCommand(
         request.FirstName,
         request.LastName,
         request.Email,
@@ -71,6 +70,6 @@ public class CreatePetWalker(IMediator _mediator)
       return;
     }
 
-    Response = new CreateUserResponse(result.Value);
+    Response = new CreatePetWalkerResponse(result.Value);
   }
 }

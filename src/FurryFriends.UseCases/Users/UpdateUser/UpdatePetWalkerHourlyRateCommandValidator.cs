@@ -2,9 +2,9 @@
 
 namespace FurryFriends.UseCases.Users.UpdateUser;
 
-public class UpdateUserHourlyRateCommandValidator : AbstractValidator<UpdateUserHourlyRateCommand>
+public class UpdatePetWalkerHourlyRateCommandValidator : AbstractValidator<UpdatePetWalkerHourlyRateCommand>
 {
-  public UpdateUserHourlyRateCommandValidator()
+  public UpdatePetWalkerHourlyRateCommandValidator()
   {
     RuleFor(x => x.UserId)
         .NotEmpty().WithMessage("UserId is required.");
