@@ -104,15 +104,7 @@ classDiagram
         +IsValid() bool
         +IsExpired() bool
     }
-
-    class ServiceArea {
-        -List~String~ ZipCodes
-        -Int RadiusInMiles
-        +AddZipCode(String) Result
-        +RemoveZipCode(String) Result
-        +IsInServiceArea(String) bool
-    }
-
+    
     class Rating {
         -Decimal Value
         -Int TotalReviews
@@ -129,6 +121,33 @@ classDiagram
         +Validate() bool
     }
 
+    class ServiceArea { 
+        -Guid Id 
+        -Guid UserID 
+        -Guid LocalityID         
+        -Locality Locality 
+    }
+
+    class Country { 
+        -Guid CountryID 
+        -string CountryName 
+        -ICollection<Region> Regions 
+    } 
+    
+    class Region { 
+        -Guid RegionID 
+        -string RegionName 
+        -Guid CountryID 
+        -Country Country 
+        -ICollection<Locality> Localities 
+    } 
+    
+    class Locality { 
+        -Guid LocalityID 
+        -string LocalityName 
+        -Guid RegionID 
+        -Region Region 
+    }
     
     note for User "Invariants:
         1. Email must be valid
@@ -149,6 +168,14 @@ classDiagram
     User "1" *-- "1" ServiceArea
     User "1" *-- "1" BackgroundCheck
     User "1" *-- "1" Rating
-    User "1" *-- "many" Testimonial
+    User "1" --> "0..n" ServiceArea : has 
+    ServiceArea "1" --> "1" User : belongs to 
+    ServiceArea "1" --> "1" Locality : belongs to 
+    Country "1" --> "0..n" Region : has 
+    Region "1" --> "0..n" Locality : has 
+    Locality "1" --> "0..n" ServiceArea : has 
+    Region "1" --> "1" Country : belongs to 
+    Locality "1" --> "1" Region : belongs to
     Schedule "1" *-- "many" TimeSlot
+    User "1" *-- "many" Testimonial
     User ..> DomainEvents

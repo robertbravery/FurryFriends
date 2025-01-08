@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Core.ContributorAggregate;
-using FurryFriends.Core.UserAggregate;
+using FurryFriends.Core.PetWalkerAggregate;
 
 namespace FurryFriends.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options,
@@ -8,8 +8,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
   private readonly IDomainEventDispatcher? _dispatcher = dispatcher;
 
   public DbSet<Contributor> Contributors => Set<Contributor>();
-  public DbSet<User> Users => Set<User>();
+  public DbSet<PetWalker> PetWalkers => Set<PetWalker>();
   public DbSet<Photo> Photos => Set<Photo>();
+  public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
 
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

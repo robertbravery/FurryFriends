@@ -38,6 +38,124 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.ToTable("Contributors");
                 });
 
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Country", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CountryName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Locality", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LocalityName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<Guid>("RegionID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RegionID");
+
+                    b.ToTable("Localities", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Region", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CountryID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RegionName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryID");
+
+                    b.ToTable("Regions", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.UserAggregate.PetWalker", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Biography")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DailyPetWalkLimit")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasFirstAidCertificatation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HasInsurance")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("YearsOfExperience")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PetWalkers", (string)null);
+                });
+
             modelBuilder.Entity("FurryFriends.Core.UserAggregate.Photo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -71,23 +189,31 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.ToTable("Photos", (string)null);
                 });
 
-            modelBuilder.Entity("FurryFriends.Core.UserAggregate.User", b =>
+            modelBuilder.Entity("FurryFriends.Core.UserAggregate.ServiceArea", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LocalityID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
+                    b.HasIndex("LocalityID");
 
-                    b.ToTable("Users", (string)null);
+                    b.HasIndex("UserID");
+
+                    b.ToTable("ServiceAreas", (string)null);
                 });
 
             modelBuilder.Entity("FurryFriends.Core.ContributorAggregate.Contributor", b =>
@@ -142,44 +268,58 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Navigation("PhoneNumber");
                 });
 
-            modelBuilder.Entity("FurryFriends.Core.UserAggregate.Photo", b =>
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Locality", b =>
                 {
-                    b.HasOne("FurryFriends.Core.UserAggregate.User", "User")
-                        .WithMany("Photos")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("FurryFriends.Core.LocationAggregate.Region", "Region")
+                        .WithMany("Localities")
+                        .HasForeignKey("RegionID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Region");
                 });
 
-            modelBuilder.Entity("FurryFriends.Core.UserAggregate.User", b =>
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Region", b =>
+                {
+                    b.HasOne("FurryFriends.Core.LocationAggregate.Country", "Country")
+                        .WithMany("Regions")
+                        .HasForeignKey("CountryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.UserAggregate.PetWalker", b =>
                 {
                     b.OwnsOne("FurryFriends.Core.ValueObjects.Name", "Name", b1 =>
                         {
-                            b1.Property<Guid>("UserId")
+                            b1.Property<Guid>("PetWalkerId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("FirstName")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
-                                .HasColumnName("FirstName");
+                                .HasColumnName("FirstName")
+                                .HasColumnOrder(1);
 
                             b1.Property<string>("LastName")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
-                                .HasColumnName("LastName");
+                                .HasColumnName("LastName")
+                                .HasColumnOrder(2);
 
-                            b1.HasKey("UserId");
+                            b1.HasKey("PetWalkerId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("PetWalkers");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("PetWalkerId");
                         });
 
                     b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
                         {
-                            b1.Property<Guid>("UserId")
+                            b1.Property<Guid>("PetWalkerId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("CountryCode")
@@ -194,17 +334,17 @@ namespace FurryFriends.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(15)")
                                 .HasColumnName("PhoneNumber");
 
-                            b1.HasKey("UserId");
+                            b1.HasKey("PetWalkerId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("PetWalkers");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("PetWalkerId");
                         });
 
                     b.OwnsOne("FurryFriends.Core.ValueObjects.Address", "Address", b1 =>
                         {
-                            b1.Property<Guid>("UserId")
+                            b1.Property<Guid>("PetWalkerId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("City")
@@ -237,15 +377,89 @@ namespace FurryFriends.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(5)")
                                 .HasColumnName("ZipCode");
 
-                            b1.HasKey("UserId");
+                            b1.HasKey("PetWalkerId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("PetWalkers");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("PetWalkerId");
+                        });
+
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.Compensation", "Compensation", b1 =>
+                        {
+                            b1.Property<Guid>("PetWalkerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("char")
+                                .HasColumnName("Currency")
+                                .IsFixedLength();
+
+                            b1.Property<decimal>("HourlyRate")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("HourlyRate");
+
+                            b1.HasKey("PetWalkerId");
+
+                            b1.ToTable("PetWalkers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetWalkerId");
+                        });
+
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("PetWalkerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("EmailAddress")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("nvarchar(256)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("PetWalkerId");
+
+                            b1.HasIndex("EmailAddress")
+                                .IsUnique();
+
+                            b1.ToTable("PetWalkers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetWalkerId");
+                        });
+
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.GenderType", "Gender", b1 =>
+                        {
+                            b1.Property<Guid>("PetWalkerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Gender")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasDefaultValue(0)
+                                .HasColumnName("Gender");
+
+                            b1.HasKey("PetWalkerId");
+
+                            b1.ToTable("PetWalkers");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetWalkerId");
                         });
 
                     b.Navigation("Address")
+                        .IsRequired();
+
+                    b.Navigation("Compensation")
+                        .IsRequired();
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("Gender")
                         .IsRequired();
 
                     b.Navigation("Name")
@@ -255,9 +469,50 @@ namespace FurryFriends.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FurryFriends.Core.UserAggregate.User", b =>
+            modelBuilder.Entity("FurryFriends.Core.UserAggregate.Photo", b =>
+                {
+                    b.HasOne("FurryFriends.Core.UserAggregate.PetWalker", "User")
+                        .WithMany("Photos")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.UserAggregate.ServiceArea", b =>
+                {
+                    b.HasOne("FurryFriends.Core.LocationAggregate.Locality", "Locality")
+                        .WithMany()
+                        .HasForeignKey("LocalityID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FurryFriends.Core.UserAggregate.PetWalker", "User")
+                        .WithMany("ServiceAreas")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Locality");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Country", b =>
+                {
+                    b.Navigation("Regions");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Region", b =>
+                {
+                    b.Navigation("Localities");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.UserAggregate.PetWalker", b =>
                 {
                     b.Navigation("Photos");
+
+                    b.Navigation("ServiceAreas");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,5 @@
 ﻿using FurryFriends.UseCases.Contributors;
 using FurryFriends.UseCases.Contributors.List;
-using Microsoft.EntityFrameworkCore;
 
 namespace FurryFriends.Infrastructure.Data.Queries;
 

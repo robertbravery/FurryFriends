@@ -1,10 +1,9 @@
-﻿using Ardalis.SharedKernel;
+﻿using System.Reflection;
+using Ardalis.SharedKernel;
 using FluentValidation;
 using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Contributors.Create;
-using MediatR;
-using System.Reflection;
 
 namespace FurryFriends.Web.Configurations;
 

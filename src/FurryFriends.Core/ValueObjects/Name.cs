@@ -51,3 +51,4 @@ public class Name : ValueObject
     return HashCode.Combine(FirstName, LastName);
   }
 }
+

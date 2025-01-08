@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.UserAggregate;
+﻿using FurryFriends.Core.PetWalkerAggregate;
 
 public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 {
@@ -9,7 +9,5 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
 
     builder.Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
     builder.Property(p => p.Url).IsRequired().HasMaxLength(2048);
-
-   //builder.HasOne(p => p.User).WithOne(u => u.BioPicture).HasForeignKey<Photo>("UserId");
   }
 }
