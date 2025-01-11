@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.Web.Endpoints.UserEndpoints.Get;
+﻿namespace FurryFriends.Web.Endpoints.Base;
 
 public class ResponseBase<T>(T? data, bool success = true, string message = "Success", List<string>? errors = null) where T : class
 {

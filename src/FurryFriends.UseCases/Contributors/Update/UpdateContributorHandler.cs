@@ -1,12 +1,10 @@
-using FluentValidation;
-using FurryFriends.Core.ContributorAggregate;
+﻿using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.UseCases.Contributors.Update;
 
 public class UpdateContributorHandler(
-    IRepository<Contributor> _repository, 
-    IValidator<Name> _nameValidator)
+    IRepository<Contributor> _repository)
     : ICommandHandler<UpdateContributorCommand, Result<ContributorDTO>>
 {
   public async Task<Result<ContributorDTO>> Handle(UpdateContributorCommand request, CancellationToken cancellationToken)
@@ -20,7 +18,7 @@ public class UpdateContributorHandler(
     var firstName = string.IsNullOrEmpty(nameParts[0]) ? "Unknown" : nameParts[0];
     var lastName = string.IsNullOrEmpty(nameParts[1]) ? "Unknown" : nameParts[1];
     var fullName = string.Join(" ", nameParts);
-    var name = Name.Create(firstName, lastName, _nameValidator).Value;
+    var name = Name.Create(firstName, lastName).Value;
     existingContributor.UpdateName(name);
 
     await _repository.UpdateAsync(existingContributor, cancellationToken);

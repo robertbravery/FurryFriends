@@ -27,7 +27,7 @@ public class CreateUserHandler : ICommandHandler<CreatePetWalkerCommand, Result<
       return Result<Guid>.Invalid(validationResult.Errors.Select(e => new ValidationError(e.ErrorMessage)).ToList());
     }
 
-    var phoneNumberResult = await PhoneNumber.Create(command.CountryCode, command.Number, _phoneNumberValidator);
+    var phoneNumberResult = await PhoneNumber.Create(command.CountryCode, command.Number);
     if (!phoneNumberResult.IsSuccess)
     {
       return Result<Guid>.Invalid(phoneNumberResult.Errors.Select(e => new ValidationError(e)).ToList());
@@ -39,7 +39,7 @@ public class CreateUserHandler : ICommandHandler<CreatePetWalkerCommand, Result<
       return Result<Guid>.Invalid(addressResult.Errors.Select(e => new ValidationError(e)).ToList());
     }
 
-    var nameResult = Name.Create(command.FirstName, command.LastName, _nameValidator);
+    var nameResult = Name.Create(command.FirstName, command.LastName);
     if (!nameResult.IsSuccess)
     {
       return Result<Guid>.Invalid(nameResult.Errors.Select(e => new ValidationError(e)).ToList());

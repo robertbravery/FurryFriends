@@ -1,6 +1,6 @@
 ﻿using Azure;
 using FurryFriends.UseCases.Users.GetUser;
-using FurryFriends.Web.Endpoints.UserEndpoints.Get;
+using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.UserEndpoints.Records;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;

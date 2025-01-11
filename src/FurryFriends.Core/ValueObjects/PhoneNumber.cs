@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FurryFriends.Core.ValueObjects.Validators;
 namespace FurryFriends.Core.ValueObjects;
 
 public class PhoneNumber : ValueObject
@@ -7,19 +8,20 @@ public class PhoneNumber : ValueObject
   public string Number { get; private set; } = default!;
   public PhoneNumber()
   {
-    
+
   }
 
-  private PhoneNumber(string countryCode,  string number)
+  private PhoneNumber(string countryCode, string number)
   {
     CountryCode = countryCode;
     Number = number;
   }
 
-  public static async Task<Result<PhoneNumber>> Create(string countryCode,  string number, IValidator<PhoneNumber> validator)
+  public static async Task<Result<PhoneNumber>> Create(string countryCode, string number)
   {
 
     var phoneNumber = new PhoneNumber(countryCode, number);
+    var validator = new PhoneNumberValidator();
     return await Validate(validator, phoneNumber);
   }
 

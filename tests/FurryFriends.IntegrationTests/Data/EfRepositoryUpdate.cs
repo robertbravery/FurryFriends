@@ -13,7 +13,7 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
     var repository = GetRepository();
     var firstName = "John";
     var lastName = "Doe";
-    var initialName = Name.Create(firstName, lastName, new NameValidator());
+    var initialName = Name.Create(firstName, lastName);
     var Contributor = new Contributor(initialName);
     var canellationToken = new CancellationToken();
 
@@ -36,7 +36,7 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
 
     var newFirstName = "Jane";
     var newLastName = "Doe";
-    var newName = Name.Create(newFirstName, newLastName, new NameValidator());
+    var newName = Name.Create(newFirstName, newLastName);
     newContributor.UpdateName(newName);
 
     // Update the item

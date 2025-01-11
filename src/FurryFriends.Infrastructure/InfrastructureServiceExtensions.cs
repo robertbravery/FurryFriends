@@ -2,7 +2,7 @@
 using FurryFriends.Core.Services;
 using FurryFriends.Infrastructure.Data;
 using FurryFriends.Infrastructure.Data.Queries;
-using FurryFriends.Infrastructure.Email;
+using FurryFriends.Infrastructure.Messaging;
 using FurryFriends.UseCases.Contributors.List;
 using ILogger = Serilog.ILogger;
 
@@ -14,7 +14,7 @@ public static class InfrastructureServiceExtensions
     ConfigurationManager config,
     ILogger logger,
     string environmentName)
-  {    
+  {
     if (environmentName == "Development")
     {
       RegisterDevelopmentOnlyDependencies(services, config);

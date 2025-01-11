@@ -57,12 +57,12 @@ public class ListPetWalkerTests : TestBase
     var phoneNumberValidator = new PhoneNumberValidator();
     var nameValidator = new NameValidator();
 
-    var phoneNumber1 = (await PhoneNumber.Create("1", "011-123-4567", phoneNumberValidator)).Value;
-    var phoneNumber2 = (await PhoneNumber.Create("1", "011-123-4567", phoneNumberValidator)).Value;
+    var phoneNumber1 = (await PhoneNumber.Create("1", "011-123-4567")).Value;
+    var phoneNumber2 = (await PhoneNumber.Create("1", "011-123-4567")).Value;
     var address1 = Address.Create(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.Country(), Fake.Address.ZipCode());
     var address2 = Address.Create(Fake.Address.StreetAddress(), Fake.Address.City(), Fake.Address.State(), Fake.Address.Country(), Fake.Address.ZipCode());
-    var name1 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
-    var name2 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName(), nameValidator);
+    var name1 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName());
+    var name2 = Name.Create(Fake.Name.FirstName(), Fake.Name.LastName());
     var emaail1 = Email.Create(Fake.Internet.Email());
     var emaail2 = Email.Create(Fake.Internet.Email());
 

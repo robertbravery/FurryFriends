@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.Interfaces;
 
-namespace FurryFriends.Infrastructure.Email;
+namespace FurryFriends.Infrastructure.Messaging;
 
 /// <summary>
 /// MimeKit is recommended over this now:

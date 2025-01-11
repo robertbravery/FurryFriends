@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.Interfaces;
 
-namespace FurryFriends.Infrastructure.Email;
+namespace FurryFriends.Infrastructure.Messaging;
 
 public class MimeKitEmailSender(ILogger<MimeKitEmailSender> logger,
   IOptions<MailserverConfiguration> mailserverOptions) : IEmailSender
@@ -12,8 +12,8 @@ public class MimeKitEmailSender(ILogger<MimeKitEmailSender> logger,
   {
     _logger.LogWarning("Sending email to {to} from {from} with subject {subject} using {type}.", to, from, subject, this.ToString());
 
-    using var client = new MailKit.Net.Smtp.SmtpClient(); 
-    await client.ConnectAsync(_mailserverConfiguration.Hostname, 
+    using var client = new MailKit.Net.Smtp.SmtpClient();
+    await client.ConnectAsync(_mailserverConfiguration.Hostname,
       _mailserverConfiguration.Port, false);
     var message = new MimeMessage();
     message.From.Add(new MailboxAddress(from, from));
@@ -23,7 +23,7 @@ public class MimeKitEmailSender(ILogger<MimeKitEmailSender> logger,
 
     await client.SendAsync(message);
 
-    await client.DisconnectAsync(true, 
+    await client.DisconnectAsync(true,
       new CancellationToken(canceled: true));
   }
 }

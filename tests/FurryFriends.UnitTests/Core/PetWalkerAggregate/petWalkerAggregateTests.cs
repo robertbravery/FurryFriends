@@ -12,7 +12,7 @@ public class petWalkerAggregateTests
   public petWalkerAggregateTests()
   {
     _validAddress = Address.Create("123 Main St", "City", "State", "US", "12345");
-    _validPhone = PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator()).Result.Value;
+    _validPhone = PhoneNumber.Create("027", "011-123-4567").Result.Value;
   }
 
   [Fact]
@@ -21,7 +21,7 @@ public class petWalkerAggregateTests
     // Arrange    
     var firstName = "John";
     var lastName = "Doe";
-    var name = Name.Create(firstName, lastName, new NameValidator());
+    var name = Name.Create(firstName, lastName);
     var email = Email.Create("test@example.com");
 
     // Act
@@ -54,9 +54,9 @@ public class petWalkerAggregateTests
     // Arrange
     var firstName = "John";
     var lastName = "Doe";
-    var phoneNumber = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
+    var phoneNumber = await PhoneNumber.Create("027", "011-123-4567");
     var address = Address.Create("123 Main St", "Anytown", "CA", "US", "12345");
-    var name = Name.Create(firstName, lastName, new NameValidator());
+    var name = Name.Create(firstName, lastName);
     var email = Email.Create("old@example.com");
     var user = PetWalker.Create(name, email, phoneNumber, address);
     var newEmail = Email.Create("new@example.com");
@@ -96,7 +96,7 @@ public class petWalkerAggregateTests
 
 
     // Act
-    var name = Name.Create(invalidName, invalidName, new NameValidator());
+    var name = Name.Create(invalidName, invalidName);
 
     // Assert
     name.IsSuccess.Should().BeFalse();
@@ -107,12 +107,12 @@ public class petWalkerAggregateTests
   public async Task UpdateDetails_WithValidInputs_UpdatesUserDetails()
   {
     // Arrange
-    var newName = Name.Create("Jane", "Doe", new NameValidator());
+    var newName = Name.Create("Jane", "Doe");
     var newEmail = Email.Create("jane@example.com");
-    var name = Name.Create("John", "Doe", new NameValidator());
+    var name = Name.Create("John", "Doe");
     var oldEmail = Email.Create("john@example.com");
     var user = PetWalker.Create(name, oldEmail, _validPhone, _validAddress);
-    var newPhone = await PhoneNumber.Create("027", "011-123-4567", new PhoneNumberValidator());
+    var newPhone = await PhoneNumber.Create("027", "011-123-4567");
     var newAddress = Address.Create("456 Oak St", "NewCity", "NewState", "US", "54321");
 
     // Act
@@ -129,7 +129,7 @@ public class petWalkerAggregateTests
   public void UpdateEmail_WithValidEmail_UpdatesEmail()
   {
     // Arrange
-    var name = Name.Create("John", "Doe", new NameValidator());
+    var name = Name.Create("John", "Doe");
     var oldEmail = Email.Create("john@example.com");
     var user = PetWalker.Create(name, oldEmail, _validPhone, _validAddress);
     var newEmail = Email.Create("newemail@example.com");
@@ -152,7 +152,7 @@ public class petWalkerAggregateTests
     var nameValidator = new NameValidator();
 
     //act
-    var name = Name.Create(invalidUsername, invalidUsername, nameValidator);
+    var name = Name.Create(invalidUsername, invalidUsername);
 
     // Assert
     name.IsSuccess.Should().BeFalse();

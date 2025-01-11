@@ -22,7 +22,7 @@ public class EfRepositoryDelete : BaseEfRepoTestFixture
     var repository = GetRepository();
     var firstName = "Joe";
     var lastName = "Soap";
-    var initialName = Name.Create(firstName, lastName, _nameValidator).Value;
+    var initialName = Name.Create(firstName, lastName).Value;
     var Contributor = new Contributor(initialName);
     var canellationToken = new CancellationToken();
 

@@ -70,6 +70,6 @@ public class CreatePetWalker(IMediator _mediator)
       return;
     }
 
-    Response = new CreatePetWalkerResponse(result.Value);
+    Response = new CreatePetWalkerResponse(result.Value.ToString());
   }
 }

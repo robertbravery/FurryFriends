@@ -1,4 +1,5 @@
-﻿using FurryFriends.Core.ContributorAggregate;
+﻿using FurryFriends.Core.ClientAggregate;
+using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 
 namespace FurryFriends.Infrastructure.Data;
@@ -11,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
   public DbSet<PetWalker> PetWalkers => Set<PetWalker>();
   public DbSet<Photo> Photos => Set<Photo>();
   public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
+  public DbSet<Client> Clients => Set<Client>();
 
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)

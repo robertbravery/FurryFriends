@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure;
-using FurryFriends.Infrastructure.Email;
+using FurryFriends.Infrastructure.Messaging;
 using FurryFriends.UseCases.Configurations;
 using ILogger = Serilog.ILogger;
 

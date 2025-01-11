@@ -14,7 +14,7 @@ public class CreateContributorHandler(IRepository<Contributor> _repository, IVal
     var firstName = string.IsNullOrEmpty(nameParts[0]) ? "Unknown" : nameParts[0];
     var lastName = string.IsNullOrEmpty(nameParts[1]) ? "Unknown" : nameParts[1];
     var fullName = string.Join(" ", nameParts);
-    var name = Name.Create(firstName, lastName, new NameValidator());
+    var name = Name.Create(firstName, lastName);
     var newContributor = new Contributor(name);
     if (!string.IsNullOrEmpty(request.PhoneNumber))
     {

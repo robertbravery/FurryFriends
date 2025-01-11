@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.Infrastructure.Email;
+﻿namespace FurryFriends.Infrastructure.Messaging;
 
 public class MailserverConfiguration()
 {

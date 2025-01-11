@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+﻿using FurryFriends.Core.ContributorAggregate;
 
 namespace FurryFriends.Core.ValueObjects;
 
@@ -14,10 +14,10 @@ public class Name : ValueObject
     LastName = lastName;
   }
 
-  public static Result<Name> Create(string firstName, string lastName, IValidator<Name> validator)
+  public static Result<Name> Create(string firstName, string lastName)
   {
     var name = new Name(firstName, lastName);
-
+    var validator = new NameValidator();
     var validationResult = validator.Validate(name);
     return validationResult.IsValid ? Result.Success(name) : Result.Error(validationResult.ToString());
   }

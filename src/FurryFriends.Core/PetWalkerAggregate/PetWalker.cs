@@ -1,5 +1,4 @@
 ﻿using FurryFriends.Core.Common;
-using FurryFriends.Core.GuardClauses;
 using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.Core.PetWalkerAggregate;
@@ -34,9 +33,8 @@ public class PetWalker : UserEntityBase
 
   public static PetWalker Create(Name name, Email email, PhoneNumber phoneNumber, Address address)
   {
-    Guard.Against.NullOrWhiteSpace(name.FirstName, nameof(name.FirstName));
-    Guard.Against.NullOrWhiteSpace(email.EmailAddress, nameof(email));
-    Guard.Against.InvalidEmail(email.EmailAddress, nameof(email));
+    Guard.Against.Null(name, nameof(name));
+    Guard.Against.Null(email, nameof(email));
     Guard.Against.Null(address, nameof(address));
     return new PetWalker(name, email, phoneNumber, address);
   }

@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.Interfaces;
 
-namespace FurryFriends.Infrastructure.Email;
+namespace FurryFriends.Infrastructure.Messaging;
 
 public class FakeEmailSender(ILogger<FakeEmailSender> logger) : IEmailSender
 {

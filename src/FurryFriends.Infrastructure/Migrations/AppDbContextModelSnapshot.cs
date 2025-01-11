@@ -35,7 +35,7 @@ namespace FurryFriends.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contributors");
+                    b.ToTable("Contributors", (string)null);
                 });
 
             modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Country", b =>
@@ -235,7 +235,7 @@ namespace FurryFriends.Infrastructure.Migrations
 
                             b1.HasKey("ContributorId");
 
-                            b1.ToTable("Contributors");
+                            b1.ToTable("Contributors", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ContributorId");
@@ -256,7 +256,7 @@ namespace FurryFriends.Infrastructure.Migrations
 
                             b1.HasKey("ContributorId");
 
-                            b1.ToTable("Contributors");
+                            b1.ToTable("Contributors", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ContributorId");
@@ -292,56 +292,6 @@ namespace FurryFriends.Infrastructure.Migrations
 
             modelBuilder.Entity("FurryFriends.Core.UserAggregate.PetWalker", b =>
                 {
-                    b.OwnsOne("FurryFriends.Core.ValueObjects.Name", "Name", b1 =>
-                        {
-                            b1.Property<Guid>("PetWalkerId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("FirstName")
-                                .HasColumnOrder(1);
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("LastName")
-                                .HasColumnOrder(2);
-
-                            b1.HasKey("PetWalkerId");
-
-                            b1.ToTable("PetWalkers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PetWalkerId");
-                        });
-
-                    b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
-                        {
-                            b1.Property<Guid>("PetWalkerId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("CountryCode")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)")
-                                .HasColumnName("PhoneCountryCode");
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasMaxLength(15)
-                                .HasColumnType("nvarchar(15)")
-                                .HasColumnName("PhoneNumber");
-
-                            b1.HasKey("PetWalkerId");
-
-                            b1.ToTable("PetWalkers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PetWalkerId");
-                        });
-
                     b.OwnsOne("FurryFriends.Core.ValueObjects.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("PetWalkerId")
@@ -379,7 +329,7 @@ namespace FurryFriends.Infrastructure.Migrations
 
                             b1.HasKey("PetWalkerId");
 
-                            b1.ToTable("PetWalkers");
+                            b1.ToTable("PetWalkers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PetWalkerId");
@@ -403,7 +353,7 @@ namespace FurryFriends.Infrastructure.Migrations
 
                             b1.HasKey("PetWalkerId");
 
-                            b1.ToTable("PetWalkers");
+                            b1.ToTable("PetWalkers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PetWalkerId");
@@ -425,7 +375,7 @@ namespace FurryFriends.Infrastructure.Migrations
                             b1.HasIndex("EmailAddress")
                                 .IsUnique();
 
-                            b1.ToTable("PetWalkers");
+                            b1.ToTable("PetWalkers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PetWalkerId");
@@ -444,7 +394,57 @@ namespace FurryFriends.Infrastructure.Migrations
 
                             b1.HasKey("PetWalkerId");
 
-                            b1.ToTable("PetWalkers");
+                            b1.ToTable("PetWalkers", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetWalkerId");
+                        });
+
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.Name", "Name", b1 =>
+                        {
+                            b1.Property<Guid>("PetWalkerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("FirstName")
+                                .HasColumnOrder(1);
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("LastName")
+                                .HasColumnOrder(2);
+
+                            b1.HasKey("PetWalkerId");
+
+                            b1.ToTable("PetWalkers", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetWalkerId");
+                        });
+
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
+                        {
+                            b1.Property<Guid>("PetWalkerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("CountryCode")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("nvarchar(3)")
+                                .HasColumnName("PhoneCountryCode");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasMaxLength(15)
+                                .HasColumnType("nvarchar(15)")
+                                .HasColumnName("PhoneNumber");
+
+                            b1.HasKey("PetWalkerId");
+
+                            b1.ToTable("PetWalkers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PetWalkerId");
