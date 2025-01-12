@@ -1,4 +1,5 @@
-﻿using FurryFriends.Core.Interfaces;
+﻿using FluentValidation.AspNetCore;
+using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure;
 using FurryFriends.Infrastructure.Email;
 using FurryFriends.UseCases.Configurations;
@@ -10,9 +11,15 @@ public static class ServiceConfigs
 {
   public static IServiceCollection AddServiceConfigs(this IServiceCollection services, ILogger logger, WebApplicationBuilder builder)
   {
+    services.AddFluentValidationAutoValidation();
+    //services.AddValidatorsFromAssemblyContaining<CreatePetWalkerRequestValidator>()
+    //  .AddScoped<IValidator<CreatePetWalkerRequest>, CreatePetWalkerRequestValidator>();
+    //services.AddScoped<IValidator<CreatePetWalkerRequest>, CreatePetWalkerRequestValidator>();
+    //services.AddValidatorsFromAssemblies(new[] { typeof(CreatePetWalkerRequestValidator).Assembly }, lifetime: ServiceLifetime.Scoped);
     services.AddInfrastructureServices(builder.Configuration, logger, builder.Environment.EnvironmentName)
             .AddMediatrConfigs();
     services.AddUseCaseServices();
+
 
 
     if (builder.Environment.IsDevelopment())

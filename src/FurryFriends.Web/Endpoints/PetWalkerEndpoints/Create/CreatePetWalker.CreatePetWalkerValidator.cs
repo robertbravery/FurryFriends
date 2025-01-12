@@ -2,7 +2,7 @@
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
-public class CreatePetWalkerRequestValidator : AbstractValidator<CreatePetWalkerRequest>
+public class CreatePetWalkerRequestValidator : Validator<CreatePetWalkerRequest>
 {
   public CreatePetWalkerRequestValidator()
   {
