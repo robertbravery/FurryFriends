@@ -12,9 +12,9 @@ public class CreatePetWalkerRequest
 
   public string Email { get; set; } = default!;
 
-  public string CountryCode { get; set; } = default!;
+  public string PhoneCountryCode { get; set; } = default!;
 
-  public string Number { get; set; } = default!;
+  public string PhoneNumber { get; set; } = default!;
 
   public string Street { get; set; } = default!;
 

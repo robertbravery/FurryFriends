@@ -22,8 +22,8 @@ public class CreatePetWalker(IMediator _mediator)
         FirstName = "John",
         LastName = "Smith",
         Email = "john.smith@example.com",
-        CountryCode = "1",
-        Number = "1234567",
+        PhoneCountryCode = "1",
+        PhoneNumber = "1234567",
         Street = "123 Main St",
         City = "Springfield",
         State = "IL",
@@ -33,12 +33,13 @@ public class CreatePetWalker(IMediator _mediator)
   }
   public override async Task HandleAsync(CreatePetWalkerRequest request, CancellationToken cancellationToken)
   {
+
     var userCommand = new CreatePetWalkerCommand(
         request.FirstName,
         request.LastName,
         request.Email,
-        request.CountryCode,
-        request.Number,
+        request.PhoneCountryCode,
+        request.PhoneNumber,
         request.Street,
         request.City,
         request.State,

@@ -20,7 +20,7 @@ internal class PetConfiguration : IEntityTypeConfiguration<Pet>
 
     builder.
         HasOne(p => p.BreedType)
-        .WithMany()
+        .WithMany(p => p.Pets)
         .HasForeignKey(p => p.BreedId)
         .OnDelete(DeleteBehavior.Restrict);
 

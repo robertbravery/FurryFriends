@@ -32,7 +32,7 @@ public class CreateClient : Endpoint<CreateClientRequest, Result<CreateClientRep
       request.FirstName,
       request.LastName,
       request.Email,
-      request.CountryCode,
+      request.PhoneCountryCode,
       request.PhoneNumber,
       request.Street,
       request.City,

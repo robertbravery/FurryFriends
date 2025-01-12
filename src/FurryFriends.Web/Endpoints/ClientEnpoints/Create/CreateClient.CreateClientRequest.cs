@@ -12,7 +12,7 @@ public class CreateClientRequest
   public string LastName { get; set; } = default!;
 
   public string Email { get; set; } = default!;
-  public string CountryCode { get; set; } = default!;
+  public string PhoneCountryCode { get; set; } = default!;
   public string PhoneNumber { get; set; } = default!;
   public string Street { get; set; } = default!;
   public string City { get; set; } = default!;

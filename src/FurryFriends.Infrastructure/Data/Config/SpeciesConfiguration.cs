@@ -1,13 +1,14 @@
 ﻿using FurryFriends.Core.ClientAggregate;
 
 namespace FurryFriends.Infrastructure.Data.Config;
-public class BreedConfiguration : IEntityTypeConfiguration<Breed>
+
+public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
 {
 
-  public void Configure(EntityTypeBuilder<Breed> builder)
+  public void Configure(EntityTypeBuilder<Species> builder)
   {
     // Configure properties and relationships here
-    builder.ToTable("Breeds"); // Specify the table name if different from the entity name
+    builder.ToTable("Species"); // Specify the table name if different from the entity name
     builder.HasKey(b => b.Id); // Assuming there's an Id property
     builder.Property(b => b.Id).IsRequired().ValueGeneratedOnAdd();
 
@@ -17,11 +18,6 @@ public class BreedConfiguration : IEntityTypeConfiguration<Breed>
 
     builder.Property(b => b.Description)
         .HasMaxLength(150); // Set maximum length if needed
-
-    builder.HasOne(b => b.Species)
-        .WithMany(s => s.Breeds)
-        .HasForeignKey(b => b.SpeciesId)
-        .OnDelete(DeleteBehavior.NoAction);
 
   }
 }

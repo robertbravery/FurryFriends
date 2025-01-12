@@ -6,11 +6,11 @@ public class CreatePetWalkerRequestValidator : AbstractValidator<CreatePetWalker
 {
   public CreatePetWalkerRequestValidator()
   {
-    RuleFor(x => x.FirstName).NotEmpty().WithMessage("First Name is required.");
+    RuleFor(x => x.FirstName).NotEmpty().WithMessage("First Name is required!");
     RuleFor(x => x.LastName).NotEmpty().WithMessage("Last Name is required.");
     RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage("Invalid email format.");
-    RuleFor(x => x.CountryCode).NotEmpty().WithMessage("Country code is required.");
-    RuleFor(x => x.Number).NotEmpty().WithMessage("Number is required.");
+    RuleFor(x => x.PhoneCountryCode).NotEmpty().WithMessage("Country code is required.");
+    RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("Number is required.");
     RuleFor(x => x.Street).NotEmpty().WithMessage("Street is required.");
     RuleFor(x => x.City).NotEmpty().WithMessage("City is required.");
     RuleFor(x => x.State).NotEmpty().WithMessage("State is required.");

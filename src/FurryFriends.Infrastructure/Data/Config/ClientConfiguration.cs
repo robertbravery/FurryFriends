@@ -43,7 +43,7 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
     builder.Property(p => p.UpdatedAt).HasColumnName("UpdatedAt").HasColumnOrder(13);
     builder.Property(p => p.CreatedAt).HasColumnName("CreatedAt").HasColumnOrder(14);
 
-    builder.
+
 
     builder.HasMany(c => c.Pets)
       .WithOne(p => p.Owner)
