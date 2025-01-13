@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FurryFriends.UseCases.Configurations;
+﻿using FurryFriends.UseCases.Configurations;
 using FurryFriends.Web.Configurations;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -45,7 +44,7 @@ builder.Services.AddFastEndpoints()
                 .SwaggerDocument(o =>
                 {
                   o.ShortSchemaNames = true;
-                }).AddValidatorsFromAssemblies(new[] { typeof(Program).Assembly });
+                });
 
 var app = builder.Build();
 

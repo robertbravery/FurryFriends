@@ -2,7 +2,7 @@
 
 namespace FurryFriends.Web.Endpoints.ClientEnpoints.Create;
 
-public class CreateClientRequestValidator : AbstractValidator<CreateClientRequest>
+public class CreateClientRequestValidator : Validator<CreateClientRequest>
 {
   public CreateClientRequestValidator()
   {
@@ -22,12 +22,12 @@ public class CreateClientRequestValidator : AbstractValidator<CreateClientReques
 
     RuleFor(x => x.PhoneCountryCode)
         .NotEmpty()
-        .Matches(@"^[1-9]\d{0,2}$")
+        .Matches(@"^[0-9]\d{0,2}$")
         .WithMessage("Phone country code is required and must be between 1 and 3 digits");
 
     RuleFor(x => x.PhoneNumber)
         .NotEmpty()
-        .Matches(@"^\d{5,15}$")
+        .Matches(@"^[0-9\s\(\)-]{5,15}$")
         .WithMessage("Phone number is required and must be between 5 and 15 digits");
 
     RuleFor(x => x.Street)
