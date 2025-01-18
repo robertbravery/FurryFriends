@@ -8,7 +8,8 @@ internal class CreateClientCommandValidator : AbstractValidator<CreateClientComm
     // Client-specific business rules
     RuleFor(x => x.PreferredContactTime)
         .Must(BeWithinBusinessHours)
-        .WithMessage("Preferred contact time must be during business hours");
+        .WithMessage("Preferred contact time must be during business hours")
+        .WithErrorCode(errorCode: "InvalidPreferredContactTime");
 
     RuleFor(x => x.ClientType)
         .IsInEnum()

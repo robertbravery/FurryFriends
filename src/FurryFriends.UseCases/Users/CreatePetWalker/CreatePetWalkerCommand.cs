@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.UseCases.Users.CreateUser;
+namespace FurryFriends.UseCases.Users.CreatePetWalker;
 
 public record CreatePetWalkerCommand
 (

@@ -1,5 +1,6 @@
 ﻿using FurryFriends.UseCases.Configurations;
 using FurryFriends.Web.Configurations;
+using FurryFriends.Web.Middleware;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -35,7 +36,7 @@ builder.Services
     .AddOptionConfigs(builder.Configuration, logger, builder)
     .AddValidatorConfigs()
     .AddUseCaseValidators()
-    .AddMediatrConfigs();
+.AddMediatrConfigs();
 
 builder.Services.AddServiceConfigs(logger, builder);
 
@@ -49,6 +50,7 @@ builder.Services.AddFastEndpoints()
 var app = builder.Build();
 
 await app.UseAppMiddlewareAndSeedDatabase();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseFastEndpoints(c =>
 {
@@ -67,7 +69,8 @@ app.UseFastEndpoints(c =>
       _ => "One or more errors occurred!"
     };
   });
-});
+}).UseSwaggerGen();
+
 
 app.Run();
 

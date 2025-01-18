@@ -18,18 +18,28 @@ internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand,
     var phoneResult = await PhoneNumber.Create(request.CountryCode, request.PhoneNumber);
     var addressResult = Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode);
 
-    var results = new bool[] { nameResult.IsSuccess, emailResult.IsSuccess, phoneResult.IsSuccess, addressResult.IsSuccess };
-    if (results.All(x => x))
+    var results = new IResult[]
     {
-      var result = await _clientService.CreateClientAsync(
+      nameResult,
+      emailResult,
+      phoneResult,
+      addressResult
+    };
+
+    var errorsList = results.SelectMany(result => result.Errors);
+
+    if (errorsList.Any())
+    {
+
+      return Result.Error(new ErrorList(errorsList));
+    }
+
+    var result = await _clientService.CreateClientAsync(
           nameResult.Value,
           emailResult.Value,
           phoneResult.Value,
           addressResult.Value);
 
-      return Result<Guid>.Success(result.Value.Id);
-    }
-    var errors = nameResult.Errors.Concat(emailResult.Errors).Concat(phoneResult.Errors).Concat(addressResult.Errors);
-    return Result.Error(new ErrorList(errors));
+    return Result<Guid>.Success(result.Value.Id);
   }
 }

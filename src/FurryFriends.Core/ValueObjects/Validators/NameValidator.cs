@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.Core.ContributorAggregate;
+namespace FurryFriends.Core.ValueObjects.Validators;
 
 public class NameValidator : AbstractValidator<Name>
 {
@@ -12,7 +11,8 @@ public class NameValidator : AbstractValidator<Name>
         .MinimumLength(3).WithMessage("First name must be at least 3 characters long.")
         .MaximumLength(30).WithMessage("First name cannot exceed 50 characters.")
         .Matches("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")
-        .WithMessage("First name can only contain letters, spaces, and characters: ' , . -");
+        .WithMessage("First name can only contain letters, spaces, and characters: ' , . -")
+        .WithErrorCode("Invalid first name");
 
     RuleFor(n => n.LastName)
         .NotEmpty().WithMessage("Last name cannot be null or whitespace.")
@@ -20,6 +20,6 @@ public class NameValidator : AbstractValidator<Name>
         .MaximumLength(30).WithMessage("Last name cannot exceed 50 characters.")
         .Matches("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$")
         .WithMessage("Last name can only contain letters, spaces, and characters: ' , . -");
-        
+
   }
 }

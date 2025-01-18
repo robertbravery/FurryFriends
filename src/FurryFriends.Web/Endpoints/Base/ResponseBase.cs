@@ -17,4 +17,6 @@ public class ResponseBase<T>(T? data, bool success = true, string message = "Suc
       message: $"User with email {email} was not found",
       errors: [$"User with email {email} was not found"]);
   }
+
+
 }

@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Infrastructure.Data;
-using FurryFriends.UseCases.Contributors.Create;
+using FurryFriends.UseCases.Clients.CreateClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace FurryFriends.FunctionalTests;
@@ -86,7 +86,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
           services.AddMediatR(cfg =>
           {
             cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly,
-              typeof(CreateContributorCommand).Assembly,
+              typeof(CreateClientCommand).Assembly,
               typeof(AppDbContext).Assembly);
           });
         });

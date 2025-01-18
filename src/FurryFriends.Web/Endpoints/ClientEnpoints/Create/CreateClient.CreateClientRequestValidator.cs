@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace FurryFriends.Web.Endpoints.ClientEnpoints.Create;
+﻿namespace FurryFriends.Web.Endpoints.ClientEnpoints.Create;
 
 public class CreateClientRequestValidator : Validator<CreateClientRequest>
 {
@@ -22,13 +20,11 @@ public class CreateClientRequestValidator : Validator<CreateClientRequest>
 
     RuleFor(x => x.PhoneCountryCode)
         .NotEmpty()
-        .Matches(@"^[0-9]\d{0,2}$")
-        .WithMessage("Phone country code is required and must be between 1 and 3 digits");
+        .WithMessage("Phone country code is required");
 
     RuleFor(x => x.PhoneNumber)
         .NotEmpty()
-        .Matches(@"^[0-9\s\(\)-]{5,15}$")
-        .WithMessage("Phone number is required and must be between 5 and 15 digits");
+        .WithMessage("Phone number is required");
 
     RuleFor(x => x.Street)
         .NotEmpty()
@@ -44,7 +40,6 @@ public class CreateClientRequestValidator : Validator<CreateClientRequest>
 
     RuleFor(x => x.ZipCode)
         .NotEmpty()
-        .Matches(@"^\d{5}?$")
         .WithMessage("Zip or postal code is required");
   }
 }

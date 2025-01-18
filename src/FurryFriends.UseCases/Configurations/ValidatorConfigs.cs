@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using FurryFriends.Core.ContributorAggregate;
-using FurryFriends.Core.ValueObjects.Validators;
-using FurryFriends.UseCases.Users.CreateUser;
+using FurryFriends.UseCases.Clients.CreateClient;
+using FurryFriends.UseCases.Users.CreatePetWalker;
+using FurryFriends.UseCases.Users.UpdateUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FurryFriends.UseCases.Configurations;
@@ -12,12 +12,9 @@ public static class ValidatorConfigs
   {
     services.AddValidatorsFromAssemblyContaining<CreatePetWalkerCommandValidator>();
 
-    services.AddValidatorsFromAssemblyContaining<PhoneNumberValidator>();
-    services.AddValidatorsFromAssemblyContaining<NameValidator>();
-    //services.AddTransient<IValidator<Address>, AddressValidator>();
-    //services.AddTransient<IValidator<Compensation>, CompensationValidator>();
-    //services.AddTransient<IValidator<UpdatePetWalkerHourlyRateCommand>, UpdatePetWalkerHourlyRateCommandValidator>();
-    //services.AddTransient<IValidator<CreateClientCommand>, CreateClientCommandValidator>();
+    services.AddTransient<IValidator<UpdatePetWalkerHourlyRateCommand>, UpdatePetWalkerHourlyRateCommandValidator>();
+    services.AddTransient<IValidator<CreateClientCommand>, CreateClientCommandValidator>();
+    services.AddTransient<IValidator<CreatePetWalkerCommand>, CreatePetWalkerCommandValidator>();
 
 
     return services;

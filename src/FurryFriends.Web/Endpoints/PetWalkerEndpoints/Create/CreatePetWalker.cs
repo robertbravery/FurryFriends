@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FurryFriends.UseCases.Users.CreateUser;
+﻿using FurryFriends.UseCases.Users.CreatePetWalker;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
@@ -55,22 +54,37 @@ public class CreatePetWalker(IMediator _mediator)
         request.YearsOfExperience,
         request.HasInsurance,
         request.HasFirstAidCertification,
-        request.DailyPetWalkLimit);
+    request.DailyPetWalkLimit);
 
-    var result = await _mediator.Send(userCommand, cancellationToken);
+    Result<Guid> result = await _mediator.Send(userCommand, cancellationToken);
 
-    if (result == null)
+    if (result == null || !result.IsSuccess)
     {
-      await SendErrorsAsync(StatusCodes.Status500InternalServerError, cancellationToken);
-      return;
-    }
-    if (!result.IsSuccess)
-    {
-      AddError(result.ValidationErrors.First().ErrorMessage);
-      await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
+      await HandleResultErrorsAsync(result, cancellationToken);
       return;
     }
 
     Response = new CreatePetWalkerResponse(result.Value.ToString());
+  }
+
+  private async Task HandleResultErrorsAsync(Result<Guid>? result, CancellationToken cancellationToken)
+  {
+    if (result?.ValidationErrors?.Any() == true)
+    {
+      foreach (var error in result.ValidationErrors)
+      {
+        AddError(error.ErrorMessage);
+      }
+    }
+
+    if (result?.Errors?.Any() == true)
+    {
+      foreach (var error in result.Errors)
+      {
+        AddError(error);
+      }
+    }
+
+    await SendErrorsAsync(result!.IsSuccess ? StatusCodes.Status500InternalServerError : StatusCodes.Status400BadRequest, cancellationToken);
   }
 }

@@ -29,9 +29,8 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
     var result = await _mediator.Send(query, ct);
     if (result.Value is null || !result.IsSuccess || result.IsNotFound())
     {
-      //The api call was a success but the data returned is null or not found
-      var notFoundResponse = GetPetWalkerByEmailResponse.NotFound(req.Email);
-      await SendAsync(notFoundResponse, 404, ct);
+      AddError("Failed to retrieve user");
+      await SendErrorsAsync(cancellation: ct);
       return;
     }
     else

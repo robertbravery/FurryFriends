@@ -1,7 +1,8 @@
-﻿using FurryFriends.Core.ContributorAggregate;
+﻿using FluentAssertions;
 using FluentValidation;
+using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
-using FluentAssertions;
+using FurryFriends.Core.ValueObjects.Validators;
 
 
 namespace FurryFriends.IntegrationTests.Data;
@@ -34,6 +35,6 @@ public class EfRepositoryDelete : BaseEfRepoTestFixture
     // verify it's no longer there
     var result = await repository.ListAsync(canellationToken);
 
-    result.Should().NotContain(c=> c.Name.FullName == initialName.FullName);
+    result.Should().NotContain(c => c.Name.FullName == initialName.FullName);
   }
 }

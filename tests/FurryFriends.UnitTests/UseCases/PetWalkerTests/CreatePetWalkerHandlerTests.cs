@@ -3,7 +3,7 @@ using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UnitTests.TestHelpers;
-using FurryFriends.UseCases.Users.CreateUser;
+using FurryFriends.UseCases.Users.CreatePetWalker;
 using Moq;
 
 namespace FurryFriends.UnitTests.UseCases.PetWalkerTests;
@@ -11,12 +11,12 @@ namespace FurryFriends.UnitTests.UseCases.PetWalkerTests;
 public class CreatePetWalkerHandlerTests
 {
   private readonly Mock<IRepository<PetWalker>> _userRepositoryMock;
-  private readonly CreateUserHandler _handler;
+  private readonly CreatePetWalkeCommandrHandler _handler;
 
   public CreatePetWalkerHandlerTests()
   {
     _userRepositoryMock = new Mock<IRepository<PetWalker>>();
-    _handler = new CreateUserHandler(_userRepositoryMock.Object, new CreatePetWalkerCommandValidator(), new NameValidator(), new PhoneNumberValidator());
+    _handler = new CreatePetWalkeCommandrHandler(_userRepositoryMock.Object, new CreatePetWalkerCommandValidator(), new NameValidator(), new PhoneNumberValidator());
   }
 
   [Fact]

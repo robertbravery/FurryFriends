@@ -19,6 +19,7 @@ public static class MiddlewareConfig
       app.UseHsts();
     }
     app.UseMiddleware<ValidateEmailMiddleware>();
+
     app.UseFastEndpoints()
         .UseSwaggerGen(); // Includes AddFileServer and static files middleware
 

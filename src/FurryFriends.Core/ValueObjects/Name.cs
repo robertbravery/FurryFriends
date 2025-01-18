@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.ContributorAggregate;
+﻿using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.Core.ValueObjects;
 
@@ -19,7 +19,9 @@ public class Name : ValueObject
     var name = new Name(firstName, lastName);
     var validator = new NameValidator();
     var validationResult = validator.Validate(name);
-    return validationResult.IsValid ? Result.Success(name) : Result.Error(validationResult.ToString());
+    return validationResult.IsValid
+      ? Result.Success(name)
+      : Result.Error(validationResult.ToString());
   }
 
   protected override IEnumerable<object> GetEqualityComponents()
