@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
-using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UnitTests.TestHelpers;
 using FurryFriends.UseCases.Users.CreatePetWalker;
 using Moq;
@@ -16,7 +15,7 @@ public class CreatePetWalkerHandlerTests
   public CreatePetWalkerHandlerTests()
   {
     _userRepositoryMock = new Mock<IRepository<PetWalker>>();
-    _handler = new CreatePetWalkeCommandrHandler(_userRepositoryMock.Object, new CreatePetWalkerCommandValidator(), new NameValidator(), new PhoneNumberValidator());
+    _handler = new CreatePetWalkeCommandrHandler(_userRepositoryMock.Object);
   }
 
   [Fact]
