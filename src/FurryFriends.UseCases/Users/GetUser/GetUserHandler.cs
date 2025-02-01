@@ -2,7 +2,7 @@
 using FurryFriends.Core.PetWalkerAggregate.Enums;
 using FurryFriends.UseCases.Services;
 
-namespace FurryFriends.UseCases.Users.GetUser;
+namespace FurryFriends.UseCase.Users.GetUser;
 public class GetUserHandler(IPetWalkerService _userService) : IQueryHandler<GetUserQuery, Result<UserDto>>
 {
   public async Task<Result<UserDto>> Handle(GetUserQuery query, CancellationToken cancellationToken)

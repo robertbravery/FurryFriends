@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.Contributors.Get;
+﻿using FurryFriends.UseCase.Contributors.Get;
 
 namespace FurryFriends.Web.Contributors;
 

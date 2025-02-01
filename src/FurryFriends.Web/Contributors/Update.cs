@@ -1,5 +1,5 @@
-﻿using FurryFriends.UseCases.Contributors.Get;
-using FurryFriends.UseCases.Contributors.Update;
+﻿using FurryFriends.UseCase.Contributors.Get;
+using FurryFriends.UseCase.Contributors.Update;
 
 namespace FurryFriends.Web.Contributors;
 

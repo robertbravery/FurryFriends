@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.UseCases.Users.GetUser;
+namespace FurryFriends.UseCase.Users.GetUser;
 public class GetUserQueryValidator : AbstractValidator<GetUserQuery>
 {
   public GetUserQueryValidator()

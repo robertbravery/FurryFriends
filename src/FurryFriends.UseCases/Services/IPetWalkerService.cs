@@ -1,12 +1,13 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
-using FurryFriends.UseCases.Services.DataTransferObjects;
-using FurryFriends.UseCases.Users.ListUser;
+using FurryFriends.UseCase.Services.DataTransferObjects;
+using FurryFriends.UseCase.Users.ListUser;
+using FurryFriends.UseCases.Users.CreatePetWalker;
 
 namespace FurryFriends.UseCases.Services;
 
 public interface IPetWalkerService
 {
-  Task<PetWalker> CreatePetWalkerAsync(PetWalker user);
+  Task<Result<PetWalker>> CreatePetWalkerAsync(CreatePetWalkerDto dto);
   Task AddBioPictureAsync(Photo photo, Guid userId);
   Task<Result<PetWalker>> GetPetWalkerByEmailAsync(string email, CancellationToken cancellationToken);
   Task<Result<PetWalkerListDto>> ListPetWalkersAsync(ListPetWalkerQuery query);

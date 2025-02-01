@@ -1,7 +1,7 @@
 ﻿using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ContributorAggregate.Specifications;
 
-namespace FurryFriends.UseCases.Contributors.Get;
+namespace FurryFriends.UseCase.Contributors.Get;
 
 /// <summary>
 /// Queries don't necessarily need to use repository methods, but they can if it's convenient

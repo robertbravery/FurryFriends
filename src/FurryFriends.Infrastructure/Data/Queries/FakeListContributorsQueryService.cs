@@ -1,5 +1,5 @@
-﻿using FurryFriends.UseCases.Contributors;
-using FurryFriends.UseCases.Contributors.List;
+﻿using FurryFriends.UseCase.Contributors;
+using FurryFriends.UseCase.Contributors.List;
 
 namespace FurryFriends.Infrastructure.Data.Queries;
 

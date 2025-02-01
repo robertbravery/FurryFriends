@@ -1,7 +1,7 @@
 ﻿using FurryFriends.Core.ValueObjects;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCase.Services;
 
-namespace FurryFriends.UseCases.Clients.CreateClient;
+namespace FurryFriends.UseCase.Clients.CreateClient;
 internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand, Result<Guid>>
 {
   private readonly IClientService _clientService;

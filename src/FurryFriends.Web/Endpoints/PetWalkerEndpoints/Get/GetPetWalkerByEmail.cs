@@ -1,5 +1,5 @@
 ﻿using Azure;
-using FurryFriends.UseCases.Users.GetUser;
+using FurryFriends.UseCase.Users.GetUser;
 using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.UserEndpoints.Records;
 
@@ -27,8 +27,15 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
   {
     var query = new GetUserQuery(req.Email);
     var result = await _mediator.Send(query, ct);
-    if (result.Value is null || !result.IsSuccess || result.IsNotFound())
+    if (result.Value is null || !result.IsSuccess)
     {
+      if (result.IsNotFound())
+      {
+        AddError("User not found");
+        await SendNotFoundAsync(cancellation: ct);
+        return;
+      }
+
       AddError("Failed to retrieve user");
       await SendErrorsAsync(cancellation: ct);
       return;

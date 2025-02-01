@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.UseCases.Users.UpdateUser;
+namespace FurryFriends.UseCase.Users.UpdateUser;
 
 public class UpdatePetWalkerHourlyRateCommandValidator : AbstractValidator<UpdatePetWalkerHourlyRateCommand>
 {

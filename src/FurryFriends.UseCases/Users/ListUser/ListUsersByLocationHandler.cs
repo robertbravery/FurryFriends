@@ -1,18 +1,13 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.UseCase.Users.ListUser;
 using FurryFriends.UseCases.Services;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.Users.ListUser;
-public class ListUsersByLocationHandler : IQueryHandler<ListPetWalkerByLocationQuery, Result<(List<PetWalker> users, int TotalCount)>>
+public class ListUsersByLocationHandler(IPetWalkerService petWalkerService, ILogger<ListUsersByLocationHandler> logger) : IQueryHandler<ListPetWalkerByLocationQuery, Result<(List<PetWalker> users, int TotalCount)>>
 {
-  private readonly IPetWalkerService _petWalkerService;
-  private readonly ILogger<ListUsersByLocationHandler> _logger;
-
-  public ListUsersByLocationHandler(IPetWalkerService petWalkerService, ILogger<ListUsersByLocationHandler> logger)
-  {
-    _petWalkerService = petWalkerService;
-    _logger = logger;
-  }
+  private readonly IPetWalkerService _petWalkerService = petWalkerService;
+  private readonly ILogger<ListUsersByLocationHandler> _logger = logger;
 
   public async Task<Result<(List<PetWalker> users, int TotalCount)>> Handle(ListPetWalkerByLocationQuery query, CancellationToken cancellationToken)
   {

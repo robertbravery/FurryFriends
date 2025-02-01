@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using FurryFriends.UseCases.Clients.CreateClient;
-using FurryFriends.UseCases.Users.CreatePetWalker;
-using FurryFriends.UseCases.Users.UpdateUser;
+using FurryFriends.UseCase.Clients.CreateClient;
+using FurryFriends.UseCase.Users.CreatePetWalker;
+using FurryFriends.UseCase.Users.UpdateUser;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FurryFriends.UseCases.Configurations;
+namespace FurryFriends.UseCase.Configurations;
 
 public static class ValidatorConfigs
 {

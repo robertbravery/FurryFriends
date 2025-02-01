@@ -1,3 +1,3 @@
-﻿namespace FurryFriends.UseCases.Contributors.Get;
+﻿namespace FurryFriends.UseCase.Contributors.Get;
 
 public record GetContributorQuery(int ContributorId) : IQuery<Result<ContributorDTO>>;

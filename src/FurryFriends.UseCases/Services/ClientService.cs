@@ -2,7 +2,7 @@
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.UseCases.Services;
+namespace FurryFriends.UseCase.Services;
 
 public class ClientService : IClientService
 {

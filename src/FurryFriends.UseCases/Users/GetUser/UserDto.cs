@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.UseCases.Users.GetUser;
+﻿namespace FurryFriends.UseCase.Users.GetUser;
 
 public record UserDto(
   Guid Id,

@@ -1,8 +1,8 @@
-﻿using FurryFriends.UseCases.Services;
-using FurryFriends.UseCases.Services.DataTransferObjects;
+﻿using FurryFriends.UseCase.Services.DataTransferObjects;
+using FurryFriends.UseCases.Services;
 using Microsoft.Extensions.Logging;
 
-namespace FurryFriends.UseCases.Users.ListUser;
+namespace FurryFriends.UseCase.Users.ListUser;
 public class ListPetWalkersHandler : IQueryHandler<ListPetWalkerQuery, Result<PetWalkerListDto>>
 {
   private readonly IPetWalkerService _petWalkerService;

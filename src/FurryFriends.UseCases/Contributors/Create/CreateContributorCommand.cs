@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.UseCases.Contributors.Create;
+﻿namespace FurryFriends.UseCase.Contributors.Create;
 
 /// <summary>
 /// Create a new Contributor.

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.UseCases.Users.AddPhotoPicture;
+namespace FurryFriends.UseCase.Users.AddPhotoPicture;
 public sealed class AddPhotoValidator : AbstractValidator<AddPhotoCommand>
 {
   public AddPhotoValidator()

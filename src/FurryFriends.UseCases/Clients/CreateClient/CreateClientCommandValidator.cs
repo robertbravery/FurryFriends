@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.UseCases.Clients.CreateClient;
+namespace FurryFriends.UseCase.Clients.CreateClient;
 internal class CreateClientCommandValidator : AbstractValidator<CreateClientCommand>
 {
   public CreateClientCommandValidator()

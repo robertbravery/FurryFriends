@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.Users.CreatePetWalker;
+﻿using FurryFriends.UseCase.Users.CreatePetWalker;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 

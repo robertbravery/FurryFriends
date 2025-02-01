@@ -1,4 +1,5 @@
 ﻿namespace FurryFriends.UseCases.Extensions;
+
 public static class ResultExtensions
 {
   public static Result<T> Combine<T>(this IEnumerable<Result<T>> results)

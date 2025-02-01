@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.UseCases.PipeLineBehaviours;
+﻿namespace FurryFriends.UseCase.PipeLineBehaviours;
 
 public class ValidationFailureDto
 {

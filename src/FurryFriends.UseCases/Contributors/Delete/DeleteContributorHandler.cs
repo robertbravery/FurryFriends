@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.Interfaces;
 
-namespace FurryFriends.UseCases.Contributors.Delete;
+namespace FurryFriends.UseCase.Contributors.Delete;
 
 public class DeleteContributorHandler(IDeleteContributorService _deleteContributorService)
   : ICommandHandler<DeleteContributorCommand, Result>

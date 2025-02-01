@@ -2,7 +2,7 @@
 using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure;
 using FurryFriends.Infrastructure.Messaging;
-using FurryFriends.UseCases.Configurations;
+using FurryFriends.UseCase.Configurations;
 using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Web.Configurations;

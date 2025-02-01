@@ -1,9 +1,10 @@
-﻿using FurryFriends.Core.PetWalkerAggregate;
-using FurryFriends.Core.ValueObjects;
+﻿using FurryFriends.Core.ValueObjects;
+using FurryFriends.UseCase.Users.CreatePetWalker;
+using FurryFriends.UseCases.Services;
 
 namespace FurryFriends.UseCases.Users.CreatePetWalker;
 
-public class CreatePetWalkeCommandrHandler(IRepository<PetWalker> petWalkerRepository) : ICommandHandler<CreatePetWalkerCommand, Result<Guid>>
+public class CreatePetWalkeCommandrHandler(IPetWalkerService petWalkerService) : ICommandHandler<CreatePetWalkerCommand, Result<Guid>>
 {
   public async Task<Result<Guid>> Handle(CreatePetWalkerCommand command, CancellationToken cancellationToken)
   {
@@ -24,43 +25,37 @@ public class CreatePetWalkeCommandrHandler(IRepository<PetWalker> petWalkerRepos
         compensationCreationResult
     };
 
-    var errorsList = results.SelectMany(result => result.Errors);
+    var errorsList = results.SelectMany(result => result.ValidationErrors);
 
     if (errorsList.Any())
     {
 
-      return Result.Error(new ErrorList(errorsList));
+      return Result.Invalid(errorsList);
     }
 
-    var petWalker = PetWalker.Create(
-        nameCreationResult.Value,
-        emailCreationResult.Value,
-        phoneNumberCreationResult.Value,
-        addressCreationResult.Value);
+    var createPetWalkerDto = new CreatePetWalkerDto(
+       nameCreationResult.Value,
+       emailCreationResult.Value,
+       phoneNumberCreationResult.Value,
+       addressCreationResult.Value,
+       genderCreationResult.Value,
+       command.Biography ?? string.Empty, // provide a default value if null
+       command.DateOfBirth,
+       command.IsActive,
+       command.IsVerified,
+       command.YearsOfExperience,
+       command.HasInsurance,
+       command.HasFirstAidCertification,
+       command.DailyPetWalkLimit,
+       compensationCreationResult.Value);
 
-    AddData(command, genderCreationResult, compensationCreationResult, petWalker);
+    var result = await petWalkerService.CreatePetWalkerAsync(createPetWalkerDto);
 
-    var addedPetWalker = await petWalkerRepository.AddAsync(petWalker, cancellationToken);
 
-    return Result<Guid>.Success(addedPetWalker.Id);
+    return result.IsSuccess ?
+        Result<Guid>.Success(result.Value.Id) :
+         Result<Guid>.Error(string.Join(", ", result.Errors));
   }
 
-  private static void AddData(
-    CreatePetWalkerCommand command,
-    Result<GenderType> genderCreationResult,
-    Result<Compensation> compensationCreationResult,
-    PetWalker petWalker)
-  {
-    petWalker.UpdateGender(genderCreationResult.Value);
-    petWalker.UpdateBiography(command.Biography);
-    petWalker.UpdateDateOfBirth(command.DateOfBirth);
-    petWalker.UpdateIsActive(command.IsActive);
-    petWalker.UpdateIsVerified(command.IsVerified);
-    petWalker.UpdateYearsOfExperience(command.YearsOfExperience);
-    petWalker.UpdateHasInsurance(command.HasInsurance);
-    petWalker.UpdateHasFirstAidCertification(command.HasFirstAidCertification);
-    petWalker.UpdateDailyPetWalkLimit(command.DailyPetWalkLimit);
-    petWalker.UpdateCompensation(compensationCreationResult.Value);
-  }
 }
 

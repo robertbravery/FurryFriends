@@ -1,8 +1,9 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
-using FurryFriends.UseCases.Services.DataTransferObjects;
-using FurryFriends.UseCases.Users.ListUser;
+using FurryFriends.UseCase.Services.DataTransferObjects;
+using FurryFriends.UseCase.Users.ListUser;
+using FurryFriends.UseCases.Users.CreatePetWalker;
 
 namespace FurryFriends.UseCases.Services;
 
@@ -29,10 +30,37 @@ public class PetWalkerService : IPetWalkerService
     // Optionally, you can fire a domain event or log the update
   }
 
-  public Task<PetWalker> CreatePetWalkerAsync(PetWalker user)
+  public async Task<Result<PetWalker>> CreatePetWalkerAsync(CreatePetWalkerDto dto)
   {
-    throw new NotImplementedException();
+    // 1. Business Rules
+    var existingPetWalkerSpec = new GetPetWalkerByEmailSpecification(dto.Email.EmailAddress);
+    if (await _repository.AnyAsync(existingPetWalkerSpec))
+    {
+      return Result.Error("Email already exists");
+    }
+
+    // 2. Entity Creation
+    var petWalker = PetWalker.Create(dto.Name, dto.Email, dto.PhoneNumber, dto.Address);
+
+    // Entity Configuration
+    petWalker.UpdateGender(dto.Gender);
+    petWalker.UpdateBiography(dto.Biography);
+    petWalker.UpdateDateOfBirth(dto.DateOfBirth);
+    petWalker.UpdateIsActive(dto.IsActive);
+    petWalker.UpdateIsVerified(dto.IsVerified);
+    petWalker.UpdateYearsOfExperience(dto.YearsOfExperience);
+    petWalker.UpdateHasInsurance(dto.HasInsurance);
+    petWalker.UpdateHasFirstAidCertification(dto.HasFirstAidCertification);
+    petWalker.UpdateDailyPetWalkLimit(dto.DailyPetWalkLimit);
+    petWalker.UpdateCompensation(dto.Compensation);
+
+    // 4. Persistence
+    await _repository.AddAsync(petWalker);
+    await _repository.SaveChangesAsync();
+
+    return Result.Success(petWalker);
   }
+
 
   public async Task<Result<PetWalker>> GetPetWalkerByEmailAsync(string email, CancellationToken cancellationToken)
   {

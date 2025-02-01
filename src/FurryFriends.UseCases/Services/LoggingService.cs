@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace FurryFriends.UseCases.Services;
+namespace FurryFriends.UseCase.Services;
 
 public class LoggingService
 {

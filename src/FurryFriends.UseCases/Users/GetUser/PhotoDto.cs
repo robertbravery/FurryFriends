@@ -1,3 +1,3 @@
-﻿namespace FurryFriends.UseCases.Users.GetUser;
+﻿namespace FurryFriends.UseCase.Users.GetUser;
 
 public record PhotoDto(string Url, string? Desciption);
