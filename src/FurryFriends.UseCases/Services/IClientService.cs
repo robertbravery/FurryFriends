@@ -1,7 +1,7 @@
 ﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.UseCase.Services;
+namespace FurryFriends.UseCases.Services;
 
 public interface IClientService
 {

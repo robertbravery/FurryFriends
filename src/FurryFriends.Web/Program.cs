@@ -1,4 +1,5 @@
-﻿using FurryFriends.UseCase.Configurations;
+﻿using FurryFriends.ServiceDefaults;
+using FurryFriends.UseCases.Configurations;
 using FurryFriends.Web.Configurations;
 using FurryFriends.Web.Middleware;
 using OpenTelemetry.Metrics;

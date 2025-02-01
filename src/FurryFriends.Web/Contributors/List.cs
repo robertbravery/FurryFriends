@@ -1,5 +1,5 @@
-﻿using FurryFriends.UseCase.Contributors;
-using FurryFriends.UseCase.Contributors.List;
+﻿using FurryFriends.UseCases.Contributors;
+using FurryFriends.UseCases.Contributors.List;
 
 namespace FurryFriends.Web.Contributors;
 
@@ -15,7 +15,7 @@ public class List(IMediator _mediator) : EndpointWithoutRequest<ContributorListR
   {
     Get("/Contributors");
     AllowAnonymous();
-        Options(o => o.WithName("ListContributors_" + Guid.NewGuid().ToString())); // Ensure unique name
+    Options(o => o.WithName("ListContributors_" + Guid.NewGuid().ToString())); // Ensure unique name
 
   }
 

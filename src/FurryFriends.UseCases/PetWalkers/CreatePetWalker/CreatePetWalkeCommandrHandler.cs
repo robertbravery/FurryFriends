@@ -1,7 +1,5 @@
 ﻿using FurryFriends.Core.ValueObjects;
-using FurryFriends.UseCase.Users.CreatePetWalker;
 using FurryFriends.UseCases.Services;
-using FurryFriends.UseCases.Users.CreatePetWalker;
 
 namespace FurryFriends.UseCases.PetWalkers.CreatePetWalker;
 

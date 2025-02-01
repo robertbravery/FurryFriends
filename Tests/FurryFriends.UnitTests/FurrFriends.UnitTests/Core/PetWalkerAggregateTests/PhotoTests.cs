@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 
-namespace FurryFriends.UnitTests.Core.PetWalkerAggregate;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests;
 
 public class PhotoTests
 {

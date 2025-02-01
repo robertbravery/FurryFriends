@@ -1,13 +1,11 @@
 ﻿using Bogus;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UnitTests.TestHelpers;
-using FurryFriends.UseCase.Users.CreatePetWalker;
 using FurryFriends.UseCases.PetWalkers.CreatePetWalker;
 using FurryFriends.UseCases.Services;
-using FurryFriends.UseCases.Users.CreatePetWalker;
 using Moq;
 
-namespace FurryFriends.UnitTests.UseCases.PetWalkerTests;
+namespace FurryFriends.UnitTests.UseCase.PetWalkerTests;
 
 public class CreatePetWalkerHandlerTests
 {

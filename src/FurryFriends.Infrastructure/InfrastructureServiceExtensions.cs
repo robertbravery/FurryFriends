@@ -3,7 +3,7 @@ using FurryFriends.Core.Services;
 using FurryFriends.Infrastructure.Data;
 using FurryFriends.Infrastructure.Data.Queries;
 using FurryFriends.Infrastructure.Messaging;
-using FurryFriends.UseCase.Contributors.List;
+using FurryFriends.UseCases.Contributors.List;
 using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Infrastructure;

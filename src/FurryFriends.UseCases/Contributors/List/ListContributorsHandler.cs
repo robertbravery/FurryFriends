@@ -1,4 +1,6 @@
-﻿namespace FurryFriends.UseCase.Contributors.List;
+﻿using FurryFriends.UseCases.Contributors;
+
+namespace FurryFriends.UseCases.Contributors.List;
 
 public class ListContributorsHandler(IListContributorsQueryService _query)
   : IQueryHandler<ListContributorsQuery, Result<IEnumerable<ContributorDTO>>>

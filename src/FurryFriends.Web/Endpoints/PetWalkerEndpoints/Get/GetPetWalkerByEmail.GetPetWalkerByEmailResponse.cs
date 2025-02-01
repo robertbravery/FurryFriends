@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Web.Endpoints.Base;
-using FurryFriends.Web.Endpoints.UserEndpoints.Records;
+using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Records;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
 

@@ -1,4 +1,4 @@
-﻿namespace FurrFriends.UnitTests;
+﻿namespace FurryFriends.UnitTests;
 
 public class UnitTest1
 {

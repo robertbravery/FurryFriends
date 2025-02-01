@@ -3,7 +3,7 @@ using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 using Moq;
 
-namespace FurryFriends.UnitTests.Core.PetWalkerAggregate;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests;
 
 public class PetWalkerBioPictureTests
 {

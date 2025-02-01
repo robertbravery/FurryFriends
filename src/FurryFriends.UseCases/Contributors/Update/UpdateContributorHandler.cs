@@ -1,7 +1,8 @@
 ﻿using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.UseCases.Contributors;
 
-namespace FurryFriends.UseCase.Contributors.Update;
+namespace FurryFriends.UseCases.Contributors.Update;
 
 public class UpdateContributorHandler(
     IRepository<Contributor> _repository)

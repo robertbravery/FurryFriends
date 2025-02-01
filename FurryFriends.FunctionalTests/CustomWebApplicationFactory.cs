@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Infrastructure.Data;
-using FurryFriends.UseCase.Clients.CreateClient;
+using FurryFriends.UseCases.Clients.CreateClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace FurryFriends.FunctionalTests;

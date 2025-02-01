@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.UseCases.Users.CreatePetWalker;
+namespace FurryFriends.UseCases.PetWalkers.CreatePetWalker;
 public record CreatePetWalkerDto(
     Name Name,
     Email Email,

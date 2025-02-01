@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.ClientAggregate.Enums;
 
-namespace FurryFriends.UseCase.Clients.CreateClient;
+namespace FurryFriends.UseCases.Clients.CreateClient;
 public record CreateClientCommand
 (
     string FirstName,

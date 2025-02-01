@@ -3,7 +3,7 @@ using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UnitTests.TestHelpers;
 
-namespace FurrFriends.UnitTests.Core.PetWalkerAggregateTests.SpecificationTests;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests.SpecificationTests;
 
 public class UserSpecificationTests
 {

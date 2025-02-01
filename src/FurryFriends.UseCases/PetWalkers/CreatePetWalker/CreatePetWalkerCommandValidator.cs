@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.UseCase.Users.CreatePetWalker;
+namespace FurryFriends.UseCases.PetWalkers.CreatePetWalker;
 
 public class CreatePetWalkerCommandValidator : AbstractValidator<CreatePetWalkerCommand>
 {

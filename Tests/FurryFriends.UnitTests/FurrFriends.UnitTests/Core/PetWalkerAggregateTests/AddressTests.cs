@@ -3,7 +3,7 @@ using FluentValidation;
 using FurryFriends.Core.ValueObjects;
 using Moq;
 
-namespace FurryFriends.UnitTests.Core.PetWalkerAggregate;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests;
 
 public class AddressTests
 {

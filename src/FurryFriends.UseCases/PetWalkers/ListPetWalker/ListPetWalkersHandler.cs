@@ -1,5 +1,5 @@
-﻿using FurryFriends.UseCase.Services.DataTransferObjects;
-using FurryFriends.UseCases.Services;
+﻿using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.DataTransferObjects;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.PetWalkers.ListPetWalker;

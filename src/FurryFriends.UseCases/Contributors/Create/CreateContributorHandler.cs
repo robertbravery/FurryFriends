@@ -2,7 +2,7 @@ using FluentValidation;
 using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.UseCase.Contributors.Create;
+namespace FurryFriends.UseCases.Contributors.Create;
 
 public class CreateContributorHandler(IRepository<Contributor> _repository, IValidator<PhoneNumber> validator)
   : ICommandHandler<CreateContributorCommand, Result<int>>

@@ -2,7 +2,7 @@
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.UnitTests.TestHelpers;
 
-namespace FurrFriends.UnitTests.Core.PetWalkerAggregateTests.SpecificationTests;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests.SpecificationTests;
 
 public class ListPetWalkerSpecificationTests
 {

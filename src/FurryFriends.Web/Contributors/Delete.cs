@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCase.Contributors.Delete;
+﻿using FurryFriends.UseCases.Contributors.Delete;
 
 namespace FurryFriends.Web.Contributors;
 

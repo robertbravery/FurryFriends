@@ -2,7 +2,7 @@
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 
-namespace FurrFriends.UnitTests.Core.PetWalkerAggregateTests;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests;
 
 public class PetWalkerAggregateTests
 {

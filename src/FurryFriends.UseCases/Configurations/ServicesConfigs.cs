@@ -1,11 +1,10 @@
-﻿using FurryFriends.UseCase.Services;
-using FurryFriends.UseCases.PipeLineBehaviours;
+﻿using FurryFriends.UseCases.PipeLineBehaviours;
 using FurryFriends.UseCases.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace FurryFriends.UseCase.Configurations;
+namespace FurryFriends.UseCases.Configurations;
 public static class ServicesConfigs
 {
   public static IServiceCollection AddUseCaseServices(this IServiceCollection services)

@@ -1,7 +1,7 @@
 ﻿using FurryFriends.Core.ValueObjects;
 using static FurryFriends.Core.ValueObjects.GenderType;
 
-namespace FurryFriends.UnitTests.Core.PetWalkerAggregate;
+namespace FurryFriends.UnitTests.Core.PetWalkerAggregateTests;
 
 public class GenderCategoryTests
 {

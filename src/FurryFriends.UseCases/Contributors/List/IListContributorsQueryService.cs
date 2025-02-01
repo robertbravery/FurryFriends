@@ -1,4 +1,6 @@
-﻿namespace FurryFriends.UseCase.Contributors.List;
+﻿using FurryFriends.UseCases.Contributors;
+
+namespace FurryFriends.UseCases.Contributors.List;
 
 /// <summary>
 /// Represents a service that will actually fetch the necessary data
