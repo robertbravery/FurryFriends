@@ -2,8 +2,8 @@
 using FluentValidation;
 using FurryFriends.UseCases.Services;
 
-namespace FurryFriends.UseCase.Users.UpdateUser;
-public class UpdateUserHourlyRateHandler(IPetWalkerService _petWalkerService, IValidator<UpdatePetWalkerHourlyRateCommand> _validator) : ICommandHandler<UpdatePetWalkerHourlyRateCommand, Result<bool>>
+namespace FurryFriends.UseCases.PetWalkers.UpdatePetWalker;
+public class UpdatePetWalkerHourlyRateHandler(IPetWalkerService _petWalkerService, IValidator<UpdatePetWalkerHourlyRateCommand> _validator) : ICommandHandler<UpdatePetWalkerHourlyRateCommand, Result<bool>>
 {
   public async Task<Result<bool>> Handle(UpdatePetWalkerHourlyRateCommand command, CancellationToken cancellationToken)
   {

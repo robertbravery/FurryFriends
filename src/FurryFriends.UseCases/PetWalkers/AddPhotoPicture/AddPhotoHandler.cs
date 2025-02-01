@@ -2,7 +2,7 @@
 using FurryFriends.UseCases.Services;
 using Serilog;
 
-namespace FurryFriends.UseCase.Users.AddPhotoPicture;
+namespace FurryFriends.UseCases.PetWalkers.AddPhotoPicture;
 public class AddPhotoHandler(IPetWalkerService petWalkerService, IValidator<AddPhotoCommand> validator, ILogger logger) : ICommandHandler<AddPhotoCommand, Result>
 {
   private readonly IPetWalkerService _userService = petWalkerService;

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FurryFriends.UseCase.Users.UpdateUser;
+﻿using FurryFriends.UseCases.PetWalkers.UpdatePetWalker;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Update;
 

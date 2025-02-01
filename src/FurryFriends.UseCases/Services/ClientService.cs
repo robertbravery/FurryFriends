@@ -1,8 +1,9 @@
 ﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.UseCase.Services;
 
-namespace FurryFriends.UseCase.Services;
+namespace FurryFriends.UseCases.Services;
 
 public class ClientService : IClientService
 {
@@ -26,7 +27,7 @@ public class ClientService : IClientService
     await _repository.AddAsync(client);
     await _repository.SaveChangesAsync();
 
-    return Result.Success<Client>(client);
+    return Result.Success(client);
   }
 
 

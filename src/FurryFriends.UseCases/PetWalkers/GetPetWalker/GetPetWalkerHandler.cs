@@ -2,10 +2,10 @@
 using FurryFriends.Core.PetWalkerAggregate.Enums;
 using FurryFriends.UseCases.Services;
 
-namespace FurryFriends.UseCase.Users.GetUser;
-public class GetUserHandler(IPetWalkerService _userService) : IQueryHandler<GetUserQuery, Result<UserDto>>
+namespace FurryFriends.UseCases.PetWalkers.GetPetWalker;
+public class GetPetWalkerHandler(IPetWalkerService _userService) : IQueryHandler<GetPetWalkerQuery, Result<PetWalkerDto>>
 {
-  public async Task<Result<UserDto>> Handle(GetUserQuery query, CancellationToken cancellationToken)
+  public async Task<Result<PetWalkerDto>> Handle(GetPetWalkerQuery query, CancellationToken cancellationToken)
   {
     var entityResult = await _userService.GetPetWalkerByEmailAsync(query.Email, cancellationToken);
     if (!entityResult.IsSuccess)
@@ -15,7 +15,7 @@ public class GetUserHandler(IPetWalkerService _userService) : IQueryHandler<GetU
     var entity = entityResult.Value;
     var bioPicture = GetBioPicture(entity);
     var photos = GetPhotoList(entity);
-    return new UserDto(
+    return new PetWalkerDto(
       entity.Id,
       entity.Email.EmailAddress,
       entity.Name.FullName,

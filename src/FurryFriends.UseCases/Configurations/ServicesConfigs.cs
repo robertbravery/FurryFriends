@@ -1,5 +1,5 @@
-﻿using FurryFriends.UseCase.PipeLineBehaviours;
-using FurryFriends.UseCase.Services;
+﻿using FurryFriends.UseCase.Services;
+using FurryFriends.UseCases.PipeLineBehaviours;
 using FurryFriends.UseCases.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

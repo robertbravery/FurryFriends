@@ -1,9 +1,8 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
-using FurryFriends.UseCase.Users.ListUser;
 using FurryFriends.UseCases.Services;
 using Microsoft.Extensions.Logging;
 
-namespace FurryFriends.UseCases.Users.ListUser;
+namespace FurryFriends.UseCases.PetWalkers.ListPetWalker;
 public class ListUsersByLocationHandler(IPetWalkerService petWalkerService, ILogger<ListUsersByLocationHandler> logger) : IQueryHandler<ListPetWalkerByLocationQuery, Result<(List<PetWalker> users, int TotalCount)>>
 {
   private readonly IPetWalkerService _petWalkerService = petWalkerService;

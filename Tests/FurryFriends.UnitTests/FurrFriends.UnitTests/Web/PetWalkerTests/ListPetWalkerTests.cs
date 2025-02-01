@@ -5,7 +5,7 @@ using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
 using FurryFriends.UseCase.Services.DataTransferObjects;
-using FurryFriends.UseCase.Users.ListUser;
+using FurryFriends.UseCases.PetWalkers.ListPetWalker;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 using Microsoft.AspNetCore.Http;
 using Moq;

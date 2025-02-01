@@ -1,5 +1,5 @@
 ﻿using Azure;
-using FurryFriends.UseCase.Users.GetUser;
+using FurryFriends.UseCases.PetWalkers.GetPetWalker;
 using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.UserEndpoints.Records;
 
@@ -25,7 +25,7 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
 
   public override async Task HandleAsync(GetPetWalkerByEmailRequest req, CancellationToken ct)
   {
-    var query = new GetUserQuery(req.Email);
+    var query = new GetPetWalkerQuery(req.Email);
     var result = await _mediator.Send(query, ct);
     if (result.Value is null || !result.IsSuccess)
     {

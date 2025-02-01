@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.UseCase.Services.DataTransferObjects;
-using FurryFriends.UseCase.Users.ListUser;
+using FurryFriends.UseCases.PetWalkers.ListPetWalker;
 using FurryFriends.UseCases.Users.CreatePetWalker;
 
 namespace FurryFriends.UseCases.Services;

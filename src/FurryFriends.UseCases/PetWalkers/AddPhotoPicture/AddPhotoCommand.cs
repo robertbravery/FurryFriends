@@ -1,4 +1,4 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 
-namespace FurryFriends.UseCase.Users.AddPhotoPicture;
+namespace FurryFriends.UseCases.PetWalkers.AddPhotoPicture;
 public record AddPhotoCommand(Guid UserId, Photo BioPicture) : ICommand<Result>;

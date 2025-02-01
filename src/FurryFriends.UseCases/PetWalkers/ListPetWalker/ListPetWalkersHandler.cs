@@ -2,7 +2,7 @@
 using FurryFriends.UseCases.Services;
 using Microsoft.Extensions.Logging;
 
-namespace FurryFriends.UseCase.Users.ListUser;
+namespace FurryFriends.UseCases.PetWalkers.ListPetWalker;
 public class ListPetWalkersHandler : IQueryHandler<ListPetWalkerQuery, Result<PetWalkerListDto>>
 {
   private readonly IPetWalkerService _petWalkerService;

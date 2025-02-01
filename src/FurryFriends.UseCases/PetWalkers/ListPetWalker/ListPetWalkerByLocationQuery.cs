@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 
-namespace FurryFriends.UseCase.Users.ListUser;
+namespace FurryFriends.UseCases.PetWalkers.ListPetWalker;
 
 public record ListPetWalkerByLocationQuery(
   string? SearchString,

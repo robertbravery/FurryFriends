@@ -1,5 +1,5 @@
 ﻿using System;
-using FurryFriends.UseCase.Users.GetUser;
+using FurryFriends.UseCases.PetWalkers.GetPetWalker;
 
 namespace FurryFriends.Web.Endpoints.UserEndpoints.Records;
 
