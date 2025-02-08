@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Core.ValueObjects;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.ClientService;
 
 namespace FurryFriends.UseCases.Clients.CreateClient;
 internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand, Result<Guid>>
@@ -27,18 +27,24 @@ internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand,
     };
 
     var errorsList = results.SelectMany(result => result.Errors);
+    var validationErrorsList = results.SelectMany(result => result.ValidationErrors);
 
     if (errorsList.Any())
     {
 
       return Result.Error(new ErrorList(errorsList));
     }
+    if (validationErrorsList.Any())
+    {
+
+      return Result.Error(new ErrorList(validationErrorsList.Select(x => x.ErrorMessage)));
+    }
 
     var result = await _clientService.CreateClientAsync(
           nameResult.Value,
           emailResult.Value,
           phoneResult.Value,
-          addressResult.Value);
+          addressResult.Value, cancellationToken);
 
     return Result<Guid>.Success(result.Value.Id);
   }

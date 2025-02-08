@@ -2,7 +2,7 @@
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
 
-namespace FurryFriends.UseCases.Services;
+namespace FurryFriends.UseCases.Services.ClientService;
 
 public class ClientService : IClientService
 {
@@ -13,7 +13,7 @@ public class ClientService : IClientService
     _repository = repository;
   }
 
-  public async Task<Result<Client>> CreateClientAsync(Name name, Email email, PhoneNumber phoneNumber, Address address)
+  public async Task<Result<Client>> CreateClientAsync(Name name, Email email, PhoneNumber phoneNumber, Address address, CancellationToken cancellationToken)
   {
     var existingClientSpec = new ClientByEmailSpec(email.EmailAddress);
     if (await _repository.AnyAsync(existingClientSpec))
@@ -29,7 +29,17 @@ public class ClientService : IClientService
     return Result.Success(client);
   }
 
+  public async Task<Result<Client>> GetClientAsync(string emailAddress, CancellationToken cancellationToken)
+  {
+    var existingClientSpec = new ClientByEmailSpec(emailAddress, true);
+    var client = await _repository.FirstOrDefaultAsync(existingClientSpec);
+    if (client == null)
+    {
+      return Result.Error("Client not found");
+    }
+    return Result.Success(client);
 
+  }
 }
 
 

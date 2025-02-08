@@ -6,8 +6,8 @@ public class CreateClientRequestValidator : Validator<CreateClientRequest>
   {
 
     RuleFor(x => x.FirstName)
-               .NotEmpty()
-               .WithMessage("First name is required");
+        .NotEmpty()
+        .WithMessage("First name is required!");
 
     RuleFor(x => x.LastName)
         .NotEmpty()

@@ -1,3 +1,3 @@
 ﻿namespace FurryFriends.UseCases.PetWalkers.GetPetWalker;
 
-public record GetPetWalkerQuery(string Email) : IQuery<Result<PetWalkerDto>>;
+public record GetPetWalkerQuery(string EmailAddress) : IQuery<Result<PetWalkerDto>>;

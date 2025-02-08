@@ -5,6 +5,6 @@ public class GetPetWalkerQueryValidator : AbstractValidator<GetPetWalkerQuery>
 {
   public GetPetWalkerQueryValidator()
   {
-    RuleFor(x => x.Email).NotEmpty();
+    RuleFor(x => x.EmailAddress).NotEmpty().EmailAddress();
   }
 }

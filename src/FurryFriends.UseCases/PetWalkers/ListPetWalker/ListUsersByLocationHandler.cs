@@ -1,5 +1,5 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.PetWalkerService;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.PetWalkers.ListPetWalker;

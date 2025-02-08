@@ -1,13 +1,13 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Enums;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.PetWalkerService;
 
 namespace FurryFriends.UseCases.PetWalkers.GetPetWalker;
 public class GetPetWalkerHandler(IPetWalkerService _userService) : IQueryHandler<GetPetWalkerQuery, Result<PetWalkerDto>>
 {
   public async Task<Result<PetWalkerDto>> Handle(GetPetWalkerQuery query, CancellationToken cancellationToken)
   {
-    var entityResult = await _userService.GetPetWalkerByEmailAsync(query.Email, cancellationToken);
+    var entityResult = await _userService.GetPetWalkerByEmailAsync(query.EmailAddress, cancellationToken);
     if (!entityResult.IsSuccess)
     {
       return Result.NotFound("User Not Found with the given email");

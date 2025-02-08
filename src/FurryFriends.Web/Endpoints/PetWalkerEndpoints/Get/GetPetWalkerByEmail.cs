@@ -31,13 +31,13 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
     {
       if (result.IsNotFound())
       {
-        AddError("User not found");
-        await SendNotFoundAsync(cancellation: ct);
+        Response = new ResponseBase<PetWalkerRecord>(null, false, "Pet walker not found");
+        await SendAsync(Response, 404, ct);
         return;
       }
 
-      AddError("Failed to retrieve user");
-      await SendErrorsAsync(cancellation: ct);
+      Response = new ResponseBase<PetWalkerRecord>(null, false, "Failed to retrieve Client");
+      await SendAsync(Response, 400, ct);
       return;
     }
     else

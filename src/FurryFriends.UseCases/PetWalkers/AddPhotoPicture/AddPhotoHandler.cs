@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.PetWalkerService;
 using Serilog;
 
 namespace FurryFriends.UseCases.PetWalkers.AddPhotoPicture;

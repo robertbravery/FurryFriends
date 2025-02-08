@@ -1,5 +1,6 @@
 ﻿using FurryFriends.UseCases.PipeLineBehaviours;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.ClientService;
+using FurryFriends.UseCases.Services.PetWalkerService;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;

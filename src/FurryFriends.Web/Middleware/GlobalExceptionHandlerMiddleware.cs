@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using FluentValidation.Results;
+using FurryFriends.Web.Endpoints.Base;
 
 namespace FurryFriends.Web.Middleware;
 
@@ -21,22 +22,20 @@ public class GlobalExceptionHandlerMiddleware
     catch (ValidationException ex) when (ex.Errors.All(e => e.GetType() == typeof(ValidationFailure))) // Filter for standard Fluent Validation failures
     {
       context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-      await WriteValidationErrorsToResponse(context.Response, ex.Errors);
+      await HandleValidationErrorsToResponse(context.Response, ex.Errors);
     }
     catch (ValidationException ex) // Handle custom ValidationException from UseCase
     {
-      // Convert to desired format (see approach 2)
-      await WriteValidationErrorsToResponse(context.Response, ex.Errors);
+      await HandleValidationErrorsToResponse(context.Response, ex.Errors);
     }
     catch (Exception ex)
     {
       // Log the exception
-      context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-      await context.Response.WriteAsJsonAsync(new { Message = ex.Message });
+      await HandleExceptionAsync(context, ex);
     }
   }
 
-  private async Task WriteValidationErrorsToResponse(HttpResponse response, IEnumerable<ValidationFailure> errors)
+  private async Task HandleValidationErrorsToResponse(HttpResponse response, IEnumerable<ValidationFailure> errors)
   {
     var apiErrors = errors.Select(f => new
     {
@@ -58,6 +57,13 @@ public class GlobalExceptionHandlerMiddleware
     });
   }
 
-  // Implement WriteCustomValidationErrorsToResponse to convert UseCase errors to the desired format
+  private Task HandleExceptionAsync(HttpContext context, Exception ex)
+  {
+    context.Response.ContentType = "application/json";
+    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+    var response = ResponseBase<object>.FromException(ex);
+    return context.Response.WriteAsJsonAsync(response);
+  }
 }
 

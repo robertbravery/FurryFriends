@@ -17,7 +17,8 @@
     <PackageReference Include="Serilog" />
     <PackageReference Include="SQLite" />
   </ItemGroup>
-  
+
+
   <ItemGroup>
     <ProjectReference Include="..\FurryFriends.Core\FurryFriends.Core.csproj" />
     <ProjectReference Include="..\FurryFriends.UseCases\FurryFriends.UseCases.csproj" />

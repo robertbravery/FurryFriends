@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 using FluentValidation;
-using FurryFriends.UseCases.Services;
+using FurryFriends.UseCases.Services.PetWalkerService;
 
 namespace FurryFriends.UseCases.PetWalkers.UpdatePetWalker;
 public class UpdatePetWalkerHourlyRateHandler(IPetWalkerService _petWalkerService, IValidator<UpdatePetWalkerHourlyRateCommand> _validator) : ICommandHandler<UpdatePetWalkerHourlyRateCommand, Result<bool>>

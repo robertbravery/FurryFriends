@@ -54,6 +54,7 @@ public class CreateClient : Endpoint<CreateClientRequest, Result<CreateClientRep
         AddError(error);
 
       }
+      Response = Result.Error();
       await SendErrorsAsync(cancellation: cancellationToken);
       return;
 
