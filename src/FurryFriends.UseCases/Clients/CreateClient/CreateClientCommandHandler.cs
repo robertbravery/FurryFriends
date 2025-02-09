@@ -13,39 +13,30 @@ internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand,
 
   public async Task<Result<Guid>> Handle(CreateClientCommand request, CancellationToken cancellationToken)
   {
-    var nameResult = Name.Create(request.FirstName, request.LastName);
-    var emailResult = Email.Create(request.Email);
-    var phoneResult = await PhoneNumber.Create(request.CountryCode, request.PhoneNumber);
-    var addressResult = Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode);
 
-    var results = new IResult[]
+    var creationResults = new IResult[]
     {
-      nameResult,
-      emailResult,
-      phoneResult,
-      addressResult
+      Name.Create(request.FirstName, request.LastName),
+      Email.Create(request.Email),
+      await PhoneNumber.Create(request.CountryCode, request.PhoneNumber),
+      Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode)
     };
 
-    var errorsList = results.SelectMany(result => result.Errors);
-    var validationErrorsList = results.SelectMany(result => result.ValidationErrors);
-
-    if (errorsList.Any())
+    var errors = creationResults.SelectMany(r => r.Errors);
+    var validationErrors = creationResults.SelectMany(r => r.ValidationErrors);
+    if (errors.Any() || validationErrors.Any())
     {
-
-      return Result.Error(new ErrorList(errorsList));
-    }
-    if (validationErrorsList.Any())
-    {
-
-      return Result.Error(new ErrorList(validationErrorsList.Select(x => x.ErrorMessage)));
+      return Result.Error(new ErrorList(errors.Concat(validationErrors.Select(e => e.ErrorMessage))));
     }
 
-    var result = await _clientService.CreateClientAsync(
-          nameResult.Value,
-          emailResult.Value,
-          phoneResult.Value,
-          addressResult.Value, cancellationToken);
-
-    return Result<Guid>.Success(result.Value.Id);
+    var clientCreationResult = await _clientService.CreateClientAsync(
+    (Name)creationResults[0].GetValue(),
+    (Email)creationResults[1].GetValue(),
+    (PhoneNumber)creationResults[2].GetValue(),
+    (Address)creationResults[3].GetValue(),
+    cancellationToken);
+    return clientCreationResult.IsSuccess
+      ? Result<Guid>.Success(clientCreationResult.Value.Id)
+      : Result.Error(new ErrorList(clientCreationResult.Errors));
   }
 }

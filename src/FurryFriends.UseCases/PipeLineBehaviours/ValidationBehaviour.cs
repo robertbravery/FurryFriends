@@ -18,7 +18,8 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
       throw new ValidationException(failures.Select(f => new ValidationFailure
       {
         PropertyName = f.PropertyName,
-        ErrorMessage = f.ErrorMessage
+        ErrorMessage = f.ErrorMessage,
+        ErrorCode = f.ErrorCode
       }).ToList());
     }
 

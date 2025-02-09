@@ -29,38 +29,34 @@ public class CreateClient : Endpoint<CreateClientRequest, Result<CreateClientRep
     _logger.LogInformation("Received create client request for {ClientName}", request);
 
     var command = new CreateClientCommand(
-      request.FirstName,
-      request.LastName,
-      request.Email,
-      request.PhoneCountryCode,
-      request.PhoneNumber,
-      request.Street,
-      request.City,
-      request.State,
-      request.Country,
-      request.ZipCode,
-      request.ClientType,
-      request.PreferredContactTime,
-      request.ReferralSource);
+        request.FirstName,
+        request.LastName,
+        request.Email,
+        request.PhoneCountryCode,
+        request.PhoneNumber,
+        request.Street,
+        request.City,
+        request.State,
+        request.Country,
+        request.ZipCode,
+        request.ClientType,
+        request.PreferredContactTime,
+        request.ReferralSource);
 
     var result = await _mediator.Send(command, cancellationToken);
 
-
     if (!result.IsSuccess)
     {
-
       foreach (var error in result.Errors)
       {
         AddError(error);
-
       }
       Response = Result.Error();
       await SendErrorsAsync(cancellation: cancellationToken);
       return;
-
     }
-    var clientId = Result<Guid>.Success(result.Value).Value.ToString();
-    Response = new CreateClientReponse(clientId);
+
+    Response = new CreateClientReponse(result.Value.ToString());
   }
 }
 

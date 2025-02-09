@@ -4,61 +4,47 @@ using FurryFriends.Web.Endpoints.Base;
 
 namespace FurryFriends.Web.Middleware;
 
-public class GlobalExceptionHandlerMiddleware
+public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
 {
-  private readonly RequestDelegate _next;
+  private const string ValidationError = "Validation Error";
+  private readonly RequestDelegate _next = next;
+  private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger = logger;
 
-  public GlobalExceptionHandlerMiddleware(RequestDelegate next)
-  {
-    _next = next;
-  }
-
-  public async Task Invoke(HttpContext context)
+  public async Task InvokeAsync(HttpContext context)
   {
     try
     {
       await _next(context);
     }
-    catch (ValidationException ex) when (ex.Errors.All(e => e.GetType() == typeof(ValidationFailure))) // Filter for standard Fluent Validation failures
+    catch (ValidationException ex)
     {
       context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
       await HandleValidationErrorsToResponse(context.Response, ex.Errors);
     }
-    catch (ValidationException ex) // Handle custom ValidationException from UseCase
-    {
-      await HandleValidationErrorsToResponse(context.Response, ex.Errors);
-    }
     catch (Exception ex)
     {
-      // Log the exception
+      _logger.LogError(ex, ex.Message);
       await HandleExceptionAsync(context, ex);
     }
   }
 
-  private async Task HandleValidationErrorsToResponse(HttpResponse response, IEnumerable<ValidationFailure> errors)
+  private async Task HandleValidationErrorsToResponse(HttpResponse httpResponse, IEnumerable<ValidationFailure> errors)
   {
-    var apiErrors = errors.Select(f => new
-    {
-      name = f.PropertyName,
-      reason = f.ErrorMessage,
-      code = f.ErrorCode // Include if available from Fluent Validation
-                         // severity = "Error" // Can be omitted if not relevant
-    });
-
-    response.ContentType = "application/json";
-    await response.WriteAsJsonAsync(new
-    {
-      type = "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1",
-      title = "Validation Error",
-      status = 400,
-      instance = "/Clients", // Adjust if needed
-      traceId = Guid.NewGuid().ToString(), // Or use a generated trace ID
-      errors = apiErrors
-    });
+    httpResponse.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+    var response = new ResponseBase<object>(
+        data: null,
+        success: false,
+        message: ValidationError,
+        errorCode: "DataValidationError",
+        errors: errors.Select(e => e.ErrorMessage).ToList()
+    );
+    _logger.LogError("{ValidatonErrpr}: {Errors}", ValidationError, string.Join(", ", response!.Errors!));
+    await httpResponse.HttpContext.Response.WriteAsJsonAsync(response);
   }
 
   private Task HandleExceptionAsync(HttpContext context, Exception ex)
   {
+    _logger.LogError(ex, ex.Message);
     context.Response.ContentType = "application/json";
     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
