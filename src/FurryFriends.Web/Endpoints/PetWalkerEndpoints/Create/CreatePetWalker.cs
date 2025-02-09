@@ -56,7 +56,7 @@ public class CreatePetWalker(IMediator _mediator)
         request.HasFirstAidCertification,
     request.DailyPetWalkLimit);
 
-    Result<Guid> result = await _mediator.Send(userCommand, cancellationToken);
+    var result = await _mediator.Send(userCommand, cancellationToken);
 
     if (result == null || !result.IsSuccess)
     {

@@ -1,6 +1,6 @@
 ﻿namespace FurryFriends.UseCases.PipeLineBehaviours;
 
-public class ValidationFailureDto
+public class ValidationFailureDto //ToDp: Check if we need this
 {
   public string FieldName { get; set; } = default!;
   public string ErrorMessage { get; set; } = default!;
