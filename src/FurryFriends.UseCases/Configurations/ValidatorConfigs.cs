@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using FurryFriends.UseCases.Clients.CreateClient;
-using FurryFriends.UseCases.PetWalkers.CreatePetWalker;
-using FurryFriends.UseCases.PetWalkers.UpdatePetWalker;
+using FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
+using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FurryFriends.UseCases.Configurations;

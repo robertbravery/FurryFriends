@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.Contributors.Create;
+﻿using FurryFriends.UseCases.Domain.Contributors.Create;
 
 namespace FurryFriends.Web.Contributors;
 

@@ -1,8 +1,8 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
-using FurryFriends.UseCases.PetWalkers.CreatePetWalker;
-using FurryFriends.UseCases.PetWalkers.ListPetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
 
 namespace FurryFriends.UseCases.Services.PetWalkerService;
 

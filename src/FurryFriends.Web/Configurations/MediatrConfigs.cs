@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Ardalis.SharedKernel;
 using FurryFriends.Core.PetWalkerAggregate;
-using FurryFriends.UseCases.PetWalkers.CreatePetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 
 namespace FurryFriends.Web.Configurations;
 

@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using FastEndpoints;
 using FurryFriends.Core.ClientAggregate.Enums;
-using FurryFriends.UseCases.Clients.CreateClient;
+using FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
 using FurryFriends.Web.Endpoints.ClientEnpoints.Create;
 using Microsoft.AspNetCore.Http;
 using Moq;

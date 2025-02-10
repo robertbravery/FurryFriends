@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.PetWalkers.UpdatePetWalker;
+﻿using FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Update;
 

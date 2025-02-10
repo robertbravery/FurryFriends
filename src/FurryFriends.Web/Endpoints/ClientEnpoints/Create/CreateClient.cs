@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.Clients.CreateClient;
+﻿using FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
 
 namespace FurryFriends.Web.Endpoints.ClientEnpoints.Create;
 

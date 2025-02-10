@@ -1,5 +1,5 @@
 ﻿using Azure;
-using FurryFriends.UseCases.PetWalkers.GetPetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
 using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Records;
 
