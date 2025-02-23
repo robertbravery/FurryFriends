@@ -1,4 +1,6 @@
-﻿using FurryFriends.Core.ContributorAggregate;
+﻿using FurryFriends.Core.ClientAggregate;
+using FurryFriends.Core.ClientAggregate.Enums;
+using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.LocationAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
@@ -21,6 +23,7 @@ public static class SeedData
 
     await SeedData.PopulateContributorTestDataAsync(dbContext);
     await SeedData.PopulateUserTestDataAsync(dbContext);
+    await SeedData.PopulateClientTestDataAsync(dbContext);
 
   }
 
@@ -77,4 +80,45 @@ public static class SeedData
     await dbContext.SaveChangesAsync();
 
   }
+
+  private static async Task PopulateClientTestDataAsync(AppDbContext dbContext)
+  {
+    // Create Value Objects
+    var name1 = Name.Create("John", "Smith").Value;
+    var name2 = Name.Create("Jane", "Doe").Value;
+
+    var email1 = Email.Create("john.smith@example.com");
+    var email2 = Email.Create("jane.doe@example.com");
+
+    var phoneNumber1 = await PhoneNumber.Create("027", "555-123-4567");
+    var phoneNumber2 = await PhoneNumber.Create("027", "555-987-6543");
+
+    var address1 = Address.Create("789 Pet Lane", "Pet City", "Pet State", "US", "54321");
+    var address2 = Address.Create("321 Animal Ave", "Animal City", "Animal State", "US", "98765");
+
+    // Create Clients using the factory method
+    var client1 = Client.Create(
+        name1,
+        email1,
+        phoneNumber1,
+        address1,
+        ClientType.Regular,
+        new TimeOnly(9, 0), // 9:00 AM preferred contact time
+        "Website"
+    );
+
+    var client2 = Client.Create(
+        name2,
+        email2,
+        phoneNumber2,
+        address2,
+        ClientType.Premium,
+        new TimeOnly(14, 0), // 2:00 PM preferred contact time
+        "Referral"
+    );
+
+    dbContext.Clients.AddRange(new List<Client> { client1, client2 });
+    await dbContext.SaveChangesAsync();
+  }
+
 }

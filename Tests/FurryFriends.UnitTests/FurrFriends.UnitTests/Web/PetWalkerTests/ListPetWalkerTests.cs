@@ -4,11 +4,11 @@ using FastEndpoints;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
-using FurryFriends.UseCases.Domain.PetWalkers.CreatePetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
+using FurryFriends.UseCases.Services.PetWalkerService;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
 
 namespace FurryFriends.UnitTests.Web.PetWalkerTests;
 

@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.ClientAggregate.Enums;
 
-namespace FurryFriends.UseCases.Domain.Clients.Query.GetClient;
+namespace FurryFriends.UseCases.Domain.Clients.Query;
 
 public record ClientDTO(
     Guid Id,

@@ -64,11 +64,20 @@ public class PetWalkerService : IPetWalkerService
   public async Task<Result<PetWalker>> GetPetWalkerByEmailAsync(string email, CancellationToken cancellationToken)
   {
     var spec = new GetPetWalkerByEmailSpecification(email);
-    var entity = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
-    if (entity == null)
-      return Result.NotFound("User Not Found");
+    try
+    {
+      var entity = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
+      if (entity == null)
+        return Result.NotFound("User Not Found");
 
-    return entity;
+      return entity;
+    }
+    catch (Exception ex)
+    {
+
+      throw new Exception(ex.Message);
+    }
+
   }
 
   public async Task<Result<PetWalkerListDto>> ListPetWalkersAsync(ListPetWalkerQuery query)

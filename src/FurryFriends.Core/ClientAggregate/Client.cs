@@ -7,9 +7,9 @@ public class Client : UserEntityBase, IAggregateRoot
 {
   public virtual ICollection<Pet> Pets { get; set; } = new HashSet<Pet>();
 
-  public ClientType ClientType { get; }
-  public TimeOnly? PreferredContactTime { get; }
-  public string? ReferralSource { get; }
+  public ClientType ClientType { get; private set; }
+  public TimeOnly? PreferredContactTime { get; private set; }
+  public string? ReferralSource { get; private set; }
 
   private Client() { }
 
@@ -55,5 +55,24 @@ public class Client : UserEntityBase, IAggregateRoot
     Guard.Against.Null(pet, nameof(pet));
     Pets.Add(pet);
   }
+
+
+  public void UpdateClientType(ClientType clientType)
+  {
+    Guard.Against.EnumOutOfRange(clientType, nameof(clientType));
+    ClientType = clientType;
+  }
+
+  public void UpdatePreferredContactTime(TimeOnly? preferredContactTime)
+  {
+    PreferredContactTime = preferredContactTime;
+  }
+
+  public void UpdateReferralSource(string? referralSource)
+  {
+    ReferralSource = referralSource;
+  }
+
+
 }
 

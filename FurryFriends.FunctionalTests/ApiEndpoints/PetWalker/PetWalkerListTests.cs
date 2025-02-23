@@ -1,4 +1,5 @@
-﻿using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
+﻿using FurryFriends.Web.Endpoints.Base;
+using FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 
 namespace FurryFriends.FunctionalTests.ApiEndpoints.PetWalker;
 
@@ -18,7 +19,7 @@ public class PetWalkerListTests(CustomWebApplicationFactory<Program> factory) : 
     var endpoint = $"{url}?page={page}&pageSize={pageSize}";
 
     //act
-    var result = await _client.GetAndDeserializeAsync<ListPetWalkerResponse>(endpoint);
+    var result = await _client.GetAndDeserializeAsync<ListResponse<PetWalkerListResponseDto>>(endpoint);
 
     //assert
     Assert.NotNull(result);

@@ -1,45 +1,12 @@
-﻿namespace FurryFriends.Web.Endpoints.ClientEnpoints.Create;
+﻿using FurryFriends.Web.Endpoints.ClientEnpoints.Validator;
+
+namespace FurryFriends.Web.Endpoints.ClientEnpoints.Create;
 
 public class CreateClientRequestValidator : Validator<CreateClientRequest>
 {
   public CreateClientRequestValidator()
   {
 
-    RuleFor(x => x.FirstName)
-        .NotEmpty()
-        .WithMessage("First name is required!");
-
-    RuleFor(x => x.LastName)
-        .NotEmpty()
-        .WithMessage("Last name is required");
-
-    RuleFor(x => x.Email)
-        .NotEmpty()
-        .EmailAddress()
-        .WithMessage("Email address is required and must be in a valid format");
-
-    RuleFor(x => x.PhoneCountryCode)
-        .NotEmpty()
-        .WithMessage("Phone country code is required");
-
-    RuleFor(x => x.PhoneNumber)
-        .NotEmpty()
-        .WithMessage("Phone number is required");
-
-    RuleFor(x => x.Street)
-        .NotEmpty()
-        .WithMessage("Street is required");
-
-    RuleFor(x => x.City)
-        .NotEmpty()
-        .WithMessage("City or Town is required");
-
-    RuleFor(x => x.State)
-        .NotEmpty()
-        .WithMessage("State or province is required");
-
-    RuleFor(x => x.ZipCode)
-        .NotEmpty()
-        .WithMessage("Zip or postal code is required");
+    Include(new ClientRequestValidator<CreateClientRequest>());
   }
 }

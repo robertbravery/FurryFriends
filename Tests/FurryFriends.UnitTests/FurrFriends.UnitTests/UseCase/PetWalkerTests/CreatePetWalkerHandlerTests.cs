@@ -2,6 +2,7 @@
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UnitTests.TestHelpers;
 using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
+using FurryFriends.UseCases.Services.PetWalkerService;
 using Moq;
 
 namespace FurryFriends.UnitTests.UseCase.PetWalkerTests;

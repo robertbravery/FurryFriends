@@ -70,5 +70,10 @@ public class Address : ValueObject
     yield return StateProvinceRegion;
     yield return ZipCode;
   }
+
+  public override string ToString()
+  {
+    return $"{Street}, {City}, {StateProvinceRegion} {ZipCode}, {Country}";
+  }
 }
 

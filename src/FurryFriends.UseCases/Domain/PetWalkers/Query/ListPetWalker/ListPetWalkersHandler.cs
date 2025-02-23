@@ -17,16 +17,12 @@ public class ListPetWalkersHandler : IQueryHandler<ListPetWalkerQuery, Result<Pe
   {
     try
     {
-      //_logger.LogInformation("Retrieving users using specification: {Specification}", userSpecification);
-      //var users = await _repository.ListAsync(userSpecification, cancellationToken);
       var users = await _petWalkerService.ListPetWalkersAsync(query);
       if (users == null)
       {
         _logger.LogError("Failed to retrieve users");
         return Result<PetWalkerListDto>.Error("Failed to retrieve users");
       }
-      _logger.LogInformation("Retrieving total count...");
-      //var totalCountResult = await _repository.CountAsync(userSpecification, cancellationToken);
       return Result<PetWalkerListDto>.Success(users);
     }
     catch (Exception ex)
