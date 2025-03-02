@@ -3,6 +3,8 @@ using FurryFriends.Core.Common;
 using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.Core.ClientAggregate;
+
+
 public class Client : UserEntityBase, IAggregateRoot
 {
   public virtual ICollection<Pet> Pets { get; set; } = new HashSet<Pet>();
@@ -11,7 +13,9 @@ public class Client : UserEntityBase, IAggregateRoot
   public TimeOnly? PreferredContactTime { get; private set; }
   public string? ReferralSource { get; private set; }
 
-  private Client() { }
+
+
+  internal Client() { }
 
   private Client(
         Name Name,

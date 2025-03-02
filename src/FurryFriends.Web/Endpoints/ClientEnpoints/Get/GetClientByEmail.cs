@@ -1,18 +1,15 @@
-﻿using Azure;
+﻿using Ardalis.GuardClauses;
+using Azure;
+using FurryFriends.UseCases.Domain.Clients.Query;
 using FurryFriends.UseCases.Domain.Clients.Query.GetClient;
 using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
 
 namespace FurryFriends.Web.Endpoints.ClientEnpoints.Get;
 
-public class GetClientByEmail : Endpoint<GetClientRequest, ResponseBase<ClientRecord>>
+public class GetClientByEmail(IMediator mediator) : Endpoint<GetClientRequest, ResponseBase<ClientRecord>>
 {
-  private readonly IMediator _mediator;
-
-  public GetClientByEmail(IMediator mediator)
-  {
-    _mediator = mediator;
-  }
+  private readonly IMediator _mediator = Guard.Against.Null(mediator);
 
   public override void Configure()
   {
@@ -37,37 +34,44 @@ public class GetClientByEmail : Endpoint<GetClientRequest, ResponseBase<ClientRe
 
     if (result.Value is null || !result.IsSuccess)
     {
-      if (result.IsNotFound())
-      {
-        //Response = new ResponseBase<ClientRecord>(null, false, "Client not found");
-        var message = "Client not found";
-
-        Response = ResponseBase<ClientRecord>.NotFound(message, result.Errors.ToList());
-        await SendAsync(Response, 404, ct);
-        return;
-      }
-
-      Response = new ResponseBase<ClientRecord>(null, false, "Failed to retrieve Client");
-      await SendAsync(Response, 400, ct);
+      await HandleFailedResult(result, ct);
       return;
     }
-    else
-    {
-      var clientRecord = new ClientRecord(
-          result.Value.Id,
-          result.Value.Name,
-          result.Value.Email,
-          result.Value.PhoneNumber,
-          result.Value.Street,
-          result.Value.City,
-          result.Value.State,
-          result.Value.ZipCode,
-          result.Value.ClientType,
-          result.Value.PreferredContactTime,
-          result.Value.ReferralSource);
 
-      Response = new ResponseBase<ClientRecord>(clientRecord);
-      await SendAsync(Response, 200, ct);
+    var clientRecord = MapToClientRecord(result.Value);
+    Response = new ResponseBase<ClientRecord>(clientRecord);
+    await SendAsync(Response, 200, ct);
+
+  }
+
+  async Task HandleFailedResult(Result<ClientDTO> result, CancellationToken ct)
+  {
+    if (result.IsNotFound())
+    {
+      var message = "Client not found";
+      Response = ResponseBase<ClientRecord>.NotFound(message, result.Errors.ToList());
+      await SendAsync(Response, 404, ct);
+      return;
     }
+
+    Response = new ResponseBase<ClientRecord>(null, false, "Failed to retrieve Client");
+    await SendAsync(Response, 400, ct);
+  }
+
+  ClientRecord MapToClientRecord(ClientDTO client)
+  {
+    return new ClientRecord(
+        client.Id,
+        client.Name,
+        client.Email,
+        client.PhoneNumber,
+        client.Street,
+        client.City,
+        client.State,
+        client.ZipCode,
+        client.ClientType,
+        client.PreferredContactTime,
+        client.ReferralSource
+    );
   }
 }
