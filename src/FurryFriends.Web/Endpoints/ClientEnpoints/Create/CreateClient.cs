@@ -52,7 +52,7 @@ public class CreateClient : Endpoint<CreateClientRequest, Result<CreateClientRep
         AddError(error);
       }
       Response = Result.Error();
-      await SendErrorsAsync(cancellation: cancellationToken);
+      await SendErrorsAsync(result!.IsSuccess ? StatusCodes.Status500InternalServerError : StatusCodes.Status400BadRequest, cancellationToken);
       return;
     }
 

@@ -1,4 +1,5 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Net;
+using Ardalis.GuardClauses;
 using Azure;
 using FurryFriends.UseCases.Domain.Clients.Query;
 using FurryFriends.UseCases.Domain.Clients.Query.GetClient;
@@ -7,7 +8,7 @@ using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
 
 namespace FurryFriends.Web.Endpoints.ClientEnpoints.Get;
 
-public class GetClientByEmail(IMediator mediator) : Endpoint<GetClientRequest, ResponseBase<ClientRecord>>
+public class GetClientByEmail(IMediator mediator) : Endpoint<GetClientRequest, ResponseBase<ClientRecord>, ClientDTOMapper>
 {
   private readonly IMediator _mediator = Guard.Against.Null(mediator);
 
@@ -38,9 +39,8 @@ public class GetClientByEmail(IMediator mediator) : Endpoint<GetClientRequest, R
       return;
     }
 
-    var clientRecord = MapToClientRecord(result.Value);
-    Response = new ResponseBase<ClientRecord>(clientRecord);
-    await SendAsync(Response, 200, ct);
+    var clientRecord = Map.FromEntity(result.Value);
+    Response = new GetClientByEmailResponse(clientRecord);
 
   }
 
@@ -49,29 +49,12 @@ public class GetClientByEmail(IMediator mediator) : Endpoint<GetClientRequest, R
     if (result.IsNotFound())
     {
       var message = "Client not found";
-      Response = ResponseBase<ClientRecord>.NotFound(message, result.Errors.ToList());
-      await SendAsync(Response, 404, ct);
+      AddError(e => e.Email, message);
+      await SendErrorsAsync((int)HttpStatusCode.NotFound, ct);
       return;
     }
 
-    Response = new ResponseBase<ClientRecord>(null, false, "Failed to retrieve Client");
-    await SendAsync(Response, 400, ct);
-  }
-
-  ClientRecord MapToClientRecord(ClientDTO client)
-  {
-    return new ClientRecord(
-        client.Id,
-        client.Name,
-        client.Email,
-        client.PhoneNumber,
-        client.Street,
-        client.City,
-        client.State,
-        client.ZipCode,
-        client.ClientType,
-        client.PreferredContactTime,
-        client.ReferralSource
-    );
+    await SendErrorsAsync(cancellation: ct);
+    return;
   }
 }

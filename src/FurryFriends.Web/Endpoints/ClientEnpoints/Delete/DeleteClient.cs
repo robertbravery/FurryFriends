@@ -18,7 +18,7 @@ public class DeleteClient(IMediator mediator)
     {
       s.Summary = "Delete a Client";
       s.Description = "Deletes a client by their ID";
-      s.Response<bool>(200, "Client successfully deleted");
+      s.Response<bool>(204, "Client successfully deleted");
       s.Response<bool>(404, "Client not found");
       s.Response<bool>(400, "Invalid client ID");
     });
@@ -27,13 +27,14 @@ public class DeleteClient(IMediator mediator)
   public override async Task HandleAsync(DeleteClientRequest req, CancellationToken ct)
   {
     var result = await _mediator.Send(new DeleteClientCommand(req.ClientId), ct);
-
     if (result.Status == ResultStatus.NotFound)
     {
-      await SendAsync("Client not found", (int)HttpStatusCode.NotFound, ct);
-      return;
-    }
 
+      AddError(e => e.ClientId, "Client not found");
+      await SendErrorsAsync((int)HttpStatusCode.NotFound, ct);
+      return;
+
+    }
     if (result.IsSuccess)
     {
       await SendNoContentAsync(ct);

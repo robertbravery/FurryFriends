@@ -32,29 +32,7 @@ public class CreatePetWalker(IMediator _mediator)
   }
   public override async Task HandleAsync(CreatePetWalkerRequest request, CancellationToken cancellationToken)
   {
-
-    var userCommand = new CreatePetWalkerCommand(
-        request.FirstName,
-        request.LastName,
-        request.Email,
-        request.PhoneCountryCode,
-        request.PhoneNumber,
-        request.Street,
-        request.City,
-        request.State,
-        request.Country,
-        request.PostalCode, // Add this line to fix the error
-        request.Gender,
-        request.Biography,
-        request.DateOfBirth,
-        request.HourlyRate,
-        request.Currency,
-        request.IsActive,
-        request.IsVerified,
-        request.YearsOfExperience,
-        request.HasInsurance,
-        request.HasFirstAidCertification,
-    request.DailyPetWalkLimit);
+    var userCommand = CreateCommand(request);
 
     var result = await _mediator.Send(userCommand, cancellationToken);
 
@@ -65,6 +43,33 @@ public class CreatePetWalker(IMediator _mediator)
     }
 
     Response = new CreatePetWalkerResponse(result.Value.ToString());
+  }
+
+  private static CreatePetWalkerCommand CreateCommand(CreatePetWalkerRequest request)
+  {
+    var userCommand = new CreatePetWalkerCommand(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            request.PhoneCountryCode,
+            request.PhoneNumber,
+            request.Street,
+            request.City,
+            request.State,
+            request.Country,
+            request.PostalCode, // Add this line to fix the error
+            request.Gender,
+            request.Biography,
+            request.DateOfBirth,
+            request.HourlyRate,
+            request.Currency,
+            request.IsActive,
+            request.IsVerified,
+            request.YearsOfExperience,
+            request.HasInsurance,
+            request.HasFirstAidCertification,
+        request.DailyPetWalkLimit);
+    return userCommand;
   }
 
   private async Task HandleResultErrorsAsync(Result<Guid>? result, CancellationToken cancellationToken)

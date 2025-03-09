@@ -29,15 +29,7 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
     var result = await _mediator.Send(query, ct);
     if (result.Value is null || !result.IsSuccess)
     {
-      if (result.IsNotFound())
-      {
-        Response = new ResponseBase<PetWalkerRecord>(null, false, "Pet walker not found");
-        await SendAsync(Response, 404, ct);
-        return;
-      }
-
-      Response = new ResponseBase<PetWalkerRecord>(null, false, "Failed to retrieve Client");
-      await SendAsync(Response, 400, ct);
+      await HandleFailesResult(result, ct);
       return;
     }
     else
@@ -53,5 +45,19 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
         result.Value.Photos);
       Response = new GetPetWalkerByEmailResponse(petWalkerDto);
     }
+  }
+
+  private async Task HandleFailesResult(Result<PetWalkerDto> result, CancellationToken ct)
+  {
+    if (result.IsNotFound())
+    {
+      Response = new ResponseBase<PetWalkerRecord>(null, false, "Pet walker not found");
+      await SendAsync(Response, 404, ct);
+      return;
+    }
+
+    Response = new ResponseBase<PetWalkerRecord>(null, false, "Failed to retrieve Client");
+    await SendAsync(Response, 400, ct);
+    return;
   }
 }

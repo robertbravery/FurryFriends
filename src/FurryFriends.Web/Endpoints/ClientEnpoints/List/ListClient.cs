@@ -28,9 +28,9 @@ public class ListClient(IMediator mediator, ILogger<ListClient> logger) : Endpoi
     Guard.Against.Negative(request.Page, nameof(request.Page), "Page must be greater than 0");
     Guard.Against.NegativeOrZero(request.PageSize, nameof(request.PageSize), "PageSize must be greater than 0");
 
-
     var clientListQuery = new ListClientQuery(request.SearchTerm, request.Page, request.PageSize);
     var clientListResult = await _mediator.Send(clientListQuery, cancellationToken);
+
     if (!clientListResult.IsSuccess)
     {
       _logger.LogError(clientListResult.Errors.ToString());

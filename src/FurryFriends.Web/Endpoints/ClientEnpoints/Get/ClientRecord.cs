@@ -1,6 +1,6 @@
 ﻿using FurryFriends.Core.ClientAggregate.Enums;
 
-namespace FurryFriends.Web.Endpoints.ClientEnpoints;
+namespace FurryFriends.Web.Endpoints.ClientEnpoints.Get;
 
 public record ClientRecord(Guid Id,
     string Name,

@@ -2,14 +2,9 @@
 
 namespace FurryFriends.Web.Endpoints.ClientEnpoints.Update;
 
-public class UpdateClient : Endpoint<UpdateClientRequest, UpdateClientResponse>
+public class UpdateClient(IMediator mediator) : Endpoint<UpdateClientRequest, Result<UpdateClientResponse>, ClientResponseMapper>
 {
-  private readonly IMediator _mediator;
-
-  public UpdateClient(IMediator mediator)
-  {
-    _mediator = mediator;
-  }
+  private readonly IMediator _mediator = mediator;
 
   public override void Configure()
   {
@@ -44,19 +39,7 @@ public class UpdateClient : Endpoint<UpdateClientRequest, UpdateClientResponse>
 
     var client = await _mediator.Send(command, ct);
 
-    var response = new UpdateClientResponse
-    {
-      ClientId = client.Id,
-      FirstName = client.Name.FirstName,
-      LastName = client.Name.LastName,
-      Email = client.Email.EmailAddress,
-      PhoneNumber = client.PhoneNumber.Number,
-      Address = client.Address.ToString(),
-      ClientType = client.ClientType,
-      PreferredContactTime = client.PreferredContactTime,
-      ReferralSource = client.ReferralSource
-    };
+    Response = Map.FromEntity(client);
 
-    await SendAsync(response, cancellation: ct);
   }
 }

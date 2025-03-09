@@ -13,7 +13,7 @@ public class DeleteClientCommandHandler(IRepository<Client> _clientRepository)
     if (client is null)
       return Result.NotFound();
 
-    await _clientRepository.DeleteAsync(client);
+    await _clientRepository.DeleteAsync(client, cancellationToken);
     return Result.Success();
   }
 }

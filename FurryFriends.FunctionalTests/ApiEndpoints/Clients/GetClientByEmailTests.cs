@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using FluentAssertions;
 using FurryFriends.Web.Endpoints.Base;
-using FurryFriends.Web.Endpoints.ClientEnpoints;
+using FurryFriends.Web.Endpoints.ClientEnpoints.Get;
 
 namespace FurryFriends.FunctionalTests.ApiEndpoints.Clients;
 
@@ -71,7 +71,7 @@ public class GetClientByEmailTests(CustomWebApplicationFactory<Program> factory)
     var response = await _client.GetAsync(endpoint, CancellationToken.None);
 
     // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
   }
 
   [Fact]
