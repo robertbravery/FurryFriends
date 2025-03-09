@@ -1,81 +1,183 @@
-# FurryFriends
+# FurryFriends: Pet Walking & Pet Care API
 
-FurryFriends is a .NET Core 9 project built using the Clean Architecture and Domain-Driven Design (DDD) principles. This project leverages the [Ardalis.CleanArchitecture](https://github.com/ardalis/CleanArchitecture) template to ensure a maintainable and scalable codebase.
+Welcome to **FurryFriends** – a robust web API designed to power pet walking and pet care services. This project is built on .NET Core 9 using the **Ardalis Clean Architecture Template** as a baseline, ensuring our system adheres to Clean Architecture and Domain-Driven Design (DDD) principles.
+
+---
 
 ## Table of Contents
 
-- [Overview](#overview)
+- [Project Overview](#project-overview)
+- [Architecture & Technology Stack](#architecture--technology-stack)
 - [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Technologies Used](#technologies-used)
-- [Running Tests](#running-tests)
+- [Configuration & Deployment](#configuration--deployment)
+- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
+- [Contact](#contact)
 
-## Overview
+---
 
-FurryFriends is designed to manage user data and their associated locations. The project follows Clean Architecture principles to separate concerns and ensure a clear dependency flow. Domain-Driven Design (DDD) is used to model the core business logic.
+## Project Overview
+
+**FurryFriends** is a web API dedicated to managing pet care operations, including pet walking and overall pet management. The project is built with a clear separation of concerns to foster scalability, maintainability, and clarity. Key features include:
+
+- **Fast Endpoints & Fluent Validation:** For streamlined HTTP request routing and robust input validation.
+- **MediatR Integration:** For decoupled handling of commands, queries, and notifications.
+- **EF Core & MS SQL:** Providing a reliable persistence layer with well-structured data access patterns.
+- **Domain Integrity:** Implemented via Ardalis Guard Clauses and the Specification pattern (using Ardalis.Specifications) to enforce business rules.
+- **Uniform Response Patterns:** Via the Ardalis.Results pattern, ensuring clear and consistent API responses.
+- **Generic Repositories:** Utilizing the Ardalis Shared Kernel for consistent data access.
+- **Cross-cutting Concerns:** Managed with a Global Exception Middleware and structured logging using Serilog integrated with Open Telemetry.
+- **Robust Testing:** Covered by xUnit, Fluent Assertions, and Moq for confidence in code changes.
+
+---
+
+## Architecture & Technology Stack
+
+FurryFriends leverages modern best practices and a rich technology stack:
+
+- **Base Template:** Built using the [Ardalis Clean Architecture Template](https://github.com/ardalis/CleanArchitecture) to ensure a well-organized project structure.
+- **Framework:** .NET Core 9
+- **Design Principles:** Clean Architecture & Domain-Driven Design (DDD)
+- **API Layer:**
+  - **Fast Endpoints:** For defining and handling HTTP endpoints.
+  - **Fluent Validation:** For validating incoming requests.
+- **Domain Layer:**
+  - **Specifications:** Organized per Aggregate Root using *Ardalis.Specifications* to encapsulate query logic.
+  - **Guard Clauses:** Enforced via *Ardalis Guard Clauses* to maintain domain invariants.
+- **Application Layer:**
+  - **MediatR:** Dispatching commands, queries, and events to the respective Use Cases.
+- **Persistence & Infrastructure:**
+  - **EF Core:** For object-relational mapping.
+  - **MS SQL:** As the backend database.
+  - **Generic Repositories:** Implemented via the Ardalis Shared Kernel.
+- **Error Handling & Diagnostics:**
+  - **Global Exception Middleware:** For consistent error management.
+  - **Serilog + Open Telemetry:** For comprehensive logging and distributed tracing.
+- **Response Structuring:**
+  - **Ardalis.Results Pattern:** For clear API response formats.
+- **Testing:**
+  - **xUnit:** For unit and integration testing.
+  - **Fluent Assertions & Moq:** For expressive and robust tests.
+
+---
 
 ## Getting Started
 
-To get started with the project, follow these steps:
+### Prerequisites
 
-1. **Clone the repository:**
-   
+Ensure you have the following installed:
 
-2. **Install dependencies:**
-   Ensure you have the .NET SDK 9 installed. You can download it from the [official .NET website](https://dotnet.microsoft.com/download).
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [MS SQL Server](https://www.microsoft.com/en-us/sql-server)
+- Your preferred IDE (Visual Studio, VS Code, JetBrains Rider, etc.)
 
-3. **Build the project:**
-   
-4. **Run the application:**
+### Clone the Repository
 
+Clone the repository to your local machine:
 
-## Project Structure
+```bash
+git clone https://github.com/yourusername/FurryFriends.git
+cd FurryFriends
 
-The project is organized into several layers:
+```
 
-- **src/FurryFriends.Core**: Contains the core domain logic, including entities, value objects, and domain services.
-- **src/FurryFriends.Infrastructure**: Contains infrastructure concerns such as data access and external service integrations.
-- **src/FurryFriends.Web**: The entry point of the application, containing the API controllers and configuration.
-- **tests/FurryFriends.UnitTests**: Contains unit tests for the core domain logic.
-- **tests/FurryFriends.FunctionalTests**: Contains functional tests for the API endpoints.
+### Building the Application
 
-## Technologies Used
+Restore dependencies and build the solution:
 
-- **.NET Core 9**
-- **Entity Framework Core**
-- **FluentAssertions**
-- **xUnit**
-- **Ardalis.CleanArchitecture**
+```bash
+dotnet restore
+dotnet build
+```
 
-## Running Tests
+### Running the Application
 
-To run the xUnit tests from the command line or from within the VS Code Terminal, you can use the following command: `dotnet test`
+To run the application, navigate to the API project directory and execute:
 
-This command will discover and run all the tests in your solution. If you want to run tests for a specific project, you can specify the path to the project file: `dotnet test path/to/your/test/project.csproj`
-You can also run tests for specific classes or methods by using the `--filter` option: `dotnet test --filter "YourNamespace.YourClass=YourMethod"`
-You can also run tests for specific namespaces or classes by using the `--namespace` option: `dotnet test --namespace YourNamespace`
-You can also run tests for specific methods by using the `--method` option: `dotnet test --method YourNamespace.YourClass.YourMethod`
-You can also run tests for specific assemblies by using the `--assembly` option: `dotnet test --assembly YourNamespace.dll`
+```bash
+dotnet run --project src/FurryFriends.Api
+```
 
+The API will be running on your localhost (default: http://localhost:5000).
 
-For example, to run the tests in the `FurryFriends.FunctionalTests` project, you would use: `dotnet test tests/FurryFriends.FunctionalTests/FurryFriends.FunctionalTests.csproj`
-This command will execute the tests and display the results in the terminal.
+---
 
+## Configuration & Deployment
+
+### Configuration
+
+- **Database:** Update your connection string in the `appsettings.json` file (or environment-specific configuration file) within the API project.
+- **Logging & Telemetry:** Configure Serilog and Open Telemetry within the logging section in `appsettings.json`.
+
+### Database Migrations
+
+To apply the latest migrations with EF Core, navigate to the Infrastructure project directory and run:
+
+```bash
+dotnet ef database update --project src/FurryFriends.Infrastructure
+```
+
+### Deployment
+
+FurryFriends can be deployed on any hosting environment that supports .NET. Ensure that your environment has the correct connection strings and that any necessary environment variables are configured properly.
+
+---
+
+## Testing
+
+Our comprehensive suite of tests ensures reliability and maintainability:
+
+- **xUnit:** For writing and running tests.
+- **Fluent Assertions:** To provide rich assertion capabilities.
+- **Moq:** For creating mocks and simulating dependencies.
+
+To run all tests, execute:
+
+```bash
+dotnet test
+```
+
+---
 
 ## Contributing
 
-Contributions are welcome! Please follow these steps to contribute:
+We welcome contributions that help improve FurryFriends. To contribute:
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -am 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Create a new Pull Request.
+1. **Fork** the repository.
+2. **Create a feature branch:**  
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
+3. **Commit your changes:**  
+   ```bash
+   git commit -am 'Add new feature'
+   ```
+4. **Push to your branch:**  
+   ```bash
+   git push origin feature/YourFeature
+   ```
+5. **Create a Pull Request:** Provide a detailed description of your changes.
+
+For significant changes, please open an issue before submitting a pull request.
+
+---
 
 ## License
 
-This project is licensed under the MIT License. 
+Distributed under the MIT License. See [LICENSE](LICENSE) for more details.
 
+---
+
+## Contact
+
+For questions or further information, please contact:
+
+- **Project Lead:** [Robert Bravery](mailto:rbravery@iqbusiness.net)
+- **GitHub Issues:** Please use the [Issues](https://github.com/robertbravery/FurryFriends/issues) page for bug reports or feature requests.
+
+---
+
+*FurryFriends* is continuously evolving. Stay tuned for updates and know that contributions are always welcome to enhance pet walking and pet care experiences!
+```
 
