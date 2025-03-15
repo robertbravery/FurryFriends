@@ -7,7 +7,7 @@ public class GetClientQueryHandler(IClientService clientService)
 {
   private readonly IClientService _clientService = clientService;
 
-  async Task<Result<ClientDTO>> IRequestHandler<GetClientQuery, Result<ClientDTO>>.Handle(GetClientQuery request, CancellationToken cancellationToken)
+  public async Task<Result<ClientDTO>> Handle(GetClientQuery request, CancellationToken cancellationToken)
   {
     var entityResult = await _clientService.GetClientAsync(request.EmailAddress, cancellationToken);
 

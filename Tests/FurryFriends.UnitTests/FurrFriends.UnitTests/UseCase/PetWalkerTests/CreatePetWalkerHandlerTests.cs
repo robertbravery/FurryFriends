@@ -171,4 +171,157 @@ public class CreatePetWalkerHandlerTests
     result.ValidationErrors.Should().NotBeEmpty();
     result.ValidationErrors.Should().Contain(e => e.ErrorMessage.Contains("Valid Phonenumber is required"));
   }
+
+  // [Fact]
+  // public async Task Handle_ShouldReturnError_WhenEmailAlreadyExists()
+  // {
+  //   // Arrange
+  //   var f = new Faker();
+  //   var command = new CreatePetWalkerCommand(
+  //       f.Name.FirstName(),
+  //       f.Name.LastName(),
+  //       "existing@example.com", // Use an email that already exists
+  //       f.Phone.PhoneNumber("0##"),
+  //       f.Phone.PhoneNumber("###-###-####"),
+  //       f.Address.StreetAddress(),
+  //       f.Address.City(),
+  //       f.Address.State(),
+  //       f.Address.Country(),
+  //       f.Address.ZipCode("####"),
+  //       GenderType.GenderCategory.Male,
+  //       null,
+  //       DateTime.Now.AddYears(-20),
+  //       25m,
+  //       "USD",
+  //       true,
+  //       false,
+  //       5,
+  //       false,
+  //       false,
+  //       5
+  //   );
+
+  //   _petWalkerServiceMock.Setup(r => r.CreatePetWalkerAsync(It.IsAny<CreatePetWalkerDto>()))
+  //       .ThrowsAsync(new Exception("Email already exists"));
+
+  //   // Act
+  //   var result = await _handler.Handle(command, CancellationToken.None);
+
+  //   // Assert
+  //   result.IsSuccess.Should().BeFalse();
+  //   result.Errors.Should().Contain("Email already exists");
+  // }
+
+  // [Fact]
+  // public async Task Handle_ShouldReturnError_WhenAgeIsLessThan18()
+  // {
+  //   // Arrange
+  //   var f = new Faker();
+  //   var command = new CreatePetWalkerCommand(
+  //       f.Name.FirstName(),
+  //       f.Name.LastName(),
+  //       f.Internet.Email(),
+  //       f.Phone.PhoneNumber("0##"),
+  //       f.Phone.PhoneNumber("###-###-####"),
+  //       f.Address.StreetAddress(),
+  //       f.Address.City(),
+  //       f.Address.State(),
+  //       f.Address.Country(),
+  //       f.Address.ZipCode("####"),
+  //       GenderType.GenderCategory.Male,
+  //       null,
+  //       DateTime.Now.AddYears(-17), // Under 18
+  //       25m,
+  //       "USD",
+  //       true,
+  //       false,
+  //       5,
+  //       false,
+  //       false,
+  //       5
+  //   );
+
+  //   // Act
+  //   var result = await _handler.Handle(command, CancellationToken.None);
+
+  //   // Assert
+  //   result.IsSuccess.Should().BeFalse();
+  //   result.Errors.Should().Contain(e => e.Contains("must be at least 18 years old"));
+  // }
+
+  // [Theory]
+  // [InlineData(0)]
+  // [InlineData(-10)]
+  // public async Task Handle_ShouldReturnError_WhenHourlyRateIsInvalid(decimal hourlyRate)
+  // {
+  //   // Arrange
+  //   var f = new Faker();
+  //   var command = new CreatePetWalkerCommand(
+  //       f.Name.FirstName(),
+  //       f.Name.LastName(),
+  //       f.Internet.Email(),
+  //       f.Phone.PhoneNumber("0##"),
+  //       f.Phone.PhoneNumber("###-###-####"),
+  //       f.Address.StreetAddress(),
+  //       f.Address.City(),
+  //       f.Address.State(),
+  //       f.Address.Country(),
+  //       f.Address.ZipCode("####"),
+  //       GenderType.GenderCategory.Male,
+  //       null,
+  //       DateTime.Now.AddYears(-20),
+  //       hourlyRate,
+  //       "USD",
+  //       true,
+  //       false,
+  //       5,
+  //       false,
+  //       false,
+  //       5
+  //   );
+
+  //   // Act
+  //   var result = await _handler.Handle(command, CancellationToken.None);
+
+  //   // Assert
+  //   result.IsSuccess.Should().BeFalse();
+  //   result.Errors.Should().Contain(e => e.Contains("hourly rate must be greater than zero"));
+  // }
+
+  // [Fact]
+  // public async Task Handle_ShouldReturnError_WhenPhoneNumberIsInvalid()
+  // {
+  //   // Arrange
+  //   var f = new Faker();
+  //   var command = new CreatePetWalkerCommand(
+  //       f.Name.FirstName(),
+  //       f.Name.LastName(),
+  //       f.Internet.Email(),
+  //       "invalid",
+  //       "invalid",
+  //       f.Address.StreetAddress(),
+  //       f.Address.City(),
+  //       f.Address.State(),
+  //       f.Address.Country(),
+  //       f.Address.ZipCode("####"),
+  //       GenderType.GenderCategory.Male,
+  //       null,
+  //       DateTime.Now.AddYears(-20),
+  //       25m,
+  //       "USD",
+  //       true,
+  //       false,
+  //       5,
+  //       false,
+  //       false,
+  //       5
+  //   );
+
+  //   // Act
+  //   var result = await _handler.Handle(command, CancellationToken.None);
+
+  //   // Assert
+  //   result.IsSuccess.Should().BeFalse();
+  //   result.Errors.Should().Contain(e => e.Contains("invalid phone number"));
+  // }
 }
