@@ -16,5 +16,5 @@ public class ClientRequest
   public string ZipCode { get; set; } = default!;
   public ClientType ClientType { get; set; } = ClientType.Regular!;
   public TimeOnly? PreferredContactTime { get; set; } = default!;
-  public string? ReferralSource { get; set; } = default!;
+  public ReferralSource ReferralSource { get; set; } = ReferralSource.None!;
 }

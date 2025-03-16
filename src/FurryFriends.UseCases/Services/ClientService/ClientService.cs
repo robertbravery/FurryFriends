@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using FurryFriends.Core.ClientAggregate;
+using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
 
@@ -9,7 +10,14 @@ public class ClientService(IRepository<Client> repository) : IClientService
 {
   private readonly IRepository<Client> _repository = repository;
 
-  public async Task<Result<Client>> CreateClientAsync(Name name, Email email, PhoneNumber phoneNumber, Address address, CancellationToken cancellationToken)
+  public async Task<Result<Client>> CreateClientAsync(
+    Name name, 
+    Email email, 
+    PhoneNumber phoneNumber, 
+    Address address,
+    ClientType clientType = ClientType.Regular,
+    ReferralSource referralSource = ReferralSource.None,
+    CancellationToken cancellationToken = default)
   {
     var existingClientSpec = new ClientByEmailSpec(email.EmailAddress);
     if (await _repository.AnyAsync(existingClientSpec))
@@ -17,7 +25,7 @@ public class ClientService(IRepository<Client> repository) : IClientService
       return Result.Error("A client with this email already exists");
     }
 
-    var client = Client.Create(name, email, phoneNumber, address);
+    var client = Client.Create(name, email, phoneNumber, address, clientType, referralSource);
 
     await _repository.AddAsync(client, cancellationToken);
     await _repository.SaveChangesAsync(cancellationToken);

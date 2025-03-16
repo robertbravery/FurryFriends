@@ -15,5 +15,5 @@ public record CreateClientCommand
     string ZipCode,
     ClientType ClientType = ClientType.Regular,
     TimeOnly? PreferredContactTime = null,
-    string? ReferralSource = null
+    ReferralSource ReferralSource = ReferralSource.None
 ) : ICommand<Result<Guid>>;

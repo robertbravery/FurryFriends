@@ -1,6 +1,4 @@
-﻿using FurryFriends.Core.ClientAggregate.Enums;
-
-namespace FurryFriends.Web.Endpoints.ClientEnpoints.Update;
+using FurryFriends.Core.ClientAggregate.Enums;
 
 public class UpdateClientResponse
 {

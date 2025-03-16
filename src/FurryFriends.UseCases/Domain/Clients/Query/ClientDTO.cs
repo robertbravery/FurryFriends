@@ -13,5 +13,5 @@ public record ClientDTO(
     string ZipCode,
     ClientType ClientType,
     TimeOnly? PreferredContactTime,
-    string? ReferralSource
+    ReferralSource? ReferralSource
 );

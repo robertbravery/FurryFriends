@@ -11,7 +11,7 @@ public class Client : UserEntityBase, IAggregateRoot
 
   public ClientType ClientType { get; private set; }
   public TimeOnly? PreferredContactTime { get; private set; }
-  public string? ReferralSource { get; private set; }
+  public ReferralSource ReferralSource { get; private set; }
 
 
 
@@ -24,7 +24,7 @@ public class Client : UserEntityBase, IAggregateRoot
         Address Address,
         ClientType ClientType = ClientType.Regular,
         TimeOnly? PreferredContactTime = null,
-        string? ReferralSource = null)
+        ReferralSource ReferralSource = ReferralSource.None)
     : base(Name, Email, PhoneNumber, Address)
   {
     this.Name = Name;
@@ -42,14 +42,16 @@ public class Client : UserEntityBase, IAggregateRoot
     PhoneNumber phoneNumber,
     Address address,
     ClientType clientType = ClientType.Regular,
-    TimeOnly? preferredContactTime = null,
-    string? referralSource = null)
+    ReferralSource referralSource = ReferralSource.None,
+    TimeOnly? preferredContactTime = null
+    )
   {
     Guard.Against.Null(name, nameof(name));
     Guard.Against.Null(email, nameof(email));
     Guard.Against.Null(address, nameof(address));
     Guard.Against.Null(phoneNumber, nameof(phoneNumber));
     Guard.Against.EnumOutOfRange(clientType, nameof(clientType));
+    
 
     return new Client(name, email, phoneNumber, address, clientType, preferredContactTime, referralSource);
   }
@@ -72,8 +74,12 @@ public class Client : UserEntityBase, IAggregateRoot
     PreferredContactTime = preferredContactTime;
   }
 
-  public void UpdateReferralSource(string? referralSource)
+  public void UpdateReferralSource(ReferralSource referralSource)
   {
+    // if (referralSource.HasValue)
+    // {
+    //   Guard.Against.EnumOutOfRange(referralSource.Value, nameof(referralSource));
+    // }
     ReferralSource = referralSource;
   }
 

@@ -122,7 +122,7 @@ public class ListClientTests
                 "12345",
                 ClientType.Regular,
                 new TimeOnly(9, 0),
-                "Google"),
+                ReferralSource.Website),
             new ClientDTO(
                 Guid.NewGuid(),
                 "Test Client 2",
@@ -134,7 +134,7 @@ public class ListClientTests
                 "12345",
                 ClientType.Regular,
                 new TimeOnly(9, 0),
-                "Google")
+                ReferralSource.Website)
         };
   }
 }

@@ -97,7 +97,7 @@ public class UpdateClientCommandHandlerTests
       Country = "US",
       ClientType = ClientType.Premium,
       PreferredContactTime = new TimeOnly(10, 0),
-      ReferralSource = "Updated Source"
+      ReferralSource = ReferralSource.Other
     };
   }
 

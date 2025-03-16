@@ -14,10 +14,23 @@ public class CreateClient(IMediator mediator, ILogger<CreateClient> logger)
     Post(CreateClientRequest.Route);
     AllowAnonymous();
     Options(x => x.WithName("CreateClient_" + Guid.NewGuid().ToString()));
-    Description(d => d
-        .Produces<Result<int>>(201)
-        .Produces(400)
-        .WithTags("Clients"));
+    // Description(d => d
+    //     .Produces<Result<int>>(201)
+    //     .Produces(400)
+    //     .WithTags("Clients").WithName("Create Client")
+    //     .WithDescription("Creates a new client")
+    //     .WithSummary("""
+    //     Creates a new client with the provided details.
+    //     Client Type: "Regular (1)", "Premium (2)", "Corporate (3)" 
+    //     "None (0)",
+    //             "Website (1)", 
+    //             "ExistingClient (2)", 
+    //             "SocialMedia (3)",
+    //             "SearchEngine (4)",
+    //             "Veterinarian (5)",
+    //             "LocalAdvertising (6)",
+    //             "Other (7)"
+    //     """));
   }
 
   public override async Task HandleAsync(CreateClientRequest request, CancellationToken cancellationToken)

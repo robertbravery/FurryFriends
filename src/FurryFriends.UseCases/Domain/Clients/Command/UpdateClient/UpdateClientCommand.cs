@@ -19,5 +19,5 @@ public class UpdateClientCommand : IRequest<Client>
   public string Country { get; set; } = default!;
   public ClientType ClientType { get; set; }
   public TimeOnly? PreferredContactTime { get; set; }
-  public string? ReferralSource { get; set; }
+  public ReferralSource ReferralSource { get; set; } = ReferralSource.None;
 }

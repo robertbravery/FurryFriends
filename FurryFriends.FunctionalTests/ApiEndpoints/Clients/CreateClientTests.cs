@@ -30,7 +30,8 @@ public class CreateClientTests(CustomWebApplicationFactory<Program> factory) : I
       ZipCode = "12345",
       ClientType = ClientType.Regular,
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Website"
+      ReferralSource = ReferralSource.Website,
+
     };
 
     // Act
@@ -61,7 +62,7 @@ public class CreateClientTests(CustomWebApplicationFactory<Program> factory) : I
       ZipCode = "54321",
       ClientType = ClientType.Premium,
       PreferredContactTime = new TimeOnly(14, 0),
-      ReferralSource = "Referral"
+      ReferralSource = ReferralSource.Website
     };
 
     // Act

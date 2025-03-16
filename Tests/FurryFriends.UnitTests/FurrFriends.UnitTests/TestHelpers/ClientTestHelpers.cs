@@ -34,7 +34,7 @@ public static class ClientTestHelpers
         string zipCode = "12345",
         ClientType clientType = ClientType.Regular,
         TimeOnly? preferredContactTime = null,
-        string referralSource = "Website")
+        ReferralSource referralSource = ReferralSource.Website)
     {
         var client = Client.Create(
             Name.Create(firstName, lastName),
@@ -42,8 +42,9 @@ public static class ClientTestHelpers
             await PhoneNumber.Create(countryCode, phoneNumber),
             Address.Create(street, city, state, country, zipCode),
             clientType,
-            preferredContactTime ?? new TimeOnly(9, 0),
-            referralSource);
+            referralSource,
+            preferredContactTime ?? new TimeOnly(9, 0)
+            );
 
         if (id.HasValue)
         {
@@ -80,7 +81,7 @@ public static class ClientTestHelpers
             email: "premium@example.com",
             clientType: ClientType.Premium,
             preferredContactTime: new TimeOnly(14, 0),
-            referralSource: "Referral"
+            referralSource: ReferralSource.ExistingClient
         ).Result;
     }
 }

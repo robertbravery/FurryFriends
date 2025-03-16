@@ -103,8 +103,8 @@ public static class SeedData
         phoneNumber1,
         address1,
         ClientType.Regular,
-        new TimeOnly(9, 0), // 9:00 AM preferred contact time
-        "Website"
+        ReferralSource.Website,
+        new TimeOnly(9, 0) // 9:00 AM preferred contact time
     );
 
     var client2 = Client.Create(
@@ -113,8 +113,8 @@ public static class SeedData
         phoneNumber2,
         address2,
         ClientType.Premium,
-        new TimeOnly(14, 0), // 2:00 PM preferred contact time
-        "Referral"
+        ReferralSource.Other,
+        new TimeOnly(14, 0) // 2:00 PM preferred contact time
     );
 
     dbContext.Clients.AddRange(new List<Client> { client1, client2 });

@@ -36,7 +36,7 @@ public class CreateClientTests
       ZipCode = "12345",
       ClientType = ClientType.Regular,
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Website"
+      ReferralSource = ReferralSource.Website
     };
   }
 
@@ -58,7 +58,7 @@ public class CreateClientTests
       ZipCode = "12345",
       ClientType = ClientType.Regular,
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Google"
+      ReferralSource = ReferralSource.Website
     };
 
     var result = Result<Guid>.Success(Guid.NewGuid());
@@ -91,7 +91,7 @@ public class CreateClientTests
       ZipCode = "12345",
       ClientType = ClientType.Regular,
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Google"
+      ReferralSource = ReferralSource.Website
     };
 
     var result = Result<Guid>.NotFound(new[] { "Error1", "Error2" });
@@ -123,7 +123,7 @@ public class CreateClientTests
       ZipCode = "12345",
       ClientType = ClientType.Regular,
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Google"
+      ReferralSource = ReferralSource.Website
     };
 
     var clientId = Guid.NewGuid();
@@ -155,7 +155,7 @@ public class CreateClientTests
       Country = "USA",
       ZipCode = "12345",
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Google"
+      ReferralSource = ReferralSource.Website
     };
 
     var expectedError = "FirstName is required";
@@ -192,7 +192,7 @@ public class CreateClientTests
       ZipCode = "12345",
       ClientType = ClientType.Regular,
       PreferredContactTime = new TimeOnly(9, 0),
-      ReferralSource = "Friend"
+      ReferralSource = ReferralSource.Other
     };
 
     _mediatorMock

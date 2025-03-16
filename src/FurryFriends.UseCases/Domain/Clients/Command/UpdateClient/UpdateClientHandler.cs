@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using FluentValidation;
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.ClientService;
@@ -21,12 +22,37 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand, C
   {
     Guard.Against.Null(request, nameof(request));
     Guard.Against.NullOrEmpty(request.ClientId, nameof(request.ClientId));
-    Client client = await _clientRepository.GetByIdAsync(request.ClientId, cancellationToken) ?? throw new NotFoundException(nameof(Client), request.ClientId.ToString());
+    
+    Client client = await _clientRepository.GetByIdAsync(request.ClientId, cancellationToken) 
+        ?? throw new NotFoundException(nameof(Client), request.ClientId.ToString());
+
+    var nameResult = Name.Create(request.FirstName, request.LastName);
+    var emailResult = Email.Create(request.Email);
+    var phoneResult = await PhoneNumber.Create(request.CountryCode, request.PhoneNumber);
+    var addressResult = Address.Create(request.Street, request.City, request.StateProvinceRegion, request.Country, request.ZipCode);
+
+
+    if (!nameResult.IsSuccess || !emailResult.IsSuccess || !phoneResult.IsSuccess || !addressResult.IsSuccess)
+    {
+        var errors = new List<string>();
+        errors.AddRange(nameResult.Errors);
+        errors.AddRange(emailResult.Errors);
+        errors.AddRange(phoneResult.Errors);
+        errors.AddRange(addressResult.Errors);
+
+        errors.AddRange(nameResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+        errors.AddRange(emailResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+        errors.AddRange(phoneResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+        errors.AddRange(addressResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+
+        throw new ValidationException(string.Join(", ", errors));
+    }
+
     client.UpdateDetails(
-        Name.Create(request.FirstName, request.LastName).Value,
-        Email.Create(request.Email).Value,
-        await PhoneNumber.Create(request.CountryCode, request.PhoneNumber),
-        Address.Create(request.Street, request.City, request.StateProvinceRegion, request.Country, request.ZipCode).Value
+        nameResult.Value,
+        emailResult.Value,
+        phoneResult.Value,
+        addressResult.Value
     );
 
     client.UpdateClientType(request.ClientType);

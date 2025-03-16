@@ -15,9 +15,7 @@ internal class CreateClientCommandValidator : AbstractValidator<CreateClientComm
         .IsInEnum()
         .WithMessage("Invalid client type selected");
 
-    RuleFor(x => x.ReferralSource)
-        .NotEmpty()
-        .MaximumLength(100);
+    RuleFor(x => x.ReferralSource).IsInEnum();
   }
 
   private bool BeWithinBusinessHours(TimeOnly? time)

@@ -19,7 +19,15 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
     catch (ValidationException ex)
     {
       context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-      await HandleValidationErrorsToResponse(context.Response, ex.Errors);
+      if(ex.Errors.Any())
+      {
+        await HandleValidationErrorsToResponse(context.Response, ex.Errors);
+        }
+      else
+      {
+        await HandleExceptionAsync(context, ex, StatusCodes.Status400BadRequest);
+
+      }
     }
     catch (Exception ex)
     {
@@ -42,11 +50,11 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
     await httpResponse.HttpContext.Response.WriteAsJsonAsync(response);
   }
 
-  private Task HandleExceptionAsync(HttpContext context, Exception ex)
+  private Task HandleExceptionAsync(HttpContext context, Exception ex, int statusCode = StatusCodes.Status500InternalServerError)
   {
     _logger.LogError(ex, ex.Message);
     context.Response.ContentType = "application/json";
-    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+    context.Response.StatusCode = statusCode;
 
     var response = ResponseBase<object>.FromException(ex);
     return context.Response.WriteAsJsonAsync(response);

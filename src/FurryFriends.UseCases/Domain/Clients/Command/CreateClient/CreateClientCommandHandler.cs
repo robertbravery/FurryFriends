@@ -34,6 +34,8 @@ internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand,
     (Email)creationResults[1].GetValue(),
     (PhoneNumber)creationResults[2].GetValue(),
     (Address)creationResults[3].GetValue(),
+    request.ClientType,
+    request.ReferralSource,
     cancellationToken);
     return clientCreationResult.IsSuccess
       ? Result<Guid>.Success(clientCreationResult.Value.Id)
