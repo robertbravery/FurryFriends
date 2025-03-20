@@ -1,0 +1,56 @@
+classDiagram
+    class PetWalker {
+        +Guid Id
+        +Name Name
+        +Email Email
+        +PhoneNumber PhoneNumber
+        +Address Address
+        +GenderType Gender
+        +string Biography
+        +DateTime DateOfBirth
+        +Compensation Compensation
+        +bool IsActive
+        +bool IsVerified
+        +int YearsOfExperience
+        +bool HasInsurance
+        +bool HasFirstAidCertification
+        +int DailyPetWalkLimit
+        +ICollection~Photo~ Photos
+        +ICollection~ServiceArea~ ServiceAreas
+        +Create()*
+        +UpdateProfile()*
+        +AddServiceArea()*
+        +UpdateAvailability()*
+        +SetCompensation()*
+        +Verify()*
+        +Deactivate()*
+    }
+
+    class ServiceArea {
+        +Guid Id
+        +Locality Locality
+        +int RadiusInMiles
+        +bool IsActive
+        +Create()*
+        +Deactivate()*
+    }
+
+    class Photo {
+        +Guid Id
+        +string Url
+        +string Description
+        +PhotoType PhotoType
+        +bool IsActive
+        +DateTime UploadedAt
+    }
+
+    class Compensation {
+        +decimal HourlyRate
+        +string Currency
+        +Create()*
+        +Update()*
+    }
+
+    PetWalker "1" *-- "0..*" ServiceArea
+    PetWalker "1" *-- "0..*" Photo
+    PetWalker "1" *-- "1" Compensation

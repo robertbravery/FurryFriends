@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientAggregate\Docs\" />
     <Folder Include="PetWalkerAggregate\Common\" />
   </ItemGroup>
 </Project>

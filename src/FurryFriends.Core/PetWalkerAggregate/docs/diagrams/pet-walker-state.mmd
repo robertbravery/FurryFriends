@@ -1,0 +1,11 @@
+stateDiagram-v2
+    [*] --> Pending: Create Account
+    Pending --> UnderReview: Submit Documents
+    UnderReview --> Verified: Pass Verification
+    UnderReview --> Rejected: Fail Verification
+    Verified --> Active: Complete Profile
+    Active --> Suspended: Policy Violation
+    Active --> Inactive: Deactivate Account
+    Suspended --> Active: Review Complete
+    Inactive --> Active: Reactivate
+    Rejected --> UnderReview: Resubmit

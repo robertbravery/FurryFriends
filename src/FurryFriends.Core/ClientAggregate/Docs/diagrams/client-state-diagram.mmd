@@ -1,0 +1,10 @@
+stateDiagram-v2
+    [*] --> Pending: Create Client
+    Pending --> Active: Verify Email
+    Active --> Premium: Upgrade
+    Active --> Suspended: Violation
+    Premium --> Active: Downgrade
+    Suspended --> Active: Review
+    Active --> Inactive: Deactivate
+    Inactive --> Active: Reactivate
+    Inactive --> [*]: Delete

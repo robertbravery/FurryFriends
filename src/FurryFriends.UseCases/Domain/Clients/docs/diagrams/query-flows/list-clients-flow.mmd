@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant API as API Controller
+    participant LH as ListClientsHandler
+    participant CS as ClientService
+    participant CR as ClientRepository
+    participant SP as Specification
+    participant MP as Mapper
+
+    API->>LH: ListClientsQuery
+    LH->>SP: Create ClientSpecification
+    LH->>CS: ListClientsAsync(specification)
+    CS->>CR: ListAsync(specification)
+    CR-->>CS: List<Client>
+    CS-->>LH: List<Client>
+    LH->>MP: Map<ClientDTO>(clients)
+    MP-->>LH: List<ClientDTO>
+    LH-->>API: Result.Success(ClientDTOs)

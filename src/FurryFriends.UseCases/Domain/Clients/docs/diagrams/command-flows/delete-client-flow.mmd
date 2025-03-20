@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant API as API Controller
+    participant DH as DeleteClientHandler
+    participant CS as ClientService
+    participant CR as ClientRepository
+    participant DE as DomainEvents
+
+    API->>DH: DeleteClientCommand
+    DH->>CS: GetClientAsync(command.ClientId)
+    
+    alt Client Not Found
+        CS-->>DH: null
+        DH-->>API: Result.NotFound
+    else Client Found
+        CS-->>DH: Client
+        DH->>CS: DeleteClientAsync(client)
+        CS->>CR: DeleteAsync(client)
+        CR-->>CS: Success
+        CS->>CR: SaveChangesAsync()
+        CR-->>CS: Success
+        CS-->>DH: Success
+        DH->>DE: Publish(ClientDeletedEvent)
+        DH-->>API: Result.Success
+    end

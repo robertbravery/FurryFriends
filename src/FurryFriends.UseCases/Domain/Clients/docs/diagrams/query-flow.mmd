@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant C as Controller/API
+    participant H as QueryHandler
+    participant S as Service
+    participant R as Repository
+    participant M as Mapper
+
+    C->>H: GetClientQuery
+    H->>S: Get Client
+    S->>R: Find Client
+    R-->>S: Domain Entity
+    
+    alt Client Not Found
+        S-->>H: NotFound
+        H-->>C: NotFound Result
+    else Client Found
+        S->>M: Map to DTO
+        M-->>S: ClientDTO
+        S-->>H: Success
+        H-->>C: Success<ClientDTO>
+    end

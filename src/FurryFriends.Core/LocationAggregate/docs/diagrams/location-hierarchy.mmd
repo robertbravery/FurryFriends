@@ -1,0 +1,38 @@
+classDiagram
+    class Country {
+        +Guid Id
+        +string CountryName
+        +DateTime CreatedAt
+        +DateTime UpdatedAt
+        +ICollection~Region~ Regions
+        +Create(string name)*
+        +AddRegion(string name)*
+        +UpdateName(string name)*
+    }
+
+    class Region {
+        +Guid Id
+        +string RegionName
+        +Guid CountryID
+        +DateTime CreatedAt
+        +DateTime UpdatedAt
+        +Country Country
+        +ICollection~Locality~ Localities
+        +Create(string name, Guid countryId)*
+        +AddLocality(string name)*
+        +UpdateName(string name)*
+    }
+
+    class Locality {
+        +Guid Id
+        +string LocalityName
+        +Guid RegionID
+        +DateTime CreatedAt
+        +DateTime UpdatedAt
+        +Region Region
+        +Create(string name, Guid regionId)*
+        +UpdateName(string name)*
+    }
+
+    Country "1" --o "*" Region : Contains
+    Region "1" --o "*" Locality : Contains
