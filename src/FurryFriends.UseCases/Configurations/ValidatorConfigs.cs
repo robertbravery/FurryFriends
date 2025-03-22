@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
+using FurryFriends.UseCases.Domain.Clients.Command.RemovePet;
 using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 using FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ public static class ValidatorConfigs
     services.AddTransient<IValidator<UpdatePetWalkerHourlyRateCommand>, UpdatePetWalkerHourlyRateCommandValidator>();
     services.AddTransient<IValidator<CreateClientCommand>, CreateClientCommandValidator>();
     services.AddTransient<IValidator<CreatePetWalkerCommand>, CreatePetWalkerCommandValidator>();
-
+    services.AddTransient<IValidator<RemovePetCommand>, RemovePetCommandValidator>();
 
     return services;
   }
