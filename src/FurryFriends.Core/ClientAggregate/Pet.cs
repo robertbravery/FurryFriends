@@ -18,6 +18,7 @@ public class Pet : EntityBase<Guid>
   public string? DietaryRestrictions { get; private set; }
   public string SpecialNeeds { get; set; } = NONE;
   public bool IsActive { get; private set; } = true;
+  public DateTime? DeactivatedAt { get; private set; }
   public Guid OwnerId { get; set; }
   public virtual Client Owner { get; set; } = default!;
   public virtual Breed BreedType { get; private set; } = default!;
@@ -125,7 +126,18 @@ public class Pet : EntityBase<Guid>
 
   public void MarkAsInactive()
   {
+    if (!IsActive) return;
+    
     IsActive = false;
+    DeactivatedAt = DateTime.UtcNow;
+  }
+
+  public void MarkAsActive()
+  {
+    if (IsActive) return;
+    
+    IsActive = true;
+    DeactivatedAt = null;
   }
 
 }

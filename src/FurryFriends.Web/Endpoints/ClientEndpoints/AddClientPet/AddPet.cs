@@ -1,4 +1,5 @@
-﻿using FurryFriends.UseCases.Domain.Clients.Command.AddPet;
+﻿using Ardalis.GuardClauses;
+using FurryFriends.UseCases.Domain.Clients.Command.AddPet;
 using FurryFriends.Web.Endpoints.Base;
 
 
@@ -22,11 +23,13 @@ public class AddPet(IMediator mediator, ILogger<AddPet> logger) : BaseEndpoint<A
 
   public override async Task HandleAsync(AddPetRequest request, CancellationToken cancellationToken)
   {
+    Guard.Against.Null(request, nameof(request));
+
     try
     {
-      var clientId = Route<Guid>("clientId");
+      //var clientId = Route<Guid>("clientId");
 
-      var command = CreateCommand(request, clientId);
+      var command = CreateCommand(request);
 
       var result = await _mediator.Send(command, cancellationToken);
 
@@ -46,16 +49,16 @@ public class AddPet(IMediator mediator, ILogger<AddPet> logger) : BaseEndpoint<A
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Error adding pet to client {ClientId}", Route<Guid>("clientId"));
+      _logger.LogError(ex, "Error adding pet to client {ClientId}", request.ClientId);
       await SendErrorsAsync(cancellation: cancellationToken);
     }
   }
 
-  private static AddPetCommand CreateCommand(AddPetRequest request, Guid clientId)
+  private static AddPetCommand CreateCommand(AddPetRequest request)
   {
     return new AddPetCommand
     {
-      ClientId = clientId,
+      ClientId = request.ClientId,
       Name = request.Name,
       BreedId = request.BreedId,
       Age = request.Age,

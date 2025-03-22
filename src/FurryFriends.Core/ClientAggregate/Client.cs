@@ -7,11 +7,14 @@ namespace FurryFriends.Core.ClientAggregate;
 
 public class Client : UserEntityBase, IAggregateRoot
 {
-  public virtual List<Pet> Pets { get; private set; } = default!;
+  public virtual ICollection<Pet> Pets { get; private set; } = default!;
 
   public ClientType ClientType { get; private set; }
   public TimeOnly? PreferredContactTime { get; private set; }
   public ReferralSource ReferralSource { get; private set; }
+  public bool IsActive { get; private set; } = true;
+  public DateTime? DeactivatedAt { get; private set; }
+  //public virtual IEnumerable<Pet> ActivePets => Pets?.Where(p => p.IsActive) ?? Enumerable.Empty<Pet>();
 
 
 
@@ -96,10 +99,41 @@ public class Client : UserEntityBase, IAggregateRoot
     return Result.Success();
   }
 
+  public Result Deactivate()
+  {
+    if (!IsActive)
+      return Result.Error("Client is already deactivated");
+
+    // Deactivate all pets
+    if (Pets != null)
+    {
+      foreach (var pet in Pets.Where(p => p.IsActive))
+      {
+        pet.MarkAsInactive();
+      }
+    }
+
+    IsActive = false;
+    DeactivatedAt = DateTime.UtcNow;
+
+    return Result.Success();
+  }
+
+  public Result Reactivate()
+  {
+    if (IsActive)
+      return Result.Error("Client is already active");
+
+    IsActive = true;
+    DeactivatedAt = null;
+
+    return Result.Success();
+  }
+
   public bool HasReachedPetLimit()
   {
     const int MaxPetsPerClient = 5;
-    return Pets.Count(p => p.IsActive) >= MaxPetsPerClient;
+    return Pets?.Count(p => p.IsActive) >= MaxPetsPerClient;
   }
 
   public void UpdateClientType(ClientType clientType)
@@ -125,9 +159,9 @@ public class Client : UserEntityBase, IAggregateRoot
   private bool HasDuplicatePet(string name, int breedId)
   {
     return Pets?.Any(p =>
+        p.IsActive &&
         p.Name.Equals(name, StringComparison.OrdinalIgnoreCase) &&
-        p.BreedId == breedId &&
-        p.IsActive) ?? false;
+        p.BreedId == breedId) ?? false;
   }
 
 }

@@ -5,7 +5,7 @@ public sealed class ClientByIdWithPetsSpec : SingleResultSpecification<Client>
   {
     Query
       .Where(x => x.Id == clientId)
-      .Include(x => x.Pets)
+      .Include(x => x.Pets.Where(p => p.IsActive))
       .AsTracking();  // Explicitly enable tracking
   }
 }

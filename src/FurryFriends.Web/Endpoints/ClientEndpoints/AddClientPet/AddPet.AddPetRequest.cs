@@ -4,12 +4,15 @@ namespace FurryFriends.Web.Endpoints.ClientEndpoints.AddClientPet;
 
 public class AddPetRequest
 {
-  public const string Route = "/clients/{clientId}/pets";
+  public const string Route = "/clients/pets";  // Updated route without parameter
+  
+  // Add ClientId to the request body
+  public Guid ClientId { get; set; }
+  
   // Core properties required for Pet creation
   public string Name { get; set; } = string.Empty;
   public int BreedId { get; set; }
   public int Age { get; set; }
-  public string Species { get; set; } = string.Empty;
   public double Weight { get; set; }
   public string Color { get; set; } = string.Empty;
 
