@@ -75,6 +75,7 @@ dotnet_naming_style.prefix_underscore.capitalization = camel_case
 dotnet_naming_style.prefix_underscore.required_prefix = _
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 end_of_line = crlf
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
 ###############################
 # C# Coding Conventions       #
 ###############################
@@ -143,6 +144,7 @@ csharp_style_prefer_top_level_statements = true:silent
 csharp_style_prefer_primary_constructors = true:suggestion
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
+csharp_prefer_system_threading_lock = true:suggestion
 ###############################
 # VB Coding Conventions       #
 ###############################
