@@ -6,10 +6,57 @@ namespace FurryFriends.UseCases.Services.ClientService;
 
 public interface IClientService
 {
+  Task<Result<Guid>> AddPetToClientAsync(
+      Guid clientId,
+      string name,
+      int breedId,
+      int age,
+      double weight,
+      string color,
+      string specialNeeds,
+      string? dietaryRestrictions,
+      CancellationToken cancellationToken);
+
+  Task<Result> AddPetMedicalConditionAsync(
+      Guid clientId,
+      Guid petId,
+      string medicalCondition,
+      CancellationToken cancellationToken);
+
+  Task<Result> UpdatePetVaccinationStatusAsync(
+      Guid clientId,
+      Guid petId,
+      bool isVaccinated,
+      CancellationToken cancellationToken);
+
+  Task<Result> UpdatePetFavoriteActivitiesAsync(
+      Guid clientId,
+      Guid petId,
+      string favoriteActivities,
+      CancellationToken cancellationToken);
+
+  Task<Result> UpdatePetDietaryRestrictionsAsync(
+      Guid clientId,
+      Guid petId,
+      string dietaryRestrictions,
+      CancellationToken cancellationToken);
+
+  Task<Result> UpdatePetSpecialNeedsAsync(
+      Guid clientId,
+      Guid petId,
+      string specialNeeds,
+      CancellationToken cancellationToken);
+
+  Task<Result> UpdatePetSterilizationStatusAsync(
+      Guid clientId,
+      Guid petId,
+      bool isSterilized,
+      CancellationToken cancellationToken);
+
   Task<Result<Client>> CreateClientAsync(
-    Name name, 
-    Email email, 
-    PhoneNumber phoneNumber, 
+    Name name,
+    Email email,
+    PhoneNumber phoneNumber,
     Address address,
     ClientType clientType = ClientType.Regular,
     ReferralSource referralSource = ReferralSource.None,

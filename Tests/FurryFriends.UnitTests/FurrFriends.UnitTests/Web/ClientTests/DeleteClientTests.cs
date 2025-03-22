@@ -2,7 +2,7 @@
 using Ardalis.Result;
 using FastEndpoints;
 using FurryFriends.UseCases.Domain.Clients.Command.DeleteClient;
-using FurryFriends.Web.Endpoints.ClientEnpoints.Delete;
+using FurryFriends.Web.Endpoints.ClientEndpoints.Delete;
 using Moq;
 
 namespace FurryFriends.UnitTests.Web.ClientTests;

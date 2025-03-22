@@ -2,7 +2,7 @@
 using FastEndpoints;
 using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
-using FurryFriends.Web.Endpoints.ClientEnpoints.Create;
+using FurryFriends.Web.Endpoints.ClientEndpoints.Create;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;

@@ -1,5 +1,5 @@
-﻿using FurryFriends.UseCases.Services.ClientService;
-using MediatR;
+﻿using FurryFriends.UseCases.Domain.Clients.DTO;
+using FurryFriends.UseCases.Services.ClientService;
 
 namespace FurryFriends.UseCases.Domain.Clients.Query.GetClient;
 public class GetClientQueryHandler(IClientService clientService)
@@ -27,8 +27,20 @@ public class GetClientQueryHandler(IClientService clientService)
       entityResult.Value.Address.ZipCode,
       entityResult.Value.ClientType,
       entityResult.Value.PreferredContactTime,
-      entityResult.Value.ReferralSource
-
+      entityResult.Value.ReferralSource,
+      [..  entityResult.Value.Pets.Select(p => new ClientPetDto(
+            p.Id,
+            p.Name,
+            p.BreedType.Species.Name,
+            p.BreedType.Name,
+            p.Age,
+            p.Weight,
+            p.IsSterilized,
+            p.IsVaccinated,
+            p.SpecialNeeds,
+            p.MedicalConditions,
+            p.IsActive
+        ))]
       );
   }
 }

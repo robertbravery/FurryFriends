@@ -1,9 +1,9 @@
 ﻿using Ardalis.Result;
 using FastEndpoints;
 using FurryFriends.Core.ClientAggregate.Enums;
-using FurryFriends.UseCases.Domain.Clients.Query;
+using FurryFriends.UseCases.Domain.Clients.DTO;
 using FurryFriends.UseCases.Domain.Clients.Query.ListClients;
-using FurryFriends.Web.Endpoints.ClientEnpoints.List;
+using FurryFriends.Web.Endpoints.ClientEndpoints.List;
 using Moq;
 
 namespace FurryFriends.UnitTests.Web.ClientTests;
@@ -122,7 +122,8 @@ public class ListClientTests
                 "12345",
                 ClientType.Regular,
                 new TimeOnly(9, 0),
-                ReferralSource.Website),
+                ReferralSource.Website,
+                new List<ClientPetDto>()),
             new ClientDTO(
                 Guid.NewGuid(),
                 "Test Client 2",
@@ -134,7 +135,8 @@ public class ListClientTests
                 "12345",
                 ClientType.Regular,
                 new TimeOnly(9, 0),
-                ReferralSource.Website)
+                ReferralSource.Website,
+                new List<ClientPetDto>())
         };
   }
 }

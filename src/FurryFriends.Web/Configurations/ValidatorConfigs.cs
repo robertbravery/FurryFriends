@@ -1,7 +1,7 @@
 ﻿using FurryFriends.Core.ValueObjects;
 using FurryFriends.Core.ValueObjects.Validators;
-using FurryFriends.Web.Endpoints.ClientEnpoints.Create;
-using FurryFriends.Web.Endpoints.ClientEnpoints.Get;
+using FurryFriends.Web.Endpoints.ClientEndpoints.Create;
+using FurryFriends.Web.Endpoints.ClientEndpoints.Get;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
 namespace FurryFriends.Web.Configurations;
