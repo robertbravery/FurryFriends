@@ -17,6 +17,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
   public DbSet<Locality> Localities => Set<Locality>();
   public DbSet<Region> Regions => Set<Region>();
   public DbSet<Country> Countries => Set<Country>();
+  public DbSet<Pet> Pets => Set<Pet>();
+  public DbSet<Breed> Breeds => Set<Breed>();
+  public DbSet<Species> Species => Set<Species>();
+
 
 
 

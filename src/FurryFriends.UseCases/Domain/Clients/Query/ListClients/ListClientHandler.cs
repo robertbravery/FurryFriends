@@ -1,4 +1,5 @@
-﻿using FurryFriends.UseCases.Services.ClientService;
+﻿using FurryFriends.UseCases.Domain.Clients.DTO;
+using FurryFriends.UseCases.Services.ClientService;
 
 namespace FurryFriends.UseCases.Domain.Clients.Query.ListClients;
 public class ListClientHandler(IClientService clientService)
@@ -24,7 +25,21 @@ public class ListClientHandler(IClientService clientService)
       client.Address.ZipCode,
       client.ClientType,
       client.PreferredContactTime,
-      client.ReferralSource)).ToList();
+      client.ReferralSource,
+      [.. client.Pets.Select(p=> new ClientPetDto(
+        p.Id,
+        p.Name,
+        p.BreedType.Species.Name,
+        p.BreedType.Name,
+        p.Age,
+        p.Weight,
+        p.IsSterilized,
+        p.IsVaccinated,
+        p.SpecialNeeds,
+        p.MedicalConditions,
+        p.IsActive))]
+
+      )).ToList();
     return Result<List<ClientDTO>>.Success(clients);
   }
 }

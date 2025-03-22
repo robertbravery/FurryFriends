@@ -38,9 +38,9 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
     });
 
     builder.Property(p => p.ClientType).HasColumnOrder(3).HasConversion<int>().IsRequired();
-    builder.Property(p=> p.ReferralSource).IsRequired(true).HasConversion<int>();
+    builder.Property(p => p.ReferralSource).IsRequired(true).HasConversion<int>();
     builder.Property(p => p.UpdatedAt).HasColumnName("UpdatedAt").HasColumnOrder(13);
-    builder.Property(p => p.CreatedAt).HasColumnName("CreatedAt").HasColumnOrder(14); 
+    builder.Property(p => p.CreatedAt).HasColumnName("CreatedAt").HasColumnOrder(14);
     builder.Property(p => p.PreferredContactTime).HasColumnOrder(15).HasColumnType("time").IsRequired(false);
 
     builder.HasMany(c => c.Pets)

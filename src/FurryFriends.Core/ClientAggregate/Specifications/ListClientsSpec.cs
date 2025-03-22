@@ -11,10 +11,15 @@ public sealed class ListClientsSpec : Specification<Client>
       || x.Email.EmailAddress.Contains(searchTerm));
     }
 
-    Query.Skip((page - 1) * pageSize).Take(pageSize)
+    Query.Skip((page - 1) * pageSize)
+      .Take(pageSize)
       .OrderBy(o => o.Name.FirstName)
       .Include(x => x.Address)
-      .Include(x => x.Name);
+      .Include(x => x.Name)
+      .Include(x => x.Pets)
+        .ThenInclude(p => p.BreedType)
+          .ThenInclude(b => b.Species);
+    
     if (isAsNoTracking) Query.AsNoTracking();
   }
 }
