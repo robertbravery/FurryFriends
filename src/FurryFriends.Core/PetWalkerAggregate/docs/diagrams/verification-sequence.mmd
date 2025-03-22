@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant PW as PetWalker
+    participant VS as VerificationService
+    participant BCS as BackgroundCheckService
+    participant DS as DocumentService
+    participant NS as NotificationService
+
+    PW->>VS: Submit Verification Documents
+    activate VS
+    VS->>DS: Store Documents
+    VS->>BCS: Initiate Background Check
+    activate BCS
+    
+    par Background Check Process
+        BCS->>BCS: Process Identity Check
+        BCS->>BCS: Criminal Record Check
+        BCS->>BCS: Reference Verification
+    end
+    
+    BCS-->>VS: Background Check Results
+    deactivate BCS
+    
+    VS->>VS: Validate Documents
+    VS->>VS: Review Insurance Certificate
+    VS->>VS: Verify First Aid Certification
+    
+    alt All Checks Passed
+        VS->>PW: Update Status to Verified
+        VS->>NS: Send Approval Notification
+    else Checks Failed
+        VS->>PW: Update Status to Rejected
+        VS->>NS: Send Rejection Notice
+    end
+    deactivate VS

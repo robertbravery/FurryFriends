@@ -1,5 +1,5 @@
 ﻿using Azure;
-using FurryFriends.UseCases.Users.ListUser;
+using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
 
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
@@ -20,7 +20,7 @@ public class ListPetWalkerByLocation(IMediator mediator, ILogger<ListPetWalker> 
     {
       s.Summary = "Retrieve List of Users by Location";
       s.Description = "Returns a list of users based on search criteria and or filtered by location";
-      s.Response<ListPetWalkerResponse>(200, "Users retrieved successfully");
+      s.Response<Response>(200, "Users retrieved successfully");
       s.Response<Response>(400, "Failed to retrieve users");
       s.Response<Response>(401, "Unauthorized");
     });

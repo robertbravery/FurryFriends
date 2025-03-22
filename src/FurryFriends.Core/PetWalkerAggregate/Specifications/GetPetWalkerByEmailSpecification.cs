@@ -2,7 +2,7 @@
 
 public class GetPetWalkerByEmailSpecification : SingleResultSpecification<PetWalker>
 {
-  public GetPetWalkerByEmailSpecification(string email, int page = 1, int pageSize = 10) =>
+  public GetPetWalkerByEmailSpecification(string email) =>
     Query
         .Where(w => w.Email.EmailAddress == email)
         .Include(i => i.Photos)

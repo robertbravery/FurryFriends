@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant API as API Controller
+    participant GH as GetClientHandler
+    participant CS as ClientService
+    participant CR as ClientRepository
+    participant MP as Mapper
+
+    API->>GH: GetClientQuery
+    GH->>CS: GetClientAsync(query.Id)
+    CS->>CR: GetByIdAsync(id)
+    
+    alt Client Not Found
+        CR-->>CS: null
+        CS-->>GH: null
+        GH-->>API: Result.NotFound
+    else Client Found
+        CR-->>CS: Client
+        CS-->>GH: Client
+        GH->>MP: Map<ClientDTO>(client)
+        MP-->>GH: ClientDTO
+        GH-->>API: Result.Success(ClientDTO)
+    end

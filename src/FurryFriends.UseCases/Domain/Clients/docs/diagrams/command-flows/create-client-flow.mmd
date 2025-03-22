@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant API as API Controller
+    participant CH as CreateClientHandler
+    participant CV as CreateClientValidator
+    participant CS as ClientService
+    participant CR as ClientRepository
+    participant DE as DomainEvents
+
+    API->>CH: CreateClientCommand
+    CH->>CV: ValidateAsync(command)
+    
+    alt Validation Failed
+        CV-->>CH: ValidationResult (Invalid)
+        CH-->>API: Result.Invalid
+    else Validation Passed
+        CV-->>CH: ValidationResult (Valid)
+        CH->>CS: EmailExists(command.Email)
+        
+        alt Email Exists
+            CS-->>CH: true
+            CH-->>API: Result.Error("Email exists")
+        else Email Available
+            CS-->>CH: false
+            CH->>CS: CreateClientAsync(command)
+            CS->>CR: AddAsync(client)
+            CR-->>CS: Success
+            CS->>CR: SaveChangesAsync()
+            CR-->>CS: Success
+            CS-->>CH: Client
+            CH->>DE: Publish(ClientCreatedEvent)
+            CH-->>API: Result.Success(ClientId)
+        end
+    end

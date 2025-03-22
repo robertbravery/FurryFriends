@@ -1,7 +1,6 @@
-﻿using System;
-using FurryFriends.UseCases.Users.GetUser;
+﻿using FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
 
-namespace FurryFriends.Web.Endpoints.UserEndpoints.Records;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Records;
 
 public record PetWalkerRecord(Guid Id,
     string FullName = default!,

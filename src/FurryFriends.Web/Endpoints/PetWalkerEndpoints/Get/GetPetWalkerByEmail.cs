@@ -1,7 +1,7 @@
 ﻿using Azure;
-using FurryFriends.UseCases.Users.GetUser;
-using FurryFriends.Web.Endpoints.UserEndpoints.Get;
-using FurryFriends.Web.Endpoints.UserEndpoints.Records;
+using FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
+using FurryFriends.Web.Endpoints.Base;
+using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Records;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
 
@@ -25,13 +25,11 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
 
   public override async Task HandleAsync(GetPetWalkerByEmailRequest req, CancellationToken ct)
   {
-    var query = new GetUserQuery(req.Email);
+    var query = new GetPetWalkerQuery(req.Email);
     var result = await _mediator.Send(query, ct);
-    if (result.Value is null || !result.IsSuccess || result.IsNotFound())
+    if (result.Value is null || !result.IsSuccess)
     {
-      //The api call was a success but the data returned is null or not found
-      var notFoundResponse = GetPetWalkerByEmailResponse.NotFound(req.Email);
-      await SendAsync(notFoundResponse, 404, ct);
+      await HandleFailesResult(result, ct);
       return;
     }
     else
@@ -47,5 +45,19 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
         result.Value.Photos);
       Response = new GetPetWalkerByEmailResponse(petWalkerDto);
     }
+  }
+
+  private async Task HandleFailesResult(Result<PetWalkerDto> result, CancellationToken ct)
+  {
+    if (result.IsNotFound())
+    {
+      Response = new ResponseBase<PetWalkerRecord>(null, false, "Pet walker not found");
+      await SendAsync(Response, 404, ct);
+      return;
+    }
+
+    Response = new ResponseBase<PetWalkerRecord>(null, false, "Failed to retrieve Client");
+    await SendAsync(Response, 400, ct);
+    return;
   }
 }

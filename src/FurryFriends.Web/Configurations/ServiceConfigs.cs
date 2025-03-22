@@ -1,6 +1,7 @@
-﻿using FurryFriends.Core.Interfaces;
+﻿using FluentValidation.AspNetCore;
+using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure;
-using FurryFriends.Infrastructure.Email;
+using FurryFriends.Infrastructure.Messaging;
 using FurryFriends.UseCases.Configurations;
 using ILogger = Serilog.ILogger;
 
@@ -10,10 +11,10 @@ public static class ServiceConfigs
 {
   public static IServiceCollection AddServiceConfigs(this IServiceCollection services, ILogger logger, WebApplicationBuilder builder)
   {
+    services.AddFluentValidationAutoValidation();
     services.AddInfrastructureServices(builder.Configuration, logger, builder.Environment.EnvironmentName)
-            .AddMediatrConfigs();
+    .AddMediatrConfigs();
     services.AddUseCaseServices();
-
 
     if (builder.Environment.IsDevelopment())
     {

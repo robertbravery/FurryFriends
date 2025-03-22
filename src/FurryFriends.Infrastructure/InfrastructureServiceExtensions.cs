@@ -1,9 +1,7 @@
 ﻿using FurryFriends.Core.Interfaces;
 using FurryFriends.Core.Services;
 using FurryFriends.Infrastructure.Data;
-using FurryFriends.Infrastructure.Data.Queries;
-using FurryFriends.Infrastructure.Email;
-using FurryFriends.UseCases.Contributors.List;
+using FurryFriends.Infrastructure.Messaging;
 using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Infrastructure;
@@ -14,7 +12,7 @@ public static class InfrastructureServiceExtensions
     ConfigurationManager config,
     ILogger logger,
     string environmentName)
-  {    
+  {
     if (environmentName == "Development")
     {
       RegisterDevelopmentOnlyDependencies(services, config);
@@ -40,7 +38,6 @@ public static class InfrastructureServiceExtensions
   private static void RegisterDefaultDependencies(IServiceCollection services, ILogger logger)
   {
     services
-           .AddScoped<IListContributorsQueryService, ListContributorsQueryService>()
            .AddScoped<IDeleteContributorService, DeleteContributorService>();
   }
 
@@ -61,7 +58,6 @@ public static class InfrastructureServiceExtensions
     // do not configure a DbContext here for testing - it's configured in CustomWebApplicationFactory
 
     services.AddScoped<IEmailSender, FakeEmailSender>();
-    services.AddScoped<IListContributorsQueryService, FakeListContributorsQueryService>();
   }
 
   private static void RegisterDevelopmentOnlyDependencies(IServiceCollection services, ConfigurationManager config)

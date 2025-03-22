@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant API as API Endpoint
+    participant Handler as Command Handler
+    participant Service as Client Service
+    participant Domain as Client Aggregate
+    participant DB as Repository
+
+    API->>Handler: AddPetCommand
+    Handler->>Service: GetClient
+    Service->>DB: Find Client
+    DB-->>Service: Client
+    
+    alt Client Not Found
+        Service-->>Handler: Not Found Error
+        Handler-->>API: Error Response
+    else Client Found
+        Service->>Domain: Create Pet
+        Domain->>Domain: Validate Pet Details
+        Domain->>Domain: Add Pet to Client
+        Service->>DB: Save Changes
+        DB-->>Service: Success
+        Service-->>Handler: Success Result
+        Handler-->>API: Pet ID
+    end

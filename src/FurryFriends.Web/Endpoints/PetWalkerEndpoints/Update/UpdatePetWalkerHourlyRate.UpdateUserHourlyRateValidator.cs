@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FurryFriends.Web.Endpoints.UserEndpoints.Update;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Update;
 
 public class UpdateUserHourlyRateValidator : Validator<UpdateUserHourlyRateRequest>
 {

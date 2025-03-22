@@ -1,11 +1,12 @@
 ﻿using Azure;
-using FurryFriends.UseCases.Users.ListUser;
+using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
+using FurryFriends.Web.Endpoints.Base;
 
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.List;
 
 public class ListPetWalker(IMediator mediator, ILogger<ListPetWalker> logger)
-  : Endpoint<ListPetWalkerRequest, ListPetWalkerResponse>()
+  : Endpoint<ListPetWalkerRequest, ListResponse<PetWalkerListResponseDto>>()
 {
   private readonly IMediator _mediator = mediator;
   private readonly ILogger<ListPetWalker> _logger = logger;
@@ -20,7 +21,7 @@ public class ListPetWalker(IMediator mediator, ILogger<ListPetWalker> logger)
     {
       s.Summary = "Retrieve List of Users";
       s.Description = "Returns a list of users based on search criteria";
-      s.Response<ListPetWalkerResponse>(200, "Users retrieved successfully");
+      s.Response<ListResponse<PetWalkerListResponseDto>>(200, "Users retrieved successfully");
       s.Response<Response>(400, "Failed to retrieve users");
       s.Response<Response>(401, "Unauthorized");
     });
@@ -39,13 +40,12 @@ public class ListPetWalker(IMediator mediator, ILogger<ListPetWalker> logger)
     }
 
     var userListResponse = userListResult.Value.Users
-        .Select(user => new PetWalkerListResponseDto(user.Id, user.Name.FullName, user.Email.EmailAddress, user.Address.City, string.Empty)) //Note: Not going to list all the user service areas
+        .Select(user => new PetWalkerListResponseDto(user.Id, user.Name.FullName, user.Email.EmailAddress, user.Address.City, string.Empty))
         .ToList();
 
     var totalCount = userListResult.Value.TotalCount;
     string[] hideColumns = { "Id", "Location" };
 
-    Response = new ListPetWalkerResponse(userListResponse, request.Page, request.PageSize, totalCount, hideColumns);
-
+    Response = new ListResponse<PetWalkerListResponseDto>(userListResponse, request.Page, request.PageSize, totalCount, hideColumns);
   }
 }

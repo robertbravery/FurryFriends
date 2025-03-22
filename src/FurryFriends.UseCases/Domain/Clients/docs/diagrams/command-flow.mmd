@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant C as Controller/API
+    participant H as CommandHandler
+    participant V as Validator
+    participant S as Service
+    participant D as Domain
+    participant R as Repository
+
+    C->>H: CreateClientCommand
+    H->>V: Validate Command
+    V-->>H: Validation Result
+    
+    alt Validation Failed
+        H-->>C: ValidationError
+    else Validation Passed
+        H->>S: Create Client
+        S->>D: Create Domain Objects
+        S->>R: Save Client
+        R-->>S: Success
+        S-->>H: Client ID
+        H-->>C: Success Result
+    end

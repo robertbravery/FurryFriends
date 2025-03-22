@@ -1,4 +1,8 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
+using FurryFriends.Core.Extensions;
+using FurryFriends.Core.ValueObjects.Validators;
+
 namespace FurryFriends.Core.ValueObjects;
 
 public class PhoneNumber : ValueObject
@@ -7,32 +11,34 @@ public class PhoneNumber : ValueObject
   public string Number { get; private set; } = default!;
   public PhoneNumber()
   {
-    
+
   }
 
-  private PhoneNumber(string countryCode,  string number)
+  private PhoneNumber(string countryCode, string number)
   {
     CountryCode = countryCode;
     Number = number;
   }
 
-  public static async Task<Result<PhoneNumber>> Create(string countryCode,  string number, IValidator<PhoneNumber> validator)
+  public static async Task<Result<PhoneNumber>> Create(string countryCode, string number)
   {
 
     var phoneNumber = new PhoneNumber(countryCode, number);
-    return await Validate(validator, phoneNumber);
+    var validator = new PhoneNumberValidator();
+    var result = await Validate(validator, phoneNumber);
+    return result;
   }
 
   private static async Task<Result<PhoneNumber>> Validate(IValidator<PhoneNumber> validator, PhoneNumber phoneNumber)
   {
-    var validationResult = await validator.ValidateAsync(phoneNumber);
+    ValidationResult validationResult = await validator.ValidateAsync(phoneNumber);
     if (validationResult.IsValid)
     {
       return Result.Success(phoneNumber);
     }
     else
     {
-      return Result.Error(validationResult.ToString());
+      return validationResult.Errors.ToInvalidValidationErrorResult();
     }
   }
 

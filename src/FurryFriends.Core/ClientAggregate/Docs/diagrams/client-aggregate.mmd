@@ -1,0 +1,48 @@
+classDiagram
+    class Client {
+        +Guid Id
+        +Name Name
+        +Email Email
+        +PhoneNumber PhoneNumber
+        +Address Address
+        +ClientType ClientType
+        +TimeOnly? PreferredContactTime
+        +ReferralSource ReferralSource
+        +ICollection~Pet~ Pets
+        +Create(Name, Email, PhoneNumber, Address)$ Client
+        +AddPet(Pet) void
+    }
+
+    class Pet {
+        +Guid Id
+        +string Name
+        +int BreedId
+        +int Age
+        +string Species
+        +double Weight
+        +string Color
+        +string? MedicalConditions
+        +bool VaccinationStatus
+        +Guid OwnerId
+        +string? FavoriteActivities
+        +string? DietaryRestrictions
+    }
+
+    class Species {
+        +int Id
+        +string Name
+        +string Description
+        +ICollection~Breed~ Breeds
+    }
+
+    class Breed {
+        +int Id
+        +string Name
+        +string Description
+        +int SpeciesId
+        +ICollection~Pet~ Pets
+    }
+
+    Client "1" *-- "*" Pet
+    Pet "*" -- "1" Breed
+    Breed "*" -- "1" Species

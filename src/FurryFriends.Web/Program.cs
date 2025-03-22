@@ -1,5 +1,7 @@
-﻿using FurryFriends.Web.Configurations;
+﻿using FurryFriends.ServiceDefaults;
 using FurryFriends.UseCases.Configurations;
+using FurryFriends.Web.Configurations;
+using FurryFriends.Web.Middleware;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -35,7 +37,7 @@ builder.Services
     .AddOptionConfigs(builder.Configuration, logger, builder)
     .AddValidatorConfigs()
     .AddUseCaseValidators()
-    .AddMediatrConfigs();
+.AddMediatrConfigs();
 
 builder.Services.AddServiceConfigs(logger, builder);
 
@@ -49,13 +51,15 @@ builder.Services.AddFastEndpoints()
 var app = builder.Build();
 
 await app.UseAppMiddlewareAndSeedDatabase();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseFastEndpoints(c =>
+app.UseFastEndpoints(
+  c =>
 {
   c.Endpoints.RoutePrefix = "api";
   c.Errors.UseProblemDetails(x =>
   {
-    x.AllowDuplicateErrors = true;
+    x.AllowDuplicateErrors = false;
     x.IndicateErrorCode = true;
     x.IndicateErrorSeverity = true;
     x.TypeValue = "https://www.rfc-editor.org/rfc/rfc7231#section-6.5.1";
@@ -67,7 +71,9 @@ app.UseFastEndpoints(c =>
       _ => "One or more errors occurred!"
     };
   });
-});
+}
+).UseSwaggerGen();
+
 
 app.Run();
 

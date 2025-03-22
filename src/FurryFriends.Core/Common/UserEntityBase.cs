@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.GuardClauses;
+﻿using FurryFriends.Core.PetWalkerAggregate.Validation;
 using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.Core.Common;

@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant API as API Controller
+    participant UH as UpdateClientHandler
+    participant UV as UpdateClientValidator
+    participant CS as ClientService
+    participant CR as ClientRepository
+    participant DE as DomainEvents
+
+    API->>UH: UpdateClientCommand
+    UH->>UV: ValidateAsync(command)
+    
+    alt Validation Failed
+        UV-->>UH: ValidationResult (Invalid)
+        UH-->>API: Result.Invalid
+    else Validation Passed
+        UV-->>UH: ValidationResult (Valid)
+        UH->>CS: GetClientAsync(command.ClientId)
+        
+        alt Client Not Found
+            CS-->>UH: null
+            UH-->>API: Result.NotFound
+        else Client Found
+            CS-->>UH: Client
+            UH->>CS: UpdateClientAsync(client, command)
+            CS->>CR: SaveChangesAsync()
+            
+            alt Concurrency Error
+                CR-->>CS: DbUpdateConcurrencyException
+                CS-->>UH: Error
+                UH-->>API: Result.Error("Concurrent update")
+            else Success
+                CR-->>CS: Success
+                CS-->>UH: Success
+                UH->>DE: Publish(ClientUpdatedEvent)
+                UH-->>API: Result.Success
+            end
+        end
+    end

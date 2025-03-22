@@ -52,8 +52,6 @@ public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
               .IsUnique();
         });
 
-    //builder.HasIndex(u => u.Email).IsUnique();
-
     builder.OwnsOne(c => c.Name, n =>
     {
       n.Property(p => p.FirstName).HasColumnName("FirstName").HasColumnOrder(1);

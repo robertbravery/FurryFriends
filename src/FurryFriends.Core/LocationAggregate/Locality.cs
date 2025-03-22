@@ -2,9 +2,9 @@
 
 namespace FurryFriends.Core.LocationAggregate;
 
-public class Locality : AuditableEntity<Guid>
+public class Locality(string localityName, Guid regionID) : AuditableEntity<Guid>
 {
-  public string LocalityName { get; set; } = default!;
-  public Guid RegionID { get; set; }
+  public string LocalityName { get; set; } = localityName;
+  public Guid RegionID { get; set; } = regionID;
   public virtual Region Region { get; set; } = default!;
 }

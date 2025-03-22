@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using FurryFriends.UseCases.Users.CreateUser;
+﻿using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
@@ -22,8 +21,8 @@ public class CreatePetWalker(IMediator _mediator)
         FirstName = "John",
         LastName = "Smith",
         Email = "john.smith@example.com",
-        CountryCode = "1",
-        Number = "1234567",
+        PhoneCountryCode = "1",
+        PhoneNumber = "1234567",
         Street = "123 Main St",
         City = "Springfield",
         State = "IL",
@@ -33,43 +32,64 @@ public class CreatePetWalker(IMediator _mediator)
   }
   public override async Task HandleAsync(CreatePetWalkerRequest request, CancellationToken cancellationToken)
   {
-    var userCommand = new CreatePetWalkerCommand(
-        request.FirstName,
-        request.LastName,
-        request.Email,
-        request.CountryCode,
-        request.Number,
-        request.Street,
-        request.City,
-        request.State,
-        request.Country,
-        request.PostalCode, // Add this line to fix the error
-        request.Gender,
-        request.Biography,
-        request.DateOfBirth,
-        request.HourlyRate,
-        request.Currency,
-        request.IsActive,
-        request.IsVerified,
-        request.YearsOfExperience,
-        request.HasInsurance,
-        request.HasFirstAidCertification,
-        request.DailyPetWalkLimit);
+    var userCommand = CreateCommand(request);
 
     var result = await _mediator.Send(userCommand, cancellationToken);
 
-    if (result == null)
+    if (result == null || !result.IsSuccess)
     {
-      await SendErrorsAsync(StatusCodes.Status500InternalServerError, cancellationToken);
-      return;
-    }
-    if (!result.IsSuccess)
-    {
-      AddError(result.ValidationErrors.First().ErrorMessage);
-      await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
+      await HandleResultErrorsAsync(result, cancellationToken);
       return;
     }
 
-    Response = new CreatePetWalkerResponse(result.Value);
+    Response = new CreatePetWalkerResponse(result.Value.ToString());
+  }
+
+  private static CreatePetWalkerCommand CreateCommand(CreatePetWalkerRequest request)
+  {
+    var userCommand = new CreatePetWalkerCommand(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            request.PhoneCountryCode,
+            request.PhoneNumber,
+            request.Street,
+            request.City,
+            request.State,
+            request.Country,
+            request.PostalCode, // Add this line to fix the error
+            request.Gender,
+            request.Biography,
+            request.DateOfBirth,
+            request.HourlyRate,
+            request.Currency,
+            request.IsActive,
+            request.IsVerified,
+            request.YearsOfExperience,
+            request.HasInsurance,
+            request.HasFirstAidCertification,
+        request.DailyPetWalkLimit);
+    return userCommand;
+  }
+
+  private async Task HandleResultErrorsAsync(Result<Guid>? result, CancellationToken cancellationToken)
+  {
+    if (result?.ValidationErrors?.Any() == true)
+    {
+      foreach (var error in result.ValidationErrors)
+      {
+        AddError(error.ErrorMessage);
+      }
+    }
+
+    if (result?.Errors?.Any() == true)
+    {
+      foreach (var error in result.Errors)
+      {
+        AddError(error);
+      }
+    }
+
+    await SendErrorsAsync(result!.IsSuccess ? StatusCodes.Status500InternalServerError : StatusCodes.Status400BadRequest, cancellationToken);
   }
 }

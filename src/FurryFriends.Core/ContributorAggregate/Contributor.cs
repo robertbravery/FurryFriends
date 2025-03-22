@@ -22,7 +22,7 @@ public class Contributor : EntityBase, IAggregateRoot
 
   public async Task<Result> SetPhoneNumber(string phoneNumber, IValidator<PhoneNumber> validator)
   {
-    var result = await PhoneNumber.Create(string.Empty, phoneNumber, validator);
+    var result = await PhoneNumber.Create(string.Empty, phoneNumber);
     if (result.IsSuccess)
     {
       PhoneNumber = result.Value;

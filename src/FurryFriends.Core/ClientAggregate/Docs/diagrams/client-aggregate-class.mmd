@@ -1,0 +1,52 @@
+classDiagram
+    class Client {
+        +Guid Id
+        +Name Name
+        +Email Email
+        +PhoneNumber Phone
+        +Address Address
+        +ClientType Type
+        +TimeOnly? PreferredContactTime
+        +ReferralSource ReferralSource
+        +IReadOnlyCollection~Pet~ Pets
+        +Create()*
+        +AddPet(Pet)*
+        +UpdateContactInfo()*
+        +UpgradeClientType()*
+    }
+
+    class Pet {
+        +Guid Id
+        +string Name
+        +Species Species
+        +Breed Breed
+        +decimal Weight
+        +bool VaccinationStatus
+        +string? MedicalConditions
+        +Create()*
+        +UpdateDetails()*
+    }
+
+    class Name {
+        +string FirstName
+        +string LastName
+        +string FullName
+    }
+
+    class Email {
+        +string EmailAddress
+        +Validate()*
+    }
+
+    class Address {
+        +string Street
+        +string City
+        +string State
+        +string Country
+        +string ZipCode
+    }
+
+    Client "1" *-- "0..*" Pet
+    Client "1" *-- "1" Name
+    Client "1" *-- "1" Email
+    Client "1" *-- "1" Address

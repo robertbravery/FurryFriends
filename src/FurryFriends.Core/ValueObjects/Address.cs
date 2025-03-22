@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using FurryFriends.Core.Extensions;
 using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.Core.ValueObjects;
@@ -29,12 +30,11 @@ public class Address : ValueObject
   {
     var address = new Address(street, city, state, country, zipCode);
     var validationResult = Validate(address);
-    if (!validationResult.IsValid)
-    {
-      var errorList = new ErrorList(validationResult.Errors.Select(e => e.ErrorMessage));
-      return Result.Error(errorList);
-    }
-    return address;
+
+    return validationResult.IsValid
+      ? Result.Success(address)
+      : validationResult.Errors.ToInvalidValidationErrorResult();
+
   }
 
   private static ValidationResult Validate(Address address)
@@ -69,6 +69,11 @@ public class Address : ValueObject
     yield return City;
     yield return StateProvinceRegion;
     yield return ZipCode;
+  }
+
+  public override string ToString()
+  {
+    return $"{Street}, {City}, {StateProvinceRegion} {ZipCode}, {Country}";
   }
 }
 

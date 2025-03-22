@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant API as API Endpoint
+    participant Handler as Command Handler
+    participant Service as Client Service
+    participant Domain as Client Aggregate
+    participant DB as Repository
+
+    API->>Handler: CreateClientCommand
+    Handler->>Domain: Create Value Objects
+    Note over Handler,Domain: Validate Name, Email, Phone, Address
+    
+    Handler->>Service: CreateClientAsync
+    Service->>DB: Check Email Uniqueness
+    DB-->>Service: Result
+    
+    alt Email Already Exists
+        Service-->>Handler: Error Result
+        Handler-->>API: Error Response
+    else Email Available
+        Service->>Domain: Create Client
+        Service->>DB: Save Client
+        DB-->>Service: Success
+        Service-->>Handler: Success Result
+        Handler-->>API: Client ID
+    end

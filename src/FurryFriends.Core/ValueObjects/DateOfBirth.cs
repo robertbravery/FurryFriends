@@ -1,9 +1,10 @@
 ﻿
+using FurryFriends.Core.Extensions;
 using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.Core.ValueObjects;
 
-public class DateOfBirth: ValueObject
+public class DateOfBirth : ValueObject
 {
   public DateTime Date { get; private set; }
 
@@ -20,7 +21,7 @@ public class DateOfBirth: ValueObject
     var validationResults = dateOfBirthValidator.Validate(dateOfBirthObject);
     return validationResults.IsValid
       ? Result.Success(dateOfBirthObject)
-      : Result.Error(validationResults.ToString());
+      : validationResults.Errors.ToInvalidValidationErrorResult();
   }
 
   // Override equality operators

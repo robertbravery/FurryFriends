@@ -1,5 +1,4 @@
-﻿
-using FluentValidation;
+﻿using FurryFriends.Core.Extensions;
 using FurryFriends.Core.ValueObjects.Validators;
 
 namespace FurryFriends.Core.ValueObjects;
@@ -7,11 +6,11 @@ namespace FurryFriends.Core.ValueObjects;
 public class Compensation : ValueObject
 {
   public decimal HourlyRate { get; }
-  public string Currency { get; } =default!;
+  public string Currency { get; } = default!;
 
   private Compensation()
   {
-    
+
   }
 
   private Compensation(decimal amount, string currency)
@@ -26,13 +25,10 @@ public class Compensation : ValueObject
     var validator = new CompensationValidator();
     var validationResult = validator.Validate(compensation);
 
-    if (!validationResult.IsValid)
-    {
-      var validationErrors = validationResult.Errors.Select(e => new ValidationError { ErrorMessage = e.ErrorMessage }).ToArray();
-      return Result.Invalid(validationErrors);
-    }
+    return validationResult.IsValid
+      ? Result.Success(compensation)
+      : validationResult.Errors.ToInvalidValidationErrorResult();
 
-    return Result.Success(compensation);
   }
 
   // Equality members

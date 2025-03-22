@@ -1,6 +1,5 @@
 ﻿using Ardalis.ListStartupServices;
 using FurryFriends.Infrastructure.Data;
-using FurryFriends.Web.Middleware;
 
 namespace FurryFriends.Web.Configurations;
 
@@ -18,7 +17,7 @@ public static class MiddlewareConfig
       app.UseDefaultExceptionHandler(); // from FastEndpoints
       app.UseHsts();
     }
-    app.UseMiddleware<ValidateEmailMiddleware>();
+
     app.UseFastEndpoints()
         .UseSwaggerGen(); // Includes AddFileServer and static files middleware
 

@@ -1,5 +1,5 @@
 ﻿using Ardalis.ListStartupServices;
-using FurryFriends.Infrastructure.Email;
+using FurryFriends.Infrastructure.Messaging;
 using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Web.Configurations;

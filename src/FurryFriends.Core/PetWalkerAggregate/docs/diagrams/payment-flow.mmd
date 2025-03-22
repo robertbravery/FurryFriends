@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant C as Client
+    participant PS as PaymentService
+    participant PW as PetWalker
+    participant S as Stripe
+    participant NS as NotificationService
+
+    C->>PS: Initiate Payment
+    activate PS
+    PS->>S: Create Payment Intent
+    S-->>PS: Payment Intent Created
+    PS->>C: Return Client Secret
+    
+    C->>S: Confirm Payment
+    S-->>PS: Payment Confirmed
+    
+    PS->>PS: Calculate Platform Fee
+    PS->>S: Create Transfer
+    S-->>PS: Transfer Created
+    
+    par Notifications
+        PS->>PW: Payment Received
+        PS->>C: Payment Processed
+        PS->>NS: Send Receipts
+    end
+    
+    deactivate PS
