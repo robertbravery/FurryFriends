@@ -1,8 +1,6 @@
-﻿using FurryFriends.UseCases.Domain.Clients.Command.AddPet;
+﻿namespace FurryFriends.Web.Endpoints.ClientEndpoints.AddClientPet;
 
-namespace FurryFriends.Web.Endpoints.ClientEndpoints.AddClientPet;
-
-public class AddPetRequestValidatior : AbstractValidator<AddPetCommand>
+public class AddPetRequestValidatior : Validator<AddPetRequest>
 {
 
   public AddPetRequestValidatior()

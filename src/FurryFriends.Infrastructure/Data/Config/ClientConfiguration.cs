@@ -43,6 +43,16 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
     builder.Property(p => p.CreatedAt).HasColumnName("CreatedAt").HasColumnOrder(14);
     builder.Property(p => p.PreferredContactTime).HasColumnOrder(15).HasColumnType("time").IsRequired(false);
 
+    builder.Property(p => p.IsActive)
+      .IsRequired()
+      .HasDefaultValue(true);
+
+    builder.Property(p => p.DeactivatedAt)
+      .IsRequired(false);
+
+    // Add a filter to only get active clients by default
+    builder.HasQueryFilter(c => c.IsActive);
+
     builder.HasMany(c => c.Pets)
       .WithOne(p => p.Owner)
       .HasForeignKey(p => p.OwnerId)
