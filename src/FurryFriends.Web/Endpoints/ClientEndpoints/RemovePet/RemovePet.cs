@@ -1,4 +1,4 @@
-﻿using Ardalis.GuardClauses;
+﻿﻿﻿﻿using Ardalis.GuardClauses;
 using FurryFriends.UseCases.Domain.Clients.Command.RemovePet;
 
 namespace FurryFriends.Web.Endpoints.ClientEndpoints.RemovePet;
@@ -28,7 +28,7 @@ public class RemovePet : Endpoint<RemovePetRequest, Result>
 
   public override async Task HandleAsync(RemovePetRequest request, CancellationToken ct)
   {
-    var command = new RemovePetCommand(request.ClientId, request.PetId);
+    var command = new RemovePetCommand(request.PetId);
     var result = await _mediator.Send(command, ct);
 
     if (result.Status == ResultStatus.NotFound)

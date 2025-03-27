@@ -2,11 +2,9 @@ namespace FurryFriends.Web.Endpoints.ClientEndpoints.RemovePet;
 
 public class RemovePetRequest
 {
-    public const string Route = "/Clients/{ClientId}/Pets/{PetId}";
-    public static string BuildRoute(Guid clientId, Guid petId) => Route
-        .Replace("{ClientId}", clientId.ToString())
-        .Replace("{PetId}", petId.ToString());
+  public const string Route = "/Clients/RemovePet/{PetId:guid}";
 
-    public Guid ClientId { get; set; }
-    public Guid PetId { get; set; }
+  public static string BuildRoute(Guid petId) => Route.Replace("{PetId:guid}", petId.ToString());
+
+  public Guid PetId { get; set; }
 }

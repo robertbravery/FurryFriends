@@ -7,5 +7,9 @@ public record UpdatePetInfoCommand(
     int Age,
     double Weight,
     string Color,
+    string? MedicalHistory,
+    bool IsVaccinated,
+    string? FavoriteActivities,
     string? DietaryRestrictions,
-    string? FavoriteActivities) : ICommand<Result>;
+    string? SpecialNeeds,
+    string? Photo) : ICommand<Result>;

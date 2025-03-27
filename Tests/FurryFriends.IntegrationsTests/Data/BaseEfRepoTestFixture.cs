@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.ContributorAggregate;
+﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Infrastructure.Data;
 
 namespace FurryFriends.IntegrationsTests.Data;
@@ -32,8 +32,8 @@ public abstract class BaseEfRepoTestFixture
     return builder.Options;
   }
 
-  protected EfRepository<Contributor> GetRepository()
+  protected EfRepository<Client> GetRepository()
   {
-    return new EfRepository<Contributor>(_dbContext);
+    return new EfRepository<Client>(_dbContext);
   }
 }

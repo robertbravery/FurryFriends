@@ -4,6 +4,7 @@ using FurryFriends.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324140607_UpdatePetManagement")]
+    partial class UpdatePetManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +111,6 @@ namespace FurryFriends.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DeactivatedAt")
                         .HasColumnType("datetime2");
 
@@ -157,9 +157,6 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Property<string>("SpecialNeeds")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<double>("Weight")
                         .HasColumnType("float");
 
@@ -193,6 +190,22 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Species", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.ContributorAggregate.Contributor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contributors");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Country", b =>
@@ -538,6 +551,58 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Navigation("BreedType");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.ContributorAggregate.Contributor", b =>
+                {
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.Name", "Name", b1 =>
+                        {
+                            b1.Property<int>("ContributorId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("FirstName");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("LastName");
+
+                            b1.HasKey("ContributorId");
+
+                            b1.ToTable("Contributors");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ContributorId");
+                        });
+
+                    b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
+                        {
+                            b1.Property<int>("ContributorId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("CountryCode")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ContributorId");
+
+                            b1.ToTable("Contributors");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ContributorId");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
+
+                    b.Navigation("PhoneNumber");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Locality", b =>

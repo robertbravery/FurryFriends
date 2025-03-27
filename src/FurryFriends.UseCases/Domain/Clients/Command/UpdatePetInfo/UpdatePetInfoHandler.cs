@@ -21,8 +21,12 @@ public class UpdatePetInfoHandler : ICommandHandler<UpdatePetInfoCommand, Result
             command.Age,
             command.Weight,
             command.Color,
+            command.MedicalHistory,
+            command.IsVaccinated,
+            command.FavoriteActivities,
             command.DietaryRestrictions,
-            command.FavoriteActivities);
+            command.SpecialNeeds,
+            command.Photo);
 
         if (!result.IsSuccess)
             return result;

@@ -1,5 +1,4 @@
 ﻿using FurryFriends.Core.Interfaces;
-using FurryFriends.Core.Services;
 using FurryFriends.Infrastructure.Data;
 using FurryFriends.Infrastructure.Messaging;
 using ILogger = Serilog.ILogger;
@@ -37,8 +36,8 @@ public static class InfrastructureServiceExtensions
 
   private static void RegisterDefaultDependencies(IServiceCollection services, ILogger logger)
   {
-    services
-           .AddScoped<IDeleteContributorService, DeleteContributorService>();
+    //services
+    //       .AddScoped<IDeleteContributorService, DeleteContributorService>();
   }
 
   private static void RegisterEFRepositories(IServiceCollection services)

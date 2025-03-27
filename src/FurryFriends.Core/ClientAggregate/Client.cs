@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.ClientAggregate.Enums;
+﻿﻿using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.Common;
 using FurryFriends.Core.ValueObjects;
 
@@ -79,13 +79,13 @@ public class Client : UserEntityBase, IAggregateRoot
   }
 
   public Result UpdatePetInfo(Guid petId, string name, int age, double weight,
-      string color, string? dietaryRestrictions, string? favoriteActivities)
+      string color, string? medicalHistory, bool isVaccinated, string? favoriteActivities, string? dietaryRestrictions, string? specialNeeds, string? photo)
   {
     var pet = Pets.FirstOrDefault(p => p.Id == petId);
     if (pet == null)
       return Result.Error("Pet not found in this client's pets");
 
-    pet.UpdateGeneralInfo(name, age, weight, color, dietaryRestrictions, favoriteActivities);
+    pet.UpdateGeneralInfo(name, age, weight, color, medicalHistory, isVaccinated, favoriteActivities, dietaryRestrictions, specialNeeds, photo);
     return Result.Success();
   }
 
