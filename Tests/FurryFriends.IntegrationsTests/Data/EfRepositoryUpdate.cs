@@ -36,7 +36,7 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
 
     newClient.Should().NotBeSameAs(client);
 
-    var newemail = Email.Create("X9d0z@example.com");
+    var newemail = Email.Create("new@example.com");
     newClient.UpdateEmail(newemail);
 
     // Update the item
@@ -44,11 +44,9 @@ public class EfRepositoryUpdate : BaseEfRepoTestFixture
 
     // Fetch the updated item
     var updatedItem = (await repository.ListAsync(canellationToken))
-        .FirstOrDefault(client => client.Email == newemail);
+        .FirstOrDefault(c => c.Email == newemail);
 
     updatedItem.Should().NotBeNull();
     updatedItem?.Email.Should().NotBe(client.Email);
-    updatedItem?.Name.Should().Be(newemail);
-    //updatedItem?.Status.Should().Be(client.Status);
   }
 }

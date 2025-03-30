@@ -1,0 +1,25 @@
+.sidebar-nav {
+    flex-grow: 1;
+    padding-top: var(--base-spacing);
+    overflow-y: auto;
+}
+
+.nav-section-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.nav-link {
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    color: #333;
+}
+
+.nav-link:hover {
+    background-color: #ddd;
+}
+
+.icon {
+    margin-right: 5px;
+}

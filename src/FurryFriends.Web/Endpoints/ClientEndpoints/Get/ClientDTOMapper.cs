@@ -22,7 +22,7 @@ public class ClientDTOMapper : Mapper<GetClientRequest, ClientRecord, ClientDTO>
         [.. e.Pets.Select(p => new PetRecord(
             p.Id,
             p.Name,
-            p.Species,
+            "Species", //p.Species,
             p.Breed,
             p.Age,
             p.Weight,

@@ -1,4 +1,4 @@
-using FurryFriends.Core.ClientAggregate;
+﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.ValueObjects;
 
@@ -7,20 +7,20 @@ namespace FurryFriends.UnitTests.TestHelpers;
 public static class ClientTestHelpers
 {
 
-    private static readonly string[] _firstNames =
-    [
-            "James", "William", "Oliver", "Henry", "Theodore",
+  private static readonly string[] _firstNames =
+  [
+          "James", "William", "Oliver", "Henry", "Theodore",
             "Charlotte", "Ava", "Amelia", "Emma", "Sophia"
-    ];
+  ];
 
-    private static readonly string[] _lastNames =
-    [
-            "Smith", "Johnson", "Williams", "Brown", "Jones",
+  private static readonly string[] _lastNames =
+  [
+          "Smith", "Johnson", "Williams", "Brown", "Jones",
             "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"
-    ];
+  ];
 
 
-    public static async Task<Client> CreateTestClientAsync(
+  public static async Task<Client> CreateTestClientAsync(
         Guid? id = null,
         string firstName = "John",
         string lastName = "Doe",
@@ -34,54 +34,78 @@ public static class ClientTestHelpers
         string zipCode = "12345",
         ClientType clientType = ClientType.Regular,
         TimeOnly? preferredContactTime = null,
-        ReferralSource referralSource = ReferralSource.Website)
+        ReferralSource referralSource = ReferralSource.Website,
+        Species? species = null,
+        Breed? breed = null)
+  {
+    var client = Client.Create(
+        Name.Create(firstName, lastName),
+        Email.Create(email),
+        await PhoneNumber.Create(countryCode, phoneNumber),
+        Address.Create(street, city, state, country, zipCode),
+        clientType,
+        referralSource,
+        preferredContactTime ?? new TimeOnly(9, 0)
+    );
+    species = Species.Create("Canine", "Dog species");
+    species.Id = 1;
+
+    breed = Breed.Create("Golden Retriever", "Friendly and intelligent breed");
+    breed.Id = 1;
+    breed.SpeciesId = species.Id;
+    breed.Species = species;
+    for (int i = 0; i < 3; i++)
     {
-        var client = Client.Create(
-            Name.Create(firstName, lastName),
-            Email.Create(email),
-            await PhoneNumber.Create(countryCode, phoneNumber),
-            Address.Create(street, city, state, country, zipCode),
-            clientType,
-            referralSource,
-            preferredContactTime ?? new TimeOnly(9, 0)
-            );
-
-        if (id.HasValue)
-        {
-            // Use reflection to set the Id since it's likely protected
-            typeof(Client)
-                .GetProperty("Id")?
-                .SetValue(client, id.Value);
-        }
-
-        return client;
-    }
-
-    public static List<Client> CreateTestClients(int count = 3)
-    {
-
-        var clients = new List<Client>();
-        for (int i = 0; i < count; i++)
-        {
-            clients.Add(CreateTestClientAsync(
-                firstName: _firstNames[i % _firstNames.Length],
-                lastName: _lastNames[i % _lastNames.Length],
-                email: $"test{i}@example.com"
-            ).Result);
-        }
-        return clients;
+        var pet = client.AddPet($"Pet{i}", 1, 2, 5.5, "White", "None");
 
     }
 
-    public static Client CreatePremiumTestClient()
+
+    if (id.HasValue)
     {
-        return CreateTestClientAsync(
-            firstName: "Premium",
-            lastName: "User",
-            email: "premium@example.com",
-            clientType: ClientType.Premium,
-            preferredContactTime: new TimeOnly(14, 0),
-            referralSource: ReferralSource.ExistingClient
-        ).Result;
+      typeof(Client)
+          .GetProperty("Id")?
+          .SetValue(client, id.Value);
     }
+
+    return client;
+  }
+
+  public static Species CreateTestSpecies()
+  {
+    return Species.Create("Canine", "Dog species");
+  }
+
+  public static Breed CreateTestBreed(Species species)
+  {
+    return Breed.Create("Golden Retriever", "Friendly and intelligent breed");
+  }
+
+  public static List<Client> CreateTestClients(int count = 3)
+  {
+
+    var clients = new List<Client>();
+    for (int i = 0; i < count; i++)
+    {
+      clients.Add(CreateTestClientAsync(
+          firstName: _firstNames[i % _firstNames.Length],
+          lastName: _lastNames[i % _lastNames.Length],
+          email: $"test{i}@example.com"
+      ).Result);
+    }
+    return clients;
+
+  }
+
+  public static Client CreatePremiumTestClient()
+  {
+    return CreateTestClientAsync(
+        firstName: "Premium",
+        lastName: "User",
+        email: "premium@example.com",
+        clientType: ClientType.Premium,
+        preferredContactTime: new TimeOnly(14, 0),
+        referralSource: ReferralSource.ExistingClient
+    ).Result;
+  }
 }

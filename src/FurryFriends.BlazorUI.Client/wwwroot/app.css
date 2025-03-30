@@ -1,0 +1,457 @@
+:root {
+            --primary-color: #4A90E2; /* A calm, professional blue */
+            --secondary-color: #50E3C2; /* A contrasting teal/mint for accents */
+            --text-color: #4A4A4A; /* Dark grey for readability */
+            --light-text-color: #ffffff;
+            --bg-color: #F7F8FC; /* Very light grey background */
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #E0E5EE;
+            --hover-bg: #f0f4f8;
+            --active-bg: #e6effc;
+            --active-border: var(--primary-color);
+            --font-main: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            --base-spacing: 1rem;
+            --border-radius: 6px;
+            --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --sidebar-width: 240px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Prevent body scroll, manage scrolling in content */
+        }
+
+body {
+            font-family: var(--font-main);
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            font-size: 14px; /* Base size similar to business apps */
+            background-image: url("/images/catongrass.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* --- Layout: Sidebar + Main Content --- */
+        .app-layout {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            box-shadow: var(--box-shadow);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: calc(var(--base-spacing) * 1.5) var(--base-spacing);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+         .sidebar-header .logo-icon { /* Paw icon placeholder */
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+         }
+
+
+        .sidebar-nav {
+            flex-grow: 1;
+            padding-top: var(--base-spacing);
+            overflow-y: auto;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem; /* Smaller font for section titles */
+            text-transform: uppercase;
+            color: #9B9B9B; /* Lighter grey */
+            padding: var(--base-spacing) var(--base-spacing) calc(var(--base-spacing) * 0.5);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--base-spacing) * 0.75);
+            padding: calc(var(--base-spacing) * 0.8) var(--base-spacing);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            margin: 2px 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .sidebar-nav ul li a:hover {
+            background-color: var(--hover-bg);
+            color: var(--primary-color);
+        }
+        .sidebar-nav ul li a.active {
+            background-color: var(--active-bg);
+            border-left-color: var(--active-border);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .sidebar-nav ul li a .icon { /* Placeholder for icons */
+             width: 20px;
+             height: 20px;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             /* In real app, use SVG background or font icon */
+             font-size: 1.2em;
+             flex-shrink: 0;
+        }
+
+
+        .sidebar-footer {
+            padding: var(--base-spacing);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: #9B9B9B;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent layout shift from scrollbars */
+        }
+
+        .top-header {
+            height: 60px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Align items to the right */
+            padding: 0 var(--base-spacing);
+            flex-shrink: 0; /* Prevent header from shrinking */
+            box-shadow: var(--box-shadow);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--base-spacing);
+        }
+        .header-actions .icon-button { /* Placeholder for icon buttons */
+            font-size: 1.4rem;
+            color: #777;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+         .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: var(--secondary-color);
+            color: var(--light-text-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+         }
+         .user-name {
+             font-weight: 500;
+         }
+
+
+        .page-content {
+            flex-grow: 1;
+            padding: calc(var(--base-spacing) * 1.5);
+            overflow-y: auto; /* Enable scrolling for content */
+        }
+
+        .content-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .content-section.active {
+            display: block; /* Show active section */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Page Specific Styles --- */
+
+        /* Common Header for sections */
+        .page-header {
+            margin-bottom: calc(var(--base-spacing) * 1.5);
+        }
+         .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color); /* Darker heading */
+            margin-bottom: calc(var(--base-spacing) * 0.25);
+         }
+         .page-header p {
+             color: #777; /* Lighter subheading text */
+             font-size: 0.95rem;
+             margin-bottom: 0;
+         }
+
+        /* Table Styles (Client List) */
+        .data-table-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden; /* Ensures border radius clips table */
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th,
+        .data-table td {
+            padding: calc(var(--base-spacing) * 0.8) var(--base-spacing);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        .data-table thead th {
+            background-color: #f8f9fa; /* Slightly different bg for header */
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table tbody tr:hover {
+            background-color: var(--hover-bg);
+        }
+        .data-table .actions {
+            text-align: right;
+        }
+        .data-table .action-icon {
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-left: var(--base-spacing);
+            font-size: 1.2rem;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        .data-table .action-icon:hover {
+            opacity: 1;
+        }
+
+        /* Form Styles (Add Client, Add Pet) */
+        .form-container {
+            background-color: var(--card-bg);
+            padding: calc(var(--base-spacing) * 2);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 800px; /* Limit form width */
+            margin-top: var(--base-spacing);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--base-spacing) * 1.5);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: calc(var(--base-spacing) * 0.5);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            padding: calc(var(--base-spacing) * 0.7) var(--base-spacing);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #fff; /* Ensure white background */
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            margin-top: calc(var(--base-spacing) * 1.5);
+            display: flex;
+            justify-content: flex-end; /* Align button to the right */
+            gap: var(--base-spacing);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.5);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+        }
+        .btn-primary:hover {
+            background-color: #357ABD; /* Darker blue */
+        }
+        .btn-primary:active {
+             transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #e9ecef; /* Light grey */
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+         .btn-secondary:hover {
+             background-color: #dee2e6; /* Darker grey */
+         }
+         .btn-secondary:active {
+             transform: scale(0.98);
+         }
+
+
+        /* Card Styles (Pet List) */
+         .card-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+             gap: var(--base-spacing) * 1.5;
+             margin-top: var(--base-spacing);
+         }
+
+         .pet-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+         }
+         .pet-card-header {
+            padding: var(--base-spacing);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+         }
+          .pet-card-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+          }
+           .pet-card-species {
+             font-size: 0.85rem;
+             color: #777;
+             background-color: #e9ecef;
+             padding: 3px 8px;
+             border-radius: 4px;
+           }
+
+         .pet-card-body {
+             padding: var(--base-spacing);
+             flex-grow: 1;
+         }
+         .pet-card-body p {
+             margin-bottom: calc(var(--base-spacing) * 0.5);
+             font-size: 0.9rem;
+             color: #555;
+         }
+         .pet-card-body p strong {
+             font-weight: 500;
+             color: var(--text-color);
+         }
+         .pet-card-actions {
+             padding: var(--base-spacing);
+             border-top: 1px solid var(--border-color);
+             text-align: right;
+         }
+         .pet-card-actions .btn {
+            font-size: 0.85rem;
+            padding: calc(var(--base-spacing)*0.5) var(--base-spacing);
+         }
+
+        /* View Client Specific */
+        #view-client .client-details-header {
+             margin-bottom: calc(var(--base-spacing) * 2);
+             padding-bottom: var(--base-spacing);
+             border-bottom: 1px solid var(--border-color);
+         }
+         #view-client .client-details-header h2 {
+             font-size: 1.5rem;
+             margin-bottom: 5px;
+         }
+         #view-client .client-details-header p {
+              color: #555;
+          }
+
+          #view-client .section-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-top: calc(var(--base-spacing) * 2);
+              margin-bottom: var(--base-spacing);
+          }
+          #view-client .section-header h3 {
+              font-size: 1.3rem;
+              font-weight: 600;
+              color: var(--text-color);
+          }
+
+        /* --- Utility --- */
+        .hidden { display: none; }

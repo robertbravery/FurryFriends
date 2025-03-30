@@ -31,7 +31,7 @@ public class GetClientQueryHandler(IClientService clientService)
       [..  entityResult.Value.Pets.Select(p => new ClientPetDto(
             p.Id,
             p.Name,
-            p.BreedType.Species.Name,
+            // p.BreedType.Species.Name,
             p.BreedType.Name,
             p.Age,
             p.Weight,

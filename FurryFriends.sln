@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FurryFriends.IntegrationsTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirryFriends.AspireTests", "Tests\FirryFriends.AspireTests\FirryFriends.AspireTests.csproj", "{E15686F8-A5D8-4051-84A4-B9884A927A00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FurryFriends.BlazorUI.Client", "src\FurryFriends.BlazorUI.Client\FurryFriends.BlazorUI.Client.csproj", "{7DBE1FFD-AB35-453B-9076-52383214F1E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,18 @@ Global
 		{E15686F8-A5D8-4051-84A4-B9884A927A00}.Release|x64.Build.0 = Release|Any CPU
 		{E15686F8-A5D8-4051-84A4-B9884A927A00}.Release|x86.ActiveCfg = Release|Any CPU
 		{E15686F8-A5D8-4051-84A4-B9884A927A00}.Release|x86.Build.0 = Release|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Debug|x64.Build.0 = Debug|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Debug|x86.Build.0 = Debug|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Release|x64.ActiveCfg = Release|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Release|x64.Build.0 = Release|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,6 +194,7 @@ Global
 		{03094C4F-71DF-419C-AEE4-A44D23D6D436} = {68374BA0-6244-4754-AB07-BE556A0BA417}
 		{6B481D3C-2EB8-4309-9463-2CED1F5924CB} = {68374BA0-6244-4754-AB07-BE556A0BA417}
 		{E15686F8-A5D8-4051-84A4-B9884A927A00} = {68374BA0-6244-4754-AB07-BE556A0BA417}
+		{7DBE1FFD-AB35-453B-9076-52383214F1E9} = {106AE906-5075-410A-B941-912F811848EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B0F19343-8185-4A9F-9165-0EA8544BC925}

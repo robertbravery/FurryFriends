@@ -1,0 +1,51 @@
+@page "/clients"
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@inject IClientService ClientService
+
+<h1>Client Directory</h1>
+<p>View and manage all your clients.</p>
+
+@if (clients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
+                <th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
+                <th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
+                <th style="background-color:#e9ecef; text-transform:uppercase;">Pets</th>
+                <th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in clients)
+            {
+                <tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
+                    <td>@client.Name</td>
+                    <td>@client.EmailAddress</td>
+                    <td>@client.City</td>
+                    <td>@client.TotalPets</td>
+                    <td style="display: flex; gap: 10px;">
+                        <span style="color:brown; cursor:pointer">👁️</span> <!-- View -->
+                        <span style="color:steelblue; cursor:pointer">+🐾</span> <!-- Add Pet -->
+                        <span style="color:lightcoral; cursor:pointer">✏️</span> <!-- Edit -->
+                    </td> 
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ClientDto>? clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clients = await ClientService.GetClientsAsync();
+    }
+}

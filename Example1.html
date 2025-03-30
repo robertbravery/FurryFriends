@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FurryFriends - Client Management</title>
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --primary-color: #4A90E2; /* A calm, professional blue */
+            --secondary-color: #50E3C2; /* A contrasting teal/mint for accents */
+            --text-color: #4A4A4A; /* Dark grey for readability */
+            --light-text-color: #ffffff;
+            --bg-color: #F7F8FC; /* Very light grey background */
+            --sidebar-bg: #ffffff;
+            --header-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #E0E5EE;
+            --hover-bg: #f0f4f8;
+            --active-bg: #e6effc;
+            --active-border: var(--primary-color);
+            --font-main: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            --base-spacing: 1rem;
+            --border-radius: 6px;
+            --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --sidebar-width: 240px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden; /* Prevent body scroll, manage scrolling in content */
+        }
+
+        body {
+            font-family: var(--font-main);
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            font-size: 14px; /* Base size similar to business apps */
+        }
+
+        /* --- Layout: Sidebar + Main Content --- */
+        .app-layout {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
+            box-shadow: var(--box-shadow);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: calc(var(--base-spacing) * 1.5) var(--base-spacing);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+         .sidebar-header .logo-icon { /* Paw icon placeholder */
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+         }
+
+
+        .sidebar-nav {
+            flex-grow: 1;
+            padding-top: var(--base-spacing);
+            overflow-y: auto;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem; /* Smaller font for section titles */
+            text-transform: uppercase;
+            color: #9B9B9B; /* Lighter grey */
+            padding: var(--base-spacing) var(--base-spacing) calc(var(--base-spacing) * 0.5);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--base-spacing) * 0.75);
+            padding: calc(var(--base-spacing) * 0.8) var(--base-spacing);
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            margin: 2px 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        .sidebar-nav ul li a:hover {
+            background-color: var(--hover-bg);
+            color: var(--primary-color);
+        }
+        .sidebar-nav ul li a.active {
+            background-color: var(--active-bg);
+            border-left-color: var(--active-border);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .sidebar-nav ul li a .icon { /* Placeholder for icons */
+             width: 20px;
+             height: 20px;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             /* In real app, use SVG background or font icon */
+             font-size: 1.2em;
+             flex-shrink: 0;
+        }
+
+
+        .sidebar-footer {
+            padding: var(--base-spacing);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: #9B9B9B;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent layout shift from scrollbars */
+        }
+
+        .top-header {
+            height: 60px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Align items to the right */
+            padding: 0 var(--base-spacing);
+            flex-shrink: 0; /* Prevent header from shrinking */
+            box-shadow: var(--box-shadow);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--base-spacing);
+        }
+        .header-actions .icon-button { /* Placeholder for icon buttons */
+            font-size: 1.4rem;
+            color: #777;
+            cursor: pointer;
+            padding: 5px;
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+         .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: var(--secondary-color);
+            color: var(--light-text-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+         }
+         .user-name {
+             font-weight: 500;
+         }
+
+
+        .page-content {
+            flex-grow: 1;
+            padding: calc(var(--base-spacing) * 1.5);
+            overflow-y: auto; /* Enable scrolling for content */
+        }
+
+        .content-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .content-section.active {
+            display: block; /* Show active section */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- Page Specific Styles --- */
+
+        /* Common Header for sections */
+        .page-header {
+            margin-bottom: calc(var(--base-spacing) * 1.5);
+        }
+         .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-color); /* Darker heading */
+            margin-bottom: calc(var(--base-spacing) * 0.25);
+         }
+         .page-header p {
+             color: #777; /* Lighter subheading text */
+             font-size: 0.95rem;
+             margin-bottom: 0;
+         }
+
+        /* Table Styles (Client List) */
+        .data-table-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden; /* Ensures border radius clips table */
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th,
+        .data-table td {
+            padding: calc(var(--base-spacing) * 0.8) var(--base-spacing);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        .data-table thead th {
+            background-color: #f8f9fa; /* Slightly different bg for header */
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .data-table tbody tr:hover {
+            background-color: var(--hover-bg);
+        }
+        .data-table .actions {
+            text-align: right;
+        }
+        .data-table .action-icon {
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-left: var(--base-spacing);
+            font-size: 1.2rem;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+        .data-table .action-icon:hover {
+            opacity: 1;
+        }
+
+        /* Form Styles (Add Client, Add Pet) */
+        .form-container {
+            background-color: var(--card-bg);
+            padding: calc(var(--base-spacing) * 2);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 800px; /* Limit form width */
+            margin-top: var(--base-spacing);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: calc(var(--base-spacing) * 1.5);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: calc(var(--base-spacing) * 0.5);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            padding: calc(var(--base-spacing) * 0.7) var(--base-spacing);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #fff; /* Ensure white background */
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            margin-top: calc(var(--base-spacing) * 1.5);
+            display: flex;
+            justify-content: flex-end; /* Align button to the right */
+            gap: var(--base-spacing);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.5);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+        }
+        .btn-primary:hover {
+            background-color: #357ABD; /* Darker blue */
+        }
+        .btn-primary:active {
+             transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #e9ecef; /* Light grey */
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+         .btn-secondary:hover {
+             background-color: #dee2e6; /* Darker grey */
+         }
+         .btn-secondary:active {
+             transform: scale(0.98);
+         }
+
+
+        /* Card Styles (Pet List) */
+         .card-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+             gap: var(--base-spacing) * 1.5;
+             margin-top: var(--base-spacing);
+         }
+
+         .pet-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+         }
+         .pet-card-header {
+            padding: var(--base-spacing);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+         }
+          .pet-card-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+          }
+           .pet-card-species {
+             font-size: 0.85rem;
+             color: #777;
+             background-color: #e9ecef;
+             padding: 3px 8px;
+             border-radius: 4px;
+           }
+
+         .pet-card-body {
+             padding: var(--base-spacing);
+             flex-grow: 1;
+         }
+         .pet-card-body p {
+             margin-bottom: calc(var(--base-spacing) * 0.5);
+             font-size: 0.9rem;
+             color: #555;
+         }
+         .pet-card-body p strong {
+             font-weight: 500;
+             color: var(--text-color);
+         }
+         .pet-card-actions {
+             padding: var(--base-spacing);
+             border-top: 1px solid var(--border-color);
+             text-align: right;
+         }
+         .pet-card-actions .btn {
+            font-size: 0.85rem;
+            padding: calc(var(--base-spacing)*0.5) var(--base-spacing);
+         }
+
+        /* View Client Specific */
+        #view-client .client-details-header {
+             margin-bottom: calc(var(--base-spacing) * 2);
+             padding-bottom: var(--base-spacing);
+             border-bottom: 1px solid var(--border-color);
+         }
+         #view-client .client-details-header h2 {
+             font-size: 1.5rem;
+             margin-bottom: 5px;
+         }
+         #view-client .client-details-header p {
+              color: #555;
+          }
+
+          #view-client .section-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-top: calc(var(--base-spacing) * 2);
+              margin-bottom: var(--base-spacing);
+          }
+          #view-client .section-header h3 {
+              font-size: 1.3rem;
+              font-weight: 600;
+              color: var(--text-color);
+          }
+
+        /* --- Utility --- */
+        .hidden { display: none; }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                 <span class="logo-icon">🐾</span> FurryFriends
+            </div>
+            <nav class="sidebar-nav" id="main-nav">
+                <ul>
+                    <li class="nav-section-title">Clients</li>
+                    <li><a href="#list-clients" class="nav-link active"><span class="icon">📄</span> List Clients</a></li>
+                    <li><a href="#add-client" class="nav-link"><span class="icon">➕</span> Add New Client</a></li>
+                </ul>
+                <ul>
+                    <li class="nav-section-title">Other</li>
+                    <li><a href="#dashboard" class="nav-link"><span class="icon">📊</span> Dashboard</a></li>
+                     <li><a href="#settings" class="nav-link"><span class="icon">⚙️</span> Settings</a></li>
+                    <!-- Add more sections/links as needed -->
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                Version 1.0.0
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-actions">
+                     <!-- Placeholder Icons -->
+                    <span class="icon-button">🔔<sup style="color: red; font-size: 0.7em;">1</sup></span>
+                    <div class="user-menu">
+                        <div class="user-avatar">RB</div>
+                        <span class="user-name">Robert Bravery</span>
+                         <span class="icon-button" style="font-size: 1.1rem;">▼</span>
+                    </div>
+                    <span class="icon-button">➡️</span> <!-- Logout placeholder -->
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="page-content" id="page-content-area">
+
+                <!-- Section: List Clients -->
+                <section id="list-clients" class="content-section active">
+                    <div class="page-header">
+                        <h1>Client Directory</h1>
+                        <p>View and manage all your clients.</p>
+                    </div>
+                    <div class="data-table-container">
+                        <table class="data-table" id="client-list-table">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Pets</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Example Row (JS will populate this) -->
+                                <tr data-client-id="c1">
+                                    <td>Caroline Wessinger</td>
+                                    <td>caroline.w@example.com</td>
+                                    <td>(123) 456-7890</td>
+                                    <td>2</td>
+                                    <td class="actions">
+                                        <span class="action-icon view-client-btn" title="View Details">👁️</span>
+                                        <span class="action-icon add-pet-btn" title="Add Pet">+🐾</span>
+                                        <span class="action-icon edit-client-btn" title="Edit Client">✏️</span>
+                                    </td>
+                                </tr>
+                                <tr data-client-id="c2">
+                                    <td>Richard Boyder</td>
+                                    <td>rich.b@sample.net</td>
+                                    <td>(987) 654-3210</td>
+                                    <td>1</td>
+                                    <td class="actions">
+                                         <span class="action-icon view-client-btn" title="View Details">👁️</span>
+                                         <span class="action-icon add-pet-btn" title="Add Pet">+🐾</span>
+                                         <span class="action-icon edit-client-btn" title="Edit Client">✏️</span>
+                                    </td>
+                                </tr>
+                                <!-- More rows added by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                     <!-- Basic Pagination Placeholder -->
+                     <div style="text-align: right; margin-top: var(--base-spacing); color: #777; font-size: 0.9rem;">
+                         Items per page: <select style="padding: 3px;"><option>10</option><option>25</option></select>
+                         <span style="margin-left: 15px;">1 - 2 of 2</span>
+                         <button disabled style="margin-left: 10px; cursor: not-allowed;"><</button>
+                         <button style="margin-left: 5px;">></button>
+                     </div>
+                </section>
+
+                <!-- Section: Add Client -->
+                <section id="add-client" class="content-section">
+                     <div class="page-header">
+                        <h1>Add New Client</h1>
+                        <p>Enter the details for the new client.</p>
+                    </div>
+                    <div class="form-container">
+                         <form id="add-client-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="client-name">Full Name *</label>
+                                    <input type="text" id="client-name" name="clientName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="client-email">Email Address *</label>
+                                    <input type="email" id="client-email" name="clientEmail" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="client-phone">Phone Number *</label>
+                                    <input type="tel" id="client-phone" name="clientPhone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="client-address">Address</label>
+                                    <input type="text" id="client-address" name="clientAddress">
+                                </div>
+                            </div>
+                             <div class="form-group" style="margin-top: var(--base-spacing);">
+                                 <label for="client-notes">Notes (Optional)</label>
+                                 <textarea id="client-notes" name="clientNotes" placeholder="e.g., Gate code, preferred contact method..."></textarea>
+                             </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary cancel-btn" data-target="list-clients">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Client</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                 <!-- Section: View Client (includes Pet List & Add Pet Form) -->
+                 <section id="view-client" class="content-section">
+                     <div class="client-details-header">
+                         <h1 id="view-client-name">Client Name</h1>
+                         <p id="view-client-contact">Email | Phone</p>
+                         <p id="view-client-address">Address</p>
+                         <input type="hidden" id="view-client-id" value=""> <!-- Store current client ID -->
+                     </div>
+
+                     <div class="section-header">
+                         <h3>Pets</h3>
+                         <button class="btn btn-primary btn-small" id="show-add-pet-form-btn">+ Add Pet</button>
+                     </div>
+                     <div class="card-grid" id="pet-list-display">
+                         <!-- Pet cards will be loaded here -->
+                         <!-- Example Pet Card Structure: -->
+                         <!--
+                         <div class="pet-card">
+                            <div class="pet-card-header">
+                                <h4>Buddy</h4>
+                                <span class="pet-card-species">Dog</span>
+                            </div>
+                             <div class="pet-card-body">
+                                 <p><strong>Breed:</strong> Golden Retriever</p>
+                                 <p><strong>Age:</strong> 5 years</p>
+                                 <p><strong>Notes:</strong> Friendly, loves walks, allergic to chicken.</p>
+                             </div>
+                             <div class="pet-card-actions">
+                                <button class="btn btn-secondary btn-small">Edit</button>
+                                <button class="btn btn-danger btn-small">Remove</button>
+                             </div>
+                         </div>
+                         -->
+                     </div>
+                     <p id="no-pets-message" class="hidden" style="margin-top: var(--base-spacing); color: #777;">This client doesn't have any pets registered yet.</p>
+
+                     <!-- Hidden Add Pet Form -->
+                    <div id="add-pet-form-container" class="form-container hidden" style="margin-top: calc(var(--base-spacing)*2);">
+                        <h3>Add New Pet for <span id="add-pet-client-name">Client</span></h3>
+                         <form id="add-pet-form">
+                             <input type="hidden" name="clientId" id="add-pet-client-id">
+                             <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="pet-name">Pet's Name *</label>
+                                    <input type="text" id="pet-name" name="petName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pet-species">Species *</label>
+                                    <select id="pet-species" name="petSpecies" required>
+                                        <option value="">-- Select --</option>
+                                        <option value="Dog">Dog</option>
+                                        <option value="Cat">Cat</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                 <div class="form-group">
+                                    <label for="pet-breed">Breed</label>
+                                    <input type="text" id="pet-breed" name="petBreed">
+                                </div>
+                                 <div class="form-group">
+                                    <label for="pet-age">Age (Approx)</label>
+                                    <input type="text" id="pet-age" name="petAge" placeholder="e.g., 5 years, 6 months">
+                                </div>
+                             </div>
+                             <div class="form-group" style="margin-top: var(--base-spacing);">
+                                <label for="pet-notes">Care Notes / Temperament *</label>
+                                <textarea id="pet-notes" name="petNotes" placeholder="e.g., Feeding instructions, medication, behavior notes..." required></textarea>
+                             </div>
+                             <div class="form-group">
+                                <label for="pet-vet">Veterinarian Info (Optional)</label>
+                                <input type="text" id="pet-vet" name="petVet" placeholder="Name & Phone">
+                             </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" id="cancel-add-pet-btn">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Add Pet</button>
+                            </div>
+                        </form>
+                    </div>
+
+                     <button type="button" class="btn btn-secondary" style="margin-top: calc(var(--base-spacing) * 2);" data-target="list-clients" id="back-to-clients-btn">← Back to Client List</button>
+
+                 </section>
+
+                 <!-- Placeholder Sections for other links -->
+                 <section id="dashboard" class="content-section"> <div class="page-header"><h1>Dashboard</h1><p>Overview coming soon.</p></div> </section>
+                 <section id="settings" class="content-section"> <div class="page-header"><h1>Settings</h1><p>Configuration coming soon.</p></div> </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('#main-nav .nav-link');
+            const contentSections = document.querySelectorAll('.page-content .content-section');
+            const pageContentArea = document.getElementById('page-content-area');
+
+             // --- Data Simulation ---
+             // In a real app, this would come from your API
+             let clients = [
+                 { id: 'c1', clientName: 'Caroline Wessinger', clientEmail: 'caroline.w@example.com', clientPhone: '(123) 456-7890', clientAddress: '123 Main St, Anytown', clientNotes: '', pets: [
+                     { id: 'p1', petName: 'Buddy', petSpecies: 'Dog', petBreed: 'Golden Retriever', petAge: '5 years', petNotes: 'Friendly, loves walks, allergic to chicken.', petVet: 'Dr. Smith (555-1234)'},
+                     { id: 'p2', petName: 'Luna', petSpecies: 'Cat', petBreed: 'Domestic Shorthair', petAge: '2 years', petNotes: 'Shy at first, needs daily medication (pill pocket).', petVet: 'Dr. Smith (555-1234)'}
+                 ]},
+                 { id: 'c2', clientName: 'Richard Boyder', clientEmail: 'rich.b@sample.net', clientPhone: '(987) 654-3210', clientAddress: '456 Oak Ave, Anytown', clientNotes: 'Gate code: #1234', pets: [
+                     { id: 'p3', petName: 'Max', petSpecies: 'Dog', petBreed: 'Labrador', petAge: '3 years', petNotes: 'High energy, loves fetch.', petVet: 'Downtown Animal Hospital (555-5678)'}
+                 ]},
+                 { id: 'c3', clientName: 'Ashleigh Moodley', clientEmail: 'ash.m@mail.org', clientPhone: '(555) 111-2222', clientAddress: '', clientNotes: '', pets: [] } // Client with no pets yet
+             ];
+             let nextClientId = 4;
+             let nextPetId = 4;
+
+            // --- Navigation Logic ---
+            function navigateToSection(targetId) {
+                const sectionId = targetId.startsWith('#') ? targetId.substring(1) : targetId;
+
+                // Hide all sections
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Show target section
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+
+                    // Update sidebar active link
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+
+                    // Scroll content area to top
+                    pageContentArea.scrollTop = 0;
+                } else {
+                    console.warn(`Section with id "${sectionId}" not found.`);
+                     // Fallback to list-clients if target not found
+                     navigateToSection('#list-clients');
+                }
+            }
+
+            // Add click listeners to sidebar nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    navigateToSection(targetId);
+                });
+            });
+
+            // Add listeners for Cancel/Back buttons that navigate
+            pageContentArea.addEventListener('click', function(event){
+                const targetButton = event.target.closest('button[data-target]');
+                if(targetButton){
+                    const targetSectionId = targetButton.getAttribute('data-target');
+                    navigateToSection('#' + targetSectionId);
+                }
+
+                // Listener for "View Client" buttons in the table
+                const viewButton = event.target.closest('.view-client-btn');
+                if (viewButton) {
+                    const row = viewButton.closest('tr');
+                    const clientId = row.getAttribute('data-client-id');
+                    if(clientId) {
+                        loadClientView(clientId);
+                    }
+                }
+
+                 // Listener for "Add Pet" buttons in the table (shortcut to View Client + Open Form)
+                const addPetButtonTable = event.target.closest('.add-pet-btn');
+                 if (addPetButtonTable) {
+                     const row = addPetButtonTable.closest('tr');
+                     const clientId = row.getAttribute('data-client-id');
+                     if(clientId) {
+                         loadClientView(clientId, true); // Load view and immediately show add pet form
+                     }
+                 }
+
+                 // Listener for "Edit Client" buttons (placeholder)
+                 const editClientButton = event.target.closest('.edit-client-btn');
+                 if(editClientButton) {
+                     alert('Edit client functionality not implemented in this POC.');
+                     // In real app: would load client data into the add/edit form
+                 }
+            });
+
+
+            // --- Client List Logic ---
+            function renderClientList() {
+                const tableBody = document.getElementById('client-list-table')?.querySelector('tbody');
+                if (!tableBody) return;
+                tableBody.innerHTML = ''; // Clear existing rows
+
+                clients.forEach(client => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-client-id', client.id);
+                    row.innerHTML = `
+                        <td>${escapeHtml(client.clientName)}</td>
+                        <td>${escapeHtml(client.clientEmail)}</td>
+                        <td>${escapeHtml(client.clientPhone)}</td>
+                        <td>${client.pets.length}</td>
+                        <td class="actions">
+                             <span class="action-icon view-client-btn" title="View Details">👁️</span>
+                             <span class="action-icon add-pet-btn" title="Add Pet">+🐾</span>
+                             <span class="action-icon edit-client-btn" title="Edit Client">✏️</span>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                 // Update pagination info (basic)
+                 const paginationInfo = document.querySelector('#list-clients div[style*="text-align: right"] span');
+                 if(paginationInfo) {
+                      paginationInfo.textContent = `1 - ${clients.length} of ${clients.length}`;
+                 }
+            }
+
+            // --- Add Client Form Logic ---
+             const addClientForm = document.getElementById('add-client-form');
+             if (addClientForm) {
+                 addClientForm.addEventListener('submit', function(event) {
+                     event.preventDefault();
+                     const formData = new FormData(this);
+                     const newClient = Object.fromEntries(formData.entries());
+                     newClient.id = 'c' + nextClientId++;
+                     newClient.pets = []; // New clients start with no pets
+
+                     clients.push(newClient); // Add to our simulated data
+                     console.log('Added Client:', newClient);
+
+                     this.reset(); // Clear the form
+                     renderClientList(); // Update the table
+                     navigateToSection('#list-clients'); // Go back to the list
+                     alert('Client added successfully!');
+                 });
+             }
+
+             // --- View Client Logic ---
+            function loadClientView(clientId, showAddPetForm = false) {
+                const client = clients.find(c => c.id === clientId);
+                if (!client) {
+                    alert('Client not found!');
+                    navigateToSection('#list-clients');
+                    return;
+                }
+
+                // Populate client details
+                document.getElementById('view-client-name').textContent = client.clientName;
+                document.getElementById('view-client-contact').textContent = `${client.clientEmail || 'No Email'} | ${client.clientPhone || 'No Phone'}`;
+                document.getElementById('view-client-address').textContent = client.clientAddress || 'No Address Provided';
+                document.getElementById('view-client-id').value = client.id; // Store client ID for later use (e.g., adding pets)
+
+                 // Populate pet list
+                 renderPetList(clientId);
+
+                 // Set client name in Add Pet form title
+                 document.getElementById('add-pet-client-name').textContent = client.clientName;
+                 document.getElementById('add-pet-client-id').value = client.id;
+
+                 // Show/hide Add Pet form
+                 const addPetContainer = document.getElementById('add-pet-form-container');
+                 if(showAddPetForm) {
+                     addPetContainer.classList.remove('hidden');
+                 } else {
+                     addPetContainer.classList.add('hidden');
+                     document.getElementById('add-pet-form').reset(); // Reset form if hiding
+                 }
+
+
+                // Navigate to the view client section
+                navigateToSection('#view-client');
+            }
+
+             // --- Pet List (within Client View) Logic ---
+             function renderPetList(clientId) {
+                 const client = clients.find(c => c.id === clientId);
+                 const petListDisplay = document.getElementById('pet-list-display');
+                 const noPetsMessage = document.getElementById('no-pets-message');
+                 if (!client || !petListDisplay || !noPetsMessage) return;
+
+                 petListDisplay.innerHTML = ''; // Clear existing cards
+
+                 if (client.pets.length === 0) {
+                     noPetsMessage.classList.remove('hidden');
+                 } else {
+                     noPetsMessage.classList.add('hidden');
+                     client.pets.forEach(pet => {
+                         const card = document.createElement('div');
+                         card.className = 'pet-card';
+                         card.setAttribute('data-pet-id', pet.id);
+                         card.innerHTML = `
+                            <div class="pet-card-header">
+                                <h4>${escapeHtml(pet.petName)}</h4>
+                                <span class="pet-card-species">${escapeHtml(pet.petSpecies)}</span>
+                            </div>
+                             <div class="pet-card-body">
+                                 <p><strong>Breed:</strong> ${escapeHtml(pet.petBreed || 'N/A')}</p>
+                                 <p><strong>Age:</strong> ${escapeHtml(pet.petAge || 'N/A')}</p>
+                                 <p><strong>Notes:</strong> ${escapeHtml(pet.petNotes || 'None')}</p>
+                                  <p><strong>Vet:</strong> ${escapeHtml(pet.petVet || 'N/A')}</p>
+                             </div>
+                             <div class="pet-card-actions">
+                                <button class="btn btn-secondary btn-small edit-pet-btn">Edit</button>
+                                <button class="btn btn-danger btn-small remove-pet-btn" style="background-color:#dc3545; color:white;">Remove</button>
+                             </div>
+                         `;
+                         petListDisplay.appendChild(card);
+                     });
+                 }
+             }
+
+             // --- Add Pet Form Logic (within Client View) ---
+            const addPetForm = document.getElementById('add-pet-form');
+            const showAddPetBtn = document.getElementById('show-add-pet-form-btn');
+            const cancelAddPetBtn = document.getElementById('cancel-add-pet-btn');
+            const addPetContainer = document.getElementById('add-pet-form-container');
+
+            if (showAddPetBtn) {
+                showAddPetBtn.addEventListener('click', () => {
+                    addPetContainer.classList.remove('hidden');
+                    addPetForm.reset(); // Clear form when showing
+                    addPetContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                });
+            }
+             if (cancelAddPetBtn) {
+                cancelAddPetBtn.addEventListener('click', () => {
+                    addPetContainer.classList.add('hidden');
+                    addPetForm.reset();
+                });
+            }
+
+             if (addPetForm) {
+                 addPetForm.addEventListener('submit', function(event) {
+                     event.preventDefault();
+                     const formData = new FormData(this);
+                     const newPet = Object.fromEntries(formData.entries());
+                     const clientId = newPet.clientId; // Get client ID from hidden input
+
+                     const client = clients.find(c => c.id === clientId);
+                     if (!client) {
+                         alert('Error: Could not find client to add pet to.');
+                         return;
+                     }
+
+                     newPet.id = 'p' + nextPetId++;
+                     client.pets.push(newPet); // Add pet to the client's pet array
+
+                     console.log(`Added Pet:`, newPet, `to Client ID:`, clientId);
+
+                     renderPetList(clientId); // Re-render the pet list for this client
+                     addPetContainer.classList.add('hidden'); // Hide the form
+                     this.reset(); // Clear the form
+                     alert('Pet added successfully!');
+
+                     // Also update the count in the main client list table
+                     renderClientList();
+                 });
+             }
+
+              // --- Placeholder listeners for Pet Card actions ---
+              pageContentArea.addEventListener('click', function(event) {
+                  const editPetButton = event.target.closest('.edit-pet-btn');
+                  if (editPetButton) {
+                      alert('Edit pet functionality not implemented in this POC.');
+                  }
+                  const removePetButton = event.target.closest('.remove-pet-btn');
+                  if (removePetButton) {
+                     const card = removePetButton.closest('.pet-card');
+                     const petId = card.getAttribute('data-pet-id');
+                     const clientId = document.getElementById('view-client-id').value;
+
+                     if(confirm(`Are you sure you want to remove this pet?`)) {
+                         // Find client and remove pet from their array (simulation)
+                         const client = clients.find(c => c.id === clientId);
+                         if (client) {
+                             const petIndex = client.pets.findIndex(p => p.id === petId);
+                             if (petIndex > -1) {
+                                 client.pets.splice(petIndex, 1);
+                                 console.log(`Removed pet ${petId} from client ${clientId}`);
+                                 renderPetList(clientId); // Update display
+                                 renderClientList(); // Update count on main list
+                                 alert('Pet removed.');
+                             }
+                         }
+                     }
+                  }
+              });
+
+
+             // Simple HTML escaping function
+             function escapeHtml(unsafe) {
+                 if (!unsafe) return '';
+                 return unsafe
+                      .replace(/&/g, "&")
+                      .replace(/</g, "<")
+                      .replace(/>/g, ">")
+                      .replace(/"/g, "")
+                      .replace(/'/g, "'");
+             }
+
+            // --- Initial Load ---
+            renderClientList(); // Populate the client list on page load
+            navigateToSection('#list-clients'); // Start at the client list
+
+        });
+    </script>
+
+</body>
+</html>
