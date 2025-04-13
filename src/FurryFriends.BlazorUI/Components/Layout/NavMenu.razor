@@ -1,30 +1,25 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">FurryFriends.BlazorUI</a>
-    </div>
-</div>
+<nav class="sidebar-nav" id="main-nav">
+    <ul>
+        <li class="nav-section-title">Clients</li>
+        <li><NavLink class="nav-link" href="clients" Match="NavLinkMatch.All">
+            <span class="icon">📄</span> List Clients
+        </NavLink></li>
+        <li><NavLink class="nav-link" href="createclient">
+            <span class="icon">➕</span> Add New Client
+        </NavLink></li>
+    </ul>
+    <ul>
+        <li class="nav-section-title">Other</li>
+        <li><NavLink class="nav-link" href="dashboard" Match="NavLinkMatch.All">
+            <span class="icon">📊</span> Dashboard
+        </NavLink></li>
+        <li><NavLink class="nav-link" href="settings">
+            <span class="icon">⚙️</span> Settings
+        </NavLink></li>
+    </ul>
+</nav>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
+@code {
+    // Your code here
+}
 

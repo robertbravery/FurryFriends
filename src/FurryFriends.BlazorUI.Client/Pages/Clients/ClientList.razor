@@ -1,8 +1,10 @@
 @page "/clients"
+@rendermode InteractiveAuto
 @using FurryFriends.BlazorUI.Client.Models.Clients
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
 @inject IClientService ClientService
 
+<div class="client-list-container">
 <h1>Client Directory</h1>
 <p>View and manage all your clients.</p>
 
@@ -40,6 +42,7 @@ else
         </tbody>
     </table>
 }
+</div>
 
 @code {
     private List<ClientDto>? clients;

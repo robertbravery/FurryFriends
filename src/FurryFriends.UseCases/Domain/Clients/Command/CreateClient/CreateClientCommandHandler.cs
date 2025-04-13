@@ -2,14 +2,9 @@
 using FurryFriends.UseCases.Services.ClientService;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
-internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand, Result<Guid>>
+internal class CreateClientCommandHandler(IClientService clientService) : ICommandHandler<CreateClientCommand, Result<Guid>>
 {
-  private readonly IClientService _clientService;
-
-  public CreateClientCommandHandler(IClientService clientService)
-  {
-    _clientService = clientService;
-  }
+  private readonly IClientService _clientService = clientService;
 
   public async Task<Result<Guid>> Handle(CreateClientCommand request, CancellationToken cancellationToken)
   {
@@ -37,6 +32,7 @@ internal class CreateClientCommandHandler : ICommandHandler<CreateClientCommand,
     request.ClientType,
     request.ReferralSource,
     cancellationToken);
+
     return clientCreationResult.IsSuccess
       ? Result<Guid>.Success(clientCreationResult.Value.Id)
       : Result.Error(new ErrorList(clientCreationResult.Errors));
