@@ -9,14 +9,12 @@ public class ClientService(HttpClient httpClient) : IClientService
 
   public async Task<List<ClientDto>> GetClientsAsync()
   {
-    //var res = await _httpClient.GetFromJsonAsync<object>("api/Clients/list?page=1&pageSize=10");
     var response = await _httpClient.GetFromJsonAsync<ListResponse>("Clients/list?page=1&pageSize=10");
     if (response is null || response.RowsData is null)
     {
       return new List<ClientDto>();
     }
     return response.RowsData;
-    //return new List<ClientDto>(); // Placeholder implementation
   }
 
   public async Task CreateClientAsync(ClientRequestDto clientModel)

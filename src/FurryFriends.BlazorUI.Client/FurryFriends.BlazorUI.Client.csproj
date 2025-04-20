@@ -8,7 +8,7 @@
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
   </PropertyGroup>
   <PropertyGroup>
-    <PackageVersion>9.0.3</PackageVersion>
+    <PackageVersion>9.0.4</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

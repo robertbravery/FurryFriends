@@ -1,4 +1,5 @@
-﻿using FurryFriends.BlazorUI.Client.Services.Interfaces;
+﻿//using FurryFriends.BlazorUI.Client.Services.Implementation;
+using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using FurryFriends.BlazorUI.Components;
 using FurryFriends.BlazorUI.Services.Implementation;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -9,14 +10,14 @@ var host = builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-
-// Add services to the container.
 builder.Services.AddScoped<IClientService, ClientService>();
+
 builder.Services.AddHttpClient<IClientService, ClientService>(client =>
 {
   var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
   client.BaseAddress = new Uri(apiUrl);
 });
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
