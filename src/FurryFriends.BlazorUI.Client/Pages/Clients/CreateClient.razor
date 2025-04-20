@@ -1,0 +1,205 @@
+@page "/createclient"
+@rendermode InteractiveAuto
+@using FurryFriends.BlazorUI.Client.Components
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Forms
+@using FurryFriends.BlazorUI.Client.Models
+
+@inject ILogger<CreateClient> Logger
+
+
+<div class="create-client-container">
+	<h3>Add New Client</h3>
+	<p class="form-description">Enter the details for the new client.</p>
+
+	<EditForm Model="clientModel" OnValidSubmit="HandleSaveClient" FormName="CreateClient" Enhance>
+		<ObjectGraphDataAnnotationsValidator />
+
+		<div class="form-section">
+			<h4 class="section-title">Personal Information</h4>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="FirstName">First Name <span class="required">*</span></label>
+					<InputText id="FirstName" class="form-control" @bind-Value="clientModel!.FirstName" />
+					<ValidationMessage For="@(() => clientModel.FirstName)" class="validation-message" />
+				</div>
+
+				<div class="form-group">
+					<label for="LastName">Last Name <span class="required">*</span></label>
+					<InputText id="FulName" class="form-control" @bind-Value="clientModel!.LastName" />
+					<ValidationMessage For="@(() => clientModel.LastName)" class="validation-message" />
+				</div>
+
+				<div class="email-phone-container">
+
+					<div class="form-group">
+						<label for="EmailAddress">Email Address <span class="required">*</span></label>
+						<InputText id="EmailAddress" class="form-control" @bind-Value="clientModel!.EmailAddress" />
+						<ValidationMessage For="@(() => clientModel.EmailAddress)" class="validation-message" />
+					</div>
+
+					<div class="form-group">
+						<label for="CountryCode">Country Code <span class="required">*</span></label>
+						<InputText id="CountryCode" class="form-control country-code-input" @bind-Value="clientModel!.CountryCode" placeholder="e.g., 27" />
+						<ValidationMessage For="@(() => clientModel.CountryCode)" class="validation-message" />
+					</div>
+					<div class="form-group">
+						<label for="PhoneNumber">Phone Number <span class="required">*</span></label>
+						<InputText id="PhoneNumber" class="form-control" @bind-Value="clientModel!.PhoneNumber" placeholder="e.g., 0821234567" />
+						<ValidationMessage For="@(() => clientModel.PhoneNumber)" class="validation-message" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<h4 class="section-title">Address Information</h4>
+			<div class="form-grid">
+				<div class="form-group">
+					<label for="Street">Street <span class="required">*</span></label>
+					<InputText id="Street" class="form-control" @bind-Value="clientModel!.Address.Street" />
+					<ValidationMessage For="@(() => clientModel.Address.Street)" class="validation-message" />
+				</div>
+
+				<div class="form-group">
+					<label for="City">City <span class="required">*</span></label>
+					<InputText id="City" class="form-control" @bind-Value="clientModel!.Address.City" />
+					<ValidationMessage For="@(() => clientModel.Address.City)" class="validation-message" />
+				</div>
+
+				<div class="form-group">
+					<label for="StateOrProvince">State/Province <span class="required">*</span></label>
+					<InputText id="StateOrProvince" class="form-control" @bind-Value="clientModel!.Address.State" />
+					<ValidationMessage For="@(() => clientModel.Address.State)" class="validation-message" />
+				</div>
+
+				<div class="form-group">
+					<label for="ZipCode">Zip Code <span class="required">*</span></label>
+					<InputText id="ZipCode" class="form-control" @bind-Value="clientModel!.Address.ZipCode" placeholder="e.g., 12345 or 12345-6789" />
+					<ValidationMessage For="@(() => clientModel.Address.ZipCode)" class="validation-message" />
+				</div>
+
+				<div class="form-group">
+					<label for="Country">Country <span class="required">*</span></label>
+					<InputText id="Country" class="form-control" @bind-Value="clientModel!.Address.Country" />
+					<ValidationMessage For="@(() => clientModel.Address.Country)" class="validation-message" />
+				</div>
+			</div>
+		</div>
+
+		<div class="form-section">
+			<h4 class="section-title">Additional Information</h4>
+			<div class="form-grid">
+				<div class="form-group notes-full-width">
+					<label for="Notes">Notes (Optional)</label>
+					<InputTextArea id="Notes" class="form-control" @bind-Value="clientModel!.Notes" placeholder="e.g., Gate code, preferred contact method..." />
+					<ValidationMessage For="@(() => clientModel.Notes)" class="validation-message" />
+				</div>
+			</div>
+		</div>
+
+		@if (!string.IsNullOrEmpty(errorMessage))
+		{
+			<div class="api-error-message">
+				<span class="error-icon">⚠️</span> @errorMessage
+			</div>
+		}
+
+		<div class="button-row">
+			<button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
+			<button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+				@if (isSubmitting)
+				{
+					<span class="spinner"></span>
+					<span>Saving...</span>
+				}
+				else
+				{
+					<span>Save Client</span>
+				}
+			</button>
+		</div>
+	</EditForm>
+</div>
+
+@code {
+	[SupplyParameterFromForm]
+	private ClientModel clientModel { get; set; } = new()
+		{
+			Address = new Address() // Ensure Address is initialized
+		};
+	private bool isSubmitting = false;
+	private string? errorMessage;
+	// private EditContext editContext = default!;
+
+
+	[Inject]
+	public IClientService ClientService { get; set; } = default!;
+
+	[Inject]
+	public NavigationManager NavigationManager { get; set; } = default!;
+
+	protected override void OnInitialized()
+	{
+		if (clientModel is null)
+		{
+			clientModel = new ClientModel();
+		}
+
+		if (clientModel.Address is null)
+		{
+			clientModel.Address = new Address();
+		}
+		// editContext = new EditContext(clientModel);
+		isSubmitting = false;
+	}
+
+	private async Task HandleSaveClient(EditContext editContext)
+	{
+		Logger.LogInformation("Saving client");
+		errorMessage = null;
+
+		// Manually validate the form
+		var isValid = editContext.Validate();
+
+		// If validation fails, don't proceed with submission
+		if (!isValid)
+		{
+			return;
+		}
+
+		try
+		{
+			isSubmitting = true;
+			var clientRequest = ClientRequestDto.MapToDto(clientModel);
+			await ClientService.CreateClientAsync(clientRequest);
+			clientModel = new ClientModel();
+			NavigationManager.NavigateTo("clients");
+		}
+		catch (HttpRequestException ex)
+		{
+			errorMessage = $"Error saving client: {ex.Message}";
+		}
+		catch (Exception ex)
+		{
+			errorMessage = $"An unexpected error occurred: {ex.Message}";
+		}
+		finally
+		{
+			isSubmitting = false;
+		}
+	}
+
+	private void HandleCancel()
+	{
+		Logger.LogInformation("Navigating to {url}", "/createclient");
+		clientModel = new ClientModel();
+		NavigationManager.NavigateTo("/");
+		
+	}
+	private void NavigateToAbsoluteURL(MouseEventArgs args)
+	{
+		Logger.LogInformation("Navigating to {url}", args);
+	}
+}

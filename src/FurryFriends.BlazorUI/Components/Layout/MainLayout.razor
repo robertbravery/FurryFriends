@@ -1,0 +1,50 @@
+@inherits LayoutComponentBase
+@using FurryFriends.BlazorUI.Client
+@inject NavigationManager NavigationManager
+
+@code {
+    private void NavigateToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
+
+@* <link rel="stylesheet" href="MainLayout.Razor.css" /> *@
+
+
+<div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <a href="" @onclick="NavigateToHome" class="no-underline">
+                <span class="logo-icon">🐾</span> Furry Friends
+            </a>
+        </div>
+		<NavMenu />
+        <div class="sidebar-footer">
+            Version 1.0.0
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-actions">
+                 <!-- Placeholder Icons -->
+                <span class="icon-button">🔔<sup>1</sup></span>
+                <div class="user-menu">
+                    <div class="user-avatar">RB</div>
+                    <span class="user-name">Robert Bravery</span>
+                     <span class="icon-button">▼</span>
+                </div>
+                <span class="icon-button">➡️</span> <!-- Logout placeholder -->
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="page-content">
+            @Body
+        </main>
+    </div>
+</div>

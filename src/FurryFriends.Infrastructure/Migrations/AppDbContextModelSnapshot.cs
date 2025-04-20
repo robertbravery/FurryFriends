@@ -103,13 +103,13 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Property<int>("BreedId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("ClientId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeactivatedAt")
                         .HasColumnType("datetime2");
@@ -140,6 +140,9 @@ namespace FurryFriends.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("MedicalHistory")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -148,9 +151,14 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SpecialNeeds")
-                        .IsRequired()
+                    b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpecialNeeds")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("Weight")
                         .HasColumnType("float");
@@ -158,8 +166,6 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BreedId");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("OwnerId");
 
@@ -187,22 +193,6 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Species", (string)null);
-                });
-
-            modelBuilder.Entity("FurryFriends.Core.ContributorAggregate.Contributor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contributors");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Country", b =>
@@ -539,10 +529,6 @@ namespace FurryFriends.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurryFriends.Core.ClientAggregate.Client", null)
-                        .WithMany("ActivePets")
-                        .HasForeignKey("ClientId");
-
                     b.HasOne("FurryFriends.Core.ClientAggregate.Client", "Owner")
                         .WithMany("Pets")
                         .HasForeignKey("OwnerId")
@@ -552,58 +538,6 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Navigation("BreedType");
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("FurryFriends.Core.ContributorAggregate.Contributor", b =>
-                {
-                    b.OwnsOne("FurryFriends.Core.ValueObjects.Name", "Name", b1 =>
-                        {
-                            b1.Property<int>("ContributorId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("FirstName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("FirstName");
-
-                            b1.Property<string>("LastName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("LastName");
-
-                            b1.HasKey("ContributorId");
-
-                            b1.ToTable("Contributors");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ContributorId");
-                        });
-
-                    b.OwnsOne("FurryFriends.Core.ValueObjects.PhoneNumber", "PhoneNumber", b1 =>
-                        {
-                            b1.Property<int>("ContributorId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("CountryCode")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ContributorId");
-
-                            b1.ToTable("Contributors");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ContributorId");
-                        });
-
-                    b.Navigation("Name")
-                        .IsRequired();
-
-                    b.Navigation("PhoneNumber");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.LocationAggregate.Locality", b =>
@@ -843,8 +777,6 @@ namespace FurryFriends.Infrastructure.Migrations
 
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Client", b =>
                 {
-                    b.Navigation("ActivePets");
-
                     b.Navigation("Pets");
                 });
 

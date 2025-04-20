@@ -1,0 +1,13 @@
+﻿.client-list-container {
+    min-height: 100vh;
+}
+
+::deep body {
+    background-image: url("../images/catongrass.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}

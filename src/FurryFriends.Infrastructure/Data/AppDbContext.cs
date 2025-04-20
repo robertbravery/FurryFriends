@@ -1,5 +1,4 @@
 ﻿using FurryFriends.Core.ClientAggregate;
-using FurryFriends.Core.ContributorAggregate;
 using FurryFriends.Core.LocationAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 
@@ -9,7 +8,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
 {
   private readonly IDomainEventDispatcher? _dispatcher = dispatcher;
 
-  public DbSet<Contributor> Contributors => Set<Contributor>();
   public DbSet<PetWalker> PetWalkers => Set<PetWalker>();
   public DbSet<Photo> Photos => Set<Photo>();
   public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();

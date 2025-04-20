@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FurryFriends - Pet Care Made Easy</title>
+    <style>
+        /* --- Global Styles & Resets --- */
+        :root {
+            --primary-color: #4CAF50; /* Green - Trustworthy, Natural */
+            --secondary-color: #FF9800; /* Orange - Warm, Friendly */
+            --accent-color: #03A9F4; /* Light Blue - Calm, Professional */
+            --text-color: #333;
+            --light-text-color: #f8f8f8;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --border-color: #e0e0e0;
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-headings: 'Poppins', 'Segoe UI', Tahoma, sans-serif; /* Slightly more modern/rounded */
+            --base-spacing: 1rem;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Less relevant for SPA nav but good practice */
+        }
+
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3, h4 {
+            font-family: var(--font-headings);
+            margin-bottom: calc(var(--base-spacing) * 0.75);
+            line-height: 1.3;
+        }
+        h1 { font-size: 2.5rem; color: var(--primary-color); }
+        h2 { font-size: 2rem; color: var(--text-color); }
+        h3 { font-size: 1.5rem; color: var(--secondary-color); }
+        p { margin-bottom: var(--base-spacing); }
+        a { color: var(--primary-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* --- Layout & Containers --- */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: calc(var(--base-spacing) * 2) 0;
+        }
+
+        header {
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--base-spacing) 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: var(--font-headings);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .logo span { /* Paw icon placeholder */
+            display: inline-block;
+            margin-left: 5px;
+            color: var(--secondary-color);
+            /* In a real app, use an SVG icon here */
+            content: '🐾'; /* Basic emoji placeholder */
+        }
+
+        /* --- Navigation (Simple SPA POC) --- */
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: calc(var(--base-spacing) * 1.5);
+        }
+
+        nav ul li a {
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: var(--primary-color);
+        }
+
+        nav ul li a::after { /* Underline effect */
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after,
+        nav ul li a.active::after {
+            width: 100%;
+        }
+
+        /* --- Main Content Sections --- */
+        main {
+            flex-grow: 1; /* Ensure footer stays at bottom */
+        }
+
+        .content-section {
+            display: none; /* Hidden by default */
+            padding: calc(var(--base-spacing) * 2) 0;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block; /* Show active section */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Section Specific Styles --- */
+
+        /* Hero Section */
+        #home {
+            text-align: center;
+            background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://via.placeholder.com/1200x500/A0E8A2/333333?text=Happy+Dog+Background') no-repeat center center/cover;
+            /* Replace placeholder with a high-quality image */
+            padding: calc(var(--base-spacing) * 4) 0;
+            color: var(--text-color); /* Ensure readability over background */
+        }
+
+        #home h1 {
+            font-size: 3rem;
+            margin-bottom: var(--base-spacing);
+        }
+
+        #home p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto var(--base-spacing) * 1.5;
+        }
+
+        /* Services Section */
+        #services .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--base-spacing) * 1.5;
+            margin-top: var(--base-spacing) * 1.5;
+        }
+
+        .service-card {
+            background-color: var(--card-bg);
+            padding: var(--base-spacing) * 1.5;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-card i { /* Placeholder for icons */
+           font-size: 2.5rem;
+           color: var(--primary-color);
+           margin-bottom: var(--base-spacing);
+        }
+
+        /* Booking / Forms Section */
+        #booking {
+           background-color: #f0f8ff; /* AliceBlue - Soft, clean bg for forms */
+           padding: calc(var(--base-spacing) * 3) 0;
+        }
+
+       .form-container {
+            background: var(--bg-color);
+            padding: var(--base-spacing) * 2;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            max-width: 700px;
+            margin: calc(var(--base-spacing)*1.5) auto 0;
+       }
+
+       .form-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Default to single column */
+            gap: var(--base-spacing) * 1.5;
+       }
+
+       @media (min-width: 600px) {
+            .form-grid.two-columns {
+                grid-template-columns: 1fr 1fr; /* Two columns on wider screens */
+            }
+       }
+
+
+       .form-group {
+            display: flex;
+            flex-direction: column;
+       }
+
+       .form-group label {
+            margin-bottom: calc(var(--base-spacing) * 0.4);
+            font-weight: 500;
+            color: var(--text-color);
+       }
+
+       .form-group input[type="text"],
+       .form-group input[type="email"],
+       .form-group input[type="tel"],
+       .form-group input[type="date"],
+       .form-group input[type="number"],
+       .form-group select,
+       .form-group textarea {
+            padding: calc(var(--base-spacing) * 0.75);
+            border: 1px solid var(--border-color);
+            border-radius: calc(var(--border-radius) / 2);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+       }
+
+       .form-group input:focus,
+       .form-group select:focus,
+       .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+       }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input[type="file"] {
+            padding: calc(var(--base-spacing) * 0.5);
+        }
+        .form-group input[type="file"]::file-selector-button {
+            padding: calc(var(--base-spacing) * 0.5) var(--base-spacing);
+            border: none;
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border-radius: calc(var(--border-radius) / 2);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: var(--base-spacing);
+        }
+        .form-group input[type="file"]::file-selector-button:hover {
+            background-color: #388E3C; /* Darker green */
+        }
+
+        /* Dashboard / List Section */
+        #dashboard h2 { margin-bottom: var(--base-spacing) * 2; }
+
+        .pet-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--base-spacing) * 1.5;
+        }
+
+        .pet-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+             border: 1px solid var(--border-color);
+        }
+
+        .pet-card-image {
+             height: 180px;
+             background-color: #ccc; /* Placeholder bg */
+             /* In real app: use background-image: url(...) */
+             background-size: cover;
+             background-position: center;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             color: #666;
+             font-style: italic;
+        }
+
+        .pet-card-content {
+            padding: var(--base-spacing);
+            flex-grow: 1;
+        }
+        .pet-card-content h4 {
+            margin-top: 0;
+            margin-bottom: calc(var(--base-spacing) * 0.5);
+            color: var(--primary-color);
+        }
+        .pet-card-content p {
+             font-size: 0.9rem;
+             color: #555;
+             margin-bottom: calc(var(--base-spacing) * 0.5);
+        }
+         .pet-card-actions {
+             padding: 0 var(--base-spacing) var(--base-spacing);
+             display: flex;
+             gap: var(--base-spacing) * 0.5;
+         }
+
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: calc(var(--base-spacing) * 0.8) calc(var(--base-spacing) * 1.8);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+        }
+        .btn-primary:hover {
+            background-color: #388E3C; /* Darker green */
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+             background-color: var(--secondary-color);
+             color: var(--light-text-color);
+        }
+        .btn-secondary:hover {
+             background-color: #F57C00; /* Darker orange */
+             transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+         .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            transform: translateY(-2px);
+        }
+
+         .btn-small {
+            padding: calc(var(--base-spacing) * 0.5) var(--base-spacing);
+            font-size: 0.9rem;
+         }
+
+
+        /* --- Footer --- */
+        footer {
+            background-color: #333;
+            color: var(--light-text-color);
+            text-align: center;
+            padding: var(--base-spacing) * 1.5;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+        footer p { margin-bottom: 0; }
+        footer a { color: var(--secondary-color); }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: var(--base-spacing); }
+            nav ul { justify-content: center; flex-wrap: wrap; }
+            h1 { font-size: 2rem; }
+            #home h1 { font-size: 2.5rem; }
+            .container { width: 95%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">FurryFriends<span>🐾</span></div>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#services" class="nav-link">Services</a></li>
+                    <li><a href="#booking" class="nav-link">Book Now</a></li>
+                    <li><a href="#dashboard" class="nav-link">My Pets</a></li>
+                    <!-- Add more links as needed -->
+                </ul>
+            </nav>
+            <!-- Example Enterprise Menu Structure (Conceptual - hidden) -->
+            <!--
+            <nav>
+              <ul>
+                <li><a href="#home">Home</a></li>
+                <li>
+                  <a href="#services">Services ▾</a>
+                  <ul class="dropdown">
+                    <li><a href="#walking">Pet Walking</a></li>
+                    <li><a href="#sitting">Pet Sitting</a></li>
+                    <li><a href="#dropin">Drop-in Visits</a></li>
+                    <li><a href="#boarding">Overnight Care</a></li>
+                  </ul>
+                </li>
+                 <li><a href="#findcare">Find Care</a></li> // Main CTA maybe
+                <li>
+                  <a href="#about">About Us ▾</a>
+                   <ul class="dropdown">
+                    <li><a href="#ourstory">Our Story</a></li>
+                    <li><a href="#team">Our Team</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#resources">Resources ▾</a>
+                   <ul class="dropdown">
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#safety">Safety Tips</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#account">Account ▾</a>
+                  <ul class="dropdown">
+                    <li><a href="#profile">My Profile</a></li>
+                    <li><a href="#dashboard">My Pets</a></li>
+                    <li><a href="#bookings">My Bookings</a></li>
+                    <li><a href="#billing">Billing</a></li>
+                    <li><a href="#logout">Sign Out</a></li> // Or Sign In/Up
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+            -->
+        </div>
+    </header>
+
+    <main>
+        <!-- Section 1: Home / Hero -->
+        <section id="home" class="content-section active">
+            <div class="container">
+                <h1>Peace of Mind for You, Happy Paws for Them</h1>
+                <p>Reliable, loving pet sitting and dog walking services right in your neighborhood. Book trusted care for your furry family members today.</p>
+                <a href="#booking" class="btn btn-primary btn-large navigate-link">Find a Sitter or Walker</a>
+                <a href="#services" class="btn btn-outline btn-large navigate-link" style="margin-left: 10px;">Learn More</a>
+            </div>
+        </section>
+
+        <!-- Section 2: Services -->
+        <section id="services" class="content-section">
+            <div class="container">
+                <h2>Our Services</h2>
+                <p>We offer a range of services tailored to your pet's needs.</p>
+                <div class="service-grid">
+                    <div class="service-card">
+                        <!-- Replace <i> with actual icons (SVG preferred) -->
+                        <i><svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40" fill="currentColor"><path d="M477-120v-87q-17-2-34.5-6.5T374-224l-63 38q-12 7-26.5-1.5T270-212l-80-138q-5-10-1-20.5t16-15.5l68-47q-2-12-3-24t-1-27q0-15 1-27t3-24l-68-47q-11-8-16-15.5t-1-20.5l80-138q6-12 20.5-17.5T311-758l63 38q16-10 33.5-14.5T443-841v-87q0-14 9.5-23.5T476-960h160q14 0 23.5 9.5T769-928v87q17 2 34.5 6.5T838-724l63-38q12-7 26.5 1.5T942-636l80 138q5 10 1 20.5T1008-461l-68 47q2 12 3 24t1 27q0 15-1 27t-3 24l68 47q11 8 16 15.5t1 20.5l-80 138q-6 12-20.5 17.5T899-182l-63-38q-16 10-33.5 14.5T769-199v87q0 14-9.5 23.5T736-80H616q-14 0-23.5-9.5T583-112v-81H377v81q0 14-9.5 23.5T344-80H184q-14 0-23.5-9.5T151-112v-81H51q-14 0-23.5-9.5T18-224v-104q0-14 9.5-23.5T51-361h100v-238H51q-14 0-23.5-9.5T18-632v-104q0-14 9.5-23.5T51-769h100V-841h126v81q14 0 23.5 9.5T344-728v80h272v-80q0-14 9.5-23.5T649-760h126v72h100q14 0 23.5 9.5T942-656v104q0 14-9.5 23.5T909-505H809v238h100q14 0 23.5 9.5T942-239v104q0 14-9.5 23.5T909-93H809v73H689v80q0 14-9.5 23.5T656-16H304q-14 0-23.5-9.5T271-40v-80H181zM480-480Zm160-280H320v120h320v-120Z"/></svg></i>
+                        <h3>Dog Walking</h3>
+                        <p>Regular walks to keep your dog happy, healthy, and exercised.</p>
+                        <a href="#booking" class="btn btn-secondary btn-small navigate-link">Book a Walk</a>
+                    </div>
+                     <div class="service-card">
+                         <i><svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40" fill="currentColor"><path d="M220-180h160v-80h160v80h160v-184l-240-180-240 180v184Zm-60 60v-304l300-225 300 225v304H160Zm100-120v-80h320v80H260Zm0 0v-80 80Zm240-207q-15-11-35.5-11t-35.5 11q-14 11-22 27.5t-8 34.5q0 34 24 58t58 24q34 0 58-24t24-58q0-18-8-34.5T500-447ZM480-80q-83 0-141.5-58.5T280-280h400q0 83-58.5 141.5T480-80Z"/></svg></i>
+                         <h3>Pet Sitting</h3>
+                         <p>In-home pet sitting visits while you're away. Peace of mind guaranteed.</p>
+                         <a href="#booking" class="btn btn-secondary btn-small navigate-link">Book Sitting</a>
+                    </div>
+                     <div class="service-card">
+                         <i><svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40" fill="currentColor"><path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg></i>
+                         <h3>Drop-In Visits</h3>
+                         <p>Quick visits for feeding, potty breaks, or medication.</p>
+                         <a href="#booking" class="btn btn-secondary btn-small navigate-link">Book a Visit</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Booking / Forms -->
+        <section id="booking" class="content-section">
+            <div class="container">
+                <h2>Book Your Pet Care</h2>
+                <p>Let's get some details to provide the best care for your furry friend.</p>
+
+                <div class="form-container">
+                    <h3>Your Information</h3>
+                    <form id="client-form">
+                        <div class="form-grid two-columns">
+                            <div class="form-group">
+                                <label for="client-name">Full Name</label>
+                                <input type="text" id="client-name" name="clientName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-email">Email Address</label>
+                                <input type="email" id="client-email" name="clientEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-phone">Phone Number</label>
+                                <input type="tel" id="client-phone" name="clientPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-address">Address</label>
+                                <input type="text" id="client-address" name="clientAddress" required>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: var(--base-spacing);">
+                             <label for="service-needed">Service Needed</label>
+                             <select id="service-needed" name="serviceNeeded" required>
+                                <option value="">-- Select Service --</option>
+                                <option value="walking">Dog Walking</option>
+                                <option value="sitting">Pet Sitting</option>
+                                <option value="dropin">Drop-in Visit</option>
+                             </select>
+                         </div>
+                         <div class="form-group" style="margin-top: var(--base-spacing);">
+                             <label for="client-notes">Additional Notes (Optional)</label>
+                             <textarea id="client-notes" name="clientNotes" placeholder="Anything else we should know? Preferred times, specific needs..."></textarea>
+                         </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: var(--base-spacing) * 1.5;">Request Booking</button>
+                    </form>
+                </div>
+
+                <div class="form-container" style="margin-top: var(--base-spacing) * 2;">
+                    <h3>Add a New Pet</h3>
+                     <form id="pet-form">
+                        <div class="form-grid two-columns">
+                            <div class="form-group">
+                                <label for="pet-name">Pet's Name</label>
+                                <input type="text" id="pet-name" name="petName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pet-species">Species</label>
+                                <select id="pet-species" name="petSpecies" required>
+                                    <option value="">-- Select Species --</option>
+                                    <option value="dog">Dog</option>
+                                    <option value="cat">Cat</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                             <div class="form-group">
+                                <label for="pet-breed">Breed</label>
+                                <input type="text" id="pet-breed" name="petBreed">
+                            </div>
+                             <div class="form-group">
+                                <label for="pet-age">Age (Years)</label>
+                                <input type="number" id="pet-age" name="petAge" min="0" step="0.1">
+                            </div>
+                         </div>
+                         <div class="form-group" style="margin-top: var(--base-spacing);">
+                            <label for="pet-temperament">Temperament / Behavior Notes</label>
+                            <textarea id="pet-temperament" name="petTemperament" placeholder="e.g., Friendly with strangers, shy at first, leash reactive, loves fetch..." required></textarea>
+                         </div>
+                         <div class="form-grid two-columns" style="margin-top: var(--base-spacing);">
+                            <div class="form-group">
+                                <label for="pet-feeding">Feeding Instructions</label>
+                                <textarea id="pet-feeding" name="petFeeding" rows="2"></textarea>
+                            </div>
+                             <div class="form-group">
+                                <label for="pet-medication">Medication Needs</label>
+                                <textarea id="pet-medication" name="petMedication" rows="2" placeholder="Include dosage and timing if any"></textarea>
+                             </div>
+                         </div>
+                         <div class="form-group" style="margin-top: var(--base-spacing);">
+                             <label for="pet-vet">Veterinarian Information (Name & Phone)</label>
+                             <input type="text" id="pet-vet" name="petVet">
+                         </div>
+                         <div class="form-group" style="margin-top: var(--base-spacing);">
+                            <label for="pet-photo">Upload Pet Photo (Optional)</label>
+                            <input type="file" id="pet-photo" name="petPhoto" accept="image/*">
+                         </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: var(--base-spacing) * 1.5;">Add Pet</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Dashboard / List View -->
+        <section id="dashboard" class="content-section">
+            <div class="container">
+                <h2>My Pets</h2>
+                <p>Manage your registered pets here.</p>
+
+                <div class="pet-list" id="pet-list-display">
+                    <!-- Pet cards will be dynamically added here by JavaScript -->
+                    <!-- Example Pet Card Structure: -->
+                     <div class="pet-card">
+                         <div class="pet-card-image" style="background-image: url('https://via.placeholder.com/300x180/FFDAB9/333333?text=Buddy')">
+                             <!-- Real image would go here -->
+                             <!-- Or: <span>No Photo</span> -->
+                         </div>
+                         <div class="pet-card-content">
+                             <h4>Buddy</h4>
+                             <p><strong>Breed:</strong> Golden Retriever</p>
+                             <p><strong>Age:</strong> 5 years</p>
+                             <p>Friendly, loves walks, allergic to chicken.</p>
+                         </div>
+                         <div class="pet-card-actions">
+                             <button class="btn btn-secondary btn-small">Edit</button>
+                             <button class="btn btn-outline btn-small" style="border-color: var(--secondary-color); color: var(--secondary-color);">View Details</button>
+                         </div>
+                    </div>
+                     <div class="pet-card">
+                         <div class="pet-card-image" style="background-color: #e0e0e0; display:flex; align-items:center; justify-content:center; color: #666;">
+                             <span>No Photo Provided</span>
+                         </div>
+                         <div class="pet-card-content">
+                             <h4>Luna</h4>
+                             <p><strong>Breed:</strong> Domestic Shorthair</p>
+                             <p><strong>Age:</strong> 2 years</p>
+                             <p>Shy at first, needs daily medication (pill pocket).</p>
+                         </div>
+                         <div class="pet-card-actions">
+                             <button class="btn btn-secondary btn-small">Edit</button>
+                             <button class="btn btn-outline btn-small" style="border-color: var(--secondary-color); color: var(--secondary-color);">View Details</button>
+                         </div>
+                    </div>
+                    <!-- Add more example cards or keep it empty for JS population -->
+
+                </div>
+                 <a href="#booking" class="btn btn-primary navigate-link" style="margin-top: var(--base-spacing) * 2;">Add Another Pet</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 FurryFriends Pet Care. All rights reserved.</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('#main-nav .nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const navigateButtons = document.querySelectorAll('.navigate-link'); // Select buttons/links meant for navigation too
+
+            // Function to handle navigation
+            function navigateToSection(targetId) {
+                 // Remove '#' from targetId if present
+                 const sectionId = targetId.startsWith('#') ? targetId.substring(1) : targetId;
+
+                // Hide all sections
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Show the target section
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+
+                    // Update active state in nav
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+
+                     // Scroll to top of main content area smoothly for better UX
+                    // document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
+                    // Or just jump to top:
+                    window.scrollTo(0, 0);
+
+                } else {
+                    console.warn(`Section with id "${sectionId}" not found.`);
+                    // Optionally show the home section as a fallback
+                    document.getElementById('home').classList.add('active');
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    document.querySelector('#main-nav .nav-link[href="#home"]').classList.add('active');
+                }
+            }
+
+            // Add click listeners to nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default anchor behavior
+                    const targetId = this.getAttribute('href');
+                    navigateToSection(targetId);
+
+                     // Optional: Update URL hash (doesn't trigger page load)
+                     // history.pushState(null, null, targetId);
+                });
+            });
+
+             // Add click listeners to other navigation elements (buttons, etc.)
+            navigateButtons.forEach(button => {
+                 button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    navigateToSection(targetId);
+                 });
+            });
+
+            // --- Form Submission Handlers (Basic Example) ---
+            const clientForm = document.getElementById('client-form');
+            if (clientForm) {
+                clientForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent actual form submission for this POC
+                    alert('Client booking request submitted (simulation)! Check console for data.');
+                    const formData = new FormData(this);
+                    // In a real app, you'd send this data to your API:
+                    // fetch('/api/bookings', { method: 'POST', body: formData }) ...
+                    console.log('Client Form Data:', Object.fromEntries(formData.entries()));
+                    // Maybe navigate to a confirmation or dashboard section
+                     navigateToSection('#dashboard');
+                     // Or clear the form: this.reset();
+                });
+            }
+
+            const petForm = document.getElementById('pet-form');
+            if (petForm) {
+                petForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    alert('Pet added (simulation)! Check console for data.');
+                    const formData = new FormData(this);
+                    console.log('Pet Form Data:', Object.fromEntries(formData.entries()));
+
+                    // --- Basic Example: Add Pet to the List Display ---
+                    const petListData = Object.fromEntries(formData.entries());
+                    addPetCard(petListData);
+
+                    this.reset(); // Clear the form
+                });
+            }
+
+            // --- Function to dynamically add a Pet Card ---
+            function addPetCard(petData) {
+                const petListDisplay = document.getElementById('pet-list-display');
+                if (!petListDisplay) return;
+
+                const card = document.createElement('div');
+                card.className = 'pet-card';
+
+                // Handle potential photo upload (very basic - doesn't actually show uploaded image)
+                let imageHtml = `<div class="pet-card-image" style="background-color: #e0e0e0; display:flex; align-items:center; justify-content:center; color: #666;">
+                                     <span>No Photo Provided</span>
+                                 </div>`;
+                // In a real app, if formData contained an image URL after upload, you'd use it:
+                // if (petData.photoUrl) { imageHtml = `<div class="pet-card-image" style="background-image: url('${petData.photoUrl}')"></div>`; }
+                 // For this POC, just check if the file input had a file selected by name
+                 if (petData.petPhoto && petData.petPhoto.name) {
+                      imageHtml = `<div class="pet-card-image" style="background-color: #d1ffd3; display:flex; align-items:center; justify-content:center; color: #333; font-style:italic;">
+                                     <span>Photo Selected (Simulated)</span>
+                                 </div>`;
+                 }
+
+
+                card.innerHTML = `
+                    ${imageHtml}
+                    <div class="pet-card-content">
+                        <h4>${escapeHtml(petData.petName || 'Unnamed Pet')}</h4>
+                        <p><strong>Breed:</strong> ${escapeHtml(petData.petBreed || 'N/A')}</p>
+                        <p><strong>Age:</strong> ${escapeHtml(petData.petAge || 'N/A')} years</p>
+                        <p>${escapeHtml(petData.petTemperament || 'No notes.')}</p>
+                    </div>
+                    <div class="pet-card-actions">
+                        <button class="btn btn-secondary btn-small">Edit</button>
+                        <button class="btn btn-outline btn-small" style="border-color: var(--secondary-color); color: var(--secondary-color);">View Details</button>
+                    </div>
+                `;
+                petListDisplay.appendChild(card);
+            }
+
+            // Simple HTML escaping function to prevent XSS from user input display
+            function escapeHtml(unsafe) {
+                if (!unsafe) return '';
+                return unsafe
+                     .replace(/&/g, "&")
+                     .replace(/</g, "<")
+                     .replace(/>/g, ">")
+                     .replace(/"/g, "")
+                     .replace(/'/g, "'");
+             }
+
+            // Initialize by showing the default section (home)
+            navigateToSection('#home');
+
+        });
+    </script>
+
+</body>
+</html>

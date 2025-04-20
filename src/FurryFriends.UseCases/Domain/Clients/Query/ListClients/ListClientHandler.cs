@@ -29,7 +29,7 @@ public class ListClientHandler(IClientService clientService)
       [.. client.Pets.Select(p=> new ClientPetDto(
         p.Id,
         p.Name,
-        p.BreedType.Species.Name,
+        //p.BreedType.Species.Name,
         p.BreedType.Name,
         p.Age,
         p.Weight,

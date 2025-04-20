@@ -1,0 +1,44 @@
+﻿@page "/settings"
+@rendermode InteractiveAuto
+@using FurryFriends.BlazorUI.Client.Models.Clients
+
+<h3>Settings</h3>
+<EditForm Model="clientModel" OnValidSubmit="HandleInvalidSubmit" FormName="Settings" Enhance>
+	
+	<ObjectGraphDataAnnotationsValidator />
+	<div class="form-section">
+		<h4 class="section-title">Personal Information</h4>
+		<div class="form-grid">
+			<div class="form-group">
+				<label for="FirstName">First Name <span class="required">*</span></label>
+				<InputText id="FirstName" class="form-control" @bind-Value="clientModel!.FirstName" />
+				<ValidationMessage For="@(() => clientModel.FirstName)" class="validation-message" />
+			</div>
+		</div>
+	</div>
+	<div class="button-row">
+		<button type="button" class="btn btn-secondary" @onclick="HandleCancel" @onclick:preventDefault="true">Cancel</button>
+		<button type="submit" class="btn btn-primary">
+
+		</button>
+	</div>
+	<button type="button" class="btn btn-primary" @onclick="Logout">Logout</button>
+</EditForm>
+@code {
+	@inject ILogger<Settings> Logger 
+	[SupplyParameterFromForm]
+	private ClientModel clientModel { get; set; } = new();
+	private void Logout()
+	{
+		Logger.LogInformation("Logging out");
+	}
+	private void HandleInvalidSubmit(EditContext args)
+	{
+		Logger.LogInformation("Invalid submit");
+	}
+	private void HandleCancel(MouseEventArgs args)
+	{
+		Logger.LogInformation("Cancel");
+	}
+}
+

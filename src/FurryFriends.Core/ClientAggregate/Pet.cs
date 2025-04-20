@@ -1,7 +1,8 @@
 ﻿using FurryFriends.Core.ClientAggregate.Enums;
+using FurryFriends.Core.Common;
 
 namespace FurryFriends.Core.ClientAggregate;
-public class Pet : EntityBase<Guid>
+public class Pet : AuditableEntity<Guid>
 {
   private const string NONE = "None";
 
@@ -12,11 +13,13 @@ public class Pet : EntityBase<Guid>
   public double Weight { get; private set; }
   public string Color { get; private set; } = default!;
   public bool IsSterilized { get; set; }
+  public string? MedicalHistory { get; private set; }
   public string? MedicalConditions { get; private set; }
-  public bool IsVaccinated { get; private set; }
-  public string? FavoriteActivities { get; private set; }
-  public string? DietaryRestrictions { get; private set; }
-  public string SpecialNeeds { get; set; } = NONE;
+  public bool IsVaccinated { get; set; }
+  public string? FavoriteActivities { get; set; }
+  public string? DietaryRestrictions { get; set; }
+  public string? SpecialNeeds { get; set; } = NONE;
+  public string? Photo { get; set; }
   public bool IsActive { get; private set; } = true;
   public DateTime? DeactivatedAt { get; private set; }
   public Guid OwnerId { get; set; }
@@ -54,10 +57,39 @@ public class Pet : EntityBase<Guid>
   }
 
   public static Pet Create(
-    string name, int breedId, int age, double weight, string color, string specialNeeds, Client owner
+    string name, int breedId, int age, double weight, string color, string specialNeeds, Client owner, string? medicalHistory = null, bool isVaccinated = false, string? favoriteActivities = null, string? dietaryRestrictions = null, string? photo = null
     )
   {
     var pet = new Pet(name, breedId, age, weight, color, specialNeeds, owner);
+    pet.MedicalHistory = medicalHistory;
+    pet.IsVaccinated = isVaccinated;
+    pet.FavoriteActivities = favoriteActivities;
+    pet.DietaryRestrictions = dietaryRestrictions;
+    pet.Photo = photo;
+    return pet;
+  }
+
+  public static Pet Create(
+    string name,
+    int age,
+    double weight,
+    string color,
+    string specialNeeds,
+    Client owner,
+    Breed breed,
+    string? medicalHistory = null,
+    bool isVaccinated = false,
+    string? favoriteActivities = null,
+    string? dietaryRestrictions = null,
+    string? photo = null)
+  {
+    var pet = new Pet(name, breed.Id, age, weight, color, specialNeeds, owner);
+    pet.MedicalHistory = medicalHistory;
+    pet.IsVaccinated = isVaccinated;
+    pet.FavoriteActivities = favoriteActivities;
+    pet.DietaryRestrictions = dietaryRestrictions;
+    pet.Photo = photo;
+    pet.BreedType = breed;
     return pet;
   }
 
@@ -80,7 +112,12 @@ public class Pet : EntityBase<Guid>
   }
 
   public void UpdateGeneralInfo(string name, int age, double weight, string color,
-      string? dietaryRestrictions, string? favoriteActivities)
+      string? medicalHistory,
+      bool isVaccinated,
+      string? favoriteActivities,
+      string? dietaryRestrictions,
+      string? specialNeeds,
+      string? photo)
   {
     Guard.Against.NullOrWhiteSpace(name, nameof(name));
     Guard.Against.OutOfRange(name.Length, nameof(name), 1, 50);
@@ -91,11 +128,15 @@ public class Pet : EntityBase<Guid>
     Guard.Against.OutOfRange(color.Length, nameof(color), 1, 30);
 
     Name = name;
-    // BreedId = breedId;
     Age = age;
-    // Species = species;
     Weight = weight;
     Color = color;
+    MedicalHistory = medicalHistory;
+    IsVaccinated = isVaccinated;
+    FavoriteActivities = favoriteActivities;
+    DietaryRestrictions = dietaryRestrictions;
+    SpecialNeeds = specialNeeds;
+    Photo = photo;
   }
 
   public void AddMedicalCondition(string medicalCondition)
@@ -127,7 +168,7 @@ public class Pet : EntityBase<Guid>
   public void MarkAsInactive()
   {
     if (!IsActive) return;
-    
+
     IsActive = false;
     DeactivatedAt = DateTime.UtcNow;
   }
@@ -135,7 +176,7 @@ public class Pet : EntityBase<Guid>
   public void MarkAsActive()
   {
     if (IsActive) return;
-    
+
     IsActive = true;
     DeactivatedAt = null;
   }

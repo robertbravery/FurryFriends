@@ -39,14 +39,14 @@ public class ListClient(IMediator mediator, ILogger<ListClient> logger) : Endpoi
     }
     var clientListResponse = clientListResult.Value
         .Select(client => new ClientDto(
-            client.Id, 
-            client.Name, 
-            client.Email, 
+            client.Id,
+            client.Name,
+            client.Email,
             client.City,
             client.Pets.Count(p => p.IsActive),
             client.Pets
                 .Where(p => p.IsActive)
-                .GroupBy(p => p.Species)
+                .GroupBy(p => p.Breed) //ToDo: Group By Species
                 .ToDictionary(g => g.Key, g => g.Count())))
         .ToList();
     var totalCount = clientListResult.Value.Count;

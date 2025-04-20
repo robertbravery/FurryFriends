@@ -3,7 +3,7 @@
 public record ClientPetDto(
     Guid Id,
     string Name,
-    string Species,
+    // string Species,
     string Breed,
     int Age,
     double? Weight,

@@ -1,9 +1,9 @@
-﻿using FurryFriends.Core.PetWalkerAggregate.Validation;
+﻿﻿using FurryFriends.Core.PetWalkerAggregate.Validation;
 using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.Core.Common;
 
-public abstract class UserEntityBase : AuditableEntity<Guid>, IAggregateRoot
+public abstract class UserEntityBase : AuditableEntity<Guid>
 {
   public Name Name { get; protected set; } = default!;
   public Email Email { get; protected set; } = default!;

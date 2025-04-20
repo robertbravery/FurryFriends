@@ -4,7 +4,7 @@ namespace FurryFriends.Web.Endpoints.ClientEndpoints.AddClientPet;
 
 public class AddPetRequest
 {
-  public const string Route = "/clients/pets";  // Updated route without parameter
+  public const string Route = "/Clients/pets";  // Updated route without parameter
   
   // Add ClientId to the request body
   public Guid ClientId { get; set; }
