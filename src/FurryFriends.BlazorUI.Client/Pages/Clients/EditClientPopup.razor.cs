@@ -29,10 +29,27 @@ namespace FurryFriends.BlazorUI.Client.Pages.Clients;
         private bool isLoading = true;
         private bool isPetsLoading = true;
         private string? loadError = null;
+        private bool isPetsPanelOpen = false; // Controls the visibility of the pets panel
 
         protected override async Task OnInitializedAsync()
         {
             await LoadClientData();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                // Add Font Awesome if not already loaded
+                await JS.InvokeVoidAsync("eval", @"
+                    if (!document.querySelector('link[href*=""fontawesome""]')) {
+                        var link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+                        document.head.appendChild(link);
+                    }
+                ");
+            }
         }
 
         private async Task LoadClientData()
@@ -119,6 +136,13 @@ namespace FurryFriends.BlazorUI.Client.Pages.Clients;
                 // If you have a dedicated pet creation component, you could invoke it here
                 // await OnAddPet.InvokeAsync(clientData.Id);
             }
+        }
+
+        // Toggle the visibility of the pets panel
+        private void TogglePetsPanel()
+        {
+            isPetsPanelOpen = !isPetsPanelOpen;
+            StateHasChanged();
         }
     }
 

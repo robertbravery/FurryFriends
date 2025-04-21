@@ -1,6 +1,8 @@
 .pets-section {
-    border-left: 1px solid #dee2e6;
-    padding-left: 1.5rem;
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .pets-header {
@@ -32,11 +34,14 @@
 /* Pets Form */
 .pets-form {
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Pets Container */
 .pets-container {
-    max-height: 700px;
+    flex: 1;
     overflow-y: auto;
     padding-right: 0.5rem;
     margin-bottom: 0.5rem;
@@ -171,10 +176,6 @@
 /* Responsive overrides */
 @media (max-width: 992px) {
     .pets-section {
-        border-left: none;
-        border-top: 1px solid #dee2e6;
-        padding-left: 0;
-        padding-top: 1.5rem;
-        margin-top: 1.5rem;
+        padding: 0.75rem;
     }
 }

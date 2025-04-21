@@ -7,7 +7,15 @@
 		<div class="modal-content" style="background-color: white; border-radius: 0.3rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);">
 			<div class="modal-header modal-header-background" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid #dee2e6;">
 				<h5 class="modal-title">Edit Client</h5>
-				<button type="button" class="close" @onclick="OnCancel" style="background: none; border: none; font-size: 1.5rem; font-weight: 700; cursor: pointer;">&times;</button>
+				<div class="header-actions">
+					<button type="button" class="pets-toggle-btn" @onclick="TogglePetsPanel">
+						<span class="@(isPetsPanelOpen ? "pets-toggle-icon open" : "pets-toggle-icon")">
+							<i class="@(isPetsPanelOpen ? "fas fa-chevron-left" : "fas fa-paw")"></i>
+							@(isPetsPanelOpen ? "Hide Pets" : "Show Pets")
+						</span>
+					</button>
+					<button type="button" class="close" @onclick="OnCancel" style="background: none; border: none; font-size: 1.5rem; font-weight: 700; cursor: pointer;">&times;</button>
+				</div>
 			</div>
 			<div class="modal-body" style="padding: 1rem;">
 				@if (isLoading)
@@ -25,6 +33,15 @@
 				else if (clientModel != null)
 				{
 					<div class="edit-client-layout">
+						<!-- Slide-out pets panel -->
+						<div class="pets-panel @(isPetsPanelOpen ? "open" : "")">
+							<PetsDisplay
+								Pets="clientPets"
+								IsLoading="isPetsLoading"
+								ClientEmail="ClientEmail"
+								OnAddPet="HandleAddPet" />
+						</div>
+
 						<div class="client-form-section">
 							<ClientForm
 							ClientModel="clientModel"
@@ -35,11 +52,6 @@
 							ButtonContainerClass="modal-footer"
 							CancelButtonStyle="margin-right: 0.5rem;" />
 						</div>
-						<PetsDisplay
-							Pets="clientPets"
-							IsLoading="isPetsLoading"
-							ClientEmail="ClientEmail"
-							OnAddPet="HandleAddPet" />
 					</div>
 				}
 			</div>
