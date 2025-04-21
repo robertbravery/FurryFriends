@@ -1,54 +1,90 @@
 @using FurryFriends.BlazorUI.Client.Models.Clients
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using FurryFriends.BlazorUI.Client.Components.Common
 @inject IClientService ClientService
 
 <div class="client-list-container">
-	<h1>Client Directory</h1>
-	<p>View and manage all your clients.</p>
+    <h1>Client Directory</h1>
+    <p>View and manage all your clients.</p>
 
-	@if (clients is null)
-	{
-		<p><em>Loading client list...</em></p>
-	}
-	else
-	{
-		<table class="table">
-			<thead>
-				<tr>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Pets</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var client in clients)
-				{
-					<tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
-						<td>@client.Name</td>
-						<td>@client.EmailAddress</td>
-						<td>@client.City</td>
-						<td>@client.TotalPets</td>
-						<td style="display: flex; gap: 10px;">
-							<span style="color:brown; cursor:pointer">👁️</span> <!-- View -->
-							<span style="color:steelblue; cursor:pointer">+🐾</span> <!-- Add Pet -->
-							<span style="color:lightcoral; cursor:pointer">✏️</span> <!-- Edit -->
-						</td> 
-					</tr>
-				}
-			</tbody>
-		</table>
-	}
+    @if (clients is null)
+    {
+        <p><em>Loading client list...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Pets</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var client in clients)
+                {
+                    <tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
+                        <td>@client.Name</td>
+                        <td>@client.EmailAddress</td>
+                        <td>@client.City</td>
+                        <td>@client.TotalPets</td>
+                        <td style="display: flex; gap: 10px;">
+                            <span style="color:brown; cursor:pointer">👁️</span>
+                            <span style="color:steelblue; cursor:pointer">+🐾</span>
+							<button class="btn btn-link p-0" style="color:lightcoral;"
+									@onclick="() => OpenEditPopup(client.EmailAddress)">✏️</button>
+							@* <span style="color:lightcoral; cursor:pointer; padding: 5px;" @onclick="() => OpenEditPopup(client.EmailAddress)" @onclick:stopPropagation="true">✏️</span> *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
+@if (showEditPopup)
+{
+	<EditClientPopup ClientEmail="@selectedClientEmail" OnSave="HandleSave" OnCancel="HandleCancel" />
+}
 
 @code {
 	private List<ClientDto>? clients { get; set; }
+	private bool showEditPopup = false;
+	private string selectedClientEmail = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
 		clients = await ClientService.GetClientsAsync();
 		Console.WriteLine($"Clients fetched: {clients?.Count}");
+	}
 
+	private void OpenEditPopup(string? clientEmail)
+	{
+		if (clientEmail is null)
+		{
+			return;
+		}
+		Console.WriteLine($"Opening edit popup for client ID: {clientEmail}");
+		selectedClientEmail = clientEmail;
+		showEditPopup = true;
+		StateHasChanged(); // Ensure UI updates
+	}
+
+	private async Task HandleSave()
+	{
+		Console.WriteLine("Client saved");
+		showEditPopup = false;
+		// Refresh the client list after saving
+		clients = await ClientService.GetClientsAsync();
+		StateHasChanged();
+	}
+
+	private void HandleCancel()
+	{
+		Console.WriteLine("Edit canceled");
+		showEditPopup = false;
+		StateHasChanged();
 	}
 }

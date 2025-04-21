@@ -17,6 +17,17 @@ public class ClientService(HttpClient httpClient) : IClientService
     return response.RowsData;
   }
 
+  public async Task<ClientResponseBase> GetClientByEmailAsync(string email)
+  {
+    var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"Clients/email/{email}");
+    if (response is null || response is null)
+    {
+      return new ClientResponseBase();
+    }
+    //return new ClientModel();
+    return response;
+  }
+
   public async Task CreateClientAsync(ClientRequestDto clientModel)
   {
     var response = await _httpClient.PostAsJsonAsync("Clients", clientModel);
@@ -25,6 +36,17 @@ public class ClientService(HttpClient httpClient) : IClientService
     {
       var errorContent = await response.Content.ReadAsStringAsync();
       throw new HttpRequestException($"Failed to create client: {errorContent}", null, response.StatusCode);
+    }
+  }
+
+  public async Task UpdateClientAsync(ClientRequestDto clientModel)
+  {
+    var response = await _httpClient.PutAsJsonAsync($"Clients/email/{clientModel.Email}", clientModel);
+
+    if (!response.IsSuccessStatusCode)
+    {
+      var errorContent = await response.Content.ReadAsStringAsync();
+      throw new HttpRequestException($"Failed to update client: {errorContent}", null, response.StatusCode);
     }
   }
 }

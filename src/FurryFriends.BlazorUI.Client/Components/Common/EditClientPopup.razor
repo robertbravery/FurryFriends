@@ -1,0 +1,103 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using System.ComponentModel.DataAnnotations
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using FurryFriends.BlazorUI.Client.Components.Common
+@inject IClientService ClientService
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop" style="display: block; background-color: rgba(0,0,0,0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000;">
+	<div class="modal-dialog" style="position: relative; width: auto; margin: 1.75rem auto; max-width: 900px; z-index: 1050;">
+		<div class="modal-content" style="background-color: white; border-radius: 0.3rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);">
+			<div class="modal-header modal-header-background" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid #dee2e6;">
+				<h5 class="modal-title">Edit Client</h5>
+				<button type="button" class="close" @onclick="OnCancel" style="background: none; border: none; font-size: 1.5rem; font-weight: 700; cursor: pointer;">&times;</button>
+			</div>
+			<div class="modal-body" style="padding: 1rem;">
+				@if (isLoading)
+				{
+					<div style="text-align: center; padding: 20px;">
+						<p><em>Loading client data...</em></p>
+					</div>
+				}
+				else if (loadError != null)
+				{
+					<div style="color: red; padding: 20px;">
+						<p>Error: @loadError</p>
+					</div>
+				}
+				else if (clientModel != null)
+				{
+					<ClientForm
+						ClientModel="clientModel"
+						OnSubmit="HandleValidSubmit"
+						OnCancel="OnCancel"
+						FormName="EditClient"
+						SubmitButtonText="Save Client"
+						ButtonContainerClass="modal-footer"
+						CancelButtonStyle="margin-right: 0.5rem;" />
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string ClientEmail { get; set; } = default!;
+
+	[Parameter]
+	public EventCallback OnSave { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	private ClientModel clientModel = new();
+	private bool isLoading = true;
+	private string? loadError = null;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadClientData();
+	}
+
+	private async Task LoadClientData()
+	{
+		try
+		{
+			isLoading = true;
+			loadError = null;
+
+			// Get client model by ID from the service
+			var client = await ClientService.GetClientByEmailAsync(ClientEmail);
+
+			if (!client.Success || client.Data == null)
+			{
+				loadError = "Client not found";
+			}
+			else
+			{
+				clientModel = ClientData.MapToModel(client.Data);
+			}
+		}
+		catch (Exception ex)
+		{
+			loadError = ex.Message;
+			Console.WriteLine($"Error loading client: {ex}");
+		}
+		finally
+		{
+			isLoading = false;
+			StateHasChanged();
+		}
+	}
+
+	private async Task HandleValidSubmit()
+	{
+		if (clientModel != null)
+		{
+			ClientRequestDto clientRequest = ClientModel.MapToRequest(clientModel);
+			await ClientService.UpdateClientAsync(clientRequest);
+			await OnSave.InvokeAsync();
+		}
+	}
+}

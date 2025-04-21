@@ -36,4 +36,19 @@ public class ClientModel
 
   [StringLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
   public string Notes { get; set; } = string.Empty;
+
+  public static ClientRequestDto MapToRequest(ClientModel clientDto) => new()
+  {
+    FirstName = clientDto.FirstName,
+    LastName = clientDto.LastName,
+    Email = clientDto.EmailAddress,
+    PhoneCountryCode = clientDto.CountryCode,
+    PhoneNumber = clientDto.PhoneNumber,
+    Street = clientDto.Address.Street,
+    City = clientDto.Address.City,
+    State = clientDto.Address.State,
+    ZipCode = clientDto.Address.ZipCode,
+    Country = clientDto.Address.Country,
+    Notes = clientDto.Notes
+  };
 }

@@ -1,0 +1,160 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Models
+@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveAuto
+
+<EditForm Model="@ClientModel" OnValidSubmit="@OnSubmit" FormName="@FormName" Enhance="@Enhance">
+    <ObjectGraphDataAnnotationsValidator />
+
+    <div class="form-section">
+        <h4 class="section-title">Personal Information</h4>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="FirstName">First Name <span class="required">*</span></label>
+                <InputText id="FirstName" class="form-control" @bind-Value="ClientModel.FirstName" />
+                <ValidationMessage For="@(() => ClientModel.FirstName)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="LastName">Last Name <span class="required">*</span></label>
+                <InputText id="LastName" class="form-control" @bind-Value="ClientModel.LastName" />
+                <ValidationMessage For="@(() => ClientModel.LastName)" class="validation-message" />
+            </div>
+            <div class="email-phone-container">
+                <div class="form-group">
+                    <label for="EmailAddress">Email Address <span class="required">*</span></label>
+                    <InputText id="EmailAddress" class="form-control" @bind-Value="ClientModel.EmailAddress" />
+                    <ValidationMessage For="@(() => ClientModel.EmailAddress)" class="validation-message" />
+                </div>
+
+                <div class="form-group">
+                    <label for="CountryCode">Country Code <span class="required">*</span></label>
+                    <InputText id="CountryCode" class="form-control country-code-input" @bind-Value="ClientModel.CountryCode" placeholder="e.g., 27" />
+                    <ValidationMessage For="@(() => ClientModel.CountryCode)" class="validation-message" />
+                </div>
+                <div class="form-group">
+                    <label for="PhoneNumber">Phone Number <span class="required">*</span></label>
+                    <InputText id="PhoneNumber" class="form-control" @bind-Value="ClientModel.PhoneNumber" placeholder="e.g., 0821234567" />
+                    <ValidationMessage For="@(() => ClientModel.PhoneNumber)" class="validation-message" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <h4 class="section-title">Address Information</h4>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="Street">Street <span class="required">*</span></label>
+                <InputText id="Street" class="form-control" @bind-Value="ClientModel.Address.Street" />
+                <ValidationMessage For="@(() => ClientModel.Address.Street)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="City">City <span class="required">*</span></label>
+                <InputText id="City" class="form-control" @bind-Value="ClientModel.Address.City" />
+                <ValidationMessage For="@(() => ClientModel.Address.City)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="StateOrProvince">State/Province <span class="required">*</span></label>
+                <InputText id="StateOrProvince" class="form-control" @bind-Value="ClientModel.Address.State" />
+                <ValidationMessage For="@(() => ClientModel.Address.State)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="ZipCode">Zip Code <span class="required">*</span></label>
+                <InputText id="ZipCode" class="form-control" @bind-Value="ClientModel.Address.ZipCode" placeholder="e.g., 12345 or 12345-6789" />
+                <ValidationMessage For="@(() => ClientModel.Address.ZipCode)" class="validation-message" />
+            </div>
+
+            <div class="form-group">
+                <label for="Country">Country <span class="required">*</span></label>
+                <InputText id="Country" class="form-control" @bind-Value="ClientModel.Address.Country" />
+                <ValidationMessage For="@(() => ClientModel.Address.Country)" class="validation-message" />
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <h4 class="section-title">Additional Information</h4>
+        <div class="form-grid">
+            <div class="form-group notes-full-width">
+                <label for="Notes">Notes (Optional)</label>
+                <InputTextArea id="Notes" class="form-control" @bind-Value="ClientModel.Notes" placeholder="e.g., Gate code, preferred contact method..." />
+                <ValidationMessage For="@(() => ClientModel.Notes)" class="validation-message" />
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="api-error-message">
+            <span class="error-icon">⚠️</span> @ErrorMessage
+        </div>
+    }
+
+    <div class="@ButtonContainerClass">
+        @if (ShowCancelButton)
+        {
+            <button type="button" class="btn btn-secondary" @onclick="OnCancel" style="@CancelButtonStyle">Cancel</button>
+        }
+        <button type="submit" class="btn btn-primary" disabled="@IsSubmitting">
+            @if (IsSubmitting)
+            {
+                <span class="spinner"></span>
+                <span>Saving...</span>
+            }
+            else
+            {
+                <span>@SubmitButtonText</span>
+            }
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public ClientModel ClientModel { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<EditContext> OnSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public string FormName { get; set; } = "ClientForm";
+
+    [Parameter]
+    public bool Enhance { get; set; } = false;
+
+    [Parameter]
+    public bool IsSubmitting { get; set; } = false;
+
+    [Parameter]
+    public string? ErrorMessage { get; set; }
+
+    [Parameter]
+    public string SubmitButtonText { get; set; } = "Save Client";
+
+    [Parameter]
+    public bool ShowCancelButton { get; set; } = true;
+
+    [Parameter]
+    public string ButtonContainerClass { get; set; } = "button-row";
+
+    [Parameter]
+    public string CancelButtonStyle { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        if (ClientModel is null)
+        {
+            ClientModel = new ClientModel();
+        }
+
+        if (ClientModel.Address is null)
+        {
+            ClientModel.Address = new Address();
+        }
+    }
+}
