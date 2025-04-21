@@ -70,4 +70,5 @@ public class Pet
   public string SpecialNeeds { get; set; } = default!;
   public string MedicalConditions { get; set; } = default!;
   public bool isActive { get; set; }
+  public string Photo { get; set; } = default!;
 }

@@ -1,6 +1,6 @@
 /* Form Sections */
 .form-section {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding-bottom: .75rem;
     border-bottom: 1px solid #eaedf2;
 }
@@ -38,7 +38,7 @@
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     position: relative;
 }
 

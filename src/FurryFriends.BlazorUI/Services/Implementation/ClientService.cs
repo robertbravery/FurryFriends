@@ -3,9 +3,16 @@ using FurryFriends.BlazorUI.Client.Services.Interfaces;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
-public class ClientService(HttpClient httpClient) : IClientService
+public class ClientService : IClientService
 {
-  private readonly HttpClient _httpClient = httpClient;
+  private readonly HttpClient _httpClient;
+  private readonly HttpClient _dogClient;
+
+  public ClientService(HttpClient httpClient, HttpClient dogClient)
+  {
+    _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    _dogClient = dogClient ?? throw new ArgumentNullException(nameof(dogClient));
+  }
 
   public async Task<List<ClientDto>> GetClientsAsync()
   {
@@ -20,11 +27,10 @@ public class ClientService(HttpClient httpClient) : IClientService
   public async Task<ClientResponseBase> GetClientByEmailAsync(string email)
   {
     var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"Clients/email/{email}");
-    if (response is null || response is null)
+    if (response is null)
     {
       return new ClientResponseBase();
     }
-    //return new ClientModel();
     return response;
   }
 
@@ -49,4 +55,23 @@ public class ClientService(HttpClient httpClient) : IClientService
       throw new HttpRequestException($"Failed to update client: {errorContent}", null, response.StatusCode);
     }
   }
+
+  public async Task<string> GetDogImageAsync()
+  {
+    var dogImage = await _dogClient.GetFromJsonAsync<DogImageResponse>("https://dog.ceo/api/breeds/image/random");
+    if (dogImage is null)
+    {
+      return string.Empty;
+    }
+    else
+    {
+      return dogImage.Message.Replace("\\/", "/");
+    }
+  }
+}
+
+public class DogImageResponse
+{
+  public string Message { get; set; } = default!;
+  public string Status { get; set; } = default!;
 }

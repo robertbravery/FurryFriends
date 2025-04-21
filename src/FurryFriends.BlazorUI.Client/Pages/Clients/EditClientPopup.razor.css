@@ -29,7 +29,24 @@
     border: 1px solid var(--border-color, #e0e5ee);
 }
 
+/* Layout */
+.edit-client-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
+.client-form-section {
+    max-width: 100%;
+}
+
 /* Responsive overrides */
+@media (max-width: 992px) {
+    .edit-client-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
     .create-client-container {
         margin: 1rem;
