@@ -1,13 +1,6 @@
 @page "/createclient"
 @rendermode InteractiveAuto
-@using FurryFriends.BlazorUI.Client.Components
-@using FurryFriends.BlazorUI.Client.Models.Clients
-@using FurryFriends.BlazorUI.Client.Services.Interfaces
-@using Microsoft.AspNetCore.Components.Forms
-@using FurryFriends.BlazorUI.Client.Models
 @using FurryFriends.BlazorUI.Client.Components.Common
-
-@inject ILogger<CreateClient> Logger
 
 <div class="create-client-container">
 	<h3>Add New Client</h3>
@@ -24,83 +17,4 @@
 		SubmitButtonText="Save Client" />
 </div>
 
-@code {
-	[SupplyParameterFromForm]
-	private ClientModel clientModel { get; set; } = new()
-		{
-			Address = new Address() // Ensure Address is initialized
-		};
-	private bool isSubmitting = false;
-	private string? errorMessage;
-	// private EditContext editContext = default!;
 
-
-	[Inject]
-	public IClientService ClientService { get; set; } = default!;
-
-	[Inject]
-	public NavigationManager NavigationManager { get; set; } = default!;
-
-	protected override void OnInitialized()
-	{
-		if (clientModel is null)
-		{
-			clientModel = new ClientModel();
-		}
-
-		if (clientModel.Address is null)
-		{
-			clientModel.Address = new Address();
-		}
-		// editContext = new EditContext(clientModel);
-		isSubmitting = false;
-	}
-
-	private async Task HandleSaveClient(EditContext editContext)
-	{
-		Logger.LogInformation("Saving client");
-		errorMessage = null;
-
-		// Manually validate the form
-		var isValid = editContext.Validate();
-
-		// If validation fails, don't proceed with submission
-		if (!isValid)
-		{
-			return;
-		}
-
-		try
-		{
-			isSubmitting = true;
-			var clientRequest = ClientRequestDto.MapToDto(clientModel);
-			await ClientService.CreateClientAsync(clientRequest);
-			clientModel = new ClientModel();
-			NavigationManager.NavigateTo("clients");
-		}
-		catch (HttpRequestException ex)
-		{
-			errorMessage = $"Error saving client: {ex.Message}";
-		}
-		catch (Exception ex)
-		{
-			errorMessage = $"An unexpected error occurred: {ex.Message}";
-		}
-		finally
-		{
-			isSubmitting = false;
-		}
-	}
-
-	private void HandleCancel()
-	{
-		Logger.LogInformation("Navigating to {url}", "/createclient");
-		clientModel = new ClientModel();
-		NavigationManager.NavigateTo("/");
-
-	}
-	private void NavigateToAbsoluteURL(MouseEventArgs args)
-	{
-		Logger.LogInformation("Navigating to {url}", args);
-	}
-}
