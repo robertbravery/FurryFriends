@@ -1,13 +1,90 @@
 /* Modal-specific styles */
+.modal-backdrop {
+    display: block;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    animation: backdropFadeIn 0.2s ease-out;
+}
+
+@keyframes backdropFadeIn {
+    from {
+        background-color: rgba(0,0,0,0);
+    }
+    to {
+        background-color: rgba(0,0,0,0.5);
+    }
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.25rem auto;
+    max-width: 1200px;
+    z-index: 1050;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 0.3rem;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 0.3rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures the shadow respects the border radius */
+    transition: box-shadow 0.3s ease;
+}
+
+.modal-content:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
 .modal-header-background {
     background-color: #f5f5f5; /* Very light gray */
     border-top-left-radius: 0.3rem;
     border-top-right-radius: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .modal-title {
     font-weight: 700; /* Bold text */
     font-size: 1.25rem;
+}
+
+/* Modal body styling */
+.modal-body {
+    padding: 1rem;
+}
+
+.loading-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.error-container {
+    color: red;
+    padding: 20px;
 }
 
 /* Modal footer styling */
@@ -23,6 +100,19 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: #dc3545; /* Red color on hover */
 }
 
 /* Pets toggle button */
@@ -85,8 +175,9 @@
     width: 350px;
     height: 100%;
     background-color: white;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    transition: right 0.3s ease;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* No shadow when closed */
+    border-left: 1px solid transparent; /* Transparent border when closed */
+    transition: right 0.3s ease, box-shadow 0.3s ease, border-left-color 0.3s ease;
     overflow-y: auto;
     z-index: 10;
 }
@@ -94,7 +185,20 @@
 /* When panel is open, adjust the main content area */
 .pets-panel.open {
     right: 0;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2), -2px 0 5px rgba(0, 0, 0, 0.1);
+    animation: shadowFadeIn 0.3s ease-out;
+    border-left: 1px solid #e0e0e0;
+}
+
+@keyframes shadowFadeIn {
+    from {
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        border-left-color: transparent;
+    }
+    to {
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2), -2px 0 5px rgba(0, 0, 0, 0.1);
+        border-left-color: #e0e0e0;
+    }
 }
 
 /* Responsive overrides */
@@ -106,7 +210,8 @@
 
     .pets-panel.open {
         right: 0;
-        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2), -2px 0 5px rgba(0, 0, 0, 0.1);
+        border-left: 1px solid #e0e0e0;
     }
 }
 
