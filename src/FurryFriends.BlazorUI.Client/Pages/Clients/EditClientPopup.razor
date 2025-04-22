@@ -1,0 +1,72 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Components.Common
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header modal-header-background">
+				<h5 class="modal-title">Edit Client</h5>
+				<div class="header-actions">
+					<button type="button" class="pets-toggle-btn" @onclick="TogglePetsPanel">
+						<span class="@(isPetsPanelOpen ? "pets-toggle-icon open" : "pets-toggle-icon")">
+							<i class="@(isPetsPanelOpen ? "fas fa-chevron-left" : "fas fa-paw")"></i>
+							@(isPetsPanelOpen ? "Hide Pets" : "Show Pets")
+						</span>
+					</button>
+					<button type="button" class="close" @onclick="OnCancel">&times;</button>
+				</div>
+			</div>
+			<div class="modal-body">
+				@if (isLoading)
+				{
+					<div class="loading-container">
+						<p><em>Loading client data...</em></p>
+					</div>
+				}
+				else if (loadError != null)
+				{
+					<div class="error-container">
+						<p>Error: @loadError</p>
+					</div>
+				}
+				else if (clientModel != null)
+				{
+					<div class="edit-client-layout">
+						<!-- Slide-out pets panel -->
+						<div class="pets-panel @(isPetsPanelOpen ? "open" : "")">
+							<PetsDisplay
+								Pets="clientPets"
+								IsLoading="isPetsLoading"
+								ClientEmail="ClientEmail"
+								OnAddPet="HandleAddPet"
+								OnEditPet="HandleEditPet" />
+						</div>
+
+						<div class="client-form-section">
+							<ClientForm
+							ClientModel="clientModel"
+							OnSubmit="HandleValidSubmit"
+							OnCancel="OnCancel"
+							FormName="EditClient"
+							SubmitButtonText="Save Client"
+							ButtonContainerClass="modal-footer"
+							CancelButtonStyle="margin-right: 0.5rem;" />
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+@if (showEditPetPopup && selectedPet != null)
+{
+	<EditPetPopup
+		Pet="selectedPet"
+		ClientEmail="ClientEmail"
+		OnSave="HandlePetSaved"
+		OnCancel="HandlePetEditCancel" />
+}
+
+

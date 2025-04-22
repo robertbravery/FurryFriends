@@ -7,7 +7,7 @@ using MediatR;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdateClient;
 
-public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand, Client>
+public class UpdateClientCommandHandler : ICommandHandler<UpdateClientCommand, Result<Client>>
 {
   private readonly IReadRepository<Client> _clientRepository;
   private readonly IClientService _clientService;
@@ -18,7 +18,7 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand, C
     _clientService = clientService;
   }
 
-  public async Task<Client> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
+  public async Task<Result<Client>> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
   {
     Guard.Against.Null(request, nameof(request));
     Guard.Against.NullOrEmpty(request.ClientId, nameof(request.ClientId));
@@ -59,8 +59,8 @@ public class UpdateClientCommandHandler : IRequestHandler<UpdateClientCommand, C
     client.UpdatePreferredContactTime(request.PreferredContactTime);
     client.UpdateReferralSource(request.ReferralSource);
 
-    await _clientService.UpdateClientAsync(client);
-
-    return client;
+    var updateClient = await _clientService.UpdateClientAsync(client);
+return updateClient;
+    // return updateClient == null ? Result.Success(updateClient) : Result.NotFound();
   }
 }

@@ -5,5 +5,10 @@ namespace FurryFriends.BlazorUI.Client.Services.Interfaces;
 public interface IClientService
 {
   Task<List<ClientDto>> GetClientsAsync();
+  Task<ClientResponseBase> GetClientByEmailAsync(string email);
   Task CreateClientAsync(ClientRequestDto clientModel);
+  Task UpdateClientAsync(ClientRequestDto clientModel);
+  Task UpdatePetAsync(string clientEmail, Pet pet);
+
+  Task<string> GetDogImageAsync();
 }

@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdateClient;
 
-public class UpdateClientCommand : IRequest<Client>
+public class UpdateClientCommand : ICommand<Result<Client>>
 {
   public Guid ClientId { get; set; }
   public string FirstName { get; set; } = default!;

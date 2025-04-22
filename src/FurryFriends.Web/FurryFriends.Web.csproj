@@ -27,6 +27,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" />
     <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Ardalis.ApiEndpoints" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,4 +42,3 @@
   </ItemGroup>
 
 </Project>
-

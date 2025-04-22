@@ -39,8 +39,9 @@ public class UpdateClientCommandHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Name.FullName.Should().Be("Updated Name");
-        result.Email.EmailAddress.Should().Be("updated@example.com");
+        result.Value.Should().NotBeNull();
+        result.Value.Name.FullName.Should().Be("Updated Name");
+        result.Value.Email.EmailAddress.Should().Be("updated@example.com");
         _mockClientService.Verify(s => s.UpdateClientAsync(It.IsAny<Client>()), Times.Once);
     }
 

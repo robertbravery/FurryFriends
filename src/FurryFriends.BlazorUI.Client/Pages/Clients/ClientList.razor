@@ -1,45 +1,52 @@
+@page "/clients"
+
+@rendermode InteractiveAuto
 @using FurryFriends.BlazorUI.Client.Models.Clients
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using FurryFriends.BlazorUI.Client.Components.Common
+@implements IDisposable
 @inject IClientService ClientService
+@inject IPopupService PopupService
 
 <div class="client-list-container">
-	<h1>Client Directory</h1>
-	<p>View and manage all your clients.</p>
+    <h1>Client Directory</h1>
+    <p>View and manage all your clients.</p>
 
-	@if (clients is null)
-	{
-		<p><em>Loading client list...</em></p>
-	}
-	else
-	{
-		<table class="table">
-			<thead>
-				<tr>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Pets</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var client in clients)
-				{
-					<tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
-						<td>@client.Name</td>
-						<td>@client.EmailAddress</td>
-						<td>@client.City</td>
-						<td>@client.TotalPets</td>
-						<td style="display: flex; gap: 10px;">
-							<span style="color:brown; cursor:pointer">👁️</span> <!-- View -->
-							<span style="color:steelblue; cursor:pointer">+🐾</span> <!-- Add Pet -->
-							<span style="color:lightcoral; cursor:pointer">✏️</span> <!-- Edit -->
-						</td> 
-					</tr>
-				}
-			</tbody>
-		</table>
-	}
+    @if (clients is null)
+    {
+        <p><em>Loading client list...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Pets</th>
+                    <th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var client in clients)
+                {
+                    <tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
+                        <td>@client.Name</td>
+                        <td>@client.EmailAddress</td>
+                        <td>@client.City</td>
+                        <td>@client.TotalPets</td>
+                        <td style="display: flex; gap: 10px;">
+                            <span style="color:brown; cursor:pointer">👁️</span>
+                            <span style="color:steelblue; cursor:pointer">+🐾</span>
+							<button class="btn btn-link p-0" style="color:lightcoral;"
+								@onclick="() => OpenEditPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>✏️</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 
 @code {
@@ -47,8 +54,65 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		await LoadClients();
+
+		// Subscribe to the popup close event to refresh data
+		SubscribeToEvents();
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			// Ensure we're subscribed after the component is rendered
+			SubscribeToEvents();
+		}
+	}
+
+	private void SubscribeToEvents()
+	{
+		// Unsubscribe first to avoid duplicate subscriptions
+		PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
+
+		// Subscribe to events
+		PopupService.OnCloseEditClientPopup += HandlePopupClosed;
+	}
+
+	private async Task LoadClients()
+	{
 		clients = await ClientService.GetClientsAsync();
 		Console.WriteLine($"Clients fetched: {clients?.Count}");
+	}
 
+	private async void HandlePopupClosed()
+	{
+		// Refresh the client list when the popup is closed
+		await LoadClients();
+		StateHasChanged();
+	}
+
+	private void OpenEditPopup(string? clientEmail)
+	{
+		if (clientEmail is null)
+		{
+			return;
+		}
+		Console.WriteLine($"Opening edit popup for client ID: {clientEmail}");
+
+		// Use the popup service to show the edit popup
+		PopupService.ShowEditClientPopup(clientEmail);
+	}
+
+	public void Dispose()
+	{
+		try
+		{
+			// Unsubscribe from events when the component is disposed
+			PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error during Dispose: {ex.Message}");
+		}
 	}
 }

@@ -1,0 +1,111 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@inject IJSRuntime JS
+
+<div class="pets-section">
+    <div class="pets-header">
+        <h4 class="section-title">Client's Pets</h4>
+        <button type="button" class="btn btn-primary add-pet-btn" @onclick="AddNewPet">
+            <span class="add-icon">+</span> Add Pet
+        </button>
+    </div>
+    <form class="pets-form">
+        <div class="pets-container">
+            @if (IsLoading)
+            {
+                <div class="pets-loading-container">
+                    <p class="pets-loading-message">Loading pets...</p>
+                </div>
+            }
+            else if (Pets == null || !Pets.Any())
+            {
+                <p class="no-pets-message">No pets found for this client.</p>
+            }
+            else
+            {
+                <div class="pet-cards-container">
+                    @foreach (var pet in Pets)
+                    {
+                        <div class="pet-card">
+                            <div class="pet-card-header">
+                                <h4>@pet.Name</h4>
+                                <span class="pet-card-species">@pet.Breed</span>
+                            </div>
+                            <div class="pet-card-image">
+                                @if (string.IsNullOrEmpty(pet.Photo))
+                                {
+                                    <div class="pet-image-placeholder">No image available</div>
+                                }
+                                else
+                                {
+                                    <img src="@pet.Photo" alt="@pet.Name" class="pet-image" style="max-width: 200px; max-height: 200px;" />
+                                }
+                            </div>
+                            <div class="pet-card-body">
+                                <p><strong>Age:</strong> @pet.Age years</p>
+                                <p><strong>Weight:</strong> @pet.Weight lbs</p>
+                                <p><strong>Active:</strong> @(pet.isActive ? "Yes" : "No")</p>
+                                @if (!string.IsNullOrEmpty(pet.SpecialNeeds))
+                                {
+                                    <p><strong>Special Needs:</strong> @pet.SpecialNeeds</p>
+                                }
+                                @if (!string.IsNullOrEmpty(pet.MedicalConditions))
+                                {
+                                    <p><strong>Medical:</strong> @pet.MedicalConditions</p>
+                                }
+                            </div>
+                            <div class="pet-card-actions">
+                                <button type="button" class="btn btn-primary" @onclick="() => EditPet(pet)">Edit</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </form>
+</div>
+
+@code {
+    [Parameter]
+    public Pet[]? Pets { get; set; }
+
+    [Parameter]
+    public bool IsLoading { get; set; } = true;
+
+    [Parameter]
+    public string ClientEmail { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> OnAddPet { get; set; }
+
+    [Parameter]
+    public EventCallback<Pet> OnEditPet { get; set; }
+
+    private async Task AddNewPet()
+    {
+        if (!string.IsNullOrEmpty(ClientEmail))
+        {
+            if (OnAddPet.HasDelegate)
+            {
+                await OnAddPet.InvokeAsync(ClientEmail);
+            }
+            else
+            {
+                // Fallback if no callback is provided
+                await JS.InvokeVoidAsync("alert", $"Add a new pet for client {ClientEmail}. This would open a pet creation form.");
+            }
+        }
+    }
+
+    private async Task EditPet(Pet pet)
+    {
+        if (OnEditPet.HasDelegate)
+        {
+            await OnEditPet.InvokeAsync(pet);
+        }
+        else
+        {
+            // Fallback if no callback is provided
+            await JS.InvokeVoidAsync("alert", $"Edit pet {pet.Name}. This would open a pet edit form.");
+        }
+    }
+}

@@ -1,0 +1,32 @@
+C4Context
+    title System Context diagram for FurryFriends Pet Walking App
+
+    Person(petOwner, "Pet Owner", "A person who owns a pet and needs walking services.")
+    Person(petWalker, "Pet Walker", "A person who provides pet walking services.")
+
+    System_Boundary(c1, "FurryFriends App") {
+        System(app, "FurryFriends App", "Mobile and Web application for pet owners and walkers.")
+    }
+
+    System_Boundary(c2, "Payment Gateway", "Handles payment processing for walk bookings.") {
+        System(paymentGateway, "Stripe", "Processes payments securely.")
+    }
+
+    System_Boundary(c3, "Notification Service", "Sends notifications to users.") {
+        System(notificationService, "Twilio/Mailkit", "Sends SMS and emails.")
+    }
+
+    System_Boundary(c4, "Location Service", "Provides location-based services.") {
+        System(locationService, "Google Maps API", "Provides maps and location data.")
+    }
+
+    System_Boundary(c5, "Database", "Stores application data.") {
+        System(userDb, "User Database", "Stores user profiles, pets, and bookings.")
+    }
+
+    Rel(petOwner, app, "Uses")
+    Rel(petWalker, app, "Uses")
+    Rel(app, paymentGateway, "Uses", "For payment processing")
+    Rel(app, notificationService, "Uses", "To send notifications")
+    Rel(app, locationService, "Uses", "For location-based services")
+    Rel(app, userDb, "Reads/Writes")
