@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
 @using FurryFriends.BlazorUI.Client
+@using FurryFriends.BlazorUI.Client.Components.Common
 @inject NavigationManager NavigationManager
 
 @code {
@@ -46,5 +47,8 @@
         <main class="page-content">
             @Body
         </main>
+
+        <!-- Popup Manager -->
+        <ClientEditPopupManager />
     </div>
 </div>

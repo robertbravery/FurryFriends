@@ -2,6 +2,7 @@
 @using FurryFriends.BlazorUI.Client.Models
 @using System.ComponentModel.DataAnnotations
 @rendermode InteractiveAuto
+@inject NavigationManager NavigationManager
 
 <EditForm Model="@ClientModel" OnValidSubmit="@OnSubmit" FormName="@FormName" Enhance="@Enhance">
     <ObjectGraphDataAnnotationsValidator />
@@ -95,7 +96,7 @@
     <div class="@ButtonContainerClass">
         @if (ShowCancelButton)
         {
-            <button type="button" class="btn btn-secondary" @onclick="OnCancel" style="@CancelButtonStyle">Cancel</button>
+            <button type="button" class="btn btn-secondary" @onclick="HandleCancel" style="@CancelButtonStyle">Cancel</button>
         }
         <button type="submit" class="btn btn-primary" disabled="@IsSubmitting">
             @if (IsSubmitting)
@@ -155,6 +156,30 @@
         if (ClientModel.Address is null)
         {
             ClientModel.Address = new Address();
+        }
+    }
+
+    private async Task HandleCancel()
+    {
+        try
+        {
+            // First try to invoke the callback
+            if (OnCancel.HasDelegate)
+            {
+                await OnCancel.InvokeAsync();
+            }
+            else
+            {
+                // If no callback is provided, navigate directly to clients page
+                NavigationManager.NavigateTo("/clients");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in HandleCancel: {ex.Message}");
+
+            // If there's an error, navigate directly to clients page
+            NavigationManager.NavigateTo("/clients");
         }
     }
 }

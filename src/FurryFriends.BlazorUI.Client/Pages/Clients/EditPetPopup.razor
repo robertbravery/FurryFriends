@@ -1,0 +1,75 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-background">
+                <h5 class="modal-title">Edit Pet</h5>
+                <button type="button" class="close" @onclick="OnCancel">&times;</button>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="loading-container">
+                        <p><em>Loading pet data...</em></p>
+                    </div>
+                }
+                else if (Pet != null)
+                {
+                    <EditForm Model="@Pet" OnValidSubmit="HandleValidSubmit" FormName="EditPet">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-group">
+                            <label for="petName">Name</label>
+                            <InputText id="petName" @bind-Value="Pet.Name" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Name)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petBreed">Breed</label>
+                            <InputText id="petBreed" @bind-Value="Pet.Breed" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Breed)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petAge">Age (years)</label>
+                            <InputNumber id="petAge" @bind-Value="Pet.Age" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Age)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petWeight">Weight (lbs)</label>
+                            <InputNumber id="petWeight" @bind-Value="Pet.Weight" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Weight)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petSpecialNeeds">Special Needs</label>
+                            <InputText id="petSpecialNeeds" @bind-Value="Pet.SpecialNeeds" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.SpecialNeeds)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petMedicalConditions">Medical Conditions</label>
+                            <InputText id="petMedicalConditions" @bind-Value="Pet.MedicalConditions" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.MedicalConditions)" />
+                        </div>
+
+                        <div class="form-group form-check">
+                            <InputCheckbox id="petIsActive" @bind-Value="Pet.isActive" class="form-check-input" />
+                            <label class="form-check-label" for="petIsActive">Active</label>
+                            <ValidationMessage For="@(() => Pet.isActive)" />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save Pet</button>
+                            <button type="button" class="btn btn-secondary" @onclick="OnCancel">Cancel</button>
+                        </div>
+                    </EditForm>
+                }
+            </div>
+        </div>
+    </div>
+</div>

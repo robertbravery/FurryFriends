@@ -1,0 +1,20 @@
+
+
+C4Component
+    title Component diagram for FurryFriends
+
+    Container(blazorUi, "Blazor UI", "Blazor WebAssembly", "Provides the user interface for the application.")
+    Container_Boundary(b2, "Web API Components") {
+        Component(clientController, "Client Controller", "ASP.NET Core Controller", "Handles client-related requests.")
+        Component(petWalkerController, "Pet Walker Controller", "ASP.NET Core Controller", "Handles pet walker-related requests.")
+        Component(bookingController, "Booking Controller", "Handles booking-related requests.")
+        Component(authService, "Authentication Service", "ASP.NET Core Service", "Provides authentication and authorization functionality.")
+    }
+
+
+Rel(blazorUi, clientController, "Uses", "HTTPS")
+Rel(blazorUi, petWalkerController, "Uses", "HTTPS")
+Rel(blazorUi, bookingController, "Uses", "HTTPS")
+Rel(clientController, authService, "Uses")
+Rel(petWalkerController, authService, "Uses")
+Rel(bookingController, authService, "Uses")

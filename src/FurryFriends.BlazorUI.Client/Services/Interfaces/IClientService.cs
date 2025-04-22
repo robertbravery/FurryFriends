@@ -8,6 +8,7 @@ public interface IClientService
   Task<ClientResponseBase> GetClientByEmailAsync(string email);
   Task CreateClientAsync(ClientRequestDto clientModel);
   Task UpdateClientAsync(ClientRequestDto clientModel);
+  Task UpdatePetAsync(string clientEmail, Pet pet);
 
   Task<string> GetDogImageAsync();
 }

@@ -30,6 +30,8 @@ namespace FurryFriends.BlazorUI.Client.Pages.Clients;
         private bool isPetsLoading = true;
         private string? loadError = null;
         private bool isPetsPanelOpen = false; // Controls the visibility of the pets panel
+        private bool showEditPetPopup = false; // Controls the visibility of the edit pet popup
+        private Pet? selectedPet = null; // The pet being edited
 
         protected override async Task OnInitializedAsync()
         {
@@ -114,9 +116,20 @@ namespace FurryFriends.BlazorUI.Client.Pages.Clients;
         {
             if (clientModel != null)
             {
-                ClientRequestDto clientRequest = ClientModel.MapToRequest(clientModel);
-                await ClientService.UpdateClientAsync(clientRequest);
-                await OnSave.InvokeAsync();
+                // Use Task.Run to ensure the UI thread is not blocked
+                await Task.Run(async () =>
+                {
+                    // Small delay to ensure the event completes
+                    await Task.Delay(10);
+
+                    // Update the state on the UI thread
+                    await InvokeAsync(async () =>
+                    {
+                        ClientRequestDto clientRequest = ClientModel.MapToRequest(clientModel);
+                        await ClientService.UpdateClientAsync(clientRequest);
+                        await OnSave.InvokeAsync();
+                    });
+                });
             }
         }
 
@@ -129,20 +142,102 @@ namespace FurryFriends.BlazorUI.Client.Pages.Clients;
             // If the client has an ID, we can use it to add a pet
             if (clientModel != null && !string.IsNullOrEmpty(clientEmail))
             {
-                // For now, we'll just show a JavaScript alert
-                // In a real implementation, you would navigate to a pet creation form or show a popup
-                await JS.InvokeVoidAsync("alert", $"Add a new pet for client {clientEmail}. This would open a pet creation form.");
+                // Use Task.Run to ensure the UI thread is not blocked
+                await Task.Run(async () =>
+                {
+                    // Small delay to ensure the event completes
+                    await Task.Delay(10);
 
-                // If you have a dedicated pet creation component, you could invoke it here
-                // await OnAddPet.InvokeAsync(clientData.Id);
+                    // Update the state on the UI thread
+                    await InvokeAsync(async () =>
+                    {
+                        // For now, we'll just show a JavaScript alert
+                        // In a real implementation, you would navigate to a pet creation form or show a popup
+                        await JS.InvokeVoidAsync("alert", $"Add a new pet for client {clientEmail}. This would open a pet creation form.");
+
+                        // If you have a dedicated pet creation component, you could invoke it here
+                        // await OnAddPet.InvokeAsync(clientData.Id);
+                    });
+                });
             }
+        }
+
+        // Handle the edit pet request from the PetsDisplay component
+        private void HandleEditPet(Pet pet)
+        {
+            // Use Task.Run to ensure the UI thread is not blocked
+            Task.Run(async () =>
+            {
+                // Small delay to ensure the event completes
+                await Task.Delay(10);
+
+                // Update the state on the UI thread
+                await InvokeAsync(() =>
+                {
+                    selectedPet = pet;
+                    showEditPetPopup = true;
+                    StateHasChanged();
+                });
+            });
+        }
+
+        // Handle the save event from the EditPetPopup component
+        private async Task HandlePetSaved()
+        {
+            // Use Task.Run to ensure the UI thread is not blocked
+            await Task.Run(async () =>
+            {
+                // Small delay to ensure the event completes
+                await Task.Delay(10);
+
+                // Update the state on the UI thread
+                await InvokeAsync(async () =>
+                {
+                    showEditPetPopup = false;
+                    selectedPet = null;
+
+                    // Reload the client data to refresh the pet list
+                    await LoadClientData();
+                    StateHasChanged();
+                });
+            });
+        }
+
+        // Handle the cancel event from the EditPetPopup component
+        private void HandlePetEditCancel()
+        {
+            // Use Task.Run to ensure the UI thread is not blocked
+            Task.Run(async () =>
+            {
+                // Small delay to ensure the event completes
+                await Task.Delay(10);
+
+                // Update the state on the UI thread
+                await InvokeAsync(() =>
+                {
+                    showEditPetPopup = false;
+                    selectedPet = null;
+                    StateHasChanged();
+                });
+            });
         }
 
         // Toggle the visibility of the pets panel
         private void TogglePetsPanel()
         {
-            isPetsPanelOpen = !isPetsPanelOpen;
-            StateHasChanged();
+            // Use Task.Run to ensure the UI thread is not blocked
+            Task.Run(async () =>
+            {
+                // Small delay to ensure the event completes
+                await Task.Delay(10);
+
+                // Update the state on the UI thread
+                await InvokeAsync(() =>
+                {
+                    isPetsPanelOpen = !isPetsPanelOpen;
+                    StateHasChanged();
+                });
+            });
         }
     }
 

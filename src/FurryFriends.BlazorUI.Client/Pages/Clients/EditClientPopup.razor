@@ -39,7 +39,8 @@
 								Pets="clientPets"
 								IsLoading="isPetsLoading"
 								ClientEmail="ClientEmail"
-								OnAddPet="HandleAddPet" />
+								OnAddPet="HandleAddPet"
+								OnEditPet="HandleEditPet" />
 						</div>
 
 						<div class="client-form-section">
@@ -58,5 +59,14 @@
 		</div>
 	</div>
 </div>
+
+@if (showEditPetPopup && selectedPet != null)
+{
+	<EditPetPopup
+		Pet="selectedPet"
+		ClientEmail="ClientEmail"
+		OnSave="HandlePetSaved"
+		OnCancel="HandlePetEditCancel" />
+}
 
 

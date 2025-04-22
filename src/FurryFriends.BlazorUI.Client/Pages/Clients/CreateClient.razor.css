@@ -32,6 +32,30 @@
     gap: 1.5rem; /* Slightly larger gap than the default */
 }
 
+/* Direct cancel button */
+.direct-cancel-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px dashed #dc3545;
+}
+
+.direct-cancel-container .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.direct-cancel-container .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    transform: scale(1.05);
+}
+
 /* Responsive overrides */
 @media (max-width: 768px) {
     .create-client-container {

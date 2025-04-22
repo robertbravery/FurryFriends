@@ -1,4 +1,4 @@
-﻿//using FurryFriends.BlazorUI.Client.Services.Implementation;
+﻿using FurryFriends.BlazorUI.Client.Services.Implementation;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using FurryFriends.BlazorUI.Components;
 using FurryFriends.BlazorUI.Services.Implementation;
@@ -11,6 +11,7 @@ var host = builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddSingleton<IPopupService, PopupService>();
 
 builder.Services.AddHttpClient<IClientService, ClientService>(client =>
 {

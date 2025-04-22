@@ -1,0 +1,11 @@
+C4Context
+    title System Context diagram for FurryFriends Pet Walking App
+
+    Container_Boundary(b1, "FurryFriends App Containers") {
+    Container(blazorUi, "Blazor UI", "Blazor WebAssembly", "Provides the user interface for the application.")
+    Container(webApi, "Web API", "ASP.NET Core API", "Provides API endpoints for the application.")
+    ContainerDb(database, "Database", "SQL Server", "Stores application data.")
+}
+
+Rel(blazorUi, webApi, "Uses", "HTTPS")
+Rel(webApi, database, "Reads/Writes", "EF Core")

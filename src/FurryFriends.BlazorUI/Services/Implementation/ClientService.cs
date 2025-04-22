@@ -68,6 +68,33 @@ public class ClientService : IClientService
       return dogImage.Message.Replace("\\/", "/");
     }
   }
+
+  public async Task UpdatePetAsync(string clientEmail, Pet pet)
+  {
+    // Create the request object for the API
+    var updatePetRequest = new
+    {
+      ClientEmail = clientEmail,
+      PetId = pet.Id,
+      Name = pet.Name,
+      Age = pet.Age,
+      Weight = pet.Weight,
+      Color = "Unknown", // This field is required by the API but not in our UI model
+      SpecialNeeds = pet.SpecialNeeds,
+      MedicalConditions = pet.MedicalConditions,
+      IsActive = pet.isActive,
+      Photo = pet.Photo
+    };
+
+    // Send the update request to the API
+    var response = await _httpClient.PutAsJsonAsync("Clients/pets", updatePetRequest);
+
+    if (!response.IsSuccessStatusCode)
+    {
+      var errorContent = await response.Content.ReadAsStringAsync();
+      throw new HttpRequestException($"Failed to update pet: {errorContent}", null, response.StatusCode);
+    }
+  }
 }
 
 public class DogImageResponse

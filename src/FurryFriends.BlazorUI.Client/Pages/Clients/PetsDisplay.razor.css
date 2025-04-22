@@ -154,6 +154,14 @@
     color: #495057;
 }
 
+.pet-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+
 /* Scrollbar styling */
 .pets-container::-webkit-scrollbar {
     width: 6px;

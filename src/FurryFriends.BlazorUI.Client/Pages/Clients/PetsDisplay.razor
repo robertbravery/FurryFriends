@@ -53,6 +53,9 @@
                                     <p><strong>Medical:</strong> @pet.MedicalConditions</p>
                                 }
                             </div>
+                            <div class="pet-card-actions">
+                                <button type="button" class="btn btn-primary" @onclick="() => EditPet(pet)">Edit</button>
+                            </div>
                         </div>
                     }
                 </div>
@@ -74,6 +77,9 @@
     [Parameter]
     public EventCallback<string> OnAddPet { get; set; }
 
+    [Parameter]
+    public EventCallback<Pet> OnEditPet { get; set; }
+
     private async Task AddNewPet()
     {
         if (!string.IsNullOrEmpty(ClientEmail))
@@ -87,6 +93,19 @@
                 // Fallback if no callback is provided
                 await JS.InvokeVoidAsync("alert", $"Add a new pet for client {ClientEmail}. This would open a pet creation form.");
             }
+        }
+    }
+
+    private async Task EditPet(Pet pet)
+    {
+        if (OnEditPet.HasDelegate)
+        {
+            await OnEditPet.InvokeAsync(pet);
+        }
+        else
+        {
+            // Fallback if no callback is provided
+            await JS.InvokeVoidAsync("alert", $"Edit pet {pet.Name}. This would open a pet edit form.");
         }
     }
 }

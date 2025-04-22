@@ -1,0 +1,100 @@
+@using FurryFriends.BlazorUI.Client.Pages.Clients
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IPopupService PopupService
+@inject IClientService ClientService
+
+@if (showEditPopup && !string.IsNullOrEmpty(clientEmail))
+{
+    <EditClientPopup ClientEmail="@clientEmail" OnSave="HandleSave" OnCancel="HandleCancel" />
+}
+
+@code {
+    private bool showEditPopup = false;
+    private string clientEmail = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        SubscribeToEvents();
+
+        // Check if the popup should be open based on the service state
+        if (PopupService.IsEditClientPopupOpen())
+        {
+            clientEmail = PopupService.GetCurrentClientEmail();
+            showEditPopup = true;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Ensure we're subscribed after the component is rendered
+            SubscribeToEvents();
+
+            // Check if the popup should be open based on the service state
+            if (PopupService.IsEditClientPopupOpen() && !showEditPopup)
+            {
+                clientEmail = PopupService.GetCurrentClientEmail();
+                showEditPopup = true;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void SubscribeToEvents()
+    {
+        // Unsubscribe first to avoid duplicate subscriptions
+        PopupService.OnShowEditClientPopup -= ShowPopup;
+        PopupService.OnCloseEditClientPopup -= ClosePopup;
+
+        // Subscribe to events
+        PopupService.OnShowEditClientPopup += ShowPopup;
+        PopupService.OnCloseEditClientPopup += ClosePopup;
+    }
+
+    private void ShowPopup(string email)
+    {
+        clientEmail = email;
+        showEditPopup = true;
+        StateHasChanged();
+    }
+
+    private void ClosePopup()
+    {
+        showEditPopup = false;
+        StateHasChanged();
+    }
+
+    private void HandleSave()
+    {
+        showEditPopup = false;
+        StateHasChanged();
+
+        // Notify any listeners that might need to refresh their data
+        PopupService.CloseEditClientPopup();
+    }
+
+    private void HandleCancel()
+    {
+        showEditPopup = false;
+        StateHasChanged();
+
+        // Notify any listeners that the popup was closed
+        PopupService.CloseEditClientPopup();
+    }
+
+    public void Dispose()
+    {
+        try
+        {
+            PopupService.OnShowEditClientPopup -= ShowPopup;
+            PopupService.OnCloseEditClientPopup -= ClosePopup;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during Dispose: {ex.Message}");
+        }
+    }
+}
