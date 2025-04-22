@@ -37,7 +37,8 @@
                         <td>@client.City</td>
                         <td>@client.TotalPets</td>
                         <td style="display: flex; gap: 10px;">
-                            <span style="color:brown; cursor:pointer">👁️</span>
+                            <button class="btn btn-link p-0" style="color:brown;"
+                                @onclick="() => OpenViewPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>👁️</button>
                             <span style="color:steelblue; cursor:pointer">+🐾</span>
 							<button class="btn btn-link p-0" style="color:lightcoral;"
 								@onclick="() => OpenEditPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>✏️</button>
@@ -73,9 +74,11 @@
 	{
 		// Unsubscribe first to avoid duplicate subscriptions
 		PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
+		PopupService.OnCloseViewClientPopup -= HandlePopupClosed;
 
 		// Subscribe to events
 		PopupService.OnCloseEditClientPopup += HandlePopupClosed;
+		PopupService.OnCloseViewClientPopup += HandlePopupClosed;
 	}
 
 	private async Task LoadClients()
@@ -103,12 +106,25 @@
 		PopupService.ShowEditClientPopup(clientEmail);
 	}
 
+	private void OpenViewPopup(string? clientEmail)
+	{
+		if (clientEmail is null)
+		{
+			return;
+		}
+		Console.WriteLine($"Opening view popup for client ID: {clientEmail}");
+
+		// Use the popup service to show the view popup
+		PopupService.ShowViewClientPopup(clientEmail);
+	}
+
 	public void Dispose()
 	{
 		try
 		{
 			// Unsubscribe from events when the component is disposed
 			PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
+			PopupService.OnCloseViewClientPopup -= HandlePopupClosed;
 		}
 		catch (Exception ex)
 		{

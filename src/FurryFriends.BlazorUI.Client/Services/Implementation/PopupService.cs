@@ -5,13 +5,20 @@ namespace FurryFriends.BlazorUI.Client.Services.Implementation;
 
 public class PopupService : IPopupService
 {
+    // Edit popup events
     public event Action<string> OnShowEditClientPopup = default!;
     public event Action OnCloseEditClientPopup = default!;
+
+    // View popup events
+    public event Action<string> OnShowViewClientPopup = default!;
+    public event Action OnCloseViewClientPopup = default!;
 
     // Track the current state to handle page refreshes
     private string _currentClientEmail = string.Empty;
     private bool _isEditClientPopupOpen = false;
+    private bool _isViewClientPopupOpen = false;
 
+    // Edit popup methods
     public void ShowEditClientPopup(string clientEmail)
     {
         _currentClientEmail = clientEmail;
@@ -23,7 +30,7 @@ public class PopupService : IPopupService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error showing popup: {ex.Message}");
+            Console.WriteLine($"Error showing edit popup: {ex.Message}");
         }
     }
 
@@ -37,13 +44,49 @@ public class PopupService : IPopupService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error closing popup: {ex.Message}");
+            Console.WriteLine($"Error closing edit popup: {ex.Message}");
         }
     }
 
+    // View popup methods
+    public void ShowViewClientPopup(string clientEmail)
+    {
+        _currentClientEmail = clientEmail;
+        _isViewClientPopupOpen = true;
+
+        try
+        {
+            OnShowViewClientPopup?.Invoke(clientEmail);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing view popup: {ex.Message}");
+        }
+    }
+
+    public void CloseViewClientPopup()
+    {
+        _isViewClientPopupOpen = false;
+
+        try
+        {
+            OnCloseViewClientPopup?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error closing view popup: {ex.Message}");
+        }
+    }
+
+    // State methods
     public bool IsEditClientPopupOpen()
     {
         return _isEditClientPopupOpen;
+    }
+
+    public bool IsViewClientPopupOpen()
+    {
+        return _isViewClientPopupOpen;
     }
 
     public string GetCurrentClientEmail()

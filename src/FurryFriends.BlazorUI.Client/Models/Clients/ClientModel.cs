@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FurryFriends.BlazorUI.Client.Models.Clients.Enums;
 
 namespace FurryFriends.BlazorUI.Client.Models.Clients;
 
@@ -36,6 +37,13 @@ public class ClientModel
 
   [StringLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
   public string Notes { get; set; } = string.Empty;
+
+  // Additional properties from Client aggregate
+  public ClientType ClientType { get; set; } = ClientType.Regular;
+  public string PreferredContactTime { get; set; } = string.Empty;
+  public ReferralSource ReferralSource { get; set; } = ReferralSource.None;
+  public bool IsActive { get; set; } = true;
+  public DateTime? DeactivatedAt { get; set; }
 
   public static ClientRequestDto MapToRequest(ClientModel clientDto) => new()
   {
