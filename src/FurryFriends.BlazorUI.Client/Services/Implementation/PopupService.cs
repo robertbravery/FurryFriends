@@ -13,10 +13,15 @@ public class PopupService : IPopupService
     public event Action<string> OnShowViewClientPopup = default!;
     public event Action OnCloseViewClientPopup = default!;
 
+    // Create popup events
+    public event Action OnShowCreateClientPopup = default!;
+    public event Action OnCloseCreateClientPopup = default!;
+
     // Track the current state to handle page refreshes
     private string _currentClientEmail = string.Empty;
     private bool _isEditClientPopupOpen = false;
     private bool _isViewClientPopupOpen = false;
+    private bool _isCreateClientPopupOpen = false;
 
     // Edit popup methods
     public void ShowEditClientPopup(string clientEmail)
@@ -78,6 +83,35 @@ public class PopupService : IPopupService
         }
     }
 
+    // Create popup methods
+    public void ShowCreateClientPopup()
+    {
+        _isCreateClientPopupOpen = true;
+
+        try
+        {
+            OnShowCreateClientPopup?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing create popup: {ex.Message}");
+        }
+    }
+
+    public void CloseCreateClientPopup()
+    {
+        _isCreateClientPopupOpen = false;
+
+        try
+        {
+            OnCloseCreateClientPopup?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error closing create popup: {ex.Message}");
+        }
+    }
+
     // State methods
     public bool IsEditClientPopupOpen()
     {
@@ -87,6 +121,11 @@ public class PopupService : IPopupService
     public bool IsViewClientPopupOpen()
     {
         return _isViewClientPopupOpen;
+    }
+
+    public bool IsCreateClientPopupOpen()
+    {
+        return _isCreateClientPopupOpen;
     }
 
     public string GetCurrentClientEmail()

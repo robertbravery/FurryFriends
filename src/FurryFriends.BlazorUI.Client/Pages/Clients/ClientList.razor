@@ -9,8 +9,15 @@
 @inject IPopupService PopupService
 
 <div class="client-list-container">
-    <h1>Client Directory</h1>
-    <p>View and manage all your clients.</p>
+    <div class="client-list-header">
+        <div>
+            <h1>Client Directory</h1>
+            <p>View and manage all your clients.</p>
+        </div>
+        <button class="btn btn-primary add-client-btn" @onclick="OpenCreatePopup">
+            <span class="add-icon">+</span> Add New Client
+        </button>
+    </div>
 
     @if (clients is null)
     {
@@ -75,10 +82,12 @@
 		// Unsubscribe first to avoid duplicate subscriptions
 		PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
 		PopupService.OnCloseViewClientPopup -= HandlePopupClosed;
+		PopupService.OnCloseCreateClientPopup -= HandlePopupClosed;
 
 		// Subscribe to events
 		PopupService.OnCloseEditClientPopup += HandlePopupClosed;
 		PopupService.OnCloseViewClientPopup += HandlePopupClosed;
+		PopupService.OnCloseCreateClientPopup += HandlePopupClosed;
 	}
 
 	private async Task LoadClients()
@@ -118,6 +127,14 @@
 		PopupService.ShowViewClientPopup(clientEmail);
 	}
 
+	private void OpenCreatePopup()
+	{
+		Console.WriteLine("Opening create client popup");
+
+		// Use the popup service to show the create popup
+		PopupService.ShowCreateClientPopup();
+	}
+
 	public void Dispose()
 	{
 		try
@@ -125,6 +142,7 @@
 			// Unsubscribe from events when the component is disposed
 			PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
 			PopupService.OnCloseViewClientPopup -= HandlePopupClosed;
+			PopupService.OnCloseCreateClientPopup -= HandlePopupClosed;
 		}
 		catch (Exception ex)
 		{

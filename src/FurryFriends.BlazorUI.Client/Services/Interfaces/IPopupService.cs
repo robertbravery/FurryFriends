@@ -18,8 +18,16 @@ public interface IPopupService
     void ShowViewClientPopup(string clientEmail);
     void CloseViewClientPopup();
 
+    // Create popup events and methods
+    event Action OnShowCreateClientPopup;
+    event Action OnCloseCreateClientPopup;
+
+    void ShowCreateClientPopup();
+    void CloseCreateClientPopup();
+
     // Methods to get the current state
     bool IsEditClientPopupOpen();
     bool IsViewClientPopupOpen();
+    bool IsCreateClientPopupOpen();
     string GetCurrentClientEmail();
 }

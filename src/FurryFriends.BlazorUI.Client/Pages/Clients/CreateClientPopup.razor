@@ -1,0 +1,41 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Components.Common
+@rendermode InteractiveAuto
+
+<div class="popup-overlay">
+	<div class="popup-container">
+		<div class="popup-header">
+			<h3>Add New Client</h3>
+			<button type="button" class="close-button" @onclick="OnCancel">×</button>
+		</div>
+		<div class="popup-content">
+			<div class="popup-body">
+				@if (isSubmitting)
+				{
+					<div class="loading-container">
+						<p>Saving client...</p>
+					</div>
+				}
+				else if (!string.IsNullOrEmpty(errorMessage))
+				{
+					<div class="error-container">
+						<p>Error: @errorMessage</p>
+					</div>
+				}
+				else
+				{
+					<div class="client-form-section">
+						<ClientForm
+							ClientModel="clientModel"
+							OnSubmit="HandleValidSubmit"
+							OnCancel="OnCancel"
+							FormName="CreateClient"
+							SubmitButtonText="Save Client"
+							ButtonContainerClass="modal-footer"
+							CancelButtonStyle="margin-right: 0.5rem;" />
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
