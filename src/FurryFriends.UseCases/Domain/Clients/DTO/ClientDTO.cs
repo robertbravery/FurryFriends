@@ -11,6 +11,7 @@ public record ClientDTO(
     string City,
     string State,
     string ZipCode,
+    string Country,
     ClientType ClientType,
     TimeOnly? PreferredContactTime,
     ReferralSource? ReferralSource,

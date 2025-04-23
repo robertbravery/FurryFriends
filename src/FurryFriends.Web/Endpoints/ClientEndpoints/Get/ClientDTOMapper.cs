@@ -16,6 +16,7 @@ public class ClientDTOMapper : Mapper<GetClientRequest, ClientRecord, ClientDTO>
         e.City,
         e.State,
         e.ZipCode,
+        e.Country,
         e.ClientType,
         e.PreferredContactTime,
         e.ReferralSource,

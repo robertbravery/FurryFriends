@@ -25,6 +25,7 @@ public class GetClientQueryHandler(IClientService clientService)
       entityResult.Value.Address.City,
       entityResult.Value.Address.StateProvinceRegion,
       entityResult.Value.Address.ZipCode,
+      entityResult.Value.Address.Country,
       entityResult.Value.ClientType,
       entityResult.Value.PreferredContactTime,
       entityResult.Value.ReferralSource,
