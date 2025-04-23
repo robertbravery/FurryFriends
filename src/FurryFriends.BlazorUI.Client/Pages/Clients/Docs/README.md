@@ -18,6 +18,24 @@ This diagram maps the sequence of viewing a client and their pet details from th
 6. How the data flows back to the UI
 7. The process of closing the popup
 
+#### Client View Detailed Sequence (`client-view-detailed-sequence.mmd`)
+
+This enhanced sequence diagram provides a more detailed view of the client viewing process, including:
+
+1. The exact flow of data between all components
+2. The role of the PetsViewDisplay component in showing pet information
+3. State changes during the loading process
+4. The complete event handling chain for opening and closing the popup
+
+#### Pet View Flow (`pet-view-flow.mmd`)
+
+This flowchart illustrates how pet information is displayed within the client view:
+
+1. The loading and error handling process
+2. Conditional display based on whether pets exist
+3. The different elements of the pet cards (name, breed, photo, etc.)
+4. The relationship between client information and pet display sections
+
 ### Client Creation
 
 #### Client Creation Sequence (`client-creation-sequence.mmd`)
@@ -45,6 +63,46 @@ This specialized flowchart focuses on the multi-layered validation process durin
 3. Domain validation in value objects
 4. Business rule validation
 
+### Pet Management
+
+#### Pet Creation Sequence (`pet-creation-sequence.mmd`)
+
+This sequence diagram illustrates the process of adding a new pet to a client:
+
+1. How the pet creation is initiated from the EditClientPopup
+2. The role of the PetsDisplay component in triggering pet creation
+3. The AddPetPopup component's initialization and form handling
+4. The API communication for breed data and pet creation
+5. The process of updating the UI after successful pet creation
+
+#### Pet Update Sequence (`pet-update-sequence.mmd`)
+
+This sequence diagram shows the process of updating an existing pet:
+
+1. How pet editing is initiated from the PetsDisplay component
+2. The EditPetPopup component's initialization with existing pet data
+3. The validation and submission process
+4. The API communication for updating pet information
+5. The UI refresh process after successful update
+
+#### Pet Creation Flow (`pet-creation-flow.mmd`)
+
+This flowchart provides a high-level overview of the pet creation process:
+
+1. The user interaction steps
+2. Decision points for validation
+3. The client-side and server-side processing
+4. The UI update flow after successful creation
+
+#### Pet Update Flow (`pet-update-flow.mmd`)
+
+This flowchart illustrates the pet update process:
+
+1. The steps to initiate pet editing
+2. The validation and submission flow
+3. Error handling paths
+4. The UI refresh process
+
 ### Architecture Diagrams
 
 #### C4 Context Diagram (`client-creation-c4-context.mmd`)
@@ -55,13 +113,43 @@ This diagram shows the FurryFriends system in context with its users and externa
 
 This diagram shows the high-level containers (applications, data stores) that make up the FurryFriends system.
 
-#### C4 Component Diagram (`client-creation-c4-component.mmd`)
+#### C4 Component Diagram (Client Creation) (`client-creation-c4-component.mmd`)
 
 This diagram decomposes the containers into components, showing how they interact during client creation.
 
-#### Class Diagram (`client-creation-class-diagram.mmd`)
+#### C4 Component Diagram (Pet Management) (`pet-management-c4-component.mmd`)
+
+This diagram shows the components involved in pet management functionality:
+
+1. The UI components for displaying, adding, and editing pets
+2. The API endpoints and handlers for pet operations
+3. The domain entities and services for pet management
+4. The data access components for persisting pet data
+
+#### Class Diagram (Client Creation) (`client-creation-class-diagram.mmd`)
 
 This diagram shows the relationships between the key classes involved in client creation, from UI models to domain entities.
+
+#### Class Diagram (Pet Management) (`pet-management-class-diagram.mmd`)
+
+This diagram illustrates the class relationships for pet management:
+
+1. The UI components (EditClientPopup, PetsDisplay, AddPetPopup, EditPetPopup)
+2. The data models (Pet, BreedDto)
+3. The services for API communication
+4. The relationships and dependencies between these classes
+
+#### Comprehensive Client Domain Class Diagram (`client-domain-comprehensive-class-diagram.mmd`)
+
+This detailed class diagram provides a complete view of the Client domain model and all its relationships:
+
+1. Base classes and interfaces (EntityBase, AuditableEntity, UserEntityBase, IAggregateRoot, ValueObject)
+2. Domain entities (Client, Pet, Breed, Species) with their properties and methods
+3. Value objects (Name, Email, PhoneNumber, Address) with their validation logic
+4. Enumerations (ClientType, ReferralSource, PetGender)
+5. UI models (ClientModel, ClientDto, ClientData, PetModel, BreedDto)
+6. All relationships between these classes (inheritance, composition, association)
+7. Detailed notes explaining key architectural concepts
 
 ## Viewing the Diagrams
 

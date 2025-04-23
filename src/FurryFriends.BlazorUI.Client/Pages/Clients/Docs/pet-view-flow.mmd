@@ -1,0 +1,47 @@
+flowchart TD
+    A[User clicks View button on client row] --> B[ClientViewPopup opens]
+    B --> C{Loading client data}
+    
+    C -->|Loading| D[Display loading indicator]
+    D --> C
+    
+    C -->|Error| E[Display error message]
+    
+    C -->|Success| F[Display client details]
+    F --> G[Display pet cards in PetsViewDisplay]
+    
+    G --> H{Are there pets?}
+    H -->|No| I[Display 'No pets found' message]
+    H -->|Yes| J[Display pet cards with details]
+    
+    J --> K[Show pet name, breed, age, weight]
+    J --> L[Show pet photo if available]
+    J --> M[Show special needs if any]
+    J --> N[Show medical conditions if any]
+    
+    F --> O[User views client information]
+    K --> O
+    L --> O
+    M --> O
+    N --> O
+    I --> O
+    
+    O --> P[User clicks Close button]
+    P --> Q[Close ClientViewPopup]
+    Q --> R[Return to ClientList]
+    
+    subgraph "Client Information Section"
+        F
+        O
+    end
+    
+    subgraph "Pets Display Section"
+        G
+        H
+        I
+        J
+        K
+        L
+        M
+        N
+    end

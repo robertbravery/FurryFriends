@@ -1,0 +1,269 @@
+classDiagram
+    %% Base Classes and Interfaces
+    class IAggregateRoot {
+        <<interface>>
+    }
+    
+    class EntityBase {
+        +object Id
+    }
+    
+    class AuditableEntity~T~ {
+        +T Id
+        +DateTime CreatedAt
+        +DateTime UpdatedAt
+    }
+    
+    class UserEntityBase {
+        +Name Name
+        +Email Email
+        +PhoneNumber PhoneNumber
+        +Address Address
+        +UpdateDetails(Name, Email, PhoneNumber, Address)
+        +UpdateEmail(Email)
+    }
+    
+    class ValueObject {
+        <<abstract>>
+        #GetEqualityComponents()* IEnumerable~object~
+    }
+    
+    %% Domain Entities
+    class Client {
+        +ClientType ClientType
+        +TimeOnly? PreferredContactTime
+        +ReferralSource ReferralSource
+        +bool IsActive
+        +DateTime? DeactivatedAt
+        +ICollection~Pet~ Pets
+        +static Create(Name, Email, PhoneNumber, Address, ClientType, ReferralSource, TimeOnly?)* Client
+        +AddPet(string, int, int, double, string, string, string?)* Result~Pet~
+        +HasDuplicatePet(string, int) bool
+        +Deactivate() Result
+        +Reactivate() Result
+        +HasReachedPetLimit() bool
+        +UpdateClientType(ClientType)
+        +UpdatePreferredContactTime(TimeOnly?)
+        +UpdateReferralSource(ReferralSource)
+    }
+    
+    class Pet {
+        +string Name
+        +int BreedId
+        +int Age
+        +PetGender Gender
+        +double Weight
+        +string Color
+        +bool IsSterilized
+        +string? MedicalHistory
+        +string? MedicalConditions
+        +bool IsVaccinated
+        +string? FavoriteActivities
+        +string? DietaryRestrictions
+        +string? SpecialNeeds
+        +string? Photo
+        +bool IsActive
+        +DateTime? DeactivatedAt
+        +Guid OwnerId
+        +Client Owner
+        +Breed BreedType
+        +static Create(string, int, int, double, string, string, Client, string?, bool, string?, string?, string?)* Pet
+        +UpdateGeneralInfo(string, int, double, string, string?, bool, string?, string?, string?, string?, int)
+        +AddMedicalCondition(string)
+        +UpdateVaccinationStatus(bool)
+        +UpdateFavoriteActivities(string)
+        +UpdateDietaryRestrictions(string)
+        +UpdateSpecialNeeds(string)
+        +UpdateSterilizationStatus(bool)
+        +MarkAsInactive()
+        +MarkAsActive()
+    }
+    
+    class Breed {
+        +int Id
+        +string Name
+        +string Description
+        +int SpeciesId
+        +Species Species
+        +ICollection~Pet~ Pets
+        +static Create(string, string)* Breed
+    }
+    
+    class Species {
+        +int Id
+        +string Name
+        +string Description
+        +ICollection~Breed~ Breeds
+        +static Create(string, string)* Species
+    }
+    
+    %% Value Objects
+    class Name {
+        +string FirstName
+        +string LastName
+        +string FullName
+        +static Create(string, string)* Result~Name~
+    }
+    
+    class Email {
+        +string EmailAddress
+        +static Create(string)* Result~Email~
+        +static IsValidEmail(string) bool
+    }
+    
+    class PhoneNumber {
+        +string CountryCode
+        +string Number
+        +static Create(string, string)* Result~PhoneNumber~
+        +ToString() string
+    }
+    
+    class Address {
+        +string Street
+        +string City
+        +string StateProvinceRegion
+        +string ZipCode
+        +string Country
+        +static Create(string, string, string, string, string)* Result~Address~
+        +ToString() string
+    }
+    
+    %% Enums
+    class ClientType {
+        <<enumeration>>
+        Regular
+        Premium
+        Corporate
+    }
+    
+    class ReferralSource {
+        <<enumeration>>
+        None
+        Website
+        ExistingClient
+        SocialMedia
+        SearchEngine
+        Veterinarian
+        LocalAdvertising
+        Other
+    }
+    
+    class PetGender {
+        <<enumeration>>
+        Unknown
+        Male
+        Female
+    }
+    
+    %% UI Models
+    class ClientModel {
+        +Guid Id
+        +string FirstName
+        +string LastName
+        +string EmailAddress
+        +string CountryCode
+        +string PhoneNumber
+        +Address Address
+        +string Notes
+        +ClientType ClientType
+        +string PreferredContactTime
+        +ReferralSource ReferralSource
+        +bool IsActive
+        +DateTime? DeactivatedAt
+        +static MapToRequest(ClientModel) ClientRequestDto
+    }
+    
+    class ClientDto {
+        +Guid Id
+        +string? Name
+        +string? EmailAddress
+        +string? City
+        +int TotalPets
+        +Dictionary~string,int~? PetsBySpecies
+    }
+    
+    class ClientData {
+        +Guid Id
+        +string Name
+        +string Email
+        +string PhoneCountryCode
+        +string PhoneNumber
+        +string Street
+        +string City
+        +string State
+        +string ZipCode
+        +string Country
+        +int ClientType
+        +string PreferredContactTime
+        +int ReferralSource
+        +Pet[] Pets
+        +static MapToModel(ClientData) ClientModel
+    }
+    
+    class PetModel {
+        +string Id
+        +string Name
+        +string Species
+        +string Breed
+        +int BreedId
+        +int Age
+        +int Weight
+        +string SpecialNeeds
+        +string MedicalConditions
+        +bool isActive
+        +string Photo
+    }
+    
+    class BreedDto {
+        +int Id
+        +string Name
+        +string Description
+        +int SpeciesId
+        +string Species
+    }
+    
+    %% Relationships - Inheritance
+    EntityBase <|-- AuditableEntity~T~
+    AuditableEntity~Guid~ <|-- UserEntityBase
+    UserEntityBase <|-- Client
+    AuditableEntity~Guid~ <|-- Pet
+    
+    %% Relationships - Interfaces
+    Client ..|> IAggregateRoot
+    Breed ..|> IAggregateRoot
+    Species ..|> IAggregateRoot
+    
+    %% Relationships - Value Objects
+    ValueObject <|-- Name
+    ValueObject <|-- Email
+    ValueObject <|-- PhoneNumber
+    ValueObject <|-- Address
+    
+    %% Relationships - Domain Entities
+    Client "1" *-- "*" Pet : owns
+    Pet "*" -- "1" Breed : is of
+    Breed "*" -- "1" Species : belongs to
+    
+    %% Relationships - Value Objects to Entities
+    Client "1" *-- "1" Name : has
+    Client "1" *-- "1" Email : has
+    Client "1" *-- "1" PhoneNumber : has
+    Client "1" *-- "1" Address : has
+    
+    %% Relationships - Enums to Entities
+    Client "1" -- "1" ClientType : has
+    Client "1" -- "1" ReferralSource : has
+    Pet "1" -- "1" PetGender : has
+    
+    %% Relationships - UI Models
+    ClientModel .. ClientDto : maps to
+    ClientModel .. ClientData : maps from
+    ClientModel "1" *-- "1" Address : has
+    ClientModel "1" -- "1" ClientType : has
+    ClientModel "1" -- "1" ReferralSource : has
+    
+    %% Notes
+    note for Client "Aggregate Root\nManages all pet-related operations"
+    note for Pet "Entity within Client Aggregate\nCannot exist without an owner"
+    note for ValueObject "Base class for immutable value objects\nEquality based on property values"
+    note for UserEntityBase "Common base for user-related entities\nShared between Client and PetWalker"

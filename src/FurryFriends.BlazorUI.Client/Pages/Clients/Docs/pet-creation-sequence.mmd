@@ -1,0 +1,84 @@
+sequenceDiagram
+    participant User
+    participant EditClientPopup
+    participant PetsDisplay
+    participant AddPetPopup
+    participant ClientService
+    participant API
+    participant CommandHandler
+    participant DomainService
+    participant Repository
+    participant Database
+
+    User->>EditClientPopup: Click "Show Pets" button
+    EditClientPopup->>EditClientPopup: Set isPetsPanelOpen = true
+    EditClientPopup->>PetsDisplay: Render with client pets
+    
+    User->>PetsDisplay: Click "Add Pet" button
+    PetsDisplay->>PetsDisplay: AddNewPet()
+    PetsDisplay->>EditClientPopup: OnAddPet.InvokeAsync(ClientEmail)
+    
+    EditClientPopup->>EditClientPopup: HandleAddPet(clientEmail)
+    EditClientPopup->>EditClientPopup: Set showAddPetPopup = true
+    EditClientPopup->>AddPetPopup: Render with ClientId and ClientEmail
+    
+    AddPetPopup->>AddPetPopup: OnInitializedAsync()
+    AddPetPopup->>ClientService: GetBreedsAsync()
+    ClientService->>API: GET /Clients/breeds
+    API->>Database: Query breeds
+    Database-->>API: Return breeds data
+    API-->>ClientService: Return breeds list
+    ClientService-->>AddPetPopup: Return breeds list
+    
+    User->>AddPetPopup: Fill pet details
+    User->>AddPetPopup: Select species
+    AddPetPopup->>AddPetPopup: SpeciesChanged()
+    AddPetPopup->>AddPetPopup: Reset breed selection
+    
+    User->>AddPetPopup: Select breed
+    User->>AddPetPopup: Click "Save Pet" button
+    
+    AddPetPopup->>AddPetPopup: Validate form
+    
+    alt Validation fails
+        AddPetPopup-->>User: Display validation errors
+    else Validation passes
+        AddPetPopup->>AddPetPopup: HandleValidSubmit()
+        AddPetPopup->>ClientService: AddPetAsync(ClientId, Pet)
+        
+        ClientService->>API: POST /Clients/pets
+        API->>CommandHandler: Handle(AddPetCommand)
+        
+        CommandHandler->>CommandHandler: Validate command
+        CommandHandler->>DomainService: AddPetToClientAsync()
+        
+        DomainService->>Repository: GetClientById()
+        Repository->>Database: Query client
+        Database-->>Repository: Return client
+        Repository-->>DomainService: Return client
+        
+        DomainService->>DomainService: client.AddPet()
+        DomainService->>Repository: SaveChangesAsync()
+        Repository->>Database: Insert pet
+        Database-->>Repository: Confirm insertion
+        Repository-->>DomainService: Return success
+        DomainService-->>CommandHandler: Return pet ID
+        CommandHandler-->>API: Return success with pet ID
+        API-->>ClientService: Return pet ID
+        
+        ClientService-->>AddPetPopup: Return pet ID
+        AddPetPopup->>EditClientPopup: OnSave.InvokeAsync(Pet)
+        
+        EditClientPopup->>EditClientPopup: HandlePetAdded(Pet)
+        EditClientPopup->>EditClientPopup: Set showAddPetPopup = false
+        EditClientPopup->>ClientService: GetClientByEmailAsync(ClientEmail)
+        ClientService->>API: GET /Clients/email/{email}
+        API->>Database: Query client with pets
+        Database-->>API: Return updated client data
+        API-->>ClientService: Return updated client data
+        ClientService-->>EditClientPopup: Return updated client data
+        
+        EditClientPopup->>EditClientPopup: Update clientPets
+        EditClientPopup->>PetsDisplay: Update Pets parameter
+        PetsDisplay-->>User: Display updated pet list
+    end

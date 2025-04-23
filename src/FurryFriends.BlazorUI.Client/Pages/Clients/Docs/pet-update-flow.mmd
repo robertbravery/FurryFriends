@@ -1,0 +1,46 @@
+flowchart TD
+    A[User clicks Show Pets button] --> B[Pets panel slides out]
+    B --> C[User clicks Edit on pet card]
+    C --> D[EditPetPopup opens with pet data]
+    D --> E[Load breeds from API]
+    
+    E --> F[User modifies pet details]
+    F --> G[User clicks Save Changes]
+    
+    G --> H{Form validation}
+    H -->|Invalid| I[Display validation errors]
+    I --> F
+    
+    H -->|Valid| J[Send updated pet data to API]
+    J --> K{API validation}
+    K -->|Invalid| L[Return error message]
+    L --> F
+    
+    K -->|Valid| M[Update pet in database]
+    M --> N[Return success]
+    N --> O[Close EditPetPopup]
+    O --> P[Reload client data with pets]
+    P --> Q[Update pets display]
+    
+    subgraph "Client-Side (Blazor)"
+        A
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+        I
+        O
+        P
+        Q
+    end
+    
+    subgraph "Server-Side (API)"
+        J
+        K
+        L
+        M
+        N
+    end

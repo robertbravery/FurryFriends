@@ -1,0 +1,72 @@
+C4Component
+    title Component diagram for Pet Management in FurryFriends
+
+    Container_Boundary(blazorUI, "Blazor UI") {
+        Component(editClientPopup, "EditClientPopup", "Blazor Component", "Provides client editing interface with pet management")
+        Component(petsDisplay, "PetsDisplay", "Blazor Component", "Displays list of pets with add/edit options")
+        Component(addPetPopup, "AddPetPopup", "Blazor Component", "Form for adding new pets")
+        Component(editPetPopup, "EditPetPopup", "Blazor Component", "Form for editing existing pets")
+        Component(clientService, "ClientService", "C# Service", "Handles API communication for client and pet operations")
+    }
+    
+    Container_Boundary(webAPI, "Web API") {
+        Component(clientEndpoints, "ClientEndpoints", "ASP.NET Endpoints", "Exposes client and pet API endpoints")
+        Component(mediator, "MediatR", "Library", "Mediates commands and queries")
+        Component(addPetHandler, "AddPetCommandHandler", "C# Class", "Handles pet creation command")
+        Component(updatePetHandler, "UpdatePetInfoCommandHandler", "C# Class", "Handles pet update command")
+        Component(listBreedsHandler, "ListBreedsHandler", "C# Class", "Handles breed listing query")
+        Component(domainService, "ClientService", "C# Service", "Implements domain logic for clients and pets")
+    }
+    
+    Container_Boundary(domain, "Domain Layer") {
+        Component(clientEntity, "Client Entity", "C# Class", "Client aggregate root")
+        Component(petEntity, "Pet Entity", "C# Class", "Pet entity within client aggregate")
+        Component(breedEntity, "Breed Entity", "C# Class", "Breed reference data")
+    }
+    
+    Container_Boundary(infrastructure, "Infrastructure") {
+        Component(repository, "Repository", "C# Class", "Handles data access")
+        Component(dbContext, "AppDbContext", "EF Core DbContext", "Entity Framework context")
+    }
+    
+    ContainerDb(database, "SQL Database", "SQL Server", "Stores client, pet, and breed information")
+    
+    Rel(petsDisplay, editClientPopup, "Notifies of pet actions")
+    Rel(editClientPopup, addPetPopup, "Opens for new pet")
+    Rel(editClientPopup, editPetPopup, "Opens for pet edit")
+    Rel(addPetPopup, clientService, "Uses for API calls")
+    Rel(editPetPopup, clientService, "Uses for API calls")
+    Rel(editClientPopup, clientService, "Uses for API calls")
+    
+    Rel(clientService, clientEndpoints, "Makes HTTP requests")
+    Rel(clientEndpoints, mediator, "Sends commands/queries")
+    Rel(mediator, addPetHandler, "Routes AddPetCommand")
+    Rel(mediator, updatePetHandler, "Routes UpdatePetInfoCommand")
+    Rel(mediator, listBreedsHandler, "Routes ListBreedsQuery")
+    
+    Rel(addPetHandler, domainService, "Uses")
+    Rel(updatePetHandler, domainService, "Uses")
+    Rel(listBreedsHandler, repository, "Uses")
+    
+    Rel(domainService, clientEntity, "Manipulates")
+    Rel(clientEntity, petEntity, "Contains")
+    Rel(petEntity, breedEntity, "References")
+    
+    Rel(domainService, repository, "Uses")
+    Rel(repository, dbContext, "Uses")
+    Rel(dbContext, database, "Reads/Writes")
+    
+    UpdateRelStyle(petsDisplay, editClientPopup, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(editClientPopup, addPetPopup, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(editClientPopup, editPetPopup, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(addPetPopup, clientService, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(editPetPopup, clientService, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(clientService, clientEndpoints, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(clientEndpoints, mediator, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(mediator, addPetHandler, $textColor="green", $lineColor="green")
+    UpdateRelStyle(mediator, updatePetHandler, $textColor="green", $lineColor="green")
+    UpdateRelStyle(mediator, listBreedsHandler, $textColor="green", $lineColor="green")
+    UpdateRelStyle(domainService, clientEntity, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(clientEntity, petEntity, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(petEntity, breedEntity, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(dbContext, database, $textColor="blue", $lineColor="blue")
