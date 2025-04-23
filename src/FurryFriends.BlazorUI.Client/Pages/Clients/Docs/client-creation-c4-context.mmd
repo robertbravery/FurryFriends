@@ -1,0 +1,17 @@
+C4Context
+    title System Context diagram for Client Creation in FurryFriends
+
+    Person(user, "Pet Owner", "A person who owns pets and wants to register as a client")
+    
+    System(furryFriends, "FurryFriends System", "Allows pet owners to register and manage their pets and appointments")
+    
+    System_Ext(emailSystem, "Email System", "Sends confirmation emails to clients")
+    System_Ext(paymentSystem, "Payment Processing", "Handles client payments")
+    
+    Rel(user, furryFriends, "Uses", "HTTPS")
+    Rel(furryFriends, emailSystem, "Sends emails using", "SMTP")
+    Rel(furryFriends, paymentSystem, "Processes payments using", "HTTPS/API")
+    
+    UpdateRelStyle(user, furryFriends, $textColor="blue", $lineColor="blue", $offsetY="-10")
+    UpdateRelStyle(furryFriends, emailSystem, $textColor="green", $lineColor="green", $offsetX="-40", $offsetY="-10")
+    UpdateRelStyle(furryFriends, paymentSystem, $textColor="red", $lineColor="red", $offsetY="-10", $offsetX="-40")

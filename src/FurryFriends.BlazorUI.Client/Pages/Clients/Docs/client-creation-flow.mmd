@@ -1,0 +1,60 @@
+flowchart TD
+    A[User navigates to /createclient] --> B[CreateClient component initializes]
+    B --> C[ClientForm renders with empty ClientModel]
+    C --> D[User fills in client details]
+    D --> E[User clicks Save Client button]
+    
+    E --> F{Client-side validation}
+    F -->|Invalid| G[Display validation errors]
+    G --> D
+    
+    F -->|Valid| H[Map ClientModel to ClientRequestDto]
+    H --> I[Call ClientService.CreateClientAsync]
+    I --> J[Send HTTP POST to API]
+    
+    J --> K{Server-side validation}
+    K -->|Invalid| L[Return 400 Bad Request]
+    L --> M[Display error message to user]
+    M --> D
+    
+    K -->|Valid| N[Create domain value objects]
+    N --> O{Domain validation}
+    O -->|Invalid| P[Return validation errors]
+    P --> L
+    
+    O -->|Valid| Q[Check if email exists]
+    Q -->|Exists| R[Return email exists error]
+    R --> L
+    
+    Q -->|Unique| S[Create Client entity]
+    S --> T[Save to database]
+    T --> U[Return success with client ID]
+    U --> V[Navigate to clients list]
+    
+    subgraph "Client-Side (Blazor)"
+        A
+        B
+        C
+        D
+        E
+        F
+        G
+        H
+        I
+        M
+        V
+    end
+    
+    subgraph "Server-Side (API)"
+        J
+        K
+        L
+        N
+        O
+        P
+        Q
+        R
+        S
+        T
+        U
+    end

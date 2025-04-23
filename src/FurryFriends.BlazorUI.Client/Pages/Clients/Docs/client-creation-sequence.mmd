@@ -1,0 +1,75 @@
+sequenceDiagram
+    participant User
+    participant CreateClient as CreateClient.razor
+    participant ClientForm as ClientForm.razor
+    participant ClientService as IClientService
+    participant API as Web API
+    participant Mediator as MediatR
+    participant CommandHandler as CreateClientCommandHandler
+    participant DomainService as ClientService
+    participant Repository
+    participant Database
+
+    User->>CreateClient: Navigate to /createclient
+    CreateClient->>CreateClient: Initialize ClientModel
+    CreateClient->>ClientForm: Render with ClientModel
+    
+    User->>ClientForm: Fill in client details
+    User->>ClientForm: Click "Save Client"
+    
+    ClientForm->>ClientForm: Validate form (client-side)
+    Note over ClientForm: Data annotations validation
+    
+    alt Validation fails
+        ClientForm-->>User: Display validation errors
+    else Validation passes
+        ClientForm->>CreateClient: OnSubmit callback (EditContext)
+        CreateClient->>CreateClient: HandleSaveClient(EditContext)
+        CreateClient->>CreateClient: Set isSubmitting = true
+        
+        CreateClient->>CreateClient: Map ClientModel to ClientRequestDto
+        CreateClient->>ClientService: CreateClientAsync(ClientRequestDto)
+        
+        ClientService->>API: POST /Clients
+        API->>Mediator: Send(CreateClientCommand)
+        
+        Mediator->>CommandHandler: Handle(CreateClientCommand)
+        
+        CommandHandler->>CommandHandler: Validate command
+        
+        CommandHandler->>CommandHandler: Create value objects (Name, Email, PhoneNumber, Address)
+        Note over CommandHandler: Domain validation in value objects
+        
+        alt Domain validation fails
+            CommandHandler-->>API: Return validation errors
+            API-->>ClientService: Return 400 Bad Request
+            ClientService-->>CreateClient: Throw HttpRequestException
+            CreateClient-->>User: Display error message
+        else Domain validation passes
+            CommandHandler->>DomainService: CreateClientAsync(valueObjects)
+            
+            DomainService->>DomainService: Check if email exists
+            
+            alt Email already exists
+                DomainService-->>CommandHandler: Return error
+                CommandHandler-->>API: Return error
+                API-->>ClientService: Return 400 Bad Request
+                ClientService-->>CreateClient: Throw HttpRequestException
+                CreateClient-->>User: Display error message
+            else Email is unique
+                DomainService->>DomainService: Client.Create(valueObjects)
+                DomainService->>Repository: AddAsync(client)
+                Repository->>Database: Insert client
+                Database-->>Repository: Confirm insertion
+                Repository-->>DomainService: Return success
+                DomainService-->>CommandHandler: Return client
+                CommandHandler-->>API: Return success with client ID
+                API-->>ClientService: Return 200 OK
+                ClientService-->>CreateClient: Return success
+                
+                CreateClient->>CreateClient: Set isSubmitting = false
+                CreateClient->>CreateClient: NavigateTo("/clients")
+                CreateClient-->>User: Redirect to clients list
+            end
+        end
+    end

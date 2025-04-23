@@ -1,0 +1,73 @@
+flowchart TD
+    A[User submits client form] --> B{Client-side validation}
+    
+    B -->|Invalid| C[Display validation errors]
+    C --> A
+    
+    B -->|Valid| D[Send to server]
+    
+    D --> E{Command validation}
+    E -->|Invalid| F[Return validation errors]
+    F --> C
+    
+    E -->|Valid| G{Value object creation}
+    
+    G --> G1{Name validation}
+    G1 -->|Invalid| H1[Return name validation errors]
+    
+    G --> G2{Email validation}
+    G2 -->|Invalid| H2[Return email validation errors]
+    
+    G --> G3{Phone validation}
+    G3 -->|Invalid| H3[Return phone validation errors]
+    
+    G --> G4{Address validation}
+    G4 -->|Invalid| H4[Return address validation errors]
+    
+    H1 --> F
+    H2 --> F
+    H3 --> F
+    H4 --> F
+    
+    G1 -->|Valid| I
+    G2 -->|Valid| I
+    G3 -->|Valid| I
+    G4 -->|Valid| I
+    
+    I{Business rule validation} -->|Invalid| J[Return business rule errors]
+    J --> F
+    
+    I -->|Valid| K[Create client entity]
+    K --> L[Save to database]
+    L --> M[Return success]
+    
+    subgraph "Client-Side Validation"
+        A
+        B
+        C
+    end
+    
+    subgraph "Server-Side Validation"
+        E
+        F
+    end
+    
+    subgraph "Domain Validation"
+        G
+        G1
+        G2
+        G3
+        G4
+        H1
+        H2
+        H3
+        H4
+        I
+        J
+    end
+    
+    subgraph "Persistence"
+        K
+        L
+        M
+    end
