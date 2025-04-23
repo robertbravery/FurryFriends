@@ -2,10 +2,11 @@
 
 public class ClientDto
 {
-  public string? Id { get; set; }
+  public Guid Id { get; set; }
   public string? Name { get; set; }
   public string? EmailAddress { get; set; }
   public string? City { get; set; }
   public int TotalPets { get; set; }
   public Dictionary<string, int>? PetsBySpecies { get; set; }
+
 }

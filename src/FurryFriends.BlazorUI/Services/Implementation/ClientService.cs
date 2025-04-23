@@ -1,4 +1,5 @@
-﻿using FurryFriends.BlazorUI.Client.Models.Clients;
+﻿using System.Text.Json;
+using FurryFriends.BlazorUI.Client.Models.Clients;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
@@ -47,7 +48,7 @@ public class ClientService : IClientService
 
   public async Task UpdateClientAsync(ClientRequestDto clientModel)
   {
-    var response = await _httpClient.PutAsJsonAsync($"Clients/email/{clientModel.Email}", clientModel);
+    var response = await _httpClient.PutAsJsonAsync($"Clients/{clientModel.Id}", clientModel);
 
     if (!response.IsSuccessStatusCode)
     {
@@ -69,6 +70,24 @@ public class ClientService : IClientService
     }
   }
 
+  public async Task<List<BreedDto>> GetBreedsAsync()
+  {
+    try
+    {
+      var response = await _httpClient.GetFromJsonAsync<List<BreedDto>>("Clients/breeds");
+      if (response is null || response.Count == 0)
+      {
+        return [];
+      }
+      return response;
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Error fetching breeds: {ex.Message}");
+      return new List<BreedDto>();
+    }
+  }
+
   public async Task UpdatePetAsync(string clientEmail, Pet pet)
   {
     // Create the request object for the API
@@ -77,6 +96,7 @@ public class ClientService : IClientService
       ClientEmail = clientEmail,
       PetId = pet.Id,
       Name = pet.Name,
+      BreedId = pet.BreedId, // Include the breed ID
       Age = pet.Age,
       Weight = pet.Weight,
       Color = "Unknown", // This field is required by the API but not in our UI model
@@ -95,10 +115,39 @@ public class ClientService : IClientService
       throw new HttpRequestException($"Failed to update pet: {errorContent}", null, response.StatusCode);
     }
   }
-}
 
-public class DogImageResponse
-{
-  public string Message { get; set; } = default!;
-  public string Status { get; set; } = default!;
+  public async Task<Guid> AddPetAsync(Guid clientId, Pet pet)
+  {
+    // Create the request object for the API
+    var addPetRequest = new
+    {
+      ClientId = clientId,
+      Name = pet.Name,
+      BreedId = pet.BreedId, // Use the selected breed ID
+      Age = pet.Age,
+      Weight = pet.Weight,
+      Color = string.IsNullOrEmpty(pet.Breed) ? "Unknown" : pet.Breed, // Using breed as color if available
+      MedicalHistory = pet.MedicalConditions,
+      IsVaccinated = false, // Default value
+      FavoriteActivities = string.Empty,
+      DietaryRestrictions = string.Empty,
+      SpecialNeeds = pet.SpecialNeeds,
+      Photo = pet.Photo,
+      Species = string.IsNullOrEmpty(pet.Species) ? "Dog" : pet.Species // Default to Dog if not specified
+    };
+
+    // Send the add request to the API
+    var response = await _httpClient.PostAsJsonAsync("/Clients/pets", addPetRequest);
+
+    if (!response.IsSuccessStatusCode)
+    {
+      var errorContent = await response.Content.ReadAsStringAsync();
+      throw new HttpRequestException($"Failed to add pet: {errorContent}", null, response.StatusCode);
+    }
+
+    // Parse the response to get the new pet ID
+    var responseContent = await response.Content.ReadAsStringAsync();
+    var responseObject = JsonSerializer.Deserialize<AddPetResponse>(responseContent);
+    return responseObject?.PetId ?? Guid.Empty;
+  }
 }

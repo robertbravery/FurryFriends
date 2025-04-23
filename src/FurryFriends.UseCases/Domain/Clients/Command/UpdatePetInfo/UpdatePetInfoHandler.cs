@@ -1,4 +1,7 @@
-using FurryFriends.Core.ClientAggregate;
+﻿﻿using FurryFriends.Core.ClientAggregate;
+using FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
+
+namespace FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
 
 public class UpdatePetInfoHandler : ICommandHandler<UpdatePetInfoCommand, Result>
 {
@@ -26,7 +29,8 @@ public class UpdatePetInfoHandler : ICommandHandler<UpdatePetInfoCommand, Result
             command.FavoriteActivities,
             command.DietaryRestrictions,
             command.SpecialNeeds,
-            command.Photo);
+            command.Photo,
+            command.BreedId);
 
         if (!result.IsSuccess)
             return result;

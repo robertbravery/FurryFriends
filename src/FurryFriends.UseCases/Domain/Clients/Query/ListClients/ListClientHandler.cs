@@ -18,7 +18,8 @@ public class ListClientHandler(IClientService clientService)
       client.Id,
       client.Name.FullName,
       client.Email.EmailAddress,
-      client.PhoneNumber.ToString(),
+      client.PhoneNumber.CountryCode,
+      client.PhoneNumber.Number,
       client.Address.Street,
       client.Address.City,
       client.Address.StateProvinceRegion,
@@ -30,7 +31,7 @@ public class ListClientHandler(IClientService clientService)
       [.. client.Pets.Select(p=> new ClientPetDto(
         p.Id,
         p.Name,
-        //p.BreedType.Species.Name,
+        p.BreedType.Species.Name,
         p.BreedType.Name,
         p.Age,
         p.Weight,

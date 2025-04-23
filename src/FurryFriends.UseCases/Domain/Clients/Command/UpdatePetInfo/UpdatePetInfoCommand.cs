@@ -1,4 +1,4 @@
-
+﻿﻿namespace FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
 
 public record UpdatePetInfoCommand(
     Guid ClientId,
@@ -12,4 +12,5 @@ public record UpdatePetInfoCommand(
     string? FavoriteActivities,
     string? DietaryRestrictions,
     string? SpecialNeeds,
-    string? Photo) : ICommand<Result>;
+    string? Photo,
+    int BreedId = 0) : ICommand<Result>;

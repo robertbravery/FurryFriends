@@ -5,6 +5,7 @@ public class ClientData
   public Guid Id { get; set; }
   public string Name { get; set; } = default!;
   public string Email { get; set; } = default!;
+  public string PhoneCountryCode { get; set; } = default!;
   public string PhoneNumber { get; set; } = default!;
   public string Street { get; set; } = default!;
   public string City { get; set; } = default!;
@@ -18,33 +19,6 @@ public class ClientData
 
   public static ClientModel MapToModel(ClientData clientData)
   {
-    // Parse phone number to extract country code and number
-    string countryCode = "1"; // Default to US
-    string phoneNumber = clientData.PhoneNumber;
-
-    // If phone number contains a plus sign, extract the country code
-    if (clientData.PhoneNumber.StartsWith("+") && clientData.PhoneNumber.Length > 1)
-    {
-      var parts = clientData.PhoneNumber.TrimStart('+').Split(' ', 2);
-      if (parts.Length > 1)
-      {
-        countryCode = parts[0];
-        phoneNumber = parts[1];
-      }
-      else
-      {
-        // Try to extract first 1-3 digits as country code
-        if (parts[0].Length > 3)
-        {
-          countryCode = parts[0].Substring(0, Math.Min(3, parts[0].Length));
-          phoneNumber = parts[0].Substring(countryCode.Length);
-        }
-        else
-        {
-          phoneNumber = parts[0];
-        }
-      }
-    }
 
     // Parse name into first and last name
     string firstName = clientData.Name;
@@ -68,11 +42,12 @@ public class ClientData
 
     return new ClientModel
     {
+      Id = clientData.Id,
       FirstName = firstName,
       LastName = lastName,
       EmailAddress = clientData.Email,
-      CountryCode = countryCode,
-      PhoneNumber = phoneNumber,
+      CountryCode = clientData.PhoneCountryCode,
+      PhoneNumber = clientData.PhoneNumber,
       Address = new Address
       {
         Street = clientData.Street,

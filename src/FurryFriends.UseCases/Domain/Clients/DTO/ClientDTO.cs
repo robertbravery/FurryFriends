@@ -6,6 +6,7 @@ public record ClientDTO(
     Guid Id,
     string Name,
     string Email,
+    string PhoneCountryCode,
     string PhoneNumber,
     string Street,
     string City,

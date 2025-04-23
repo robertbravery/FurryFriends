@@ -2,7 +2,7 @@
 using FurryFriends.Core.Common;
 
 namespace FurryFriends.Core.ClientAggregate;
-public class Pet : AuditableEntity<Guid>
+public partial class Pet : AuditableEntity<Guid>
 {
   private const string NONE = "None";
 

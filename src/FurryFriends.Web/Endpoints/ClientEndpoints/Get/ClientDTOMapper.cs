@@ -11,6 +11,7 @@ public class ClientDTOMapper : Mapper<GetClientRequest, ClientRecord, ClientDTO>
         e.Id,
         e.Name,
         e.Email,
+        e.PhoneCountryCode,
         e.PhoneNumber,
         e.Street,
         e.City,
@@ -23,7 +24,7 @@ public class ClientDTOMapper : Mapper<GetClientRequest, ClientRecord, ClientDTO>
         [.. e.Pets.Select(p => new PetRecord(
             p.Id,
             p.Name,
-            "Species", //p.Species,
+            p.Species,
             p.Breed,
             p.Age,
             p.Weight,

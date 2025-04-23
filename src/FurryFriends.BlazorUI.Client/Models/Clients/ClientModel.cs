@@ -5,6 +5,8 @@ namespace FurryFriends.BlazorUI.Client.Models.Clients;
 
 public class ClientModel
 {
+  public Guid Id { get; set; }
+
   [Required(ErrorMessage = "Full name is required")]
   [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
   [RegularExpression(@"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
@@ -47,6 +49,7 @@ public class ClientModel
 
   public static ClientRequestDto MapToRequest(ClientModel clientDto) => new()
   {
+    Id = clientDto.Id,
     FirstName = clientDto.FirstName,
     LastName = clientDto.LastName,
     Email = clientDto.EmailAddress,

@@ -5,7 +5,7 @@ using FurryFriends.Core.ValueObjects;
 namespace FurryFriends.Core.ClientAggregate;
 
 
-public class Client : UserEntityBase, IAggregateRoot
+public partial class Client : UserEntityBase, IAggregateRoot
 {
   public virtual ICollection<Pet> Pets { get; private set; } = default!;
 

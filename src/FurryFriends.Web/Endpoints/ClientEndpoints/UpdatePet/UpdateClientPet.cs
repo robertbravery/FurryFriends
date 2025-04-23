@@ -1,4 +1,6 @@
-﻿﻿namespace FurryFriends.Web.Endpoints.ClientEndpoints.UpdatePet;
+﻿using FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
+
+namespace FurryFriends.Web.Endpoints.ClientEndpoints.UpdatePet;
 
 public class UpdateClientPet : Endpoint<UpdateClientPetRequest, Result>
 {
@@ -36,7 +38,8 @@ public class UpdateClientPet : Endpoint<UpdateClientPetRequest, Result>
         request.FavoriteActivities,
         request.DietaryRestrictions,
         request.SpecialNeeds,
-        request.Photo);
+        request.Photo,
+        request.BreedId);
 
     return await _mediator.Send(command, cancellationToken);
   }

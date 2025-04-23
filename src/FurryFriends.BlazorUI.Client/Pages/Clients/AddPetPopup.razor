@@ -5,30 +5,50 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header modal-header-background">
-                <h5 class="modal-title">Edit Pet</h5>
-                <button type="button" class="close" @onclick="OnCancel">&times;</button>
+                <h5 class="modal-title">Add New Pet</h5>
+                <button type="button" class="close" @onclick="HandleCancel">&times;</button>
             </div>
             <div class="modal-body">
-                @if (isLoading)
+                @if (isSubmitting)
                 {
                     <div class="loading-container">
-                        <p><em>Loading pet data...</em></p>
+                        <p><em>Adding pet...</em></p>
                     </div>
                 }
-                else if (Pet != null)
+                else if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    <EditForm Model="@Pet" OnValidSubmit="HandleValidSubmit" FormName="EditPet">
+                    <div class="error-container">
+                        <p class="text-danger">@errorMessage</p>
+                    </div>
+                }
+                else
+                {
+                    <EditForm Model="@Pet" OnValidSubmit="HandleValidSubmit" FormName="AddPet">
                         <DataAnnotationsValidator />
-                        <ValidationSummary />
 
                         <div class="form-group">
-                            <label for="petName">Name</label>
+                            <label for="petName">Name <span class="required">*</span></label>
                             <InputText id="petName" @bind-Value="Pet.Name" class="form-control" />
                             <ValidationMessage For="@(() => Pet.Name)" />
                         </div>
 
                         <div class="form-group">
-                            <label for="petBreed">Breed</label>
+                            <label for="petSpecies">Species <span class="required">*</span></label>
+                            <InputSelect id="petSpecies" @bind-Value="Pet.Species" class="form-control" @oninput="SpeciesChanged">
+                                <option value="">-- Select Species --</option>
+                                @if (breeds != null)
+                                {
+                                    @foreach (var species in breeds.Distinct())
+                                    {
+                                        <option value="@species">@species</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Pet.Species)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petBreed">Breed <span class="required">*</span></label>
                             <InputSelect id="petBreed" @bind-Value="Pet.BreedId" class="form-control">
                                 <option value="0">-- Select Breed --</option>
                                 @if (breeds != null)
@@ -43,27 +63,33 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="petAge">Age (years)</label>
+                            <label for="petAge">Age (years) <span class="required">*</span></label>
                             <InputNumber id="petAge" @bind-Value="Pet.Age" class="form-control" />
                             <ValidationMessage For="@(() => Pet.Age)" />
                         </div>
 
                         <div class="form-group">
-                            <label for="petWeight">Weight (lbs)</label>
+                            <label for="petWeight">Weight (lbs) <span class="required">*</span></label>
                             <InputNumber id="petWeight" @bind-Value="Pet.Weight" class="form-control" />
                             <ValidationMessage For="@(() => Pet.Weight)" />
                         </div>
 
                         <div class="form-group">
                             <label for="petSpecialNeeds">Special Needs</label>
-                            <InputText id="petSpecialNeeds" @bind-Value="Pet.SpecialNeeds" class="form-control" />
+                            <InputTextArea id="petSpecialNeeds" @bind-Value="Pet.SpecialNeeds" class="form-control" />
                             <ValidationMessage For="@(() => Pet.SpecialNeeds)" />
                         </div>
 
                         <div class="form-group">
                             <label for="petMedicalConditions">Medical Conditions</label>
-                            <InputText id="petMedicalConditions" @bind-Value="Pet.MedicalConditions" class="form-control" />
+                            <InputTextArea id="petMedicalConditions" @bind-Value="Pet.MedicalConditions" class="form-control" />
                             <ValidationMessage For="@(() => Pet.MedicalConditions)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petPhoto">Photo URL</label>
+                            <InputText id="petPhoto" @bind-Value="Pet.Photo" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Photo)" />
                         </div>
 
                         <div class="form-group form-check">
@@ -73,8 +99,8 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save Pet</button>
-                            <button type="button" class="btn btn-secondary" @onclick="OnCancel">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Pet</button>
+                            <button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
                         </div>
                     </EditForm>
                 }

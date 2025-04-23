@@ -9,6 +9,8 @@ public interface IClientService
   Task CreateClientAsync(ClientRequestDto clientModel);
   Task UpdateClientAsync(ClientRequestDto clientModel);
   Task UpdatePetAsync(string clientEmail, Pet pet);
+  Task<Guid> AddPetAsync(Guid clientId, Pet pet);
+  Task<List<BreedDto>> GetBreedsAsync();
 
   Task<string> GetDogImageAsync();
 }

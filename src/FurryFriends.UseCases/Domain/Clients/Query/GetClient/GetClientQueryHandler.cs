@@ -20,6 +20,7 @@ public class GetClientQueryHandler(IClientService clientService)
       entityResult.Value.Id,
       entityResult.Value.Name.FullName,
       entityResult.Value.Email.EmailAddress,
+      entityResult.Value.PhoneNumber.CountryCode,
       entityResult.Value.PhoneNumber.Number,
       entityResult.Value.Address.Street,
       entityResult.Value.Address.City,
@@ -32,7 +33,7 @@ public class GetClientQueryHandler(IClientService clientService)
       [..  entityResult.Value.Pets.Select(p => new ClientPetDto(
             p.Id,
             p.Name,
-            // p.BreedType.Species.Name,
+            p.BreedType.Species.Name,
             p.BreedType.Name,
             p.Age,
             p.Weight,

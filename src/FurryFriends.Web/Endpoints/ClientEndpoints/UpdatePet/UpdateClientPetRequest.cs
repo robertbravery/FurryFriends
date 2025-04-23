@@ -6,6 +6,7 @@ public class UpdateClientPetRequest
   public Guid ClientId { get; set; }
   public Guid PetId { get; set; }
   public string Name { get; set; } = default!;
+  public int BreedId { get; set; }
   public int Age { get; set; }
   public double Weight { get; set; }
   public string Color { get; set; } = default!;
