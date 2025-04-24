@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using FurryFriends.BlazorUI.Client.Models.Clients;
+using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
@@ -17,7 +18,7 @@ public class ClientService : IClientService
 
   public async Task<List<ClientDto>> GetClientsAsync()
   {
-    var response = await _httpClient.GetFromJsonAsync<ListResponse>("Clients/list?page=1&pageSize=10");
+    var response = await _httpClient.GetFromJsonAsync<ListResponse<ClientDto>>("Clients/list?page=1&pageSize=10");
     if (response is null || response.RowsData is null)
     {
       return new List<ClientDto>();

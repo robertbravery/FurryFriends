@@ -11,6 +11,7 @@ var host = builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IPetWalkerService, PetWalkerService>();
 builder.Services.AddSingleton<IPopupService, PopupService>();
 
 builder.Services.AddHttpClient<IClientService, ClientService>(client =>
