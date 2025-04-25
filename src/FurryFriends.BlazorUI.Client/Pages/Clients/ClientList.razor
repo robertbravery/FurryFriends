@@ -2,6 +2,7 @@
 
 @rendermode InteractiveAuto
 @using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Models.Common
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
 @using FurryFriends.BlazorUI.Client.Components.Common
 @implements IDisposable
@@ -55,10 +56,30 @@
             </tbody>
         </table>
     }
+
+    @if (clients is not null)
+    {
+        <!-- Pagination Controls -->
+        <Pagination
+            CurrentPage="@currentPage"
+            PageSize="@pageSize"
+            TotalCount="@totalCount"
+            TotalPages="@totalPages"
+            HasPreviousPage="@hasPreviousPage"
+            HasNextPage="@hasNextPage"
+            OnPageChanged="@HandlePageChanged"
+            OnPageSizeChanged="@HandlePageSizeChanged" />
+    }
 </div>
 
 @code {
 	private List<ClientDto>? clients { get; set; }
+	private int currentPage = 1;
+	private int pageSize = 10;
+	private int totalCount = 0;
+	private int totalPages = 1;
+	private bool hasPreviousPage = false;
+	private bool hasNextPage = false;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -92,7 +113,29 @@
 
 	private async Task LoadClients()
 	{
-		clients = await ClientService.GetClientsAsync();
+		var response = await ClientService.GetClientsAsync(currentPage, pageSize);
+
+		// Update the component state with data from the response
+		clients = response.RowsData;
+		totalCount = response.TotalCount;
+		totalPages = response.TotalPages;
+		hasPreviousPage = response.HasPreviousPage;
+		hasNextPage = response.HasNextPage;
+
+		// Debug pagination values
+		Console.WriteLine($"Pagination Debug - TotalCount: {totalCount}, PageSize: {pageSize}, TotalPages: {totalPages}");
+		Console.WriteLine($"Pagination Debug - HasPreviousPage: {hasPreviousPage}, HasNextPage: {hasNextPage}, CurrentPage: {currentPage}");
+
+		// Use the page number from the response (in case it was adjusted on the server)
+		currentPage = response.PageNumber;
+
+		// Ensure current page is valid
+		if (currentPage > totalPages && totalPages > 0)
+		{
+			currentPage = totalPages;
+			await LoadClients();
+		}
+
 		Console.WriteLine($"Clients fetched: {clients?.Count}");
 	}
 
@@ -133,6 +176,20 @@
 
 		// Use the popup service to show the create popup
 		PopupService.ShowCreateClientPopup();
+	}
+
+	private async Task HandlePageChanged(int newPage)
+	{
+		currentPage = newPage;
+		await LoadClients();
+		Console.WriteLine($"Navigated to page: {currentPage}");
+	}
+
+	private async Task HandlePageSizeChanged(int newPageSize)
+	{
+		pageSize = newPageSize;
+		await LoadClients();
+		Console.WriteLine($"Changed page size to: {pageSize}");
 	}
 
 	public void Dispose()

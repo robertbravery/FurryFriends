@@ -25,6 +25,11 @@ public interface IPetWalkerService : IListService<PetWalkerDto>
   Task<PetWalkerDto> GetPetWalkerByEmailAsync(string email);
 
   /// <summary>
+  /// Gets detailed information about a pet walker by email
+  /// </summary>
+  Task<ApiResponse<PetWalkerDetailDto>> GetPetWalkerDetailsByEmailAsync(string email);
+
+  /// <summary>
   /// Gets a paginated list of pet walkers
   /// </summary>
   Task<ListResponse<PetWalkerDto>> GetPetWalkersAsync(int page, int pageSize);

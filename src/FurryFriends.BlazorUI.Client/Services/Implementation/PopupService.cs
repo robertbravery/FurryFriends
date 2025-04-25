@@ -17,11 +17,17 @@ public class PopupService : IPopupService
     public event Action OnShowCreateClientPopup = default!;
     public event Action OnCloseCreateClientPopup = default!;
 
+    // PetWalker view popup events
+    public event Action<string> OnShowViewPetWalkerPopup = default!;
+    public event Action OnCloseViewPetWalkerPopup = default!;
+
     // Track the current state to handle page refreshes
     private string _currentClientEmail = string.Empty;
+    private string _currentPetWalkerEmail = string.Empty;
     private bool _isEditClientPopupOpen = false;
     private bool _isViewClientPopupOpen = false;
     private bool _isCreateClientPopupOpen = false;
+    private bool _isViewPetWalkerPopupOpen = false;
 
     // Edit popup methods
     public void ShowEditClientPopup(string clientEmail)
@@ -112,6 +118,36 @@ public class PopupService : IPopupService
         }
     }
 
+    // PetWalker view popup methods
+    public void ShowViewPetWalkerPopup(string petWalkerEmail)
+    {
+        _currentPetWalkerEmail = petWalkerEmail;
+        _isViewPetWalkerPopupOpen = true;
+
+        try
+        {
+            OnShowViewPetWalkerPopup?.Invoke(petWalkerEmail);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing pet walker view popup: {ex.Message}");
+        }
+    }
+
+    public void CloseViewPetWalkerPopup()
+    {
+        _isViewPetWalkerPopupOpen = false;
+
+        try
+        {
+            OnCloseViewPetWalkerPopup?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error closing pet walker view popup: {ex.Message}");
+        }
+    }
+
     // State methods
     public bool IsEditClientPopupOpen()
     {
@@ -128,8 +164,18 @@ public class PopupService : IPopupService
         return _isCreateClientPopupOpen;
     }
 
+    public bool IsViewPetWalkerPopupOpen()
+    {
+        return _isViewPetWalkerPopupOpen;
+    }
+
     public string GetCurrentClientEmail()
     {
         return _currentClientEmail;
+    }
+
+    public string GetCurrentPetWalkerEmail()
+    {
+        return _currentPetWalkerEmail;
     }
 }

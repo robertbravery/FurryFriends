@@ -3,6 +3,7 @@ using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.UseCases.Domain.Clients.Query.ListClients;
 
 namespace FurryFriends.UseCases.Services.ClientService;
 
@@ -65,15 +66,23 @@ public class ClientService(IRepository<Client> repository) : IClientService
 
   }
 
-  public async Task<Result<IEnumerable<Client>>> ListClientsAsync(string? searchTerm, int page, int pageSize, CancellationToken cancellationToken)
+  public async Task<Result<ClientListDto>> ListClientsAsync(ListClientQuery query, CancellationToken cancellationToken)
   {
-    var listSpec = new ListClientsSpec(searchTerm, page, pageSize);
-    IEnumerable<Client> clients = await _repository.ListAsync(listSpec, cancellationToken);
+    var listSpec = new ListClientsSpec(query.SearchTerm, query.Page, query.PageSize);
+    var clients = await _repository.ListAsync(listSpec, cancellationToken);
+    var totalCount = await _repository.CountAsync(listSpec, cancellationToken);
     if (clients == null)
     {
       return Result.Error("No Clients found");
     }
-    return Result.Success(clients);
+    return new ClientListDto(clients, totalCount);
+  }
+
+  public async Task<Result<int>> CountClientsAsync(string? searchTerm, CancellationToken cancellationToken)
+  {
+    var countSpec = new CountClientsSpec(searchTerm);
+    int count = await _repository.CountAsync(countSpec, cancellationToken);
+    return Result.Success(count);
   }
 
   // Add these methods to the existing ClientService implementation

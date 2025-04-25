@@ -1,0 +1,176 @@
+@namespace FurryFriends.BlazorUI.Client.Pages.PetWalkers
+@using FurryFriends.BlazorUI.Client.Models.PetWalkers
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-background">
+                <h5 class="modal-title">Pet Walker Details</h5>
+                <div class="header-actions">
+                    <button type="button" class="close" @onclick="OnClose">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="loading-container">
+                        <p><em>Loading pet walker data...</em></p>
+                    </div>
+                }
+                else if (loadError != null)
+                {
+                    <div class="error-container">
+                        <p>Error: @loadError</p>
+                    </div>
+                }
+                else if (petWalkerModel != null)
+                {
+                    <div class="view-petwalker-layout">
+                        <div class="petwalker-header">
+                            <div class="profile-image-container">
+                                @{
+                                    string imageUrl = petWalkerModel.ProfilePicture != null && !string.IsNullOrEmpty(petWalkerModel.ProfilePicture.Url)
+                                        ? petWalkerModel.ProfilePicture.Url
+                                        : $"https://placehold.co/400x400/e9ecef/495057?text={Uri.EscapeDataString(petWalkerModel.Name)}";
+                                }
+                                <img src="@imageUrl" alt="@petWalkerModel.Name" class="profile-picture" />
+                                @if (petWalkerModel.IsVerified)
+                                {
+                                    <span class="verified-badge">✓ Verified</span>
+                                }
+                                @if (petWalkerModel.HasInsurance)
+                                {
+                                    <span class="insurance-badge">🛡️ Insured</span>
+                                }
+                                @if (petWalkerModel.HasFirstAidCertification)
+                                {
+                                    <span class="certification-badge">🩹 First Aid Certified</span>
+                                }
+                            </div>
+                            <div class="profile-title-container">
+                                <h3 class="profile-name">@petWalkerModel.Name</h3>
+                                <div class="profile-rate">
+                                    <span class="rate-value">@petWalkerModel.HourlyRate.ToString("C")</span>
+                                    <span class="rate-label">per hour</span>
+                                </div>
+                                <div class="profile-experience">
+                                    <span class="experience-value">@petWalkerModel.YearsOfExperience</span>
+                                    <span class="experience-label">@(petWalkerModel.YearsOfExperience == 1 ? "year" : "years") of experience</span>
+                                </div>
+                                <div class="profile-walk-limit">
+                                    <span class="walk-limit-value">@petWalkerModel.DailyPetWalkLimit</span>
+                                    <span class="walk-limit-label">@(petWalkerModel.DailyPetWalkLimit == 1 ? "pet" : "pets") per day maximum</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="petwalker-content">
+                            <div class="content-left">
+                                <div class="biography-section">
+                                    <h4>About Me</h4>
+                                    <div class="biography-content">
+                                        @if (!string.IsNullOrEmpty(petWalkerModel.Biography))
+                                        {
+                                            <p>@petWalkerModel.Biography</p>
+                                        }
+                                        else
+                                        {
+                                            <p>No biography provided.</p>
+                                        }
+                                    </div>
+                                </div>
+
+                                @if (petWalkerModel.Photos != null && petWalkerModel.Photos.Any())
+                                {
+                                    <div class="photos-section">
+                                        <h4>Photos</h4>
+                                        <div class="photos-gallery">
+                                            @foreach (var photo in petWalkerModel.Photos)
+                                            {
+                                                <div class="photo-item">
+                                                    <img src="@photo.Url" alt="@(photo.Description ?? "Pet Walker Photo")" />
+                                                    @if (!string.IsNullOrEmpty(photo.Description))
+                                                    {
+                                                        <div class="photo-description">@photo.Description</div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="content-right">
+                                <div class="detail-section">
+                                    <h4>Contact Information</h4>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Email:</div>
+                                        <div class="detail-value">@petWalkerModel.EmailAddress</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Phone:</div>
+                                        <div class="detail-value">@FormatPhoneNumber(petWalkerModel.PhoneNumber)</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Gender:</div>
+                                        <div class="detail-value">@petWalkerModel.Gender</div>
+                                    </div>
+                                </div>
+
+                                <div class="detail-section">
+                                    <h4>Location</h4>
+                                    <div class="detail-row">
+                                        <div class="detail-label">City:</div>
+                                        <div class="detail-value">@petWalkerModel.City</div>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(petWalkerModel.State))
+                                    {
+                                        <div class="detail-row">
+                                            <div class="detail-label">State:</div>
+                                            <div class="detail-value">@petWalkerModel.State</div>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(petWalkerModel.ZipCode))
+                                    {
+                                        <div class="detail-row">
+                                            <div class="detail-label">Zip Code:</div>
+                                            <div class="detail-value">@petWalkerModel.ZipCode</div>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(petWalkerModel.Country))
+                                    {
+                                        <div class="detail-row">
+                                            <div class="detail-label">Country:</div>
+                                            <div class="detail-value">@petWalkerModel.Country</div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="detail-section">
+                                    <h4>Service Areas</h4>
+                                    @if (petWalkerModel.ServiceAreas != null && petWalkerModel.ServiceAreas.Any())
+                                    {
+                                        <div class="service-areas-list">
+                                            @foreach (var area in petWalkerModel.ServiceAreas)
+                                            {
+                                                <span class="service-area-tag">@area</span>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p>No service areas specified.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" @onclick="OnClose">Close</button>
+					</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

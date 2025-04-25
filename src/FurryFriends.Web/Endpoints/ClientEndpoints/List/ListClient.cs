@@ -37,7 +37,7 @@ public class ListClient(IMediator mediator, ILogger<ListClient> logger) : Endpoi
       await SendNotFoundAsync(cancellationToken);
       return;
     }
-    var clientListResponse = clientListResult.Value
+    var clientListResponse = clientListResult.Value.Clients
         .Select(client => new ClientDto(
             client.Id,
             client.Name,
@@ -49,7 +49,7 @@ public class ListClient(IMediator mediator, ILogger<ListClient> logger) : Endpoi
                 .GroupBy(p => p.Breed) //ToDo: Group By Species
                 .ToDictionary(g => g.Key, g => g.Count())))
         .ToList();
-    var totalCount = clientListResult.Value.Count;
+    var totalCount = clientListResult.Value.TotalCount;
     string[] hideColumns = { "Id", "Location" };
 
     Response = new ListResponse<ClientDto>(clientListResponse, request.Page, request.PageSize, totalCount, hideColumns);

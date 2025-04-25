@@ -16,14 +16,29 @@ public class GetPetWalkerHandler(IPetWalkerService _userService) : IQueryHandler
     var bioPicture = GetBioPicture(entity);
     var photos = GetPhotoList(entity);
     return new PetWalkerDto(
-      entity.Id,
-      entity.Email.EmailAddress,
-      entity.Name.FullName,
-      entity.PhoneNumber.ToString(),
-      entity.Address.City,
-      entity.ServiceAreas.Select(x => x.Locality.LocalityName)?.ToList(),
-      bioPicture,
-      photos);
+        entity.Id,
+        entity.Email.EmailAddress,
+        entity.Name.FullName,
+        entity.PhoneNumber.ToString(),
+        entity.Address.Street,
+        entity.Address.City,
+        entity.Address.StateProvinceRegion,
+        entity.Address.ZipCode,
+        entity.Address.Country,
+        entity.Biography,
+        entity.DateOfBirth,
+        entity.Gender?.Gender.ToString() ?? "N/A",
+        entity.Compensation.HourlyRate,
+        entity.Compensation.Currency,
+        entity.IsActive,
+        entity.IsVerified,
+        entity.YearsOfExperience,
+        entity.HasInsurance,
+        entity.HasFirstAidCertificatation,
+        entity.DailyPetWalkLimit,
+        entity.ServiceAreas.Select(x => x.Locality.LocalityName)?.ToList(),
+        bioPicture,
+        photos);
   }
 
   private static List<PhotoDto>? GetPhotoList(PetWalker entity)

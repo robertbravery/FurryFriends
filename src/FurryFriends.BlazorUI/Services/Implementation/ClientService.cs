@@ -5,12 +5,13 @@ using FurryFriends.BlazorUI.Client.Services.Interfaces;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
-public class ClientService : IClientService
+public class ClientService : BaseListService<ClientDto>, IClientService
 {
   private readonly HttpClient _httpClient;
   private readonly HttpClient _dogClient;
 
-  public ClientService(HttpClient httpClient, HttpClient dogClient)
+  public ClientService(HttpClient httpClient, HttpClient dogClient, IConfiguration configuration)
+    : base(httpClient, configuration, "Clients/list")
   {
     _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     _dogClient = dogClient ?? throw new ArgumentNullException(nameof(dogClient));
@@ -18,12 +19,17 @@ public class ClientService : IClientService
 
   public async Task<List<ClientDto>> GetClientsAsync()
   {
-    var response = await _httpClient.GetFromJsonAsync<ListResponse<ClientDto>>("Clients/list?page=1&pageSize=10");
+    var response = await GetClientsAsync(1, 10);
     if (response is null || response.RowsData is null)
     {
       return new List<ClientDto>();
     }
     return response.RowsData;
+  }
+
+  public async Task<ListResponse<ClientDto>> GetClientsAsync(int page, int pageSize, string? searchTerm = null)
+  {
+    return await GetListAsync(page, pageSize, searchTerm);
   }
 
   public async Task<ClientResponseBase> GetClientByEmailAsync(string email)

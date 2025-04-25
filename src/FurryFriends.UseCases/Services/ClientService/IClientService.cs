@@ -1,6 +1,7 @@
 ﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.ValueObjects;
+using FurryFriends.UseCases.Domain.Clients.Query.ListClients;
 
 namespace FurryFriends.UseCases.Services.ClientService;
 
@@ -63,7 +64,8 @@ public interface IClientService
     CancellationToken cancellationToken = default);
 
   Task<Result<Client>> GetClientAsync(string emailAddress, CancellationToken cancellationToken);
-  Task<Result<IEnumerable<Client>>> ListClientsAsync(string? searchTerm, int page, int pageSize, CancellationToken cancellationToken);
+  Task<Result<ClientListDto>> ListClientsAsync(ListClientQuery query, CancellationToken cancellationToken);
+  Task<Result<int>> CountClientsAsync(string? searchTerm, CancellationToken cancellationToken);
   Task<Result<Client>> UpdateClientAsync(Client client);
 }
 

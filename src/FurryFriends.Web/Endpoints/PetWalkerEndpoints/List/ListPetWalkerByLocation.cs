@@ -39,7 +39,12 @@ public class ListPetWalkerByLocation(IMediator mediator, ILogger<ListPetWalker> 
     }
 
     var userListResponse = userListResult.Value.Users
-        .Select(user => new PetWalkerListResponseDto(user.Id, user.Name.FullName, user.Email.EmailAddress, user.Address.City, user.ServiceAreas?.FirstOrDefault()?.Locality?.LocalityName ?? string.Empty))
+        .Select(user => new PetWalkerListResponseDto(user.Id,
+                                                     user.Name.FullName,
+                                                     user.Email.EmailAddress,
+                                                     user.Address.City,
+                                                     user.ServiceAreas?.FirstOrDefault()?.Locality?.LocalityName ?? string.Empty,
+                                                     user.PhoneNumber.Number))
         .ToList();
 
     var totalCount = userListResult.Value.TotalCount;

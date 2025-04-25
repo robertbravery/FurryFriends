@@ -1,0 +1,337 @@
+/* Modal-specific styles */
+.modal-backdrop {
+    display: block;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    animation: backdropFadeIn 0.2s ease-out;
+}
+
+@keyframes backdropFadeIn {
+    from {
+        background-color: rgba(0,0,0,0);
+    }
+    to {
+        background-color: rgba(0,0,0,0.5);
+    }
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.25rem auto;
+    max-width: 1200px;
+    width: 95%;
+    z-index: 1050;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 0.3rem;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 0.3rem;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header-background {
+    background-color: #f8f9fa;
+}
+
+.modal-title {
+    margin: 0;
+    font-weight: bold;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
+.close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.close:hover {
+    opacity: 1;
+}
+
+/* Loading and error styles */
+.loading-container, .error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.error-container {
+    color: #dc3545;
+}
+
+/* PetWalker view layout */
+.view-petwalker-layout {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header section with profile image and key details */
+.petwalker-header {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 1.5rem;
+}
+
+.profile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin-bottom: 0.75rem;
+}
+
+.verified-badge, .insurance-badge, .certification-badge {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.5rem;
+    color: white;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    text-align: center;
+    width: 100%;
+}
+
+.verified-badge {
+    background-color: #28a745;
+}
+
+.insurance-badge {
+    background-color: #007bff;
+}
+
+.certification-badge {
+    background-color: #dc3545;
+}
+
+.profile-title-container {
+    flex: 1;
+}
+
+.profile-name {
+    margin: 0 0 1rem 0;
+    font-size: 1.75rem;
+    color: #343a40;
+}
+
+.profile-rate, .profile-experience, .profile-walk-limit {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+}
+
+.rate-value, .experience-value, .walk-limit-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #343a40;
+    margin-right: 0.5rem;
+}
+
+.rate-label, .experience-label, .walk-limit-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Main content area with two columns */
+.petwalker-content {
+    display: flex;
+    gap: 2rem;
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.content-left, .content-right {
+    flex: 1;
+}
+
+/* Biography section */
+.biography-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1.25rem;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 0.75rem;
+}
+
+.detail-label {
+    width: 40%;
+    font-weight: 600;
+    color: #495057;
+}
+
+.detail-value {
+    width: 60%;
+    color: #212529;
+}
+
+/* Biography section */
+.biography-content {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border-left: 4px solid #6c757d;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Service areas */
+.service-areas-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.service-area-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #e9ecef;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+/* Photos gallery */
+.photos-section {
+    margin-top: 1.5rem;
+}
+
+.photos-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.photo-item {
+    position: relative;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.photo-item:hover {
+    transform: scale(1.03);
+}
+
+.photo-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+
+.photo-description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.7);
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/* Detail sections */
+.detail-section h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .petwalker-content {
+        flex-direction: column;
+    }
+
+    .content-left, .content-right {
+        width: 100%;
+    }
+
+    .petwalker-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-image-container {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+    }
+}

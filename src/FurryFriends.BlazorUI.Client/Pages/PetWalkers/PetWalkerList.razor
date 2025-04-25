@@ -5,8 +5,10 @@
 @using FurryFriends.BlazorUI.Client.Models.Common
 @using FurryFriends.BlazorUI.Client.Services
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using FurryFriends.BlazorUI.Client.Components.Common
 
 @inject IPetWalkerService PetWalkerService
+@inject IPopupService PopupService
 
 <div class="petwalker-list-container">
 	<div class="petwalker-list-header">
@@ -44,10 +46,10 @@
 						<td>@petWalker.EmailAddress</td>
 						<td>@petWalker.City</td>
 						<td>@petWalker.Location</td>
-						<td>@petWalker.PhoneNumber</td>
+						<td>@FormatPhoneNumber(petWalker.PhoneNumber)</td>
 						<td style="display: flex; gap: 10px;">
-							<button class="btn btn-link p-0" style="color:brown;">	👁️</button>
-							<button class="btn btn-link p-0" style="color:lightcoral;">✏️</button>
+							<button class="btn btn-link p-0" style="color:brown;" @onclick="() => OpenViewPopup(petWalker.EmailAddress)" title="View Pet Walker">👁️</button>
+							<button class="btn btn-link p-0" style="color:lightcoral;" title="Edit Pet Walker">✏️</button>
 						</td>
 					</tr>
 				}
@@ -55,31 +57,15 @@
 		</table>
 
 		<!-- Pagination Controls -->
-		<div class="pagination-container">
-			<div class="page-size-selector">
-				Items per page:
-				<select @bind="pageSize" @bind:after="LoadPetWalkers">
-					<option value="5">5</option>
-					<option value="10">10</option>
-					<option value="25">25</option>
-					<option value="50">50</option>
-				</select>
-			</div>
-			<div class="pagination-info">
-				@GetPaginationInfo()
-			</div>
-			<div class="pagination-controls">
-				<button class="btn btn-sm @(hasPreviousPage ? "btn-outline-primary" : "btn-outline-secondary")"
-					@onclick="PreviousPage" disabled="@(!hasPreviousPage)">
-					&lt;
-				</button>
-				<span class="current-page">@currentPage</span>
-				<button class="btn btn-sm @(hasNextPage ? "btn-outline-primary" : "btn-outline-secondary")"
-					@onclick="NextPage" disabled="@(!hasNextPage)">
-					&gt;
-				</button>
-			</div>
-		</div>
+		<Pagination
+			CurrentPage="@currentPage"
+			PageSize="@pageSize"
+			TotalCount="@totalCount"
+			TotalPages="@totalPages"
+			HasPreviousPage="@hasPreviousPage"
+			HasNextPage="@hasNextPage"
+			OnPageChanged="@HandlePageChanged"
+			OnPageSizeChanged="@HandlePageSizeChanged" />
 	}
 </div>
 
@@ -119,33 +105,37 @@
 		}
 	}
 
-	private async Task PreviousPage()
+	private void OpenViewPopup(string? petWalkerEmail)
 	{
-		if (hasPreviousPage)
+		if (petWalkerEmail is null)
 		{
-			currentPage--;
-			await LoadPetWalkers();
+			return;
 		}
+		Console.WriteLine($"Opening view popup for pet walker: {petWalkerEmail}");
+
+		// Use the popup service to show the view popup
+		PopupService.ShowViewPetWalkerPopup(petWalkerEmail);
 	}
 
-	private async Task NextPage()
+	private async Task HandlePageChanged(int newPage)
 	{
-		if (hasNextPage)
-		{
-			currentPage++;
-			await LoadPetWalkers();
-		}
+		currentPage = newPage;
+		await LoadPetWalkers();
 	}
 
-	private string GetPaginationInfo()
+	private async Task HandlePageSizeChanged(int newPageSize)
 	{
-		if (totalCount == 0)
-		{
-			return "No items";
-		}
+		pageSize = newPageSize;
+		await LoadPetWalkers();
+	}
 
-		var start = (currentPage - 1) * pageSize + 1;
-		var end = Math.Min(currentPage * pageSize, totalCount);
-		return $"{start} - {end} of {totalCount}";
+	private string FormatPhoneNumber(string phoneNumber)
+	{
+		if (string.IsNullOrEmpty(phoneNumber))
+			return string.Empty;
+		// Format the phone number as needed
+		return phoneNumber.Length == 10
+			? $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}"
+			: phoneNumber;
 	}
 }

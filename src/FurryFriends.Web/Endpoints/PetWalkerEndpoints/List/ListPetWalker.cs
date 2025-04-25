@@ -45,7 +45,8 @@ public class ListPetWalker(IMediator mediator, ILogger<ListPetWalker> logger)
             user.Name.FullName,
             user.Email.EmailAddress,
             user.Address.City,
-            string.Join(", ", user.ServiceAreas.Select(s => s.Locality.LocalityName)) // Fix: Convert IEnumerable<string> to a single string
+            string.Join(", ", user.ServiceAreas.Select(s => s.Locality.LocalityName)), // Fix: Convert IEnumerable<string> to a single string
+            user.PhoneNumber.Number
         ))
         .ToList();
 

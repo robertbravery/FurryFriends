@@ -25,7 +25,7 @@ public class ListClientTests
     // Arrange
     var request = new ListClientRequest { Page = 1, PageSize = 10, SearchTerm = "test" };
     var clients = GetFakeClients();
-    var result = Result<List<ClientDTO>>.Success(clients);
+    var result = Result<ClientsDto>.Success(clients);
 
     _mediator.Setup(m => m.Send(It.IsAny<ListClientQuery>(), It.IsAny<CancellationToken>()))
         .ReturnsAsync(result);
@@ -47,7 +47,7 @@ public class ListClientTests
   {
     // Arrange
     var request = new ListClientRequest { Page = 1, PageSize = 10, SearchTerm = "test" };
-    var result = Result<List<ClientDTO>>.NotFound();
+    var result = Result<ClientsDto>.NotFound();
 
     _mediator.Setup(m => m.Send(It.IsAny<ListClientQuery>(), It.IsAny<CancellationToken>()))
         .ReturnsAsync(result);
@@ -65,7 +65,7 @@ public class ListClientTests
   {
     // Arrange
     var request = new ListClientRequest { Page = 1, PageSize = 10, SearchTerm = "test" };
-    var result = Result<List<ClientDTO>>.Error("Test Error");
+    var result = Result<ClientsDto>.Error("Test Error");
 
     _mediator.Setup(m => m.Send(It.IsAny<ListClientQuery>(), It.IsAny<CancellationToken>()))
         .ReturnsAsync(result);
@@ -107,9 +107,9 @@ public class ListClientTests
     endpoint.Definition.AllowAnyPermission.Should().BeFalse();
   }
 
-  private static List<ClientDTO> GetFakeClients()
+  private static ClientsDto GetFakeClients()
   {
-    return new List<ClientDTO>
+    var clients = new List<ClientDTO>
         {
             new ClientDTO(
                 Guid.NewGuid(),
@@ -142,5 +142,6 @@ public class ListClientTests
                 ReferralSource.Website,
                 new List<ClientPetDto>())
         };
+    return new ClientsDto(clients, clients.Count);
   }
 }
