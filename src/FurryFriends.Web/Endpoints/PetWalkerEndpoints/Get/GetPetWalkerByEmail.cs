@@ -38,6 +38,7 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
         result.Value.Id,
         result.Value.Name,
         result.Value.Email,
+        result.Value.CountryCode,
         result.Value.PhoneNumber,
         result.Value.Street,
         result.Value.City,

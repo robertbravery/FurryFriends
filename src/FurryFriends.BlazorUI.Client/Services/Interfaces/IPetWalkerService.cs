@@ -37,5 +37,5 @@ public interface IPetWalkerService : IListService<PetWalkerDto>
   /// <summary>
   /// Updates an existing pet walker
   /// </summary>
-  Task UpdatePetWalkerAsync(PetWalkerRequestDto petWalkerModel);
+  Task<ApiResponse<bool>> UpdatePetWalkerAsync(PetWalkerDetailDto petWalkerModel);
 }

@@ -4,6 +4,7 @@ public record PetWalkerDto(
   Guid Id,
   string Email,
   string Name,
+  string CountryCode,
   string PhoneNumber,
   string Street,
   string City,

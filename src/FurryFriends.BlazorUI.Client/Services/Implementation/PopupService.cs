@@ -17,6 +17,10 @@ public class PopupService : IPopupService
     public event Action OnShowCreateClientPopup = default!;
     public event Action OnCloseCreateClientPopup = default!;
 
+    // Edit PetWalker popup events
+    public event Action<string> OnShowEditPetWalkerPopup = default!;
+    public event Action OnCloseEditPetWalkerPopup = default!;
+
     // PetWalker view popup events
     public event Action<string> OnShowViewPetWalkerPopup = default!;
     public event Action OnCloseViewPetWalkerPopup = default!;
@@ -24,9 +28,11 @@ public class PopupService : IPopupService
     // Track the current state to handle page refreshes
     private string _currentClientEmail = string.Empty;
     private string _currentPetWalkerEmail = string.Empty;
+    private string _currentEditPetWalkerEmail = string.Empty;
     private bool _isEditClientPopupOpen = false;
     private bool _isViewClientPopupOpen = false;
     private bool _isCreateClientPopupOpen = false;
+    private bool _isEditPetWalkerPopupOpen = false;
     private bool _isViewPetWalkerPopupOpen = false;
 
     // Edit popup methods
@@ -177,5 +183,45 @@ public class PopupService : IPopupService
     public string GetCurrentPetWalkerEmail()
     {
         return _currentPetWalkerEmail;
+    }
+
+    public string GetCurrentEditPetWalkerEmail()
+    {
+        return _currentEditPetWalkerEmail;
+    }
+
+    // Edit PetWalker popup methods
+    public void ShowEditPetWalkerPopup(string petWalkerEmail)
+    {
+        _currentEditPetWalkerEmail = petWalkerEmail;
+        _isEditPetWalkerPopupOpen = true;
+
+        try
+        {
+            OnShowEditPetWalkerPopup?.Invoke(petWalkerEmail);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing edit pet walker popup: {ex.Message}");
+        }
+    }
+
+    public void CloseEditPetWalkerPopup()
+    {
+        _isEditPetWalkerPopupOpen = false;
+
+        try
+        {
+            OnCloseEditPetWalkerPopup?.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error closing edit pet walker popup: {ex.Message}");
+        }
+    }
+
+    public bool IsEditPetWalkerPopupOpen()
+    {
+        return _isEditPetWalkerPopupOpen;
     }
 }

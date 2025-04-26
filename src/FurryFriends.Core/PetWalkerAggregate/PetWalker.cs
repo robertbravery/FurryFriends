@@ -47,7 +47,9 @@ public class PetWalker : UserEntityBase
   {
     Guard.Against.NullOrEmpty(newUserName.FirstName, nameof(newUserName.FirstName));
     Guard.Against.StringTooLong(newUserName.FirstName, 30, nameof(newUserName.FirstName));
-    Guard.Against.StringTooShort(newUserName.FirstName, 5, nameof(newUserName.FirstName));
+    Guard.Against.StringTooShort(newUserName.LastName, 5, nameof(newUserName.LastName)); Guard.Against.NullOrEmpty(newUserName.FirstName, nameof(newUserName.FirstName));
+    Guard.Against.StringTooLong(newUserName.LastName, 30, nameof(newUserName.LastName));
+    Guard.Against.StringTooShort(newUserName.LastName, 5, nameof(newUserName.LastName));
     Name = newUserName;
   }
 
@@ -110,6 +112,33 @@ public class PetWalker : UserEntityBase
   {
     Guard.Against.Negative(dailyPetWalkLimit, nameof(dailyPetWalkLimit));
     DailyPetWalkLimit = dailyPetWalkLimit;
+  }
+
+  public void UpdateAddress(string street, string city, string state, string zipCode, string country)
+  {
+    Guard.Against.NullOrEmpty(street, nameof(street));
+    Guard.Against.NullOrEmpty(city, nameof(city));
+    Guard.Against.NullOrEmpty(state, nameof(state));
+    Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
+    Guard.Against.NullOrEmpty(country, nameof(country));
+    Address = Address.Create(street, city, state, zipCode, country);
+  }
+  public void UpdateAddress(Address address)
+  {
+    Guard.Against.Null(address, nameof(address));
+    Address = address;
+  }
+
+  public void UpdatePhoneNumber(string countryCode, string phoneNumber)
+  {
+    Guard.Against.NullOrEmpty(phoneNumber, nameof(phoneNumber));
+    Guard.Against.NullOrEmpty(countryCode, nameof(countryCode));
+    PhoneNumber = PhoneNumber.Create(countryCode, phoneNumber).GetAwaiter().GetResult();
+  }
+  public void UpdatePhoneNumber(PhoneNumber phoneNumber)
+  {
+    Guard.Against.Null(phoneNumber, nameof(phoneNumber));
+    PhoneNumber = phoneNumber;
   }
 }
 

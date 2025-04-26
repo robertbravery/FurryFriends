@@ -60,6 +60,35 @@ public class PetWalkerService : IPetWalkerService
     return Result.Success(petWalker);
   }
 
+  public async Task<Result<PetWalker>> UpdatePetWalkerAsync(UpdatePetWalkerDto dto, CancellationToken cancellationToken)
+  {
+    // 1. Business Rules
+    var petWalker = await _repository.GetByIdAsync(dto.Id, cancellationToken);
+    if (petWalker is null)
+    {
+      return Result.Error("Petwalker does not exist");
+    }
+
+    // 2 Entity Configuration
+    petWalker.UpdateUsername(dto.Name);
+    petWalker.UpdatePhoneNumber(dto.PhoneNumber.CountryCode, dto.PhoneNumber.Number);
+    petWalker.UpdateAddress(dto.Address);
+    petWalker.UpdateGender(dto.Gender);
+    petWalker.UpdateBiography(dto.Biography);
+    petWalker.UpdateDateOfBirth(dto.DateOfBirth);
+    petWalker.UpdateIsActive(dto.IsActive);
+    petWalker.UpdateIsVerified(dto.IsVerified);
+    petWalker.UpdateYearsOfExperience(dto.YearsOfExperience);
+    petWalker.UpdateHasInsurance(dto.HasInsurance);
+    petWalker.UpdateHasFirstAidCertification(dto.HasFirstAidCertification);
+    petWalker.UpdateDailyPetWalkLimit(dto.DailyPetWalkLimit);
+    petWalker.UpdateCompensation(dto.Compensation);
+    petWalker.UpdatedAt = DateTime.UtcNow;
+    // 4. Persistence
+    await _repository.SaveChangesAsync(cancellationToken);
+
+    return Result.Success(petWalker);
+  }
 
   public async Task<Result<PetWalker>> GetPetWalkerByEmailAsync(string email, CancellationToken cancellationToken)
   {

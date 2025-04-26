@@ -26,11 +26,16 @@ public interface IPopupService
     void CloseCreateClientPopup();
 
     // PetWalker view popup events and methods
+    void ShowViewPetWalkerPopup(string petWalkerEmail);
     event Action<string> OnShowViewPetWalkerPopup;
     event Action OnCloseViewPetWalkerPopup;
 
-    void ShowViewPetWalkerPopup(string petWalkerEmail);
-    void CloseViewPetWalkerPopup();
+    // Edit PetWalker popup events
+    event Action<string> OnShowEditPetWalkerPopup;
+    event Action OnCloseEditPetWalkerPopup;
+
+    void ShowEditPetWalkerPopup(string petWalkerEmail);
+    void CloseEditPetWalkerPopup();
 
     // Methods to get the current state
     bool IsEditClientPopupOpen();
@@ -39,4 +44,6 @@ public interface IPopupService
     bool IsViewPetWalkerPopupOpen();
     string GetCurrentClientEmail();
     string GetCurrentPetWalkerEmail();
+    string GetCurrentEditPetWalkerEmail();
+    bool IsEditPetWalkerPopupOpen();
 }

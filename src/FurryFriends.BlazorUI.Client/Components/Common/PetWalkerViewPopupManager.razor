@@ -2,8 +2,8 @@
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
 @rendermode InteractiveServer
 @implements IDisposable
-@inject IPopupService PopupService
 @inject IPetWalkerService PetWalkerService
+@inject IPopupService PopupService
 
 @if (showViewPopup && !string.IsNullOrEmpty(petWalkerEmail))
 {
@@ -73,7 +73,7 @@
         StateHasChanged();
 
         // Notify any listeners that the popup was closed
-        PopupService.CloseViewPetWalkerPopup();
+        PopupService.CloseViewClientPopup();
     }
 
     public void Dispose()

@@ -1,0 +1,194 @@
+@using FurryFriends.BlazorUI.Client.Models.PetWalkers
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header modal-header-background">
+				<h5 class="modal-title">Edit Pet Walker</h5>
+				<button type="button" class="btn-close" aria-label="Close" @onclick="OnCancel"></button>
+			</div>
+			<div class="modal-body">
+				@if (showSuccessMessage)
+				{
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Pet walker updated successfully!
+						<button type="button" class="btn-close" @onclick="@(() => showSuccessMessage = false)"
+								aria-label="Close"></button>
+					</div>
+				}
+
+				@if (isLoading)
+				{
+					<div class="loading-container">
+						<p><em>Loading pet walker data...</em></p>
+					</div>
+				}
+				else if (loadError != null)
+				{
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						@loadError
+						<button type="button" class="btn-close" @onclick="@(() => loadError = null)"
+								aria-label="Close"></button>
+					</div>
+				}
+				else if (petWalkerModel != null)
+				{
+					<EditForm Model="@petWalkerModel" OnValidSubmit="@HandleValidSubmit">
+						<DataAnnotationsValidator />
+						<ValidationSummary />
+
+						<div class="form-sections">
+							<div class="form-section">
+								<h4>Personal Information</h4>
+								<div class="form-group">
+									<label for="name">Name</label>
+									<InputText id="name" class="form-control" @bind-Value="petWalkerModel.Name" />
+									<ValidationMessage For="@(() => petWalkerModel.Name)" />
+								</div>
+
+								<div class="form-group">
+									<label>Phone Number</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text">+</span>
+										</div>
+										<InputText class="form-control country-code" style="max-width: 80px;"
+												   @bind-Value="petWalkerModel.CountryCode" placeholder="Code" />
+										<InputText class="form-control" @bind-Value="petWalkerModel.PhoneNumber"
+												   placeholder="Phone Number" />
+									</div>
+									<ValidationMessage For="@(() => petWalkerModel.CountryCode)" />
+									<ValidationMessage For="@(() => petWalkerModel.PhoneNumber)" />
+								</div>
+
+								<div class="form-group">
+									<label for="gender">Gender</label>
+									<InputSelect id="gender" class="form-control" @bind-Value="petWalkerModel.Gender">
+										<option value="">Select Gender</option>
+										<option value="Male">Male</option>
+										<option value="Female">Female</option>
+										<option value="Other">Other</option>
+									</InputSelect>
+									<ValidationMessage For="@(() => petWalkerModel.Gender)" />
+								</div>
+
+								<div class="form-group">
+									<label for="biography">Biography</label>
+									<InputTextArea id="biography" class="form-control"
+												   @bind-Value="petWalkerModel.Biography" rows="4" />
+									<ValidationMessage For="@(() => petWalkerModel.Biography)" />
+								</div>
+							</div>
+
+							<div class="form-section">
+								<h4>Professional Details</h4>
+								<div class="form-group">
+									<label for="hourlyRate">Hourly Rate ($)</label>
+									<InputNumber id="hourlyRate" class="form-control"
+												 @bind-Value="petWalkerModel.HourlyRate" />
+									<ValidationMessage For="@(() => petWalkerModel.HourlyRate)" />
+								</div>
+
+								<div class="form-group">
+									<label for="yearsOfExperience">Years of Experience</label>
+									<InputNumber id="yearsOfExperience" class="form-control"
+												 @bind-Value="petWalkerModel.YearsOfExperience" />
+									<ValidationMessage For="@(() => petWalkerModel.YearsOfExperience)" />
+								</div>
+
+								<div class="form-group">
+									<label for="dailyPetWalkLimit">Daily Pet Walk Limit</label>
+									<InputNumber id="dailyPetWalkLimit" class="form-control"
+												 @bind-Value="petWalkerModel.DailyPetWalkLimit" />
+									<ValidationMessage For="@(() => petWalkerModel.DailyPetWalkLimit)" />
+								</div>
+
+								<div class="form-group">
+									<label>Certifications</label>
+									<div class="certification-checkboxes">
+										<div class="form-check">
+											<InputCheckbox id="isVerified" class="form-check-input"
+														   @bind-Value="petWalkerModel.IsVerified" />
+											<label class="form-check-label" for="isVerified">Verified Walker</label>
+										</div>
+										<div class="form-check">
+											<InputCheckbox id="hasInsurance" class="form-check-input"
+														   @bind-Value="petWalkerModel.HasInsurance" />
+											<label class="form-check-label" for="hasInsurance">Has Insurance</label>
+										</div>
+										<div class="form-check">
+											<InputCheckbox id="hasFirstAid" class="form-check-input"
+														   @bind-Value="petWalkerModel.HasFirstAidCertification" />
+											<label class="form-check-label" for="hasFirstAid">First Aid Certified</label>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-section">
+								<h4>Location Information</h4>
+								<div class="form-group">
+									<label for="city">City</label>
+									<InputText id="city" class="form-control" @bind-Value="petWalkerModel.City" />
+									<ValidationMessage For="@(() => petWalkerModel.City)" />
+								</div>
+
+								<div class="form-group">
+									<label for="state">State</label>
+									<InputText id="state" class="form-control" @bind-Value="petWalkerModel.State" />
+									<ValidationMessage For="@(() => petWalkerModel.State)" />
+								</div>
+
+								<div class="form-group">
+									<label for="zipCode">Zip Code</label>
+									<InputText id="zipCode" class="form-control" @bind-Value="petWalkerModel.ZipCode" />
+									<ValidationMessage For="@(() => petWalkerModel.ZipCode)" />
+								</div>
+
+								<div class="form-group">
+									<label for="country">Country</label>
+									<InputText id="country" class="form-control" @bind-Value="petWalkerModel.Country" />
+									<ValidationMessage For="@(() => petWalkerModel.Country)" />
+								</div>
+							</div>
+						</div>
+						<div class="form-sections form-sections-service-areas">
+						@* Service Areas *@
+						<div class="form-section">
+							<h4>Service Areas</h4>
+							<div class="form-group">
+								<div class="service-areas-container">
+									@for (int i = 0; i < petWalkerModel.ServiceAreas.Count; i++)
+									{
+										var index = i;
+										<div class="service-area-input-group">
+											<InputText class="form-control" @bind-Value="petWalkerModel.ServiceAreas[index]"
+													   placeholder="Enter service area" />
+											<button type="button" class="btn btn-outline-danger"
+													@onclick="() => RemoveServiceArea(index)">
+												<i class="fas fa-times"></i>
+											</button>
+										</div>
+									}
+									@if (petWalkerModel.ServiceAreas.Count < 10) // Limit to 10 service areas
+									{
+										<button type="button" class="btn btn-outline-primary mt-2" @onclick="AddServiceArea">
+											<i class="fas fa-plus"></i> Add Service Area
+										</button>
+									}
+								</div>
+							</div>
+						</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Save Changes</button>
+							<button type="button" class="btn btn-secondary" @onclick="OnCancel">Cancel</button>
+						</div>
+					</EditForm>
+				}
+			</div>
+		</div>
+	</div>
+</div>

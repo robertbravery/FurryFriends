@@ -49,7 +49,7 @@
 						<td>@FormatPhoneNumber(petWalker.PhoneNumber)</td>
 						<td style="display: flex; gap: 10px;">
 							<button class="btn btn-link p-0" style="color:brown;" @onclick="() => OpenViewPopup(petWalker.EmailAddress)" title="View Pet Walker">👁️</button>
-							<button class="btn btn-link p-0" style="color:lightcoral;" title="Edit Pet Walker">✏️</button>
+							<button class="btn btn-link p-0" style="color:lightcoral;" @onclick="() => OpenEditPopup(petWalker.EmailAddress)" title="Edit Pet Walker">✏️</button>
 						</td>
 					</tr>
 				}
@@ -105,12 +105,8 @@
 		}
 	}
 
-	private void OpenViewPopup(string? petWalkerEmail)
+	private void OpenViewPopup(string petWalkerEmail)
 	{
-		if (petWalkerEmail is null)
-		{
-			return;
-		}
 		Console.WriteLine($"Opening view popup for pet walker: {petWalkerEmail}");
 
 		// Use the popup service to show the view popup
@@ -138,4 +134,9 @@
 			? $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}"
 			: phoneNumber;
 	}
+
+    private void OpenEditPopup(string petWalkerEmail)
+    {
+       PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
+    }
 }

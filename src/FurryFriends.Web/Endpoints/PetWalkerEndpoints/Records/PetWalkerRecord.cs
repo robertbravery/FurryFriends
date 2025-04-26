@@ -6,6 +6,7 @@ public record PetWalkerRecord(
     Guid Id,
     string FullName = default!,
     string Email = default!,
+    string CountryCode = default!,
     string PhoneNumber = default!,
     string Street = default!,
     string City = default!,
