@@ -4,382 +4,340 @@ using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
+public class PetWalkerApiResponse
+{
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
+
+    [JsonPropertyName("fullName")]
+    public string FullName { get; set; } = string.Empty;
+
+    [JsonPropertyName("email")]
+    public string Email { get; set; } = string.Empty;
+
+    [JsonPropertyName("countryCode")]
+    public string CountryCode { get; set; } = string.Empty;
+
+    [JsonPropertyName("phoneNumber")]
+    public string PhoneNumber { get; set; } = string.Empty;
+
+    [JsonPropertyName("city")]
+    public string City { get; set; } = string.Empty;
+
+    [JsonPropertyName("hourlyRate")]
+    public decimal HourlyRate { get; set; } = 25.00m;
+
+    [JsonPropertyName("currency")]
+    public string Currency { get; set; } = "USD";
+
+    [JsonPropertyName("yearsOfExperience")]
+    public int YearsOfExperience { get; set; } = 1;
+
+    [JsonPropertyName("dailyPetWalkLimit")]
+    public int DailyPetWalkLimit { get; set; } = 5;
+
+    [JsonPropertyName("isVerified")]
+    public bool IsVerified { get; set; } = true;
+
+    [JsonPropertyName("hasInsurance")]
+    public bool HasInsurance { get; set; } = true;
+
+    [JsonPropertyName("hasFirstAidCertification")]
+    public bool HasFirstAidCertification { get; set; } = true;
+
+    [JsonPropertyName("gender")]
+    public string Gender { get; set; } = "Not specified";
+
+    [JsonPropertyName("biography")]
+    public string Biography { get; set; } = "This pet walker has not provided a biography yet.";
+
+    [JsonPropertyName("locations")]
+    public List<string> Locations { get; set; } = new();
+
+    [JsonPropertyName("serviceLocation")]
+    public List<string> ServiceLocation { get; set; } = new();
+
+    [JsonPropertyName("street")]
+    public string Street { get; set; } = string.Empty;
+
+    [JsonPropertyName("state")]
+    public string State { get; set; } = string.Empty;
+
+    [JsonPropertyName("zipCode")]
+    public string ZipCode { get; set; } = string.Empty;
+
+    [JsonPropertyName("country")]
+    public string Country { get; set; } = string.Empty;
+
+    [JsonPropertyName("bioPicture")]
+    public PhotoDto? BioPicture { get; set; }
+
+    [JsonPropertyName("photos")]
+    public List<PhotoDto> Photos { get; set; } = new();
+}
+
 public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
 {
-  private readonly HttpClient _httpClient;
-  private readonly string _apiBaseUrl;
+    private readonly HttpClient _httpClient;
+    private readonly string _apiBaseUrl;
 
-  public PetWalkerService(HttpClient httpClient, IConfiguration configuration)
-    : base(httpClient, configuration, "PetWalker/list")
-  {
-    _httpClient = httpClient;
-    _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;
-  }
-
-  public async Task<ListResponse<PetWalkerDto>> GetPetWalkersAsync(int page, int pageSize)
-  {
-    return await GetListAsync(page, pageSize);
-  }
-
-  public async Task<PetWalkerDto> GetPetWalkerByEmailAsync(string email)
-  {
-    var response = await _httpClient.GetFromJsonAsync<PetWalkerDto>($"{_apiBaseUrl}/PetWalkers/{email}");
-    return response ?? new PetWalkerDto();
-  }
-
-  public async Task<ApiResponse<PetWalkerDetailDto>> GetPetWalkerDetailsByEmailAsync(string email)
-  {
-    try
+    public PetWalkerService(HttpClient httpClient, IConfiguration configuration)
+        : base(httpClient, configuration, "PetWalker/list")
     {
-      // Call the API endpoint to get detailed pet walker information
-      var response = await _httpClient.GetAsync($"{_apiBaseUrl}/PetWalker/email/{email}");
+        _httpClient = httpClient;
+        _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;
+    }
 
-      if (!response.IsSuccessStatusCode)
-      {
-        return new ApiResponse<PetWalkerDetailDto>
+    public async Task<ListResponse<PetWalkerDto>> GetPetWalkersAsync(int page, int pageSize)
+    {
+        return await GetListAsync(page, pageSize);
+    }
+
+    public async Task<PetWalkerDto> GetPetWalkerByEmailAsync(string email)
+    {
+        var response = await _httpClient.GetFromJsonAsync<PetWalkerDto>($"{_apiBaseUrl}/PetWalkers/{email}");
+        return response ?? new PetWalkerDto();
+    }
+
+    public async Task<ApiResponse<PetWalkerDetailDto>> GetPetWalkerDetailsByEmailAsync(string email)
+    {
+        try
         {
-          Success = false,
-          Message = $"Failed to load pet walker details: {response.StatusCode}",
-          Errors = new List<string> { $"API returned status code: {response.StatusCode}" },
-          Timestamp = DateTime.Now
-        };
-      }
+            var response = await _httpClient.GetAsync($"{_apiBaseUrl}/PetWalker/email/{email}");
 
-      // Read the response content as a string
-      var jsonString = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ApiResponse<PetWalkerDetailDto>
+                {
+                    Success = false,
+                    Message = $"Failed to load pet walker details: {response.StatusCode}",
+                    Errors = new List<string> { $"API returned status code: {response.StatusCode}" },
+                    Timestamp = DateTime.Now
+                };
+            }
 
-      // Deserialize the JSON string into our ApiResponseBase to extract the data
-      var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-      var apiResponse = JsonSerializer.Deserialize<ApiResponseBase>(jsonString, options);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseBase>(options);
 
-      if (apiResponse == null || !apiResponse.Success || apiResponse.Data.ValueKind == JsonValueKind.Null)
-      {
-        return new ApiResponse<PetWalkerDetailDto>
-        {
-          Success = false,
-          Message = apiResponse?.Message ?? "Failed to load pet walker details",
-          Errors = apiResponse?.Errors,
-          Timestamp = DateTime.Now
-        };
-      }
+            if (apiResponse == null || !apiResponse.Success)
+            {
+                return new ApiResponse<PetWalkerDetailDto>
+                {
+                    Success = false,
+                    Message = apiResponse?.Message ?? "Failed to load pet walker details",
+                    Errors = apiResponse?.Errors,
+                    Timestamp = DateTime.Now
+                };
+            }
 
-      // Extract the data from the JsonElement and map it to our PetWalkerDetailDto
-      var serviceAreas = apiResponse.Data.GetProperty("locations")
-            .EnumerateArray()
-            .Select(x => x.GetString() ?? string.Empty)
-            .Where(x => !string.IsNullOrEmpty(x))
-            .ToList();
+            var petWalkerData = JsonSerializer.Deserialize<PetWalkerApiResponse>(apiResponse.Data.GetRawText(), options);
 
-      var petWalkerDetail = new PetWalkerDetailDto
-      {
-        Id = apiResponse.Data.GetProperty("id").GetGuid(),
-        Name = apiResponse.Data.GetProperty("fullName").GetString() ?? string.Empty,
-        EmailAddress = apiResponse.Data.GetProperty("email").GetString() ?? string.Empty,
-        CountryCode = apiResponse.Data.GetProperty("countryCode").GetString() ?? string.Empty,
-        PhoneNumber = apiResponse.Data.GetProperty("phoneNumber").GetString() ?? string.Empty,
-        City = apiResponse.Data.GetProperty("city").GetString() ?? string.Empty,
-        // Default values for properties that might not be in the API response
-        HourlyRate = 25.00m,
-        Currency = "USD",
-        YearsOfExperience = 1,
-        DailyPetWalkLimit = 5,
-        IsVerified = true,
-        HasInsurance = true,
-        HasFirstAidCertification = true,
-        Gender = "Not specified",
-        Biography = "This pet walker has not provided a biography yet.",
-        ServiceAreas = serviceAreas,
-      };
+            if (petWalkerData == null)
+            {
+                return new ApiResponse<PetWalkerDetailDto>
+                {
+                    Success = false,
+                    Message = "Failed to deserialize pet walker data",
+                    Timestamp = DateTime.Now
+                };
+            }
 
-      // Try to get additional fields if they exist
-      if (apiResponse.Data.TryGetProperty("hourlyRate", out JsonElement hourlyRateElement) &&
-          hourlyRateElement.ValueKind == JsonValueKind.Number)
-      {
-        petWalkerDetail.HourlyRate = hourlyRateElement.GetDecimal();
-      }
+            var petWalkerDetail = new PetWalkerDetailDto
+            {
+                Id = petWalkerData.Id,
+                Name = petWalkerData.FullName,
+                EmailAddress = petWalkerData.Email,
+                CountryCode = petWalkerData.CountryCode,
+                PhoneNumber = petWalkerData.PhoneNumber,
+                City = petWalkerData.City,
+                HourlyRate = petWalkerData.HourlyRate,
+                Currency = petWalkerData.Currency,
+                YearsOfExperience = petWalkerData.YearsOfExperience,
+                DailyPetWalkLimit = petWalkerData.DailyPetWalkLimit,
+                IsVerified = petWalkerData.IsVerified,
+                HasInsurance = petWalkerData.HasInsurance,
+                HasFirstAidCertification = petWalkerData.HasFirstAidCertification,
+                Gender = petWalkerData.Gender,
+                Biography = petWalkerData.Biography,
+                Street = petWalkerData.Street,
+                State = petWalkerData.State,
+                ZipCode = petWalkerData.ZipCode,
+                Country = petWalkerData.Country,
+                ServiceAreas = petWalkerData.Locations.Concat(petWalkerData.ServiceLocation)
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Distinct()
+                    .ToList(),
+                ProfilePicture = petWalkerData.BioPicture,
+                Photos = petWalkerData.Photos
+            };
 
-      if (apiResponse.Data.TryGetProperty("currency", out JsonElement currencyElement) &&
-          currencyElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.Currency = currencyElement.GetString() ?? "USD";
-      }
-
-      if (apiResponse.Data.TryGetProperty("yearsOfExperience", out JsonElement experienceElement) &&
-          experienceElement.ValueKind == JsonValueKind.Number)
-      {
-        petWalkerDetail.YearsOfExperience = experienceElement.GetInt32();
-      }
-
-      if (apiResponse.Data.TryGetProperty("dailyPetWalkLimit", out JsonElement limitElement) &&
-          limitElement.ValueKind == JsonValueKind.Number)
-      {
-        petWalkerDetail.DailyPetWalkLimit = limitElement.GetInt32();
-      }
-
-      if ((apiResponse.Data.TryGetProperty("isVerified", out JsonElement verifiedElement) &&
-          verifiedElement.ValueKind == JsonValueKind.True) || verifiedElement.ValueKind == JsonValueKind.False)
-      {
-        petWalkerDetail.IsVerified = verifiedElement.GetBoolean();
-      }
-
-      if ((apiResponse.Data.TryGetProperty("hasInsurance", out JsonElement insuranceElement) &&
-          insuranceElement.ValueKind == JsonValueKind.True) || insuranceElement.ValueKind == JsonValueKind.False)
-      {
-        petWalkerDetail.HasInsurance = insuranceElement.GetBoolean();
-      }
-
-      if ((apiResponse.Data.TryGetProperty("hasFirstAidCertification", out JsonElement certElement) &&
-          certElement.ValueKind == JsonValueKind.True) || certElement.ValueKind == JsonValueKind.False)
-      {
-        petWalkerDetail.HasFirstAidCertification = certElement.GetBoolean();
-      }
-
-      if (apiResponse.Data.TryGetProperty("gender", out JsonElement genderElement) &&
-          genderElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.Gender = genderElement.GetString() ?? "Not specified";
-      }
-
-      if (apiResponse.Data.TryGetProperty("biography", out JsonElement bioElement) &&
-          bioElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.Biography = bioElement.GetString() ?? "This pet walker has not provided a biography yet.";
-      }
-
-      // Try to get the service locations if they exist
-      if (apiResponse.Data.TryGetProperty("serviceLocation", out JsonElement locationsElement) &&
-          locationsElement.ValueKind == JsonValueKind.Array)
-      {
-        foreach (var location in locationsElement.EnumerateArray())
-        {
-          petWalkerDetail.ServiceAreas.Add(location.GetString() ?? string.Empty);
+            return new ApiResponse<PetWalkerDetailDto>
+            {
+                Success = true,
+                Message = "Success",
+                Data = petWalkerDetail,
+                Timestamp = apiResponse.Timestamp
+            };
         }
-      }
-
-      // Try to get address details if they exist
-      if (apiResponse.Data.TryGetProperty("street", out JsonElement streetElement) &&
-          streetElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.Street = streetElement.GetString() ?? string.Empty;
-      }
-
-      if (apiResponse.Data.TryGetProperty("state", out JsonElement stateElement) &&
-          stateElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.State = stateElement.GetString() ?? string.Empty;
-      }
-
-      if (apiResponse.Data.TryGetProperty("zipCode", out JsonElement zipCodeElement) &&
-          zipCodeElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.ZipCode = zipCodeElement.GetString() ?? string.Empty;
-      }
-
-      if (apiResponse.Data.TryGetProperty("country", out JsonElement countryElement) &&
-          countryElement.ValueKind == JsonValueKind.String)
-      {
-        petWalkerDetail.Country = countryElement.GetString() ?? string.Empty;
-      }
-
-      // Try to get the profile picture if it exists
-      if (apiResponse.Data.TryGetProperty("bioPicture", out JsonElement bioPictureElement) &&
-          bioPictureElement.ValueKind == JsonValueKind.Object)
-      {
-        petWalkerDetail.ProfilePicture = new PhotoDto
+        catch (Exception ex)
         {
-          Url = bioPictureElement.GetProperty("url").GetString() ?? string.Empty,
-          Description = bioPictureElement.TryGetProperty("desciption", out JsonElement descElement) ?
-                       descElement.GetString() ?? string.Empty : string.Empty
-        };
-      }
-
-      // Try to get the photos if they exist
-      if (apiResponse.Data.TryGetProperty("photos", out JsonElement photosElement) &&
-          photosElement.ValueKind == JsonValueKind.Array)
-      {
-        petWalkerDetail.Photos = new List<PhotoDto>();
-        foreach (var photo in photosElement.EnumerateArray())
-        {
-          petWalkerDetail.Photos.Add(new PhotoDto
-          {
-            Url = photo.GetProperty("url").GetString() ?? string.Empty,
-            Description = photo.TryGetProperty("desciption", out JsonElement descElement) ?
-                         descElement.GetString() ?? string.Empty : string.Empty
-          });
+            Console.WriteLine($"Error getting pet walker details: {ex.Message}");
+            return new ApiResponse<PetWalkerDetailDto>
+            {
+                Success = false,
+                Message = "Failed to load pet walker details",
+                Errors = new List<string> { ex.Message },
+                Timestamp = DateTime.Now
+            };
         }
-      }
-
-      return new ApiResponse<PetWalkerDetailDto>
-      {
-        Success = true,
-        Message = "Success",
-        Data = petWalkerDetail,
-        Timestamp = apiResponse.Timestamp
-      };
     }
-    catch (Exception ex)
+
+    public async Task CreatePetWalkerAsync(PetWalkerRequestDto petWalkerModel)
     {
-      Console.WriteLine($"Error getting pet walker details: {ex.Message}");
-      return new ApiResponse<PetWalkerDetailDto>
-      {
-        Success = false,
-        Message = "Failed to load pet walker details",
-        Errors = new List<string> { ex.Message },
-        Timestamp = DateTime.Now
-      };
+        await _httpClient.PostAsJsonAsync($"{_apiBaseUrl}/PetWalkers", petWalkerModel);
     }
-  }
 
-  public async Task CreatePetWalkerAsync(PetWalkerRequestDto petWalkerModel)
-  {
-    await _httpClient.PostAsJsonAsync($"{_apiBaseUrl}/PetWalkers", petWalkerModel);
-  }
-
-  public async Task<ApiResponse<bool>> UpdatePetWalkerAsync(PetWalkerDetailDto petWalkerModel)
-  {
-    try
+    public async Task<ApiResponse<bool>> UpdatePetWalkerAsync(PetWalkerDetailDto petWalkerModel)
     {
-      var nameParts = petWalkerModel.Name.Split(' ', 2);
-      var firstName = nameParts[0];
-      var lastName = nameParts.Length > 1 ? nameParts[1] : string.Empty;
-
-      // Filter out empty service areas
-      var serviceAreas = petWalkerModel.ServiceAreas
-          .Where(area => !string.IsNullOrWhiteSpace(area))
-          .ToList();
-      var updateRequest = new
-      {
-
-        PetWalkerId = petWalkerModel.Id,
-        FirstName = firstName,
-        LastName = lastName,
-        CountryCode = petWalkerModel.CountryCode.TrimStart('+'), // Remove + if user added it
-        PhoneNumber = petWalkerModel.PhoneNumber,
-        ServiceAreas = serviceAreas,
-        Street = petWalkerModel.Street,
-        City = petWalkerModel.City,
-        State = petWalkerModel.State,
-        ZipCode = petWalkerModel.ZipCode,
-        Country = petWalkerModel.Country,
-        Biography = petWalkerModel.Biography,
-        DateOfBirth = petWalkerModel.DateOfBirth,
-        Gender = ConvertGenderToInt(petWalkerModel.Gender),
-        HourlyRate = petWalkerModel.HourlyRate,
-        Currency = petWalkerModel.Currency,
-        IsActive = petWalkerModel.IsActive,
-        IsVerified = petWalkerModel.IsVerified,
-        YearsOfExperience = petWalkerModel.YearsOfExperience,
-        HasInsurance = petWalkerModel.HasInsurance,
-        HasFirstAidCertification = petWalkerModel.HasFirstAidCertification,
-        DailyPetWalkLimit = petWalkerModel.DailyPetWalkLimit,
-        ServiceLocation = string.Join(", ", petWalkerModel.ServiceAreas)
-      };
-
-      var response = await _httpClient.PutAsJsonAsync(
-        $"{_apiBaseUrl}/PetWalker/{petWalkerModel.Id}",
-        updateRequest);
-
-      if (response.IsSuccessStatusCode)
-      {
-        return new ApiResponse<bool>
+        try
         {
-          Success = true,
-          Message = "Pet walker updated successfully",
-          Data = true,
-          Timestamp = DateTime.Now
-        };
-      }
+            var nameParts = petWalkerModel.Name.Split(' ', 2);
+            var firstName = nameParts[0];
+            var lastName = nameParts.Length > 1 ? nameParts[1] : string.Empty;
 
-      var errorContent = await response.Content.ReadAsStringAsync();
-      return new ApiResponse<bool>
-      {
-        Success = false,
-        Message = $"Failed to update pet walker. Status: {response.StatusCode}. Details: {errorContent}",
-        Data = false,
-        Timestamp = DateTime.Now
-      };
-    }
-    catch (Exception ex)
-    {
-      return new ApiResponse<bool>
-      {
-        Success = false,
-        Message = $"Error updating pet walker: {ex.Message}",
-        Data = false,
-        Errors = new List<string> { ex.Message },
-        Timestamp = DateTime.Now
-      };
-    }
-  }
+            var serviceAreas = petWalkerModel.ServiceAreas
+                .Where(area => !string.IsNullOrWhiteSpace(area))
+                .ToList();
 
-  private int ConvertGenderToInt(string gender)
-  {
-    return gender.ToLower() switch
-    {
-      "male" => 0,
-      "female" => 1,
-      "other" => 2,
-      _ => 0
-    };
-  }
+            var updateRequest = new
+            {
+                PetWalkerId = petWalkerModel.Id,
+                FirstName = firstName,
+                LastName = lastName,
+                CountryCode = petWalkerModel.CountryCode.TrimStart('+'),
+                PhoneNumber = petWalkerModel.PhoneNumber,
+                ServiceAreas = serviceAreas,
+                Street = petWalkerModel.Street,
+                City = petWalkerModel.City,
+                State = petWalkerModel.State,
+                ZipCode = petWalkerModel.ZipCode,
+                Country = petWalkerModel.Country,
+                Biography = petWalkerModel.Biography,
+                DateOfBirth = petWalkerModel.DateOfBirth,
+                Gender = ConvertGenderToInt(petWalkerModel.Gender),
+                HourlyRate = petWalkerModel.HourlyRate,
+                Currency = petWalkerModel.Currency,
+                IsActive = petWalkerModel.IsActive,
+                IsVerified = petWalkerModel.IsVerified,
+                YearsOfExperience = petWalkerModel.YearsOfExperience,
+                HasInsurance = petWalkerModel.HasInsurance,
+                HasFirstAidCertification = petWalkerModel.HasFirstAidCertification,
+                DailyPetWalkLimit = petWalkerModel.DailyPetWalkLimit,
+                ServiceLocation = string.Join(", ", petWalkerModel.ServiceAreas)
+            };
 
-  public async Task DeletePetWalkerAsync(string email)
-  {
-    await _httpClient.DeleteAsync($"{_apiBaseUrl}/PetWalkers/{email}");
-  }
+            var response = await _httpClient.PutAsJsonAsync(
+                $"{_apiBaseUrl}/PetWalker/{petWalkerModel.Id}",
+                updateRequest);
 
-  public async Task<ApiResponse<bool>> UpdateServiceAreasAsync(Guid petWalkerId, List<ServiceAreaDto> serviceAreas)
-  {
-    try
-    {
-      // Filter out service areas with empty locality IDs (legacy service areas)
-      var validServiceAreas = serviceAreas
-          .Where(sa => sa.LocalityId != Guid.Empty)
-          .Select(sa => new { LocalityId = sa.LocalityId })
-          .ToList();
+            if (response.IsSuccessStatusCode)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Pet walker updated successfully",
+                    Data = true,
+                    Timestamp = DateTime.Now
+                };
+            }
 
-      var request = new
-      {
-        ServiceAreas = validServiceAreas
-      };
-
-      var response = await _httpClient.PutAsJsonAsync(
-        $"{_apiBaseUrl}/PetWalker/{petWalkerId}/ServiceAreas",
-        request);
-
-      if (response.IsSuccessStatusCode)
-      {
-        return new ApiResponse<bool>
+            var errorContent = await response.Content.ReadAsStringAsync();
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = $"Failed to update pet walker. Status: {response.StatusCode}. Details: {errorContent}",
+                Data = false,
+                Timestamp = DateTime.Now
+            };
+        }
+        catch (Exception ex)
         {
-          Success = true,
-          Message = "Service areas updated successfully",
-          Data = true,
-          Timestamp = DateTime.Now
-        };
-      }
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = $"Error updating pet walker: {ex.Message}",
+                Data = false,
+                Errors = new List<string> { ex.Message },
+                Timestamp = DateTime.Now
+            };
+        }
+    }
 
-      var errorContent = await response.Content.ReadAsStringAsync();
-      return new ApiResponse<bool>
-      {
-        Success = false,
-        Message = $"Failed to update service areas. Status: {response.StatusCode}. Details: {errorContent}",
-        Data = false,
-        Timestamp = DateTime.Now
-      };
-    }
-    catch (Exception ex)
+    private int ConvertGenderToInt(string gender)
     {
-      return new ApiResponse<bool>
-      {
-        Success = false,
-        Message = $"Error updating service areas: {ex.Message}",
-        Data = false,
-        Errors = new List<string> { ex.Message },
-        Timestamp = DateTime.Now
-      };
+        return gender.ToLower() switch
+        {
+            "male" => 0,
+            "female" => 1,
+            "other" => 2,
+            _ => 0
+        };
     }
-  }
+
+    public async Task DeletePetWalkerAsync(string email)
+    {
+        await _httpClient.DeleteAsync($"{_apiBaseUrl}/PetWalkers/{email}");
+    }
+
+    public async Task<ApiResponse<bool>> UpdateServiceAreasAsync(Guid petWalkerId, List<ServiceAreaDto> serviceAreas)
+    {
+        try
+        {
+            var validServiceAreas = serviceAreas
+                .Where(sa => sa.LocalityId != Guid.Empty)
+                .Select(sa => new { LocalityId = sa.LocalityId })
+                .ToList();
+
+            var request = new { ServiceAreas = validServiceAreas };
+
+            var response = await _httpClient.PutAsJsonAsync(
+                $"{_apiBaseUrl}/PetWalker/{petWalkerId}/ServiceAreas",
+                request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Service areas updated successfully",
+                    Data = true,
+                    Timestamp = DateTime.Now
+                };
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = $"Failed to update service areas. Status: {response.StatusCode}. Details: {errorContent}",
+                Data = false,
+                Timestamp = DateTime.Now
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = $"Error updating service areas: {ex.Message}",
+                Data = false,
+                Errors = new List<string> { ex.Message },
+                Timestamp = DateTime.Now
+            };
+        }
+    }
 }
