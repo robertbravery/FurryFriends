@@ -2,10 +2,9 @@
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 
-
-public record CreatePetWalkerDto(
+public record UpdatePetWalkerDto(
+    Guid Id,
     Name Name,
-    Email Email,
     PhoneNumber PhoneNumber,
     Address Address,
     GenderType Gender,
@@ -17,5 +16,6 @@ public record CreatePetWalkerDto(
     bool HasInsurance,
     bool HasFirstAidCertification,
     int DailyPetWalkLimit,
-    Compensation Compensation);
+    Compensation Compensation
+    );
 

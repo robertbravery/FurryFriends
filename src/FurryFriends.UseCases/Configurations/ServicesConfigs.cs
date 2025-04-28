@@ -1,5 +1,6 @@
 ﻿using FurryFriends.UseCases.PipeLineBehaviours;
 using FurryFriends.UseCases.Services.ClientService;
+using FurryFriends.UseCases.Services.LocationService;
 using FurryFriends.UseCases.Services.PetWalkerService;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,8 @@ public static class ServicesConfigs
     services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     services.AddScoped<IPetWalkerService, PetWalkerService>();
     services.AddScoped<IClientService, ClientService>();
+    services.AddScoped<ILocationService, LocationService>();
+    services.AddScoped<IServiceAreaService, ServiceAreaService>();
     services.AddScoped(provider => Log.Logger);
 
     return services;

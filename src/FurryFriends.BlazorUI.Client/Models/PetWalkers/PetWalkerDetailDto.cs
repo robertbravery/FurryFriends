@@ -1,4 +1,6 @@
-﻿namespace FurryFriends.BlazorUI.Client.Models.PetWalkers;
+﻿using FurryFriends.BlazorUI.Client.Models.Locations;
+
+namespace FurryFriends.BlazorUI.Client.Models.PetWalkers;
 
 public class PetWalkerDetailDto
 {
@@ -23,7 +25,13 @@ public class PetWalkerDetailDto
   public bool HasInsurance { get; set; }
   public bool HasFirstAidCertification { get; set; }
   public int DailyPetWalkLimit { get; set; }
+
+  // Legacy service areas as strings (for backward compatibility)
   public List<string> ServiceAreas { get; set; } = new List<string>();
+
+  // New service areas as structured objects
+  public List<ServiceAreaDto> StructuredServiceAreas { get; set; } = new List<ServiceAreaDto>();
+
   public PhotoDto? ProfilePicture { get; set; }
   public List<PhotoDto> Photos { get; set; } = new List<PhotoDto>();
 }

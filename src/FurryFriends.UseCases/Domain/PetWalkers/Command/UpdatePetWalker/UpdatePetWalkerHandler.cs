@@ -21,27 +21,27 @@ public class UpdatePetWalkerHandler(
     await _petWalkerService.UpdatePetWalkerAsync(dto, cancellationToken);
   }
 
-  private UpdatePetWalkerDto CreatePetWalkerDto(UpdatePetWalkerCommand request)
+  private UpdatePetWalkerDto CreatePetWalkerDto(UpdatePetWalkerCommand command)
   {
-    var address = Address.Create(request.Street, request.City, request.State, request.Country, request.ZipCode).Value;
-    var phoneNumber = PhoneNumber.Create(request.CountryCode, request.PhoneNumber).Result.Value;
-    var name = Name.Create(request.FirstName, request.LastName).Value;
-    var gender = GenderType.Create((GenderCategory)request.Gender);
+    var address = Address.Create(command.Street, command.City, command.State, command.Country, command.ZipCode).Value;
+    var phoneNumber = PhoneNumber.Create(command.CountryCode, command.PhoneNumber).Result.Value;
+    var name = Name.Create(command.FirstName, command.LastName).Value;
+    var gender = GenderType.Create((GenderCategory)command.Gender);
     var updatePetWalkerDto = new UpdatePetWalkerDto(
-       request.PetWalkerId,
+       command.PetWalkerId,
        name,
        phoneNumber,
        address,
        gender,
-       request.Biography ?? string.Empty, // provide a default value if null
-       request.DateOfBirth,
-       request.IsActive,
-       request.IsVerified,
-       request.YearsOfExperience,
-       request.HasInsurance,
-       request.HasFirstAidCertification,
-       request.DailyPetWalkLimit,
-       Compensation.Create(request.HourlyRate, request.Currency)
+       command.Biography ?? string.Empty, // provide a default value if null
+       command.DateOfBirth,
+       command.IsActive,
+       command.IsVerified,
+       command.YearsOfExperience,
+       command.HasInsurance,
+       command.HasFirstAidCertification,
+       command.DailyPetWalkLimit,
+       Compensation.Create(command.HourlyRate, command.Currency)
        );
     return updatePetWalkerDto;
   }

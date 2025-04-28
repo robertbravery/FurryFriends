@@ -102,9 +102,25 @@
 .modal-footer {
     padding: 1rem;
     border-top: 1px solid #dee2e6;
+}
+
+.success-message {
+    color: #198754;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.3s ease-in-out;
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
     gap: 0.5rem;
+}
+
+.success-message.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.success-message i {
+    font-size: 1.2rem;
 }
 
 .loading-container, .error-container {
@@ -177,4 +193,57 @@
 
 .service-area-input-group .btn {
     padding: 0.375rem 0.75rem;
+}
+
+.service-areas-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.service-area-tag {
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-bottom: 5px;
+}
+
+.service-area-tag span {
+    margin-right: 10px;
+}
+
+.service-area-tag.service-area-tag-legacy {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.remove-button {
+    background: #dc3545;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    line-height: 2;
+    width: 20px;
+    height: 20px;
+    margin-left: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+    padding-bottom:3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-button:hover {
+    background: #c82333;
+}
+
+.service-area-tag .legacy-indicator {
+    color: #856404;
+    font-weight: bold;
+    margin-left: 4px;
 }

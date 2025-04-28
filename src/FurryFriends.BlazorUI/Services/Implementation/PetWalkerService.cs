@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using FurryFriends.BlazorUI.Client.Models;
 using FurryFriends.BlazorUI.Client.Models.Common;
+using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 
@@ -328,5 +329,57 @@ public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
   public async Task DeletePetWalkerAsync(string email)
   {
     await _httpClient.DeleteAsync($"{_apiBaseUrl}/PetWalkers/{email}");
+  }
+
+  public async Task<ApiResponse<bool>> UpdateServiceAreasAsync(Guid petWalkerId, List<ServiceAreaDto> serviceAreas)
+  {
+    try
+    {
+      // Filter out service areas with empty locality IDs (legacy service areas)
+      var validServiceAreas = serviceAreas
+          .Where(sa => sa.LocalityId != Guid.Empty)
+          .Select(sa => new { LocalityId = sa.LocalityId })
+          .ToList();
+
+      var request = new
+      {
+        ServiceAreas = validServiceAreas
+      };
+
+      var response = await _httpClient.PutAsJsonAsync(
+        $"{_apiBaseUrl}/PetWalker/{petWalkerId}/ServiceAreas",
+        request);
+
+      if (response.IsSuccessStatusCode)
+      {
+        return new ApiResponse<bool>
+        {
+          Success = true,
+          Message = "Service areas updated successfully",
+          Data = true,
+          Timestamp = DateTime.Now
+        };
+      }
+
+      var errorContent = await response.Content.ReadAsStringAsync();
+      return new ApiResponse<bool>
+      {
+        Success = false,
+        Message = $"Failed to update service areas. Status: {response.StatusCode}. Details: {errorContent}",
+        Data = false,
+        Timestamp = DateTime.Now
+      };
+    }
+    catch (Exception ex)
+    {
+      return new ApiResponse<bool>
+      {
+        Success = false,
+        Message = $"Error updating service areas: {ex.Message}",
+        Data = false,
+        Errors = new List<string> { ex.Message },
+        Timestamp = DateTime.Now
+      };
+    }
   }
 }

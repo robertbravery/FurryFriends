@@ -140,5 +140,23 @@ public class PetWalker : UserEntityBase
     Guard.Against.Null(phoneNumber, nameof(phoneNumber));
     PhoneNumber = phoneNumber;
   }
+
+  public void UpdateServiceArea(ServiceArea serviceArea)
+  {
+    Guard.Against.Null(serviceArea, nameof(serviceArea));
+    ServiceAreas.Add(serviceArea);
+  }
+
+  public void AddServiceArea(ServiceArea serviceArea)
+  {
+    Guard.Against.Null(serviceArea, nameof(serviceArea));
+    ServiceAreas.Add(serviceArea);
+  }
+
+  public void RemoveServiceArea(ServiceArea serviceArea)
+  {
+    Guard.Against.Null(serviceArea, nameof(serviceArea));
+    ServiceAreas.Remove(serviceArea);
+  }
 }
 

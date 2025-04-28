@@ -10,15 +10,6 @@
 				<button type="button" class="btn-close" aria-label="Close" @onclick="OnCancel"></button>
 			</div>
 			<div class="modal-body">
-				@if (showSuccessMessage)
-				{
-					<div class="alert alert-success alert-dismissible fade show" role="alert">
-						Pet walker updated successfully!
-						<button type="button" class="btn-close" @onclick="@(() => showSuccessMessage = false)"
-								aria-label="Close"></button>
-					</div>
-				}
-
 				@if (isLoading)
 				{
 					<div class="loading-container">
@@ -158,33 +149,94 @@
 						@* Service Areas *@
 						<div class="form-section">
 							<h4>Service Areas</h4>
-							<div class="form-group">
-								<div class="service-areas-container">
-									@for (int i = 0; i < petWalkerModel.ServiceAreas.Count; i++)
-									{
-										var index = i;
-										<div class="service-area-input-group">
-											<InputText class="form-control" @bind-Value="petWalkerModel.ServiceAreas[index]"
-													   placeholder="Enter service area" />
-											<button type="button" class="btn btn-outline-danger"
-													@onclick="() => RemoveServiceArea(index)">
-												<i class="fas fa-times"></i>
-											</button>
-										</div>
-									}
-									@if (petWalkerModel.ServiceAreas.Count < 10) // Limit to 10 service areas
-									{
-										<button type="button" class="btn btn-outline-primary mt-2" @onclick="AddServiceArea">
-											<i class="fas fa-plus"></i> Add Service Area
+
+							@* Structured Service Areas *@
+							<div class="form-group mb-4">
+								<h5>Add Service Area</h5>
+								<div class="row mb-2">
+									<div class="col-md-5">
+										<label for="region">Region</label>
+										<select id="region" class="form-control" value="@selectedRegionId" @onchange="OnRegionChanged">
+											<option value="">Select Region</option>
+											@foreach (var region in regions)
+											{
+												<option value="@region.Id">@region.RegionName</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-5">
+										<label for="locality">Locality</label>
+										<select id="locality" class="form-control" value="@selectedLocalityId" @onchange="OnLocalityChanged"
+												disabled="@(selectedRegionId == Guid.Empty)">
+											<option value="">Select Locality</option>
+											@foreach (var locality in localities)
+											{
+												<option value="@locality.Id">@locality.LocalityName</option>
+											}
+										</select>
+									</div>
+									<div class="col-md-2 d-flex align-items-end">
+										<button type="button" class="btn btn-primary w-100" @onclick="AddStructuredServiceArea"
+												disabled="@(selectedRegionId == Guid.Empty || selectedLocalityId == Guid.Empty)">
+											Add
 										</button>
-									}
+									</div>
 								</div>
+							</div>
+
+							@* Display Selected Service Areas *@
+							<div class="form-group">
+								<h5>Selected Service Areas</h5>
+								@if (petWalkerModel.StructuredServiceAreas.Count > 0)
+								{
+									<div class="service-areas-list">
+										@foreach (var area in petWalkerModel.StructuredServiceAreas)
+										{
+											<div class="service-area-tag @(area.RegionId == Guid.Empty ? "service-area-tag-legacy" : "")">
+												@if (area.RegionId != Guid.Empty)
+												{
+													<span>@area.RegionName - @area.LocalityName</span>
+												}
+												else
+												{
+													<span>@area.LocalityName</span>
+													<span class="legacy-indicator" title="This service area needs to be updated to use the new region-locality structure">*</span>
+												}
+												<button type="button" class="remove-button"
+														@onclick="() => RemoveStructuredServiceArea(area.Id)"
+														title="Remove this service area">
+													×
+												</button>
+											</div>
+										}
+									</div>
+								}
+								else
+								{
+									<p class="text-muted">No service areas selected. Please add at least one service area.</p>
+								}
+							</div>
+
+							@* Legacy Service Areas (Hidden) *@
+							<div class="d-none">
+								@for (int i = 0; i < petWalkerModel.ServiceAreas.Count; i++)
+								{
+									var index = i;
+									<InputText @bind-Value="petWalkerModel.ServiceAreas[index]" />
+								}
 							</div>
 						</div>
 						</div>
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-primary">Save Changes</button>
-							<button type="button" class="btn btn-secondary" @onclick="OnCancel">Cancel</button>
+							<div class="d-flex align-items-center justify-content-between w-100">
+								<div class="success-message @(showSuccessMessage ? "show" : "")">
+									<i class="fas fa-check-circle"></i> Pet walker updated successfully!
+								</div>
+								<div>
+									<button type="button" class="btn btn-secondary me-2" @onclick="OnCancel">Cancel</button>
+									<button type="submit" class="btn btn-primary">Save Changes</button>
+								</div>
+							</div>
 						</div>
 					</EditForm>
 				}

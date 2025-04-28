@@ -1,5 +1,6 @@
 ﻿using FurryFriends.BlazorUI.Client.Models;
 using FurryFriends.BlazorUI.Client.Models.Common;
+using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 
 namespace FurryFriends.BlazorUI.Client.Services.Interfaces;
@@ -38,4 +39,9 @@ public interface IPetWalkerService : IListService<PetWalkerDto>
   /// Updates an existing pet walker
   /// </summary>
   Task<ApiResponse<bool>> UpdatePetWalkerAsync(PetWalkerDetailDto petWalkerModel);
+
+  /// <summary>
+  /// Updates the service areas for a pet walker
+  /// </summary>
+  Task<ApiResponse<bool>> UpdateServiceAreasAsync(Guid petWalkerId, List<ServiceAreaDto> serviceAreas);
 }

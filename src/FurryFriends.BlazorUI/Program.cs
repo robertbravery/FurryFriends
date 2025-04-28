@@ -12,9 +12,16 @@ var host = builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IPetWalkerService, PetWalkerService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddSingleton<IPopupService, PopupService>();
 
 builder.Services.AddHttpClient<IClientService, ClientService>(client =>
+{
+  var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
+  client.BaseAddress = new Uri(apiUrl);
+});
+
+builder.Services.AddHttpClient<ILocationService, LocationService>(client =>
 {
   var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
   client.BaseAddress = new Uri(apiUrl);

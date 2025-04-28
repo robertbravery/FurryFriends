@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Folder Include="ClientAggregate\Docs\" />
+    <Folder Include="LocationAggregate\Specifications\" />
     <Folder Include="PetWalkerAggregate\Common\" />
     <Folder Include="Services\" />
   </ItemGroup>

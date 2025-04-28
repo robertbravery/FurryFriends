@@ -105,7 +105,9 @@ public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
 
 
     builder.HasMany(sa => sa.ServiceAreas)
-        .WithOne(u => u.User)
+        .WithOne(u => u.PetWalker)
         .HasForeignKey(sa => sa.UserID).OnDelete(DeleteBehavior.Cascade);
+
+
   }
 }

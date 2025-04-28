@@ -10,6 +10,8 @@
 @inject IPetWalkerService PetWalkerService
 @inject IPopupService PopupService
 
+@implements IDisposable
+
 <div class="petwalker-list-container">
 	<div class="petwalker-list-header">
 		<div>
@@ -135,8 +137,31 @@
 			: phoneNumber;
 	}
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PopupService.OnCloseEditPetWalkerPopup += HandleEditPopupClosed;
+    }
+
+    public void Dispose()
+    {
+        PopupService.OnCloseEditPetWalkerPopup -= HandleEditPopupClosed;
+    }
+
     private void OpenEditPopup(string petWalkerEmail)
     {
-       PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
+        PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
+    }
+
+    private async void HandleEditPopupClosed()
+    {
+        await RefreshGrid();
+        StateHasChanged();
+    }
+
+    private async Task RefreshGrid()
+    {
+        await LoadPetWalkers();
+        StateHasChanged();
     }
 }
