@@ -5,9 +5,11 @@
 @using FurryFriends.BlazorUI.Client.Models.Common
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
 @using FurryFriends.BlazorUI.Client.Components.Common
+@using Microsoft.Extensions.Logging
 @implements IDisposable
 @inject IClientService ClientService
 @inject IPopupService PopupService
+@inject ILogger<ClientList> Logger
 
 <div class="client-list-container">
     <div class="client-list-header">
@@ -113,6 +115,7 @@
 
 	private async Task LoadClients()
 	{
+		Logger.LogInformation("Loading clients - Page: {CurrentPage}, PageSize: {PageSize}", currentPage, pageSize);
 		var response = await ClientService.GetClientsAsync(currentPage, pageSize);
 
 		// Update the component state with data from the response
@@ -122,9 +125,11 @@
 		hasPreviousPage = response.HasPreviousPage;
 		hasNextPage = response.HasNextPage;
 
-		// Debug pagination values
-		Console.WriteLine($"Pagination Debug - TotalCount: {totalCount}, PageSize: {pageSize}, TotalPages: {totalPages}");
-		Console.WriteLine($"Pagination Debug - HasPreviousPage: {hasPreviousPage}, HasNextPage: {hasNextPage}, CurrentPage: {currentPage}");
+		// Log pagination values
+		Logger.LogDebug("Pagination - TotalCount: {TotalCount}, PageSize: {PageSize}, TotalPages: {TotalPages}",
+			totalCount, pageSize, totalPages);
+		Logger.LogDebug("Pagination - HasPreviousPage: {HasPreviousPage}, HasNextPage: {HasNextPage}, CurrentPage: {CurrentPage}",
+			hasPreviousPage, hasNextPage, currentPage);
 
 		// Use the page number from the response (in case it was adjusted on the server)
 		currentPage = response.PageNumber;
@@ -132,11 +137,13 @@
 		// Ensure current page is valid
 		if (currentPage > totalPages && totalPages > 0)
 		{
+			Logger.LogWarning("Current page {CurrentPage} exceeds total pages {TotalPages}, adjusting to last page",
+				currentPage, totalPages);
 			currentPage = totalPages;
 			await LoadClients();
 		}
 
-		Console.WriteLine($"Clients fetched: {clients?.Count}");
+		Logger.LogInformation("Successfully loaded {Count} clients", clients?.Count);
 	}
 
 	private async void HandlePopupClosed()
@@ -150,9 +157,10 @@
 	{
 		if (clientEmail is null)
 		{
+			Logger.LogWarning("Attempted to open edit popup with null client email");
 			return;
 		}
-		Console.WriteLine($"Opening edit popup for client ID: {clientEmail}");
+		Logger.LogInformation("Opening edit popup for client email: {ClientEmail}", clientEmail);
 
 		// Use the popup service to show the edit popup
 		PopupService.ShowEditClientPopup(clientEmail);
@@ -162,9 +170,10 @@
 	{
 		if (clientEmail is null)
 		{
+			Logger.LogWarning("Attempted to open view popup with null client email");
 			return;
 		}
-		Console.WriteLine($"Opening view popup for client ID: {clientEmail}");
+		Logger.LogInformation("Opening view popup for client email: {ClientEmail}", clientEmail);
 
 		// Use the popup service to show the view popup
 		PopupService.ShowViewClientPopup(clientEmail);
@@ -172,7 +181,7 @@
 
 	private void OpenCreatePopup()
 	{
-		Console.WriteLine("Opening create client popup");
+		Logger.LogInformation("Opening create client popup");
 
 		// Use the popup service to show the create popup
 		PopupService.ShowCreateClientPopup();
@@ -180,22 +189,23 @@
 
 	private async Task HandlePageChanged(int newPage)
 	{
+		Logger.LogInformation("Changing page from {OldPage} to {NewPage}", currentPage, newPage);
 		currentPage = newPage;
 		await LoadClients();
-		Console.WriteLine($"Navigated to page: {currentPage}");
 	}
 
 	private async Task HandlePageSizeChanged(int newPageSize)
 	{
+		Logger.LogInformation("Changing page size from {OldPageSize} to {NewPageSize}", pageSize, newPageSize);
 		pageSize = newPageSize;
 		await LoadClients();
-		Console.WriteLine($"Changed page size to: {pageSize}");
 	}
 
 	public void Dispose()
 	{
 		try
 		{
+			Logger.LogDebug("Disposing ClientList component and unsubscribing from events");
 			// Unsubscribe from events when the component is disposed
 			PopupService.OnCloseEditClientPopup -= HandlePopupClosed;
 			PopupService.OnCloseViewClientPopup -= HandlePopupClosed;
@@ -203,7 +213,7 @@
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"Error during Dispose: {ex.Message}");
+			Logger.LogError(ex, "Error during ClientList component disposal");
 		}
 	}
 }

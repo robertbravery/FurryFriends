@@ -1,7 +1,9 @@
 ﻿using Ardalis.GuardClauses;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
+using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using FurryFriends.UseCases.Services.PetWalkerService;
+using FurryFriends.UseCases.Services.PictureService;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using static FurryFriends.Core.ValueObjects.GenderType;
@@ -45,4 +47,23 @@ public class UpdatePetWalkerHandler(
        );
     return updatePetWalkerDto;
   }
+}
+
+
+public class UpdateBioPictureHandler(
+    IPictureService _pictureService,
+    ILogger<UpdatePetWalkerHandler> _logger
+    ) : IRequestHandler<UpdateBioPictureCommand, Result<PhotoDto>>
+{
+  public async Task<Result<PhotoDto>> Handle(UpdateBioPictureCommand command, CancellationToken cancellationToken)
+  {
+    Guard.Against.Null(command, nameof(command));
+
+    _logger.LogInformation($"Updating pet walker with id: {command.PetWalkerId}");
+    //ToDO: Call the service to update the bio picture
+    await _pictureService.UpdatePetWalkerBioPictureAsync(command.PetWalkerId, command.File, cancellationToken);
+    return Result.Success();
+  }
+
+
 }

@@ -1,5 +1,6 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Enums;
+using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using FurryFriends.UseCases.Services.PetWalkerService;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
@@ -56,3 +57,4 @@ public class GetPetWalkerHandler(IPetWalkerService _userService) : IQueryHandler
     return new PhotoDto(photo.Url, photo.Description);
   }
 }
+

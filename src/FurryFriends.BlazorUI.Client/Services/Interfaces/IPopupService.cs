@@ -37,6 +37,11 @@ public interface IPopupService
     void ShowEditPetWalkerPopup(string petWalkerEmail);
     void CloseEditPetWalkerPopup();
 
+    event Action<Guid> OnShowManagePetWalkerPhotosPopup;
+    event Action OnCloseManagePetWalkerPhotosPopup;
+    void ShowManagePetWalkerPhotosPopup(Guid petWalkerId);
+    void CloseManagePetWalkerPhotosPopup();
+
     // Methods to get the current state
     bool IsEditClientPopupOpen();
     bool IsViewClientPopupOpen();

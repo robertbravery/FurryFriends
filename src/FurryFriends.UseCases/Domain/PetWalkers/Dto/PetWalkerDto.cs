@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
+﻿namespace FurryFriends.UseCases.Domain.PetWalkers.Dto;
 
 public record PetWalkerDto(
   Guid Id,

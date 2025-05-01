@@ -1,8 +1,10 @@
 @using FurryFriends.BlazorUI.Client.Models.Clients
 @using FurryFriends.BlazorUI.Client.Models
 @using System.ComponentModel.DataAnnotations
+@using Microsoft.Extensions.Logging
 @rendermode InteractiveAuto
 @inject NavigationManager NavigationManager
+@inject ILogger<ClientForm> Logger
 
 <EditForm Model="@ClientModel" OnValidSubmit="@OnSubmit" FormName="@FormName" Enhance="@Enhance">
     <ObjectGraphDataAnnotationsValidator />
@@ -166,17 +168,19 @@
             // First try to invoke the callback
             if (OnCancel.HasDelegate)
             {
+                Logger.LogDebug("Invoking OnCancel callback");
                 await OnCancel.InvokeAsync();
             }
             else
             {
                 // If no callback is provided, navigate directly to clients page
+                Logger.LogDebug("No OnCancel callback provided, navigating to /clients");
                 NavigationManager.NavigateTo("/clients");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in HandleCancel: {ex.Message}");
+            Logger.LogError(ex, "Error in HandleCancel");
 
             // If there's an error, navigate directly to clients page
             NavigationManager.NavigateTo("/clients");

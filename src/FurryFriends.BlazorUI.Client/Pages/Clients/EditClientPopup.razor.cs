@@ -1,6 +1,7 @@
 ﻿using FurryFriends.BlazorUI.Client.Models.Clients;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace FurryFriends.BlazorUI.Client.Pages.Clients;
@@ -21,6 +22,9 @@ public partial class EditClientPopup
 
   [Inject]
   public IJSRuntime JS { get; set; } = default!;
+
+  [Inject]
+  public ILogger<EditClientPopup> Logger { get; set; } = default!;
 
   private ClientModel clientModel = new();
   private Pet[]? clientPets;
@@ -90,7 +94,7 @@ public partial class EditClientPopup
         }
         catch (Exception ex)
         {
-          Console.WriteLine($"Error loading pet images: {ex}");
+          Logger.LogError(ex, "Error loading pet images for client: {ClientEmail}", ClientEmail);
           // We don't set loadError here since the client data loaded successfully
         }
         finally

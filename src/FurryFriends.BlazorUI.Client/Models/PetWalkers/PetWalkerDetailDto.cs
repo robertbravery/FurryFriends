@@ -32,12 +32,6 @@ public class PetWalkerDetailDto
   // New service areas as structured objects
   public List<ServiceAreaDto> StructuredServiceAreas { get; set; } = new List<ServiceAreaDto>();
 
-  public PhotoDto? ProfilePicture { get; set; }
-  public List<PhotoDto> Photos { get; set; } = new List<PhotoDto>();
-}
-
-public class PhotoDto
-{
-  public string Url { get; set; } = string.Empty;
-  public string Description { get; set; } = string.Empty;
+  public PetWalkerBasicPhotoDto? ProfilePicture { get; set; }
+  public List<PetWalkerBasicPhotoDto> Photos { get; set; } = new List<PetWalkerBasicPhotoDto>();
 }

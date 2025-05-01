@@ -44,4 +44,11 @@ public interface IPetWalkerService : IListService<PetWalkerDto>
   /// Updates the service areas for a pet walker
   /// </summary>
   Task<ApiResponse<bool>> UpdateServiceAreasAsync(Guid petWalkerId, List<ServiceAreaDto> serviceAreas);
+
+  /// <summary>
+  /// Method to get details needed for the photo popup (might reuse existing GetById)
+  /// </summary> 
+  Task<ApiResponse<PetWalkerDetailDto>> GetPetWalkerByIdAsync(Guid petWalkerId); // Ensure this returns photos
+
+
 }

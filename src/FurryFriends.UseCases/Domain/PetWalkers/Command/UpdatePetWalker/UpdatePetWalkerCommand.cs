@@ -26,6 +26,4 @@ public class UpdatePetWalkerCommand : IRequest
   public bool HasFirstAidCertification { get; set; }
   public int DailyPetWalkLimit { get; set; }
   public required string ServiceLocation { get; set; }
-  //public required string BioPicture { get; set; }
-  //public required string Photos { get; set; }
 }

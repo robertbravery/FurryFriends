@@ -43,8 +43,6 @@ public class UpdatePetWalker(IMediator mediator) : Endpoint<UpdatePetWalkerReque
       HasFirstAidCertification = req.HasFirstAidCertification,
       DailyPetWalkLimit = req.DailyPetWalkLimit,
       ServiceLocation = req.ServiceLocation,
-      //BioPicture = req.BioPicture,
-      //Photos = req.Photos
     };
 
     await _mediator.Send(command, ct);
@@ -52,3 +50,4 @@ public class UpdatePetWalker(IMediator mediator) : Endpoint<UpdatePetWalkerReque
     await SendAsync(new UpdatePetWalkerResponse { Id = req.PetWalkerId }, 200, ct);
   }
 }
+

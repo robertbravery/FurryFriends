@@ -1,6 +1,7 @@
 ﻿using FurryFriends.BlazorUI.Client.Models.Clients;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.BlazorUI.Client.Pages.Clients;
 
@@ -20,6 +21,9 @@ public partial class EditPetPopup
 
   [Inject]
   public IClientService ClientService { get; set; } = default!;
+
+  [Inject]
+  public ILogger<EditPetPopup> Logger { get; set; } = default!;
 
   private bool isLoading = false;
   private List<BreedDto>? breeds;
@@ -48,7 +52,9 @@ public partial class EditPetPopup
     // Load breeds
     try
     {
+      Logger.LogInformation("Loading breeds for pet: {PetName}", Pet?.Name);
       breeds = await ClientService.GetBreedsAsync();
+      Logger.LogDebug("Loaded {BreedCount} breeds", breeds?.Count);
 
       // If we have the breed name, try to find the corresponding BreedId
       if (!string.IsNullOrEmpty(Pet?.Breed) && breeds != null)
@@ -58,13 +64,19 @@ public partial class EditPetPopup
 
         if (matchingBreed != null)
         {
+          Logger.LogDebug("Found matching breed ID {BreedId} for breed name {BreedName}",
+            matchingBreed.Id, Pet.Breed);
           Pet.BreedId = matchingBreed.Id;
+        }
+        else
+        {
+          Logger.LogWarning("No matching breed found for breed name {BreedName}", Pet.Breed);
         }
       }
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Error loading breeds: {ex.Message}");
+      Logger.LogError(ex, "Error loading breeds for pet: {PetName}", Pet?.Name);
     }
   }
 
@@ -97,7 +109,8 @@ public partial class EditPetPopup
             }
             catch (Exception ex)
             {
-              Console.WriteLine($"Error updating pet: {ex.Message}");
+              Logger.LogError(ex, "Error updating pet: {PetName} for client: {ClientEmail}",
+                Pet.Name, ClientEmail);
               // Handle error (could add error state and display to user)
             }
             finally

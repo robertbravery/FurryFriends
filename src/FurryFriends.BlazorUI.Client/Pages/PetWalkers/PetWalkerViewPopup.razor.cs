@@ -2,6 +2,7 @@ using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace FurryFriends.BlazorUI.Client.Pages.PetWalkers;
@@ -20,6 +21,9 @@ public partial class PetWalkerViewPopup
     [Inject]
     public IJSRuntime JS { get; set; } = default!;
 
+    [Inject]
+    public ILogger<PetWalkerViewPopup> Logger { get; set; } = default!;
+
     private PetWalkerDetailDto petWalkerModel = new();
     private bool isLoading = true;
     private string? loadError = null;
@@ -33,6 +37,7 @@ public partial class PetWalkerViewPopup
     {
         try
         {
+            Logger.LogInformation("Loading pet walker data for email: {PetWalkerEmail}", PetWalkerEmail);
             isLoading = true;
             StateHasChanged();
 
@@ -40,6 +45,7 @@ public partial class PetWalkerViewPopup
 
             if (response != null && response.Success && response.Data != null)
             {
+                Logger.LogInformation("Successfully loaded pet walker data for email: {PetWalkerEmail}", PetWalkerEmail);
                 petWalkerModel = response.Data;
                 loadError = null;
             }
@@ -53,12 +59,15 @@ public partial class PetWalkerViewPopup
                 loadError = !string.IsNullOrEmpty(errors)
                     ? $"{errorMessage}: {errors}"
                     : errorMessage;
+
+                Logger.LogWarning("Failed to load pet walker data. Email: {PetWalkerEmail}, Error: {ErrorMessage}, Details: {ErrorDetails}",
+                    PetWalkerEmail, errorMessage, errors);
             }
         }
         catch (Exception ex)
         {
             loadError = $"Error loading pet walker: {ex.Message}";
-            Console.WriteLine($"Error loading pet walker: {ex}");
+            Logger.LogError(ex, "Error loading pet walker data for email: {PetWalkerEmail}", PetWalkerEmail);
         }
         finally
         {

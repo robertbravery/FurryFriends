@@ -1,5 +1,6 @@
 ﻿using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
@@ -10,11 +11,13 @@ public class LocationService : ILocationService
 {
   private readonly HttpClient _httpClient;
   private readonly string _apiBaseUrl;
+  private readonly ILogger<LocationService> _logger;
 
-  public LocationService(HttpClient httpClient, IConfiguration configuration)
+  public LocationService(HttpClient httpClient, IConfiguration configuration, ILogger<LocationService> logger)
   {
     _httpClient = httpClient;
     _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;
+    _logger = logger;
   }
 
   /// <summary>
@@ -24,12 +27,21 @@ public class LocationService : ILocationService
   {
     try
     {
+      _logger.LogInformation("Fetching all regions");
       var response = await _httpClient.GetFromJsonAsync<List<RegionDto>>($"{_apiBaseUrl}/Locations/regions");
-      return response ?? new List<RegionDto>();
+
+      if (response == null)
+      {
+        _logger.LogWarning("Received null response when fetching regions");
+        return new List<RegionDto>();
+      }
+
+      _logger.LogInformation("Successfully retrieved {Count} regions", response.Count);
+      return response;
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Error getting regions: {ex.Message}");
+      _logger.LogError(ex, "Error fetching regions from API");
       return new List<RegionDto>();
     }
   }
@@ -41,12 +53,21 @@ public class LocationService : ILocationService
   {
     try
     {
+      _logger.LogInformation("Fetching localities for region ID: {RegionId}", regionId);
       var response = await _httpClient.GetFromJsonAsync<List<LocalityDto>>($"{_apiBaseUrl}/Locations/regions/{regionId}/localities");
-      return response ?? new List<LocalityDto>();
+
+      if (response == null)
+      {
+        _logger.LogWarning("Received null response when fetching localities for region ID: {RegionId}", regionId);
+        return new List<LocalityDto>();
+      }
+
+      _logger.LogInformation("Successfully retrieved {Count} localities for region ID: {RegionId}", response.Count, regionId);
+      return response;
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Error getting localities: {ex.Message}");
+      _logger.LogError(ex, "Error fetching localities for region ID: {RegionId}", regionId);
       return new List<LocalityDto>();
     }
   }

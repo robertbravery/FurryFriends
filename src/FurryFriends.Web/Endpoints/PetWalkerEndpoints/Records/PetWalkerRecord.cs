@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
+﻿using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Records;
 

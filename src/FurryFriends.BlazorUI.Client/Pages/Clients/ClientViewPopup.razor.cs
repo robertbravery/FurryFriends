@@ -2,6 +2,7 @@
 using FurryFriends.BlazorUI.Client.Models.Clients.Enums;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace FurryFriends.BlazorUI.Client.Pages.Clients;
@@ -19,6 +20,9 @@ public partial class ClientViewPopup
 
     [Inject]
     public IJSRuntime JS { get; set; } = default!;
+
+    [Inject]
+    public ILogger<ClientViewPopup> Logger { get; set; } = default!;
 
     private ClientModel clientModel = new();
     private Pet[]? clientPets;
@@ -52,6 +56,7 @@ public partial class ClientViewPopup
     {
         try
         {
+            Logger.LogInformation("Loading client data for email: {ClientEmail}", ClientEmail);
             isLoading = true;
             isPetsLoading = true;
             StateHasChanged();
@@ -60,6 +65,7 @@ public partial class ClientViewPopup
 
             if (clientResponse != null && clientResponse.Success)
             {
+                Logger.LogInformation("Successfully loaded client data for email: {ClientEmail}", ClientEmail);
                 clientModel = ClientData.MapToModel(clientResponse.Data);
                 clientPets = clientResponse.Data.Pets;
                 loadError = null;
@@ -67,12 +73,13 @@ public partial class ClientViewPopup
             else
             {
                 loadError = "Failed to load client data.";
+                Logger.LogWarning("Failed to load client data for email: {ClientEmail}", ClientEmail);
             }
         }
         catch (Exception ex)
         {
             loadError = $"Error loading client: {ex.Message}";
-            Console.WriteLine($"Error loading client: {ex}");
+            Logger.LogError(ex, "Error loading client data for email: {ClientEmail}", ClientEmail);
         }
         finally
         {

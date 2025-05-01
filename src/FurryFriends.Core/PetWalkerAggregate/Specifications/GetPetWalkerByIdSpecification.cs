@@ -13,3 +13,17 @@ public class GetPetWalkerByIdSpecification : SingleResultSpecification<PetWalker
     }
   }
 }
+
+public class GetPetWalkerPicturesSpecification : SingleResultSpecification<PetWalker>
+{
+  public GetPetWalkerPicturesSpecification(Guid id, bool isAsNoTracking = false)
+  {
+    Query.Where(x => x.Id == id)
+      .Include(i => i.Photos);
+
+    if (isAsNoTracking)
+    {
+      Query.AsNoTracking();
+    }
+  }
+}

@@ -2,6 +2,7 @@
 using FurryFriends.UseCases.Services.ClientService;
 using FurryFriends.UseCases.Services.LocationService;
 using FurryFriends.UseCases.Services.PetWalkerService;
+using FurryFriends.UseCases.Services.PictureService;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -16,6 +17,7 @@ public static class ServicesConfigs
     services.AddScoped<IClientService, ClientService>();
     services.AddScoped<ILocationService, LocationService>();
     services.AddScoped<IServiceAreaService, ServiceAreaService>();
+    services.AddScoped<IPictureService, PictureService>();
     services.AddScoped(provider => Log.Logger);
 
     return services;

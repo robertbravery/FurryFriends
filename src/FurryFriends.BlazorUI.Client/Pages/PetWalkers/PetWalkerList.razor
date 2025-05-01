@@ -6,9 +6,11 @@
 @using FurryFriends.BlazorUI.Client.Services
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
 @using FurryFriends.BlazorUI.Client.Components.Common
+@using Microsoft.Extensions.Logging
 
 @inject IPetWalkerService PetWalkerService
 @inject IPopupService PopupService
+@inject ILogger<PetWalkerList> Logger
 
 @implements IDisposable
 
@@ -43,7 +45,7 @@
 			<tbody>
 				@foreach (var petWalker in petWalkers)
 				{
-					<tr>
+					<tr key="@petWalker.Id"> @* Add key for better Blazor diffing *@
 						<td>@petWalker.Name</td>
 						<td>@petWalker.EmailAddress</td>
 						<td>@petWalker.City</td>
@@ -52,6 +54,7 @@
 						<td style="display: flex; gap: 10px;">
 							<button class="btn btn-link p-0" style="color:brown;" @onclick="() => OpenViewPopup(petWalker.EmailAddress)" title="View Pet Walker">👁️</button>
 							<button class="btn btn-link p-0" style="color:lightcoral;" @onclick="() => OpenEditPopup(petWalker.EmailAddress)" title="Edit Pet Walker">✏️</button>
+							<button class="btn btn-link p-0" style="color:dodgerblue;" @onclick="() => OpenManagePhotosPopup(petWalker.Id)" title="Manage Photos">🖼️</button>
 						</td>
 					</tr>
 				}
@@ -109,7 +112,7 @@
 
 	private void OpenViewPopup(string petWalkerEmail)
 	{
-		Console.WriteLine($"Opening view popup for pet walker: {petWalkerEmail}");
+		Logger.LogInformation("Opening view popup for pet walker: {PetWalkerEmail}", petWalkerEmail);
 
 		// Use the popup service to show the view popup
 		PopupService.ShowViewPetWalkerPopup(petWalkerEmail);
@@ -152,6 +155,13 @@
     {
         PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
     }
+
+	private void OpenManagePhotosPopup(Guid petWalkerId)
+	{
+		Logger.LogInformation("Opening manage photos popup for pet walker ID: {PetWalkerId}", petWalkerId);
+		PopupService.ShowManagePetWalkerPhotosPopup(petWalkerId);
+		Logger.LogDebug("ShowManagePetWalkerPhotosPopup service method called successfully");
+	}
 
     private async void HandleEditPopupClosed()
     {
