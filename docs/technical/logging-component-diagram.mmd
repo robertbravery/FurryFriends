@@ -1,0 +1,42 @@
+C4Component
+    title Component diagram for Logging Architecture in FurryFriends
+    
+    Container_Boundary(blazorClient, "Blazor WebAssembly Client") {
+        Component(clientLoggingServiceImpl, "ClientLoggingServiceImpl", "C# Service", "Client-side logging service that only logs locally")
+        Component(clientLogger, "ILogger", "Microsoft.Extensions.Logging", "Browser console logging provider")
+        Component(clientProgram, "Program.cs", "C# Configuration", "Configures client-side DI and logging")
+    }
+    
+    Container_Boundary(blazorServer, "Blazor Server") {
+        Component(serverClientLoggingService, "ServerClientLoggingService", "C# Service", "Server-side logging service that handles HTTP communication")
+        Component(serverLogger, "ILogger", "Microsoft.Extensions.Logging", "Server-side logging provider")
+        Component(loggingDelegatingHandler, "LoggingDelegatingHandler", "C# Handler", "Logs HTTP requests and responses")
+        Component(serverProgram, "Program.cs", "C# Configuration", "Configures server-side DI and logging")
+    }
+    
+    Container_Boundary(webApi, "Web API") {
+        Component(logMessageEndpoint, "LogMessage Endpoint", "FastEndpoints", "Receives and processes log messages")
+        Component(apiLogger, "ILogger", "Microsoft.Extensions.Logging", "API logging provider")
+        Component(serilogConfig, "Serilog Configuration", "appsettings.json", "Configures logging providers and levels")
+    }
+    
+    System_Ext(fileSystem, "File System", "Stores log files")
+    
+    Rel(clientLoggingServiceImpl, clientLogger, "Uses")
+    Rel(clientProgram, clientLoggingServiceImpl, "Registers")
+    
+    Rel(serverClientLoggingService, serverLogger, "Uses for local logging")
+    Rel(serverClientLoggingService, logMessageEndpoint, "Sends logs via HTTP POST")
+    Rel(serverProgram, serverClientLoggingService, "Registers")
+    Rel(serverProgram, loggingDelegatingHandler, "Registers")
+    
+    Rel(logMessageEndpoint, apiLogger, "Uses")
+    Rel(apiLogger, fileSystem, "Writes to")
+    Rel(serverLogger, fileSystem, "Writes to")
+    
+    UpdateRelStyle(serverClientLoggingService, logMessageEndpoint, $textColor="blue", $lineColor="blue")
+    
+    Component_Ext(iClientLoggingService, "IClientLoggingService", "Interface", "Common logging interface")
+    
+    Rel(clientLoggingServiceImpl, iClientLoggingService, "Implements")
+    Rel(serverClientLoggingService, iClientLoggingService, "Implements")
