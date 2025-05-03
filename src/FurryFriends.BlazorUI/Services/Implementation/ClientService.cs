@@ -13,7 +13,7 @@ public class ClientService : BaseListService<ClientDto>, IClientService
   private readonly ILogger<ClientService> _logger;
 
   public ClientService(HttpClient httpClient, HttpClient dogClient, IConfiguration configuration, ILogger<ClientService> logger)
-    : base(httpClient, configuration, "Clients/list")
+    : base(httpClient, configuration, "Clients/list", logger)
   {
     _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     _dogClient = dogClient ?? throw new ArgumentNullException(nameof(dogClient));

@@ -10,6 +10,8 @@
 
  <ItemGroup>
    <ProjectReference Include="..\FurryFriends.BlazorUI.Client\FurryFriends.BlazorUI.Client.csproj" />
+   <ProjectReference Include="..\FurryFriends.ServiceDefaults\FurryFriends.ServiceDefaults.csproj" 
+                     IsAspireProjectResource="false" />
  </ItemGroup>
 
 

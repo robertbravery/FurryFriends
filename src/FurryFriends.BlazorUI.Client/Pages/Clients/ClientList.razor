@@ -22,9 +22,24 @@
         </button>
     </div>
 
-    @if (clients is null)
+    @if (isLoading)
     {
-        <p><em>Loading client list...</em></p>
+        <div class="loading-indicator">
+            <p><em>Loading client list...</em></p>
+        </div>
+    }
+    else if (errorMessage != null)
+    {
+        <div class="alert alert-danger">
+            <p>@errorMessage</p>
+            <button class="btn btn-primary mt-2" @onclick="LoadClients">Retry</button>
+        </div>
+    }
+    else if (clients == null || clients.Count == 0)
+    {
+        <div class="alert alert-info">
+            <p>No clients found.</p>
+        </div>
     }
     else
     {
@@ -113,37 +128,57 @@
 		PopupService.OnCloseCreateClientPopup += HandlePopupClosed;
 	}
 
+	private bool isLoading = false;
+	private string? errorMessage = null;
+
 	private async Task LoadClients()
 	{
-		Logger.LogInformation("Loading clients - Page: {CurrentPage}, PageSize: {PageSize}", currentPage, pageSize);
-		var response = await ClientService.GetClientsAsync(currentPage, pageSize);
-
-		// Update the component state with data from the response
-		clients = response.RowsData;
-		totalCount = response.TotalCount;
-		totalPages = response.TotalPages;
-		hasPreviousPage = response.HasPreviousPage;
-		hasNextPage = response.HasNextPage;
-
-		// Log pagination values
-		Logger.LogDebug("Pagination - TotalCount: {TotalCount}, PageSize: {PageSize}, TotalPages: {TotalPages}",
-			totalCount, pageSize, totalPages);
-		Logger.LogDebug("Pagination - HasPreviousPage: {HasPreviousPage}, HasNextPage: {HasNextPage}, CurrentPage: {CurrentPage}",
-			hasPreviousPage, hasNextPage, currentPage);
-
-		// Use the page number from the response (in case it was adjusted on the server)
-		currentPage = response.PageNumber;
-
-		// Ensure current page is valid
-		if (currentPage > totalPages && totalPages > 0)
+		try
 		{
-			Logger.LogWarning("Current page {CurrentPage} exceeds total pages {TotalPages}, adjusting to last page",
-				currentPage, totalPages);
-			currentPage = totalPages;
-			await LoadClients();
-		}
+			isLoading = true;
+			errorMessage = null;
 
-		Logger.LogInformation("Successfully loaded {Count} clients", clients?.Count);
+			Logger.LogInformation("Loading clients - Page: {CurrentPage}, PageSize: {PageSize}", currentPage, pageSize);
+			var response = await ClientService.GetClientsAsync(currentPage, pageSize);
+
+			// Update the component state with data from the response
+			clients = response.RowsData;
+			totalCount = response.TotalCount;
+			totalPages = response.TotalPages;
+			hasPreviousPage = response.HasPreviousPage;
+			hasNextPage = response.HasNextPage;
+
+			// Log pagination values
+			Logger.LogDebug("Pagination - TotalCount: {TotalCount}, PageSize: {PageSize}, TotalPages: {TotalPages}",
+				totalCount, pageSize, totalPages);
+			Logger.LogDebug("Pagination - HasPreviousPage: {HasPreviousPage}, HasNextPage: {HasNextPage}, CurrentPage: {CurrentPage}",
+				hasPreviousPage, hasNextPage, currentPage);
+
+			// Use the page number from the response (in case it was adjusted on the server)
+			currentPage = response.PageNumber;
+
+			// Ensure current page is valid
+			if (currentPage > totalPages && totalPages > 0)
+			{
+				Logger.LogWarning("Current page {CurrentPage} exceeds total pages {TotalPages}, adjusting to last page",
+					currentPage, totalPages);
+				currentPage = totalPages;
+				await LoadClients();
+			}
+
+			Logger.LogInformation("Successfully loaded {Count} clients", clients?.Count);
+		}
+		catch (Exception ex)
+		{
+			Logger.LogError(ex, "Error loading clients");
+			errorMessage = $"Error loading clients: {ex.Message}";
+			clients = new List<ClientDto>(); // Empty list to avoid null reference exceptions
+		}
+		finally
+		{
+			isLoading = false;
+			StateHasChanged();
+		}
 	}
 
 	private async void HandlePopupClosed()

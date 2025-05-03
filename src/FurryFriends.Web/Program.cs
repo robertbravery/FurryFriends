@@ -22,6 +22,13 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .WriteTo.Console()
+    .WriteTo.File(
+        Path.Combine(logsDirectory, "web-log-.txt"),
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+        fileSizeLimitBytes: 10 * 1024 * 1024,
+        retainedFileCountLimit: 31,
+        rollOnFileSizeLimit: true)
     .CreateLogger();
 
 builder.Host.UseSerilog();

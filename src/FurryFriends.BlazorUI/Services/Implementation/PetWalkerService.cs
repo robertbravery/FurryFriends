@@ -15,7 +15,7 @@ public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
   private readonly ILogger<PetWalkerService> _logger;
 
   public PetWalkerService(HttpClient httpClient, IConfiguration configuration, ILogger<PetWalkerService> logger)
-      : base(httpClient, configuration, "PetWalker/list")
+      : base(httpClient, configuration, "PetWalker/list", logger)
   {
     _httpClient = httpClient;
     _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;

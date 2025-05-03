@@ -25,9 +25,24 @@
 		</button>
 	</div>
 
-	@if (petWalkers is null)
+	@if (isLoading)
 	{
-		<p><em>Loading client list...</em></p>
+		<div class="loading-indicator">
+			<p><em>Loading pet walker list...</em></p>
+		</div>
+	}
+	else if (errorMessage != null)
+	{
+		<div class="alert alert-danger">
+			<p>@errorMessage</p>
+			<button class="btn btn-primary mt-2" @onclick="LoadPetWalkers">Retry</button>
+		</div>
+	}
+	else if (petWalkers == null || petWalkers.Count == 0)
+	{
+		<div class="alert alert-info">
+			<p>No pet walkers found.</p>
+		</div>
 	}
 	else
 	{
@@ -88,25 +103,50 @@
 		await LoadPetWalkers();
 	}
 
+	private bool isLoading = false;
+	private string? errorMessage = null;
+
 	private async Task LoadPetWalkers()
 	{
-		var response = await PetWalkerService.GetPetWalkersAsync(currentPage, pageSize);
-
-		// Update the component state with data from the response
-		petWalkers = response.RowsData;
-		totalCount = response.TotalCount;
-		totalPages = response.TotalPages;
-		hasPreviousPage = response.HasPreviousPage;
-		hasNextPage = response.HasNextPage;
-
-		// Use the page number from the response (in case it was adjusted on the server)
-		currentPage = response.PageNumber;
-
-		// Ensure current page is valid
-		if (currentPage > totalPages && totalPages > 0)
+		try
 		{
-			currentPage = totalPages;
-			await LoadPetWalkers();
+			isLoading = true;
+			errorMessage = null;
+
+			Logger.LogInformation("Loading pet walkers - Page: {CurrentPage}, PageSize: {PageSize}", currentPage, pageSize);
+			var response = await PetWalkerService.GetPetWalkersAsync(currentPage, pageSize);
+
+			// Update the component state with data from the response
+			petWalkers = response.RowsData;
+			totalCount = response.TotalCount;
+			totalPages = response.TotalPages;
+			hasPreviousPage = response.HasPreviousPage;
+			hasNextPage = response.HasNextPage;
+
+			// Use the page number from the response (in case it was adjusted on the server)
+			currentPage = response.PageNumber;
+
+			// Ensure current page is valid
+			if (currentPage > totalPages && totalPages > 0)
+			{
+				Logger.LogWarning("Current page {CurrentPage} exceeds total pages {TotalPages}, adjusting to last page",
+					currentPage, totalPages);
+				currentPage = totalPages;
+				await LoadPetWalkers();
+			}
+
+			Logger.LogInformation("Successfully loaded {Count} pet walkers", petWalkers?.Count);
+		}
+		catch (Exception ex)
+		{
+			Logger.LogError(ex, "Error loading pet walkers");
+			errorMessage = $"Error loading pet walkers: {ex.Message}";
+			petWalkers = new List<PetWalkerDto>(); // Empty list to avoid null reference exceptions
+		}
+		finally
+		{
+			isLoading = false;
+			StateHasChanged();
 		}
 	}
 
