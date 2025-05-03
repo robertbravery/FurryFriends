@@ -5,8 +5,26 @@ using FurryFriends.Web.Configurations;
 using FurryFriends.Web.Middleware;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
+using Serilog;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Ensure Logs directory exists
+var logsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+if (!Directory.Exists(logsDirectory))
+{
+    Directory.CreateDirectory(logsDirectory);
+}
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.AddServiceDefaults();
 
@@ -24,12 +42,6 @@ builder.Services.AddCors(options =>
           .WithExposedHeaders("*"));
 });
 
-builder.Services.AddLogging(logging =>
-{
-  logging.AddConsole();
-  logging.AddOpenTelemetry();
-});
-
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing
         .AddAspNetCoreInstrumentation()
@@ -38,12 +50,7 @@ builder.Services.AddOpenTelemetry()
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation());
 
-
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
+var logger = Log.Logger;
 
 //builder.Services.AddHttpContextAccessor();
 
@@ -106,6 +113,17 @@ app.UseFastEndpoints(
 ).UseSwaggerGen();
 
 
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
 
 public partial class Program { }

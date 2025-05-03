@@ -12,5 +12,5 @@ public interface IPictureService
   Task<ApiResponse<DetailedPhotoDto>> UpdateBioPictureAsync(Guid petWalkerId, IBrowserFile file);
   Task<ApiResponse<List<DetailedPhotoDto>>> AddPhotosAsync(Guid petWalkerId, IEnumerable<IBrowserFile> files);
   Task<ApiResponse<bool>> DeletePhotoAsync(Guid petWalkerId, Guid photoId);
-  Task<ApiResponse<PictureViewModel>> GetPetWalkerByIdAsync(Guid currentPetWalkerId);
+  Task<ApiResponse<PictureViewModel>> GetPetWalkerPicturesAsync(Guid petWalkerId);
 }

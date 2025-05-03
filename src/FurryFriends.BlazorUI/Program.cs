@@ -2,18 +2,28 @@
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using FurryFriends.BlazorUI.Components;
 using FurryFriends.BlazorUI.Services.Implementation;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure logging
+// Ensure Logs directory exists
+var logsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+if (!Directory.Exists(logsDirectory))
+{
+  Directory.CreateDirectory(logsDirectory);
+}
+
+// Configure standard logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
-var host = builder.Services.AddRazorComponents()
+builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
@@ -68,4 +78,16 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(FurryFriends.BlazorUI.Client._Imports).Assembly);
 
-app.Run();
+var logger = app.Logger;
+try
+{
+  logger.LogInformation("Starting FurryFriends BlazorUI application");
+  app.Run();
+}
+catch (Exception ex)
+{
+  logger.LogCritical(ex, "FurryFriends BlazorUI application terminated unexpectedly");
+}
+
+// Partial class declaration for top-level statements
+public partial class Program { }

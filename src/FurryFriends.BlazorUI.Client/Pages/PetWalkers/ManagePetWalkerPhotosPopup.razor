@@ -11,29 +11,29 @@
 @inject IPictureService PictureService
 @inject IConfiguration Configuration
 @inject ILogger<ManagePetWalkerPhotosPopup> Logger
-@rendermode InteractiveAuto
+@rendermode InteractiveServer
 
 @implements IDisposable
 
-@if (isVisible)
+@if (_isVisible)
 {
     <div class="modal-backdrop">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-background">
-                    <h5 class="modal-title">Manage Photos for @(petWalkerPictures?.PetwalkerName ?? "Pet Walker")</h5>
+                    <h5 class="modal-title">Manage Photos for @(_petWalkerPictures?.PetWalkerName ?? "Pet Walker")</h5>
                     <button type="button" class="btn-close" aria-label="Close" @onclick="ClosePopup"></button>
                 </div>
                 <div class="modal-body">
-                    @if (isLoading)
+                    @if (_isLoading)
                     {
                         <p><em>Loading photo information...</em></p>
                     }
-                    else if (!string.IsNullOrEmpty(errorMessage))
+                    else if (!string.IsNullOrEmpty(_errorMessage))
                     {
-                        <div class="alert alert-danger">@errorMessage</div>
+                        <div class="alert alert-danger">@_errorMessage</div>
                     }
-                    else if (petWalkerPictures != null)
+                    else if (_petWalkerPictures != null)
                     {
                         <div class="row">
                             @* Bio Picture Section *@
@@ -42,24 +42,24 @@
                                     <h4>Bio Picture</h4>
                                     <div class="mb-3 text-center">
                                         @{
-                                            string bioPicUrl = petWalkerPictures.ProfilePicture != null && !string.IsNullOrEmpty(petWalkerPictures.ProfilePicture.Url)
-                                                ? GetFullPhotoUrl(petWalkerPictures.ProfilePicture.Url) // Use helper
+                                            string bioPicUrl = _petWalkerPictures.ProfilePicture != null && !string.IsNullOrEmpty(_petWalkerPictures.ProfilePicture.Url)
+                                                ? GetFullPhotoUrl(_petWalkerPictures.ProfilePicture.Url) // Use helper
                                                 : $"https://placehold.co/200x200/e9ecef/495057?text=Bio";
                                         }
                                         <div class="bio-image-container">
                                             <img src="@bioPicUrl" alt="Bio Picture" class="img-thumbnail mb-2" />
                                         </div>
-                                        @if (bioPicturePreviewUrl != null) {
+                                        @if (_bioPicturePreviewUrl != null) {
                                             <div class="bio-preview-container">
-                                                <img src="@bioPicturePreviewUrl" alt="New Bio Pic Preview" class="img-thumbnail mb-2" />
+                                                <img src="@_bioPicturePreviewUrl" alt="New Bio Pic Preview" class="img-thumbnail mb-2" />
                                             </div>
                                         }
                                     </div>
                                     <InputFile OnChange="HandleBioPictureSelected" accept="image/*" class="form-control mb-2" />
-                                    <button class="btn btn-primary w-100" @onclick="UploadBioPicture" disabled="@(selectedBioPictureFile == null || isUploadingBioPic)">
-                                        @(isUploadingBioPic ? "Uploading..." : "Update Bio Picture")
+                                    <button class="btn btn-primary w-100" @onclick="UploadBioPicture" disabled="@(_selectedBioPictureFile == null || _isUploadingBioPic)">
+                                        @(_isUploadingBioPic ? "Uploading..." : "Update Bio Picture")
                                     </button>
-                                    @if (!string.IsNullOrEmpty(bioPicUploadStatus)) { <p class="mt-2">@bioPicUploadStatus</p> }
+                                    @if (!string.IsNullOrEmpty(_bioPicUploadStatus)) { <p class="mt-2">@_bioPicUploadStatus</p> }
                                 </div>
                             </div>
 
@@ -70,10 +70,10 @@
                                     <div class="upload-section mb-4">
                                         <InputFile OnChange="HandleGalleryPhotosSelected" multiple accept="image/*" class="form-control mb-2" />
                                         @* Previews for new gallery photos *@
-                                        @if (galleryPhotoPreviews.Any())
+                                        @if (_galleryPhotoPreviews.Any())
                                         {
                                             <div class="preview-container mb-2">
-                                                @foreach(var preview in galleryPhotoPreviews)
+                                                @foreach(var preview in _galleryPhotoPreviews)
                                                 {
                                                     <div class="preview-item">
                                                         <img src="@preview.Url" title="@preview.Name" />
@@ -81,23 +81,23 @@
                                                 }
                                             </div>
                                         }
-                                        <button class="btn btn-success w-100" @onclick="UploadGalleryPhotos" disabled="@(!selectedGalleryFiles.Any() || isUploadingGallery)">
-                                            @(isUploadingGallery ? "Uploading..." : $"Upload {selectedGalleryFiles.Count} New Photo(s)")
+                                        <button class="btn btn-success w-100" @onclick="UploadGalleryPhotos" disabled="@(!_selectedGalleryFiles.Any() || _isUploadingGallery)">
+                                            @(_isUploadingGallery ? "Uploading..." : $"Upload {_selectedGalleryFiles.Count} New Photo(s)")
                                         </button>
-                                        @if (!string.IsNullOrEmpty(galleryUploadStatus)) { <p class="status-message">@galleryUploadStatus</p> }
+                                        @if (!string.IsNullOrEmpty(_galleryUploadStatus)) { <p class="status-message">@_galleryUploadStatus</p> }
                                     </div>
 
                                     <div class="existing-photos-section">
                                         <h5>Existing Photos</h5>
-                                        @if (petWalkerPictures?.Photos != null && petWalkerPictures.Photos.Any(p => p.PhotoType != PhotoType.BioPic)) // Filter out bio pic if it's in this list
+                                        @if (_petWalkerPictures?.Photos != null && _petWalkerPictures.Photos.Any(p => p.PhotoType != PhotoType.BioPic)) // Filter out bio pic if it's in this list
                                         {
                                             <div class="photos-gallery">
-                                                @foreach (var photo in petWalkerPictures.Photos.Where(p => p.PhotoType != PhotoType.BioPic))
+                                                @foreach (var photo in _petWalkerPictures.Photos.Where(p => p.PhotoType != PhotoType.BioPic))
                                                 {
                                                     <div class="position-relative">
                                                         <img src="@GetFullPhotoUrl(photo.Url)" alt="@(photo.Description ?? "Gallery Photo")" />
                                                         <button class="btn btn-danger btn-sm" title="Delete Photo"
-                                                                @onclick="() => DeleteGalleryPhoto(photo.Id)" disabled="@isDeleting">
+                                                                @onclick="() => DeleteGalleryPhoto(photo.Id)" disabled="@_isDeleting">
                                                             &times;
                                                         </button>
                                                     </div>
@@ -123,25 +123,24 @@
 }
 
 @code {
-    private bool isVisible = false;
-    private bool isLoading = false;
-    private bool isUploadingBioPic = false;
-    private bool isUploadingGallery = false;
-    private bool isDeleting = false;
-    private string? errorMessage = null;
-    private string? bioPicUploadStatus = null;
-    private string? galleryUploadStatus = null;
-    private Guid currentPetWalkerId;
-	private PictureViewModel? petWalkerPictures; // Use a detailed view model if available
+    private bool _isVisible = false;
+    private bool _isLoading = false;
+    private bool _isUploadingBioPic = false;
+    private bool _isUploadingGallery = false;
+    private bool _isDeleting = false;
+    private string? _errorMessage = null;
+    private string? _bioPicUploadStatus = null;
+    private string? _galleryUploadStatus = null;
+	private PictureViewModel? _petWalkerPictures;
     private string? _photoBaseUrl;
 
     // Bio Picture State
-    private IBrowserFile? selectedBioPictureFile;
-    private string? bioPicturePreviewUrl;
+    private IBrowserFile? _selectedBioPictureFile;
+    private string? _bioPicturePreviewUrl;
 
     // Gallery Photos State
-    private List<IBrowserFile> selectedGalleryFiles = new();
-    private List<PhotoPreview> galleryPhotoPreviews = new();
+    private List<IBrowserFile> _selectedGalleryFiles = new();
+    private List<PhotoPreview> _galleryPhotoPreviews = new();
 
     private class PhotoPreview {
         public string Url { get; set; } = "";
@@ -170,50 +169,49 @@
         Logger.LogInformation("Opening manage photos popup for pet walker ID: {PetWalkerId}", petWalkerId);
         try
         {
-            currentPetWalkerId = petWalkerId;
             Logger.LogDebug("Setting visibility and loading state");
-            isVisible = true;
-            isLoading = true;
-            errorMessage = null;
-            petWalkerPictures = null; // Reset
+            _isVisible = true;
+            _isLoading = true;
+            _errorMessage = null;
+            _petWalkerPictures = null; // Reset
             ResetUploadStates();
 
             await InvokeAsync(StateHasChanged); // Ensure UI updates immediately
 
             // Fetch specific pet walker details including photos
-            Logger.LogDebug("Fetching pet walker photos for ID: {PetWalkerId}", currentPetWalkerId);
-            var response = await PictureService.GetPetWalkerByIdAsync(currentPetWalkerId);
+            Logger.LogDebug("Fetching pet walker photos for ID: {PetWalkerId}", petWalkerId);
+            var response = await PictureService.GetPetWalkerPicturesAsync(petWalkerId);
 
             if (response.Success && response.Data != null)
             {
-                petWalkerPictures = response.Data;
+                _petWalkerPictures = response.Data;
                 Logger.LogInformation("Successfully loaded pet walker pictures: Name={Name}, ProfilePic={HasProfilePic}, Photos Count={PhotoCount}",
-                    petWalkerPictures.PetwalkerName,
-                    petWalkerPictures.ProfilePicture != null ? "Present" : "Null",
-                    petWalkerPictures.Photos?.Count.ToString() ?? "null");
+                    _petWalkerPictures.PetWalkerName,
+                    _petWalkerPictures.ProfilePicture != null ? "Present" : "Null",
+                    _petWalkerPictures.Photos?.Count.ToString() ?? "null");
 
                 // Ensure Photos collection is initialized
-                if (petWalkerPictures.Photos == null)
+                if (_petWalkerPictures.Photos == null)
                 {
                     Logger.LogWarning("Photos collection was null for pet walker {PetWalkerId}, initializing empty list", petWalkerId);
-                    petWalkerPictures.Photos = new List<DetailedPhotoDto>();
+                    _petWalkerPictures.Photos = new List<DetailedPhotoDto>();
                 }
             }
             else
             {
-                errorMessage = response.Message ?? "Failed to load pet walker data.";
+                _errorMessage = response.Message ?? "Failed to load pet walker data.";
                 Logger.LogWarning("Error loading pet walker data for ID {PetWalkerId}: {ErrorMessage}",
-                    petWalkerId, errorMessage);
+                    petWalkerId, _errorMessage);
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"An error occurred: {ex.Message}";
+            _errorMessage = $"An error occurred: {ex.Message}";
             Logger.LogError(ex, "Exception in ShowPopup for pet walker ID: {PetWalkerId}", petWalkerId);
         }
         finally
         {
-            isLoading = false;
+            _isLoading = false;
             await InvokeAsync(StateHasChanged); // Ensure UI updates after loading
         }
     }
@@ -225,77 +223,77 @@
 
     private void ClosePopupInternal()
     {
-        isVisible = false;
+        _isVisible = false;
         ResetUploadStates();
-        petWalkerPictures = null; // Clear data
+        _petWalkerPictures = null; // Clear data
         StateHasChanged();
     }
 
      private void ResetUploadStates()
     {
-        selectedBioPictureFile = null;
-        bioPicturePreviewUrl = null;
-        selectedGalleryFiles.Clear();
-        galleryPhotoPreviews.Clear();
-        bioPicUploadStatus = null;
-        galleryUploadStatus = null;
-        isUploadingBioPic = false;
-        isUploadingGallery = false;
-        isDeleting = false;
+        _selectedBioPictureFile = null;
+        _bioPicturePreviewUrl = null;
+        _selectedGalleryFiles.Clear();
+        _galleryPhotoPreviews.Clear();
+        _bioPicUploadStatus = null;
+        _galleryUploadStatus = null;
+        _isUploadingBioPic = false;
+        _isUploadingGallery = false;
+        _isDeleting = false;
     }
 
     // --- Bio Picture Handlers ---
     private async Task HandleBioPictureSelected(InputFileChangeEventArgs e)
     {
-        selectedBioPictureFile = e.File;
-        bioPicUploadStatus = null; // Clear previous status
-        if (selectedBioPictureFile != null)
+        _selectedBioPictureFile = e.File;
+        _bioPicUploadStatus = null; // Clear previous status
+        if (_selectedBioPictureFile != null)
         {
             // Create preview
             var format = "image/jpeg"; // Or derive from file type
-            var imageStream = selectedBioPictureFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5MB limit example
+            var imageStream = _selectedBioPictureFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5MB limit example
             using var ms = new MemoryStream();
             await imageStream.CopyToAsync(ms);
             var buffer = ms.ToArray();
-            bioPicturePreviewUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            _bioPicturePreviewUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
         } else {
-            bioPicturePreviewUrl = null;
+            _bioPicturePreviewUrl = null;
         }
         StateHasChanged();
     }
 
     private async Task UploadBioPicture()
     {
-        if (selectedBioPictureFile == null || petWalkerPictures == null) return;
+        if (_selectedBioPictureFile == null || _petWalkerPictures == null) return;
 
-        isUploadingBioPic = true;
-        bioPicUploadStatus = "Uploading...";
+        _isUploadingBioPic = true;
+        _bioPicUploadStatus = "Uploading...";
         StateHasChanged();
 
         try
         {
             // Call the service method - this needs to be created
-            var response = await PictureService.UpdateBioPictureAsync(petWalkerPictures.PetWalkerId, selectedBioPictureFile);
+            var response = await PictureService.UpdateBioPictureAsync(_petWalkerPictures.PetWalkerId, _selectedBioPictureFile);
             if (response.Success && response.Data != null)
             {
                 // Update the local model with the new bio pic URL/data
-                petWalkerPictures.ProfilePicture = response.Data;
-                bioPicUploadStatus = "Bio picture updated successfully!";
-                selectedBioPictureFile = null; // Clear selection
-                bioPicturePreviewUrl = null; // Clear preview
+                _petWalkerPictures.ProfilePicture = response.Data;
+                _bioPicUploadStatus = "Bio picture updated successfully!";
+                _selectedBioPictureFile = null; // Clear selection
+                _bioPicturePreviewUrl = null; // Clear preview
             }
             else
             {
-                bioPicUploadStatus = $"Error: {response.Message ?? "Upload failed."}";
+                _bioPicUploadStatus = $"Error: {response.Message ?? "Upload failed."}";
             }
         }
         catch (Exception ex)
         {
-            bioPicUploadStatus = $"Error: {ex.Message}";
+            _bioPicUploadStatus = $"Error: {ex.Message}";
         }
         finally
         {
-            isUploadingBioPic = false;
+            _isUploadingBioPic = false;
             StateHasChanged();
         }
     }
@@ -303,23 +301,23 @@
     // --- Gallery Photo Handlers ---
     private async Task HandleGalleryPhotosSelected(InputFileChangeEventArgs e)
     {
-        selectedGalleryFiles.Clear();
-        galleryPhotoPreviews.Clear();
-        galleryUploadStatus = null;
+        _selectedGalleryFiles.Clear();
+        _galleryPhotoPreviews.Clear();
+        _galleryUploadStatus = null;
 
         foreach (var file in e.GetMultipleFiles(maximumFileCount: 10)) // Limit concurrent uploads
         {
              try {
-                selectedGalleryFiles.Add(file);
+                _selectedGalleryFiles.Add(file);
                 // Create previews
                 var format = "image/jpeg";
                 var imageStream = file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024); // 5MB limit
                 using var ms = new MemoryStream();
                 await imageStream.CopyToAsync(ms);
                 var buffer = ms.ToArray();
-                galleryPhotoPreviews.Add(new PhotoPreview { Url = $"data:{format};base64,{Convert.ToBase64String(buffer)}", Name = file.Name });
+                _galleryPhotoPreviews.Add(new PhotoPreview { Url = $"data:{format};base64,{Convert.ToBase64String(buffer)}", Name = file.Name });
              } catch (IOException ex) {
-                 galleryUploadStatus = $"Error reading {file.Name}: {ex.Message}"; // Handle file size errors etc.
+                 _galleryUploadStatus = $"Error reading {file.Name}: {ex.Message}"; // Handle file size errors etc.
              }
         }
         StateHasChanged();
@@ -327,73 +325,73 @@
 
     private async Task UploadGalleryPhotos()
     {
-        if (!selectedGalleryFiles.Any() || petWalkerPictures == null) return;
+        if (!_selectedGalleryFiles.Any() || _petWalkerPictures == null) return;
 
-        isUploadingGallery = true;
-        galleryUploadStatus = $"Uploading {selectedGalleryFiles.Count} photos...";
+        _isUploadingGallery = true;
+        _galleryUploadStatus = $"Uploading {_selectedGalleryFiles.Count} photos...";
         StateHasChanged();
 
         try
         {
             // Call the service method - needs to be created
-            var response = await PictureService.AddPhotosAsync(petWalkerPictures.PetWalkerId, selectedGalleryFiles);
+            var response = await PictureService.AddPhotosAsync(_petWalkerPictures.PetWalkerId, _selectedGalleryFiles);
             if (response.Success && response.Data != null)
             {
                  // Add new photos to the local list
-                if (petWalkerPictures.Photos == null) petWalkerPictures.Photos = new List<DetailedPhotoDto >();
-                petWalkerPictures.Photos.AddRange(response.Data); // Assuming response returns the newly added photos
-                galleryUploadStatus = $"{response.Data.Count} photo(s) uploaded successfully!";
-                selectedGalleryFiles.Clear(); // Clear selection
-                galleryPhotoPreviews.Clear(); // Clear previews
+                if (_petWalkerPictures.Photos == null) _petWalkerPictures.Photos = new List<DetailedPhotoDto >();
+                _petWalkerPictures.Photos.AddRange(response.Data); // Assuming response returns the newly added photos
+                _galleryUploadStatus = $"{response.Data.Count} photo(s) uploaded successfully!";
+                _selectedGalleryFiles.Clear(); // Clear selection
+                _galleryPhotoPreviews.Clear(); // Clear previews
             }
             else
             {
-                galleryUploadStatus = $"Error: {response.Message ?? "Upload failed."}";
+                _galleryUploadStatus = $"Error: {response.Message ?? "Upload failed."}";
             }
         }
         catch (Exception ex)
         {
-            galleryUploadStatus = $"Error: {ex.Message}";
+            _galleryUploadStatus = $"Error: {ex.Message}";
         }
         finally
         {
-            isUploadingGallery = false;
+            _isUploadingGallery = false;
             StateHasChanged();
         }
     }
 
      private async Task DeleteGalleryPhoto(Guid photoId)
     {
-        if (petWalkerPictures == null) return;
+        if (_petWalkerPictures == null) return;
 
         // Optional: Add a confirmation dialog here
 
-        isDeleting = true;
-        galleryUploadStatus = "Deleting photo..."; // Use gallery status for feedback
+        _isDeleting = true;
+        _galleryUploadStatus = "Deleting photo..."; // Use gallery status for feedback
         StateHasChanged();
 
         try
         {
             // Call the service method - needs to be created
-            var response = await PictureService.DeletePhotoAsync(petWalkerPictures.PetWalkerId, photoId);
+            var response = await PictureService.DeletePhotoAsync(_petWalkerPictures.PetWalkerId, photoId);
             if (response.Success)
             {
                 // Remove photo from local list
-                petWalkerPictures.Photos?.RemoveAll(p => p.Id == photoId);
-                galleryUploadStatus = "Photo deleted successfully!";
+                _petWalkerPictures.Photos?.RemoveAll(p => p.Id == photoId);
+                _galleryUploadStatus = "Photo deleted successfully!";
             }
             else
             {
-                galleryUploadStatus = $"Error: {response.Message ?? "Deletion failed."}";
+                _galleryUploadStatus = $"Error: {response.Message ?? "Deletion failed."}";
             }
         }
         catch (Exception ex)
         {
-            galleryUploadStatus = $"Error: {ex.Message}";
+            _galleryUploadStatus = $"Error: {ex.Message}";
         }
         finally
         {
-            isDeleting = false;
+            _isDeleting = false;
             StateHasChanged();
         }
     }
