@@ -41,32 +41,126 @@ public class PictureService : IPictureService
   {
     try
     {
-      using var content = await CreateFileContent(file, "file");
-      var apiUrl = $"{_apiBaseUrl}/petwalker/{petWalkerId}/biopicture";
+      // First, get the current pictures to find the bio picture ID
+      var picturesResponse = await GetPetWalkerPicturesAsync(petWalkerId);
+      if (!picturesResponse.Success || picturesResponse.Data == null)
+      {
+        return CreateErrorResponse<DetailedPhotoDto>("Failed to retrieve pet walker pictures");
+      }
+
+      // Get the bio picture ID
+      var bioPicture = picturesResponse.Data.ProfilePicture;
+      if (bioPicture == null)
+      {
+        // If there's no bio picture yet, we should add one instead of updating
+        _logger.LogInformation("No existing bio picture found for pet walker {PetWalkerId}, adding a new one", petWalkerId);
+
+        // Create a new bio picture
+        return await AddBioPictureAsync(petWalkerId, file);
+      }
+
+      // Create the content without using a using statement to avoid premature disposal
+      var content = await CreateFileContent(file, "file");
+
+      // Use the UpdatePhoto endpoint with the bio picture ID
+      var apiUrl = $"{_apiBaseUrl}/PetWalker/{petWalkerId}/photos/{bioPicture.Id}";
+
+      // Send the request
       var response = await _httpClient.PutAsync(apiUrl, content);
 
-      return await HandleApiResponseAsync<DetailedPhotoDto>(
+      // Process the response
+      var result = await HandleApiResponseAsync<DetailedPhotoDto>(
           response,
           string.Format(ErrorMessages.UpdateError, "{0}", "{1}")
       );
+
+      // Dispose the content after we're done with it
+      content.Dispose();
+
+      return result;
     }
     catch (HttpRequestException ex)
     {
       _logger.LogError(ex, "Network error while updating bio picture for pet walker {PetWalkerId}", petWalkerId);
       return CreateErrorResponse<DetailedPhotoDto>(string.Format(ErrorMessages.NetworkError, ex.Message));
     }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Unexpected error while updating bio picture for pet walker {PetWalkerId}: {Message}", petWalkerId, ex.Message);
+      return CreateErrorResponse<DetailedPhotoDto>($"Unexpected error: {ex.Message}");
+    }
+  }
+
+  public async Task<ApiResponse<DetailedPhotoDto>> AddBioPictureAsync(Guid petWalkerId, IBrowserFile file)
+  {
+    try
+    {
+      // Create the content without using a using statement to avoid premature disposal
+      var content = new MultipartFormDataContent();
+
+      // Create a memory stream that will be owned by the StreamContent
+      var memoryStream = new MemoryStream();
+
+      // Open the file stream with a using statement to ensure it's properly disposed
+      using (var fileStream = file.OpenReadStream(maxAllowedSize: MaxFileSize))
+      {
+        await fileStream.CopyToAsync(memoryStream);
+      }
+
+      // Reset the position to the beginning
+      memoryStream.Position = 0;
+
+      var fileContent = new StreamContent(memoryStream);
+      fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+      content.Add(fileContent, "file", file.Name);
+
+      // Add a form field to indicate this is a bio picture
+      content.Add(new StringContent("BioPic"), "photoType");
+
+      var apiUrl = $"{_apiBaseUrl}/PetWalker/{petWalkerId}/photos";
+      var response = await _httpClient.PostAsync(apiUrl, content);
+
+      var result = await HandleApiResponseAsync<DetailedPhotoDto>(
+          response,
+          string.Format(ErrorMessages.PhotoUploadError, "{0}")
+      );
+
+      // Dispose the content after we're done with it
+      content.Dispose();
+
+      return result;
+    }
+    catch (HttpRequestException ex)
+    {
+      _logger.LogError(ex, "Network error while adding bio picture for pet walker {PetWalkerId}", petWalkerId);
+      return CreateErrorResponse<DetailedPhotoDto>(string.Format(ErrorMessages.NetworkError, ex.Message));
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Unexpected error while adding bio picture for pet walker {PetWalkerId}: {Message}", petWalkerId, ex.Message);
+      return CreateErrorResponse<DetailedPhotoDto>($"Unexpected error: {ex.Message}");
+    }
   }
 
   public async Task<ApiResponse<List<DetailedPhotoDto>>> AddPhotosAsync(Guid petWalkerId, IEnumerable<IBrowserFile> files)
   {
+    // Create the content without using a using statement to avoid premature disposal
+    var content = new MultipartFormDataContent();
+
     try
     {
-      using var content = new MultipartFormDataContent();
       foreach (var file in files)
       {
-        using var fileStream = file.OpenReadStream(maxAllowedSize: MaxFileSize);
-        using var memoryStream = new MemoryStream();
-        await fileStream.CopyToAsync(memoryStream);
+        // Create a memory stream that will be owned by the StreamContent
+        var memoryStream = new MemoryStream();
+
+        // Open the file stream with a using statement to ensure it's properly disposed
+        using (var fileStream = file.OpenReadStream(maxAllowedSize: MaxFileSize))
+        {
+          await fileStream.CopyToAsync(memoryStream);
+        }
+
+        // Reset the position to the beginning
         memoryStream.Position = 0;
 
         var fileContent = new StreamContent(memoryStream);
@@ -74,18 +168,30 @@ public class PictureService : IPictureService
         content.Add(fileContent, "files", file.Name);
       }
 
-      var apiUrl = $"{_apiBaseUrl}/petwalker/{petWalkerId}/photos";
+      var apiUrl = $"{_apiBaseUrl}/PetWalker/{petWalkerId}/photos";
       var response = await _httpClient.PostAsync(apiUrl, content);
 
-      return await HandleApiResponseAsync<List<DetailedPhotoDto>>(
+      var result = await HandleApiResponseAsync<List<DetailedPhotoDto>>(
           response,
           string.Format(ErrorMessages.PhotoUploadError, "{0}")
       );
+
+      // Dispose the content after we're done with it
+      content.Dispose();
+
+      return result;
     }
     catch (HttpRequestException ex)
     {
       _logger.LogError(ex, "Network error while adding photos for pet walker {PetWalkerId}", petWalkerId);
+      content.Dispose();
       return CreateErrorResponse<List<DetailedPhotoDto>>(string.Format(ErrorMessages.NetworkError, ex.Message));
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Unexpected error while adding photos for pet walker {PetWalkerId}: {Message}", petWalkerId, ex.Message);
+      content.Dispose();
+      return CreateErrorResponse<List<DetailedPhotoDto>>($"Unexpected error: {ex.Message}");
     }
   }
 
@@ -93,7 +199,7 @@ public class PictureService : IPictureService
   {
     try
     {
-      var apiUrl = $"{_apiBaseUrl}/petwalker/{petWalkerId}/photos/{photoId}";
+      var apiUrl = $"{_apiBaseUrl}/PetWalker/{petWalkerId}/photos/{photoId}";
       var response = await _httpClient.DeleteAsync(apiUrl);
 
       if (response.IsSuccessStatusCode)
@@ -123,7 +229,7 @@ public class PictureService : IPictureService
   {
     try
     {
-      var apiUrl = $"{_apiBaseUrl}/petwalker/{petWalkerId}/photos";
+      var apiUrl = $"{_apiBaseUrl}/PetWalker/{petWalkerId}/photos";
       _logger.LogInformation("Fetching pet walker photos for ID: {PetWalkerId}", petWalkerId);
 
       var response = await _httpClient.GetAsync(apiUrl);
@@ -167,14 +273,24 @@ public class PictureService : IPictureService
   private async Task<MultipartFormDataContent> CreateFileContent(IBrowserFile file, string name)
   {
     var content = new MultipartFormDataContent();
-    using var fileStream = file.OpenReadStream(maxAllowedSize: MaxFileSize);
-    using var memoryStream = new MemoryStream();
-    await fileStream.CopyToAsync(memoryStream);
+
+    // Create a memory stream that will be owned by the StreamContent
+    var memoryStream = new MemoryStream();
+
+    // Open the file stream with a using statement to ensure it's properly disposed
+    using (var fileStream = file.OpenReadStream(maxAllowedSize: MaxFileSize))
+    {
+      await fileStream.CopyToAsync(memoryStream);
+    }
+
+    // Reset the position to the beginning
     memoryStream.Position = 0;
 
+    // Create a StreamContent that will take ownership of the memory stream
     var fileContent = new StreamContent(memoryStream);
     fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
     content.Add(fileContent, name, file.Name);
+
     return content;
   }
 

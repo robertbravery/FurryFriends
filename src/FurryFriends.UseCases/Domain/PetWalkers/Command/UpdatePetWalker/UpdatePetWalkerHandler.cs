@@ -50,20 +50,34 @@ public class UpdatePetWalkerHandler(
 }
 
 
-public class UpdateBioPictureHandler(
-    IPictureService _pictureService,
-    ILogger<UpdatePetWalkerHandler> _logger
-    ) : IRequestHandler<UpdateBioPictureCommand, Result<PhotoDto>>
+public class UpdateBioPictureHandler : IRequestHandler<UpdateBioPictureCommand, Result<PhotoDto>>
 {
+  private readonly IPictureService _pictureService;
+  private readonly ILogger<UpdatePetWalkerHandler> _logger;
+
+  public UpdateBioPictureHandler(
+      IPictureService pictureService,
+      ILogger<UpdatePetWalkerHandler> logger)
+  {
+    _pictureService = pictureService;
+    _logger = logger;
+  }
+
   public async Task<Result<PhotoDto>> Handle(UpdateBioPictureCommand command, CancellationToken cancellationToken)
   {
     Guard.Against.Null(command, nameof(command));
 
-    _logger.LogInformation($"Updating pet walker with id: {command.PetWalkerId}");
-    //ToDO: Call the service to update the bio picture
-    await _pictureService.UpdatePetWalkerBioPictureAsync(command.PetWalkerId, command.File, cancellationToken);
-    return Result.Success();
+    _logger.LogInformation("Updating bio picture for pet walker with id: {PetWalkerId}", command.PetWalkerId);
+
+    var result = await _pictureService.UpdatePetWalkerBioPictureAsync(command.PetWalkerId, command.File, cancellationToken);
+
+    if (!result.IsSuccess)
+    {
+      _logger.LogWarning("Failed to update bio picture: {Error}", result.Errors);
+      return Result.Error((ErrorList)result.Errors);
+    }
+
+    var photo = result.Value;
+    return Result.Success(new PhotoDto(photo.Url, photo.Description));
   }
-
-
 }
