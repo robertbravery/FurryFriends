@@ -5,8 +5,6 @@ using FurryFriends.Web.Configurations;
 using FurryFriends.Web.Middleware;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using Serilog;
-using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 var logsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
 if (!Directory.Exists(logsDirectory))
 {
-    Directory.CreateDirectory(logsDirectory);
+  Directory.CreateDirectory(logsDirectory);
 }
 
 // Configure Serilog
@@ -59,7 +57,7 @@ builder.Services.AddOpenTelemetry()
 
 var logger = Log.Logger;
 
-//builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 
 // Register services
 builder.Services
@@ -95,6 +93,13 @@ app.UseCors("AllowBlazorClient");
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//  FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+//  RequestPath = "/Images"
+//});
+
 await app.UseAppMiddlewareAndSeedDatabase();
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
@@ -122,15 +127,15 @@ app.UseFastEndpoints(
 
 try
 {
-    app.Run();
+  app.Run();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
+  Log.Fatal(ex, "Application terminated unexpectedly");
 }
 finally
 {
-    Log.CloseAndFlush();
+  Log.CloseAndFlush();
 }
 
 public partial class Program { }

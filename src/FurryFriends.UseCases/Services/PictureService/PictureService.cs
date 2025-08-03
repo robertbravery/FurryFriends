@@ -4,7 +4,6 @@ using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.IO;
 
 namespace FurryFriends.UseCases.Services.PictureService;
 
@@ -13,16 +12,19 @@ public class PictureService : IPictureService
   private readonly IRepository<PetWalker> _repository;
   private readonly IWebHostEnvironment _webHostEnvironment;
   private readonly ILogger<PictureService> _logger;
+  private readonly IHttpContextAccessor _httpContextAccessor;
   private const string PHOTOS_FOLDER = "photos";
 
   public PictureService(
       IRepository<PetWalker> repository,
       IWebHostEnvironment webHostEnvironment,
-      ILogger<PictureService> logger)
+      ILogger<PictureService> logger,
+      IHttpContextAccessor httpContextAccessor)
   {
     _repository = repository;
     _webHostEnvironment = webHostEnvironment;
     _logger = logger;
+    _httpContextAccessor = httpContextAccessor;
   }
 
   public async Task<Result<Photo>> UpdatePetWalkerBioPictureAsync(Guid petWalkerId, IFormFile file, CancellationToken cancellationToken)
@@ -211,6 +213,18 @@ public class PictureService : IPictureService
     }
 
     // Return the URL (relative to the web root)
-    return $"/{PHOTOS_FOLDER}/{petWalkerId}/{fileName}";
+    var baseUrl = GetBaseUrl();
+    var relativeUrl = $"/{PHOTOS_FOLDER}/{petWalkerId}/{fileName}";
+    var fullUrl = $"{baseUrl}{relativeUrl}";
+    return fullUrl;
+  }
+
+  private string GetBaseUrl()
+  {
+    var request = _httpContextAccessor.HttpContext?.Request;
+    if (request == null)
+      return string.Empty;
+
+    return $"{request.Scheme}://{request.Host}";
   }
 }
