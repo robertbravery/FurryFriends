@@ -44,6 +44,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IPetWalkerService, PetWalkerService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddSingleton<IPopupService, PopupService>();
 builder.Services.AddScoped<IPictureService, PictureService>();
 builder.Services.AddScoped<FurryFriends.BlazorUI.Client.Services.Interfaces.IClientLoggingService, ServerClientLoggingService>();

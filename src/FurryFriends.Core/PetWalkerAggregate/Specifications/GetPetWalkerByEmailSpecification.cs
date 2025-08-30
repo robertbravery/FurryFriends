@@ -11,3 +11,4 @@ public class GetPetWalkerByEmailSpecification : SingleResultSpecification<PetWal
         .ThenInclude(i => i.Country);
 }
 
+

@@ -103,6 +103,16 @@ public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
               .IsRequired();
     });
 
+    builder.OwnsMany(p => p.Schedules, sb =>
+    {
+      sb.WithOwner().HasForeignKey("PetWalkerId");
+      sb.Property<Guid>("Id"); // Shadow property for EF
+      sb.HasKey("Id");
+      sb.Property(s => s.DayOfWeek).HasConversion<string>();
+      sb.Property(s => s.StartTime);
+      sb.Property(s => s.EndTime);
+      sb.ToTable("PetWalkerSchedules");
+    });
 
     builder.HasMany(sa => sa.ServiceAreas)
         .WithOne(u => u.PetWalker)

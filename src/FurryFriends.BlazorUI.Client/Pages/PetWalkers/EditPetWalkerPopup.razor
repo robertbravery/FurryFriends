@@ -1,5 +1,6 @@
 @using FurryFriends.BlazorUI.Client.Models.PetWalkers
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Forms
 @rendermode InteractiveAuto
 
 <div class="modal-backdrop">
@@ -215,6 +216,68 @@
 								{
 									<p class="text-muted">No service areas selected. Please add at least one service area.</p>
 								}
+							</div>
+
+							@* Schedule Management *@
+							<div class="form-group">
+								<h5>Weekly Schedule</h5>
+								<p class="text-muted mb-3">Set your availability for each day of the week. Toggle the checkbox to enable/disable a day, then set your start and end times.</p>
+
+								<div class="schedule-grid">
+									@foreach (var day in ScheduleHelper.WeekDays)
+									{
+										var daySchedule = scheduleItems.FirstOrDefault(s => s.DayOfWeek == day);
+										if (daySchedule == null)
+										{
+											daySchedule = new ScheduleItemDto
+											{
+												DayOfWeek = day,
+													StartTime = new TimeOnly(9, 0),
+													EndTime = new TimeOnly(17, 0),
+												IsActive = false
+											};
+											scheduleItems.Add(daySchedule);
+										}
+
+										<div class="schedule-day-row">
+											<div class="day-header">
+												<label class="day-checkbox">
+													<InputCheckbox @bind-Value="daySchedule.IsActive" />
+													<span class="day-name">@ScheduleHelper.GetDayDisplayName(day)</span>
+												</label>
+											</div>
+
+											<div class="time-controls @(daySchedule.IsActive ? "" : "disabled")">
+												<div class="time-input-group">
+													<label>Start Time:</label>
+													<input type="time"
+														   @bind="daySchedule.StartTime"
+														   @bind:format="HH:mm"
+														   disabled="@(!daySchedule.IsActive)"
+														   class="form-control time-input" />
+												</div>
+
+												<div class="time-separator">to</div>
+
+												<div class="time-input-group">
+													<label>End Time:</label>
+													<input type="time"
+														   @bind="daySchedule.EndTime"
+														   @bind:format="HH:mm"
+														   disabled="@(!daySchedule.IsActive)"
+														   class="form-control time-input" />
+												</div>
+											</div>
+
+											@if (daySchedule.IsActive && !ScheduleHelper.IsValidScheduleItem(daySchedule))
+											{
+												<div class="validation-error">
+													<small class="text-danger">End time must be after start time</small>
+												</div>
+											}
+										</div>
+									}
+								</div>
 							</div>
 
 							@* Legacy Service Areas (Hidden) *@

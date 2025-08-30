@@ -19,6 +19,9 @@ public partial class PetWalkerViewPopup
     public IPetWalkerService PetWalkerService { get; set; } = default!;
 
     [Inject]
+    public IScheduleService ScheduleService { get; set; } = default!;
+
+    [Inject]
     public IJSRuntime JS { get; set; } = default!;
 
     [Inject]
@@ -48,6 +51,9 @@ public partial class PetWalkerViewPopup
                 Logger.LogInformation("Successfully loaded pet walker data for email: {PetWalkerEmail}", PetWalkerEmail);
                 petWalkerModel = response.Data;
                 loadError = null;
+
+                // Load schedule data
+                await LoadScheduleData(petWalkerModel.Id);
             }
             else
             {
@@ -73,6 +79,32 @@ public partial class PetWalkerViewPopup
         {
             isLoading = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task LoadScheduleData(Guid petWalkerId)
+    {
+        try
+        {
+            Logger.LogInformation("Loading schedule data for PetWalker: {PetWalkerId}", petWalkerId);
+
+            var scheduleResponse = await ScheduleService.GetScheduleAsync(petWalkerId);
+
+            if (scheduleResponse.Success && scheduleResponse.Data != null)
+            {
+                petWalkerModel.Schedules = scheduleResponse.Data.Schedules;
+                Logger.LogInformation("Successfully loaded schedule with {Count} items", petWalkerModel.Schedules.Count);
+            }
+            else
+            {
+                Logger.LogWarning("Failed to load schedule: {Error}", scheduleResponse.Message);
+                petWalkerModel.Schedules = new List<ScheduleItemDto>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading schedule data for PetWalker: {PetWalkerId}", petWalkerId);
+            petWalkerModel.Schedules = new List<ScheduleItemDto>();
         }
     }
 

@@ -30,19 +30,19 @@
                                 <div class="bio-picture-section">
                                     <h4>Bio Picture</h4>
                                     <div class="mb-3 text-center">
-                                        @{
-                                            string bioPicUrl = _petWalkerPictures.ProfilePicture != null && !string.IsNullOrEmpty(_petWalkerPictures.ProfilePicture.Url)
-                                                ? GetFullPhotoUrl(_petWalkerPictures.ProfilePicture.Url) // Use helper
-                                                : $"https://placehold.co/200x200/e9ecef/495057?text=Bio";
-                                        }
-                                        <div class="bio-image-container">
-                                            <img src="@bioPicUrl" alt="Bio Picture" class="img-thumbnail mb-2" />
-                                        </div>
-                                        @if (_bioPicturePreviewUrl != null) {
-                                            <div class="bio-preview-container">
-                                                <img src="@_bioPicturePreviewUrl" alt="New Bio Pic Preview" class="img-thumbnail mb-2" />
-                                            </div>
-                                        }
+										@{
+											// Determine the URL to display.
+											// If a preview exists, use it immediately. Otherwise, use the saved profile picture or a placeholder.
+											string displayedBioPicUrl = _bioPicturePreviewUrl != null
+											? _bioPicturePreviewUrl
+											: (_petWalkerPictures.ProfilePicture != null && !string.IsNullOrEmpty(_petWalkerPictures.ProfilePicture.Url)
+											? GetFullPhotoUrl(_petWalkerPictures.ProfilePicture.Url) // Use helper
+											: $"https://placehold.co/200x200/e9ecef/495057?text=Bio");
+										}
+										<div class="bio-image-container">
+											<img src="@displayedBioPicUrl" alt="Bio Picture" class="img-thumbnail mb-2" />
+										</div>
+
                                     </div>
                                     <InputFile OnChange="HandleBioPictureSelected" accept="image/*" class="form-control mb-2" />
                                     <button class="btn btn-primary w-100" @onclick="UploadBioPicture" disabled="@(_selectedBioPictureFile == null || _isUploadingBioPic)">

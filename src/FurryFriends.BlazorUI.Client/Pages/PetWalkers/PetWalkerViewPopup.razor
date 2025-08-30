@@ -163,6 +163,26 @@
                                         <p>No service areas specified.</p>
                                     }
                                 </div>
+
+                                <div class="detail-section">
+                                    <h4>Schedule</h4>
+                                    @if (petWalkerModel.Schedules != null && petWalkerModel.Schedules.Any())
+                                    {
+                                        <div class="schedule-display">
+                                            @foreach (var schedule in petWalkerModel.Schedules.OrderBy(s => (int)s.DayOfWeek == 0 ? 7 : (int)s.DayOfWeek))
+                                            {
+                                                <div class="schedule-day-item">
+                                                    <div class="schedule-day-name">@ScheduleHelper.GetDayDisplayName(schedule.DayOfWeek)</div>
+                                                    <div class="schedule-time-range">@schedule.TimeRangeFormatted</div>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p>No schedule set.</p>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

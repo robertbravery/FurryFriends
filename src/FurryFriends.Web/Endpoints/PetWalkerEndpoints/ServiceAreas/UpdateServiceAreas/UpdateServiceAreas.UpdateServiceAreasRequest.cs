@@ -4,7 +4,7 @@ namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.ServiceAreas.UpdateServi
 
 public class UpdateServiceAreasRequest
 {
-  public const string Route = "/PetWalker/{PetWalkerId:guid}/ServiceAreas";
+  public const string Route = "/Petwalker/{PetWalkerId:guid}/ServiceAreas";
 
   [Required]
   public Guid PetWalkerId { get; set; }

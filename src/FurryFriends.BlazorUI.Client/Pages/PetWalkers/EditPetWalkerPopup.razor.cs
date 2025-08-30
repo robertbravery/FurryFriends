@@ -17,6 +17,9 @@ public partial class EditPetWalkerPopup
   public ILocationService LocationService { get; set; } = default!;
 
   [Inject]
+  public IScheduleService ScheduleService { get; set; } = default!;
+
+  [Inject]
   public IPopupService PopupService { get; set; } = default!;
 
   [Parameter]
@@ -32,6 +35,9 @@ public partial class EditPetWalkerPopup
   private List<LocalityDto> localities = new();
   private Guid selectedRegionId = Guid.Empty;
   private Guid selectedLocalityId = Guid.Empty;
+
+  // Schedule management
+  private List<ScheduleItemDto> scheduleItems = new();
 
   protected override async Task OnInitializedAsync()
   {
@@ -74,6 +80,9 @@ public partial class EditPetWalkerPopup
 
         // Convert string service areas to structured service areas
         await ConvertServiceAreasToStructured();
+
+        // Load schedule data
+        await LoadScheduleData(petWalkerModel.Id);
       }
       else
       {
@@ -184,10 +193,13 @@ public partial class EditPetWalkerPopup
         }
       }
 
+      // Save schedule changes
+      await SaveScheduleChanges();
+
       // Show success message and close popup
       // Notify parent that update was successful
       await OnPetWalkerUpdated.InvokeAsync();
-      
+
       showSuccessMessage = true;
       StateHasChanged();
 
@@ -351,6 +363,81 @@ public partial class EditPetWalkerPopup
       }
 
       StateHasChanged();
+    }
+  }
+
+  private async Task LoadScheduleData(Guid petWalkerId)
+  {
+    try
+    {
+      var scheduleResponse = await ScheduleService.GetScheduleAsync(petWalkerId);
+
+      if (scheduleResponse.Success && scheduleResponse.Data != null)
+      {
+        scheduleItems = scheduleResponse.Data.Schedules.ToList();
+        petWalkerModel.Schedules = scheduleResponse.Data.Schedules;
+      }
+      else
+      {
+        scheduleItems = new List<ScheduleItemDto>();
+        petWalkerModel.Schedules = new List<ScheduleItemDto>();
+      }
+
+      // Ensure we have entries for all days of the week
+      foreach (var day in ScheduleHelper.WeekDays)
+      {
+        if (!scheduleItems.Any(s => s.DayOfWeek == day))
+        {
+          scheduleItems.Add(new ScheduleItemDto
+          {
+            DayOfWeek = day,
+            StartTime = new TimeOnly(9, 0), // Default 9 AM
+            EndTime = new TimeOnly(17, 0),   // Default 5 PM
+            IsActive = false
+          });
+        }
+      }
+
+      // Sort by day of week (Monday first)
+      scheduleItems = scheduleItems.OrderBy(s => (int)s.DayOfWeek == 0 ? 7 : (int)s.DayOfWeek).ToList();
+    }
+    catch (Exception ex)
+    {
+      // Log error but don't fail the entire load process
+      scheduleItems = ScheduleHelper.CreateEmptyWeeklySchedule();
+      petWalkerModel.Schedules = new List<ScheduleItemDto>();
+      loadError = $"Error loading schedule: {ex.Message}";
+    }
+  }
+
+  private async Task SaveScheduleChanges()
+  {
+    try
+    {
+      // Validate all active schedule items
+      var activeSchedules = scheduleItems.Where(s => s.IsActive).ToList();
+      var invalidSchedules = activeSchedules.Where(s => !ScheduleHelper.IsValidScheduleItem(s)).ToList();
+
+      if (invalidSchedules.Any())
+      {
+        loadError = "Please fix the schedule validation errors before saving.";
+        return;
+      }
+
+      var response = await ScheduleService.SetScheduleAsync(petWalkerModel.Id, scheduleItems);
+
+      if (!response.Success)
+      {
+        loadError = response.Message ?? "Failed to save schedule changes.";
+        return;
+      }
+
+      // Update the petWalkerModel.Schedules to reflect the saved changes
+      petWalkerModel.Schedules = scheduleItems.Where(s => s.IsActive).ToList();
+    }
+    catch (Exception ex)
+    {
+      loadError = $"Error saving schedule: {ex.Message}";
     }
   }
 }

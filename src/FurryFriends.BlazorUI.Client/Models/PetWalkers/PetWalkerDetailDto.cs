@@ -34,4 +34,7 @@ public class PetWalkerDetailDto
 
   public PetWalkerBasicPhotoDto? ProfilePicture { get; set; }
   public List<PetWalkerBasicPhotoDto> Photos { get; set; } = new List<PetWalkerBasicPhotoDto>();
+
+  // Schedule information
+  public List<ScheduleItemDto> Schedules { get; set; } = new List<ScheduleItemDto>();
 }

@@ -5,6 +5,9 @@ namespace FurryFriends.Core.PetWalkerAggregate;
 
 public class PetWalker : UserEntityBase
 {
+
+  private readonly List<Schedule> _schedules = new();
+
   public GenderType Gender { get; private set; } = GenderType.Create(GenderType.GenderCategory.Other).Value;
   public string? Biography { get; private set; }
   public DateTime DateOfBirth { get; private set; }
@@ -15,6 +18,7 @@ public class PetWalker : UserEntityBase
   public bool HasInsurance { get; private set; }
   public bool HasFirstAidCertificatation { get; private set; }
   public int DailyPetWalkLimit { get; private set; }
+  public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
 
   public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
   public virtual ICollection<ServiceArea> ServiceAreas { get; set; } = new HashSet<ServiceArea>();
@@ -158,5 +162,25 @@ public class PetWalker : UserEntityBase
     Guard.Against.Null(serviceArea, nameof(serviceArea));
     ServiceAreas.Remove(serviceArea);
   }
+
+  public void AddSchedule(Schedule schedule)
+  {
+    // Optional: enforce "no duplicate day" rule
+    if (_schedules.Any(s => s.DayOfWeek == schedule.DayOfWeek &&
+                            s.StartTime == schedule.StartTime &&
+                            s.EndTime == schedule.EndTime))
+    {
+      throw new InvalidOperationException("Schedule already exists.");
+    }
+    _schedules.Add(schedule);
+  }
+
+  public void RemoveSchedule(Schedule schedule)
+  {
+    _schedules.Remove(schedule);
+  }
+
+  public void ClearSchedules() => _schedules.Clear();
+
 }
 

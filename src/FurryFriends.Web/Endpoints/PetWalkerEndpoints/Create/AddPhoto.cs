@@ -1,8 +1,6 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate.Enums;
 using FurryFriends.UseCases.Services.PictureService;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Get;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
@@ -32,7 +30,7 @@ public class AddPhoto(IMediator mediator) : Endpoint<AddPhotoRequest, DetailedPh
     var photoType = PhotoType.PetWalkerPhoto; // Default
     if (!string.IsNullOrEmpty(req.PhotoType) && Enum.TryParse<PhotoType>(req.PhotoType, out var parsedType))
     {
-        photoType = parsedType;
+      photoType = parsedType;
     }
 
     var result = await pictureService.AddPetWalkerPhotoAsync(

@@ -18,7 +18,7 @@ public class UpdateServiceAreas(IServiceAreaService serviceAreaService, IPetWalk
     Description(d => d
         .Produces<UpdateServiceAreasResponse>(200)
         .Produces(400)
-        .WithTags("PetWalker"));
+        .WithTags("Petwalker"));
   }
 
   public override async Task HandleAsync(UpdateServiceAreasRequest request, CancellationToken cancellationToken)
@@ -60,7 +60,7 @@ public class UpdateServiceAreas(IServiceAreaService serviceAreaService, IPetWalk
       {
         _logger.LogInformation("Removing service area {ServiceAreaId} for pet walker {PetWalkerId}",
             serviceArea.Id, request.PetWalkerId);
-            
+
         var removeResult = await _serviceAreaService.RemoveServiceAreaAsync(serviceArea.Id, cancellationToken);
 
         if (!removeResult.IsSuccess)

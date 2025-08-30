@@ -30,6 +30,7 @@ public class CreatePetWalker(IMediator _mediator)
       };
     });
   }
+
   public override async Task HandleAsync(CreatePetWalkerRequest request, CancellationToken cancellationToken)
   {
     var userCommand = CreateCommand(request);
