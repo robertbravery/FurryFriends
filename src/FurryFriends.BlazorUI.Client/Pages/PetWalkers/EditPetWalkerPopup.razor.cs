@@ -1,4 +1,5 @@
-﻿using FurryFriends.BlazorUI.Client.Models.Locations;
+﻿using FurryFriends.BlazorUI.Client.Models.Common;
+using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
@@ -28,7 +29,18 @@ public partial class EditPetWalkerPopup
   private PetWalkerDetailDto petWalkerModel = default!;
   private bool isLoading = true;
   private string? loadError;
-  private bool showSuccessMessage = false;
+
+  // Tab management
+  private string activeTab = "personal";
+  private bool isProcessing = false;
+  private string currentProcessingTab = "";
+  private Dictionary<string, TabMessage?> tabMessages = new()
+  {
+    ["personal"] = null,
+    ["professional"] = null,
+    ["location"] = null,
+    ["schedule"] = null
+  };
 
   // Location data
   private List<RegionDto> regions = new();
@@ -38,6 +50,21 @@ public partial class EditPetWalkerPopup
 
   // Schedule management
   private List<ScheduleItemDto> scheduleItems = new();
+
+  // Track unsaved changes per tab
+  private Dictionary<string, bool> unsavedChanges = new()
+  {
+    ["personal"] = false,
+    ["professional"] = false,
+    ["location"] = false,
+    ["schedule"] = false
+  };
+
+  public class TabMessage
+  {
+    public string Message { get; set; } = "";
+    public bool IsSuccess { get; set; }
+  }
 
   protected override async Task OnInitializedAsync()
   {
@@ -200,7 +227,6 @@ public partial class EditPetWalkerPopup
       // Notify parent that update was successful
       await OnPetWalkerUpdated.InvokeAsync();
 
-      showSuccessMessage = true;
       StateHasChanged();
 
       // Auto-close the popup after a short delay
@@ -440,4 +466,152 @@ public partial class EditPetWalkerPopup
       loadError = $"Error saving schedule: {ex.Message}";
     }
   }
+
+  // Tab Management Methods
+  private void SetActiveTab(string tabName)
+  {
+    activeTab = tabName;
+    ClearTabMessage(tabName);
+    StateHasChanged();
+  }
+
+  private bool HasUnsavedChanges(string tabName)
+  {
+    return unsavedChanges.ContainsKey(tabName) && unsavedChanges[tabName];
+  }
+
+  private void ClearTabMessage(string tabName)
+  {
+    if (tabMessages.ContainsKey(tabName))
+    {
+      tabMessages[tabName] = null;
+    }
+  }
+
+  private void SetTabMessage(string tabName, string message, bool isSuccess)
+  {
+    tabMessages[tabName] = new TabMessage { Message = message, IsSuccess = isSuccess };
+    StateHasChanged();
+  }
+
+  // Individual Save Methods
+  private async Task SavePersonalInfo()
+  {
+    await SaveTabSection("personal", async () =>
+    {
+      var result = await PetWalkerService.UpdatePetWalkerAsync(petWalkerModel);
+      return new ApiResponse<object> { Success = result.Success, Message = result.Message };
+    });
+  }
+
+  private async Task SaveProfessionalInfo()
+  {
+    await SaveTabSection("professional", async () =>
+    {
+      var result = await PetWalkerService.UpdatePetWalkerAsync(petWalkerModel);
+      return new ApiResponse<object> { Success = result.Success, Message = result.Message };
+    });
+  }
+
+  private async Task SaveLocationInfo()
+  {
+    await SaveTabSection("location", async () =>
+    {
+      // First save location info
+      var locationResult = await PetWalkerService.UpdatePetWalkerAsync(petWalkerModel);
+      if (!locationResult.Success)
+        return new ApiResponse<object> { Success = locationResult.Success, Message = locationResult.Message };
+
+      // Then save service areas
+      if (petWalkerModel.StructuredServiceAreas.Any())
+      {
+        var serviceAreasResult = await PetWalkerService.UpdateServiceAreasAsync(
+          petWalkerModel.Id,
+          petWalkerModel.StructuredServiceAreas);
+        return new ApiResponse<object> { Success = serviceAreasResult.Success, Message = serviceAreasResult.Message };
+      }
+
+      return new ApiResponse<object> { Success = locationResult.Success, Message = locationResult.Message };
+    });
+  }
+
+  private async Task SaveScheduleInfo()
+  {
+    await SaveTabSection("schedule", async () =>
+    {
+      // Validate all active schedule items
+      var activeSchedules = scheduleItems.Where(s => s.IsActive).ToList();
+      var invalidSchedules = activeSchedules.Where(s => !ScheduleHelper.IsValidScheduleItem(s)).ToList();
+
+      if (invalidSchedules.Any())
+      {
+        return new ApiResponse<object> { Success = false, Message = "Please fix the schedule validation errors before saving." };
+      }
+
+      var response = await ScheduleService.SetScheduleAsync(petWalkerModel.Id, scheduleItems);
+      if (response.Success)
+      {
+        // Update the petWalkerModel.Schedules to reflect the saved changes
+        petWalkerModel.Schedules = scheduleItems.Where(s => s.IsActive).ToList();
+      }
+
+      return new ApiResponse<object> { Success = response.Success, Message = response.Message };
+    });
+  }
+
+  private async Task SaveTabSection(string tabName, Func<Task<ApiResponse<object>>> saveAction)
+  {
+    try
+    {
+      isProcessing = true;
+      currentProcessingTab = tabName;
+      ClearTabMessage(tabName);
+      StateHasChanged();
+
+      var result = await saveAction();
+
+      if (result.Success)
+      {
+        SetTabMessage(tabName, $"{GetTabDisplayName(tabName)} saved successfully!", true);
+        unsavedChanges[tabName] = false;
+
+        // Auto-hide success message after 3 seconds
+        _ = Task.Delay(3000).ContinueWith(_ =>
+        {
+          InvokeAsync(() =>
+          {
+            ClearTabMessage(tabName);
+            StateHasChanged();
+          });
+        });
+      }
+      else
+      {
+        SetTabMessage(tabName, result.Message ?? $"Failed to save {GetTabDisplayName(tabName).ToLower()}.", false);
+      }
+    }
+    catch (Exception ex)
+    {
+      SetTabMessage(tabName, $"Error saving {GetTabDisplayName(tabName).ToLower()}: {ex.Message}", false);
+    }
+    finally
+    {
+      isProcessing = false;
+      currentProcessingTab = "";
+      StateHasChanged();
+    }
+  }
+
+  private string GetTabDisplayName(string tabName) => tabName switch
+  {
+    "personal" => "Personal Information",
+    "professional" => "Professional Details",
+    "location" => "Location & Service Areas",
+    "schedule" => "Schedule",
+    _ => tabName
+  };
+
+
+
+
 }

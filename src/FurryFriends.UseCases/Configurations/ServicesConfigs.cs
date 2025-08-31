@@ -1,4 +1,5 @@
 ﻿using FurryFriends.UseCases.PipeLineBehaviours;
+using FurryFriends.UseCases.Services.BookingService;
 using FurryFriends.UseCases.Services.ClientService;
 using FurryFriends.UseCases.Services.LocationService;
 using FurryFriends.UseCases.Services.PetWalkerService;
@@ -18,6 +19,7 @@ public static class ServicesConfigs
     services.AddScoped<ILocationService, LocationService>();
     services.AddScoped<IServiceAreaService, ServiceAreaService>();
     services.AddScoped<IPictureService, PictureService>();
+    services.AddScoped<IBookingService, BookingService>();
     services.AddScoped(provider => Log.Logger);
 
     return services;

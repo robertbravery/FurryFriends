@@ -1,4 +1,6 @@
 ﻿// Application/Scheduling/Specifications/BookingByDateSpec.cs
+using FurryFriends.Core.BookingAggregate;
+
 public class BookingByDateSpec : Specification<Booking>
 {
   public BookingByDateSpec(Guid walkerId, DateTime date)
@@ -7,7 +9,7 @@ public class BookingByDateSpec : Specification<Booking>
     var endOfDay = startOfDay.AddDays(1);
 
     Query.Where(b => b.PetWalkerId == walkerId &&
-                     b.Start >= startOfDay &&
-                     b.Start < endOfDay);
+                     b.StartTime >= startOfDay &&
+                     b.StartTime < endOfDay);
   }
 }

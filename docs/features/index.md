@@ -32,6 +32,15 @@ The PetWalker Management feature allows users to:
 - [Booking System](booking-system.md) - Scheduling and managing appointments
 
 The Booking System feature allows users to:
+- Book appointments with pet walkers based on their availability
+- Manage upcoming and past appointments
+- Handle cancellations and rescheduling
+
+### Booking System
+
+- [Booking System](booking-system.md) - Scheduling and managing appointments
+
+The Booking System feature allows users to:
 - Book appointments with pet walkers
 - Manage recurring appointments
 - Handle cancellations and rescheduling

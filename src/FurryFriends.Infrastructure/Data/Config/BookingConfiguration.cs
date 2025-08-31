@@ -1,4 +1,6 @@
-﻿namespace FurryFriends.Infrastructure.Data.Config;
+﻿using FurryFriends.Core.BookingAggregate;
+
+namespace FurryFriends.Infrastructure.Data.Config;
 
 public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 {
@@ -18,11 +20,21 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
     builder.Property(b => b.PetOwnerId)
         .IsRequired();
 
-    builder.Property(b => b.Start)
+    builder.Property(b => b.StartTime)
         .IsRequired();
 
-    builder.Property(b => b.End)
+    builder.Property(b => b.EndTime)
         .IsRequired();
+    builder.Property(b => b.Price)
+      .HasColumnType("decimal(18,2)")
+      .HasDefaultValue(0.0m)
+       .IsRequired();
+
+    builder.Property(b => b.Status)
+        .HasConversion<int>()
+        .IsRequired();
+
+    builder.Property(b => b.Notes);
 
     builder.HasOne(b => b.PetWalker)
         .WithMany()

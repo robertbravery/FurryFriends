@@ -6,7 +6,7 @@ public class CreateBookingRequest
 
   public DateTime StartDate { get; set; }
   public DateTime EndDate { get; set; }
-  public int PetId { get; set; }
+  public Guid PetId { get; set; }
   public Guid PetWalkerId { get; set; }
   public Guid PetOwnerId { get; set; }
 }

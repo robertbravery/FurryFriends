@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BookingAggegate\Validation\" />
     <Folder Include="ClientAggregate\Docs\" />
     <Folder Include="LocationAggregate\Specifications\" />
     <Folder Include="PetWalkerAggregate\Common\" />

@@ -1,4 +1,5 @@
 ﻿using Ardalis.GuardClauses;
+using FurryFriends.Core.BookingAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 using MediatR;
 
@@ -41,13 +42,13 @@ public class GetAvailabilityHandler : IRequestHandler<GetAvailabilityQuery, List
 
       var currentTime = start;
 
-      foreach (var booking in bookings.OrderBy(b => b.Start))
+      foreach (var booking in bookings.OrderBy(b => b.StartTime))
       {
-        if (booking.Start > currentTime)
+        if (booking.StartTime > currentTime)
         {
-          availableSlots.Add(new AvailableSlotDto(currentTime, booking.Start));
+          availableSlots.Add(new AvailableSlotDto(currentTime, booking.StartTime));
         }
-        currentTime = booking.End > currentTime ? booking.End : currentTime;
+        currentTime = booking.EndTime > currentTime ? booking.EndTime : currentTime;
       }
 
       if (currentTime < end)

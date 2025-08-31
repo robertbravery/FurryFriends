@@ -4,7 +4,6 @@ using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
@@ -211,9 +210,9 @@ public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
   {
     return gender.ToLower() switch
     {
-      "male" => 0,
-      "female" => 1,
-      "other" => 2,
+      "other" => 0,
+      "male" => 1,
+      "female" => 2,
       _ => 0
     };
   }

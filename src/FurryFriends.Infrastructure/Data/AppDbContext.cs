@@ -1,14 +1,18 @@
-﻿using FurryFriends.Core.ClientAggregate;
+﻿using FurryFriends.Core.BookingAggregate;
+using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.LocationAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 
 namespace FurryFriends.Infrastructure.Data;
+
+
 public class AppDbContext(DbContextOptions<AppDbContext> options,
   IDomainEventDispatcher? dispatcher) : DbContext(options)
 {
   private readonly IDomainEventDispatcher? _dispatcher = dispatcher;
 
   public DbSet<PetWalker> PetWalkers => Set<PetWalker>();
+  public DbSet<Booking> Bookings => Set<Booking>();
   public DbSet<Photo> Photos => Set<Photo>();
   public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
   public DbSet<Client> Clients => Set<Client>();
@@ -18,7 +22,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
   public DbSet<Pet> Pets => Set<Pet>();
   public DbSet<Breed> Breeds => Set<Breed>();
   public DbSet<Species> Species => Set<Species>();
-
 
 
 
