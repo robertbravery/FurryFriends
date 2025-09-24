@@ -1,0 +1,124 @@
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.Extensions.Logging
+
+<div class="petwalker-selection-container">
+    <div class="selection-header">
+        <h3>Select a Pet Walker</h3>
+        @if (!string.IsNullOrEmpty(ServiceArea))
+        {
+            <p class="service-area-filter">Showing walkers in: <strong>@ServiceArea</strong></p>
+        }
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading available pet walkers...</p>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <p class="error-message">@errorMessage</p>
+			<button class="btn btn-secondary" @onclick="() => LoadPetWalkersAsync()">Try Again</button>
+        </div>
+    }
+    else if (availablePetWalkers == null || !availablePetWalkers.Any())
+    {
+        <div class="no-walkers-container">
+            <p>No pet walkers available in your area.</p>
+            <button class="btn btn-primary" @onclick="() => LoadPetWalkersAsync(null)">Show All Walkers</button>
+        </div>
+    }
+    else
+    {
+        <div class="petwalkers-grid">
+            @foreach (var petWalker in availablePetWalkers)
+            {
+                <div class="petwalker-card @(SelectedPetWalkerId == petWalker.Id ? "selected" : "")" 
+                     @onclick="() => SelectPetWalker(petWalker)">
+                    
+                    <div class="petwalker-header">
+                        <div class="profile-picture">
+                            @if (petWalker.BioPicture?.Uri != null)
+                            {
+                                <img src="@petWalker.BioPicture.Uri" alt="@petWalker.FullName" class="profile-img" />
+                            }
+                            else
+                            {
+                                <div class="profile-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            }
+                        </div>
+                        
+                        <div class="petwalker-info">
+                            <h4 class="petwalker-name">@petWalker.FullName</h4>
+                            <div class="petwalker-badges">
+                                @if (petWalker.IsVerified)
+                                {
+                                    <span class="badge verified">✓ Verified</span>
+                                }
+                                @if (petWalker.HasInsurance)
+                                {
+                                    <span class="badge insured">🛡️ Insured</span>
+                                }
+                                @if (petWalker.HasFirstAidCertification)
+                                {
+                                    <span class="badge first-aid">🏥 First Aid</span>
+                                }
+                            </div>
+                        </div>
+                        
+                        <div class="petwalker-rate">
+                            <span class="rate-amount">$@petWalker.HourlyRate.ToString("F2")</span>
+                            <span class="rate-period">/hour</span>
+                        </div>
+                    </div>
+
+                    <div class="petwalker-details">
+                        @if (!string.IsNullOrEmpty(petWalker.Biography))
+                        {
+                            <p class="biography">@TruncateText(petWalker.Biography, 100)</p>
+                        }
+                        
+                        <div class="experience-info">
+                            <span class="experience">@petWalker.YearsOfExperience years experience</span>
+                            <span class="daily-limit">Up to @petWalker.DailyPetWalkLimit walks/day</span>
+                        </div>
+
+                        @if (petWalker.ServiceAreas.Any())
+                        {
+                            <div class="service-areas">
+                                <small>Service areas: @string.Join(", ", petWalker.ServiceAreas.Take(3))@(petWalker.ServiceAreas.Count > 3 ? "..." : "")</small>
+                            </div>
+                        }
+
+                        @if (petWalker.Rating > 0)
+                        {
+                            <div class="rating">
+                                <div class="stars">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= petWalker.Rating ? "filled" : "")"></i>
+                                    }
+                                </div>
+                                <span class="rating-text">@petWalker.Rating.ToString("F1") (@petWalker.ReviewCount reviews)</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (SelectedPetWalkerId == petWalker.Id)
+                    {
+                        <div class="selected-indicator">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Selected</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

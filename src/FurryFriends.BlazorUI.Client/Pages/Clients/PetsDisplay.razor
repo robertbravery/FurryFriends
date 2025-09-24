@@ -66,7 +66,7 @@
 
 @code {
     [Parameter]
-    public Pet[]? Pets { get; set; }
+    public PetDto[]? Pets { get; set; }
 
     [Parameter]
     public bool IsLoading { get; set; } = true;
@@ -78,7 +78,7 @@
     public EventCallback<string> OnAddPet { get; set; }
 
     [Parameter]
-    public EventCallback<Pet> OnEditPet { get; set; }
+    public EventCallback<PetDto> OnEditPet { get; set; }
 
     private async Task AddNewPet()
     {
@@ -96,7 +96,7 @@
         }
     }
 
-    private async Task EditPet(Pet pet)
+    private async Task EditPet(PetDto pet)
     {
         if (OnEditPet.HasDelegate)
         {

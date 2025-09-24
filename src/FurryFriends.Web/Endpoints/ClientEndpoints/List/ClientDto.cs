@@ -1,9 +1,9 @@
 ﻿namespace FurryFriends.Web.Endpoints.ClientEndpoints.List;
 
 public record ClientDto(
-    Guid Id, 
-    string Name, 
-    string EmailAddress, 
+    Guid Id,
+    string Name,
+    string Email,
     string City,
-    int TotalPets,
+    int Pets,
     Dictionary<string, int> PetsBySpecies);

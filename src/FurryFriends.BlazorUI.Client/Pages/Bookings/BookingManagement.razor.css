@@ -1,0 +1,869 @@
+﻿/* Pet Walker Header Styles */
+.petwalkers-header {
+  margin-bottom: 2rem;
+}
+
+.header-title h3 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.section-description {
+  color: #6c757d;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* Filters and Search Styles */
+.filters-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.filters-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  min-width: 250px;
+  flex: 1;
+}
+
+.search-box input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+
+.search-box button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.375rem 0.75rem;
+}
+
+.service-area-filter {
+  min-width: 180px;
+}
+
+.sort-controls {
+  display: flex;
+  gap: 0.25rem;
+  min-width: 150px;
+}
+
+.sort-controls select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+
+.sort-controls button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.375rem 0.75rem;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sort-controls button i {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.sort-controls button:hover i {
+  color: #495057;
+}
+
+/* Sort button styling */
+.sort-direction-btn {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  color: #6c757d;
+}
+
+.sort-direction-btn:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+/* Text fallback for sort button */
+.sort-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 0.25rem;
+}
+
+/* Ensure button has minimum content visibility */
+.sort-direction-btn {
+  min-height: 38px;
+  position: relative;
+}
+
+.results-summary {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Modern card layout for pet walker selection */
+.petwalkers-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.petwalkers-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .petwalkers-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .petwalkers-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.petwalker-card.modern {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  min-height: 380px;
+}
+
+.petwalker-card.modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-color: #d1d5db;
+}
+
+.petwalker-card.modern.selected {
+  border-color: #3b82f6;
+  background: #f8faff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.petwalker-card.modern.selected:hover {
+  border-color: #2563eb;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+}
+
+.card-selection-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: #3b82f6;
+  font-size: 1.25rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.petwalker-card.modern.selected .card-selection-indicator {
+  opacity: 1;
+}
+
+/* Profile Section - Horizontal Layout */
+.card-profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.card-media {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  flex-shrink: 0;
+}
+
+.card-media .avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  color: #9ca3af;
+  font-size: 28px;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.rate-display {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.rate-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.rate-period {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Badges */
+.petwalker-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.badge.verified {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge.insured {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge.first-aid {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Biography */
+.biography {
+  margin-bottom: 0.75rem;
+}
+
+.biography p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Key Stats */
+.key-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.stat-item i {
+  color: #6b7280;
+  width: 14px;
+  text-align: center;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.stars {
+  color: #f59e0b; /* amber-500 */
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #111827;
+}
+
+.review-count {
+  color: #6b7280;
+  font-size: .85rem;
+}
+
+.service-areas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: .25rem .6rem;
+  font-size: .8rem;
+}
+
+.chip.more {
+  background: #eef2ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+}
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.view-details-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.book-now-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border-radius: 6px;
+  font-size: .875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-sm {
+  padding: .375rem .75rem;
+  font-size: .8rem;
+}
+
+.btn-outline-primary {
+  color: #3b82f6;
+  border-color: #3b82f6;
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.details-modal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.petwalker-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  flex-shrink: 0;
+}
+
+.petwalker-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.petwalker-avatar .avatar-fallback {
+  color: #9ca3af;
+  font-size: 24px;
+}
+
+.petwalker-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.petwalker-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.details-modal .modal-body {
+  padding: 1.5rem;
+}
+
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.detail-item i {
+  color: #6b7280;
+  width: 16px;
+  text-align: center;
+}
+
+.detail-item .label {
+  font-weight: 500;
+  color: #374151;
+  min-width: 80px;
+}
+
+.detail-item .value {
+  color: #111827;
+  font-weight: 600;
+}
+
+.service-areas-section {
+  margin-top: 1.5rem;
+}
+
+.service-areas-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.service-areas-section h4 i {
+  color: #6b7280;
+}
+
+.service-areas-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  justify-content: flex-end;
+}
+
+.success-modal .modal-header {
+  text-align: center;
+  padding: 2rem 1.5rem 1rem 1.5rem;
+}
+
+.success-icon {
+  color: #10b981;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.success-modal h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.success-modal .modal-body {
+  padding: 0 1.5rem 1rem 1.5rem;
+  text-align: center;
+}
+
+.success-message {
+  color: #6b7280;
+  margin-top: 1rem;
+}
+
+.btn-secondary {
+  background: #6b7280;
+  color: white;
+  border-color: #6b7280;
+}
+
+.btn-secondary:hover {
+  background: #4b5563;
+  border-color: #4b5563;
+}
+
+/* Accessibility focus state */
+.petwalker-card.modern:focus {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+/* Loading and error states */
+.loading-container, .error-container, .no-petwalkers-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  max-width: 400px;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.empty-state p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.alert-danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* Pet Walker Info Banner */
+.petwalker-info-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.petwalker-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #0c4a6e;
+}
+
+.petwalker-info i {
+  color: #0284c7;
+}
+
+.client-context {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-content h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-content h1 i {
+  color: #3b82f6;
+}
+
+.page-description {
+  margin: 0;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.section-description {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.petwalkers-grid h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Responsive Design for New Layout */
+@media (max-width: 768px) {
+  .petwalker-card.modern {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .card-profile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .card-media {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar-fallback {
+    font-size: 24px;
+  }
+
+  .profile-info h4 {
+    font-size: 1rem;
+  }
+
+  .petwalker-badges {
+    justify-content: center;
+  }
+
+  .key-stats {
+    align-items: center;
+  }
+
+  .service-areas {
+    justify-content: center;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Pagination Styles */
+.pagination-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.page-size-selector select {
+  width: auto;
+  min-width: 80px;
+}
+
+.page-navigation {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.page-navigation .btn {
+  min-width: 40px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-info {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+  .pagination-controls {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .page-navigation {
+    justify-content: center;
+  }
+
+  .page-size-selector,
+  .page-info {
+    justify-content: center;
+  }
+
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    min-width: auto;
+  }
+}

@@ -1,8 +1,6 @@
 ﻿using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 
-using Microsoft.Extensions.Logging;
-
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
 /// <summary>
@@ -46,8 +44,9 @@ public abstract class BaseListService<T> : IListService<T> where T : class
 
       // Use GetFromJsonAsync for better performance
       var response = await HttpClient.GetFromJsonAsync<ListResponse<T>>(url,
-        new System.Text.Json.JsonSerializerOptions {
-          PropertyNameCaseInsensitive = true,
+        new System.Text.Json.JsonSerializerOptions
+        {
+          PropertyNameCaseInsensitive = false,
           PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
         });
 

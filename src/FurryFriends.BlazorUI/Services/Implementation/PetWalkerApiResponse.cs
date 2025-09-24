@@ -3,6 +3,16 @@ using FurryFriends.BlazorUI.Client.Models.PetWalkers;
 
 namespace FurryFriends.BlazorUI.Services.Implementation;
 
+// API response DTO that matches the actual API response structure
+public class ApiPhotoDto
+{
+  [JsonPropertyName("url")]
+  public string Url { get; set; } = string.Empty;
+
+  [JsonPropertyName("description")]
+  public string? Description { get; set; }
+}
+
 public class PetWalkerApiResponse
 {
   [JsonPropertyName("id")]
@@ -69,8 +79,8 @@ public class PetWalkerApiResponse
   public string Country { get; set; } = string.Empty;
 
   [JsonPropertyName("bioPicture")]
-  public PetWalkerBasicPhotoDto? BioPicture { get; set; }
+  public ApiPhotoDto? BioPicture { get; set; }
 
   [JsonPropertyName("photos")]
-  public List<PetWalkerBasicPhotoDto> Photos { get; set; } = new();
+  public List<ApiPhotoDto> Photos { get; set; } = new();
 }

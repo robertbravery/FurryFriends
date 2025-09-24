@@ -52,7 +52,7 @@
                 @foreach (var client in clients)
                 {
                     <tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
-                        <td>@client.Name</td>
+                        <td>@client.FullName</td>
                         <td>@client.EmailAddress</td>
                         <td>@client.City</td>
                         <td>@client.TotalPets</td>
@@ -61,7 +61,9 @@
                                 @onclick="() => OpenViewPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>👁️</button>
                             <span style="color:steelblue; cursor:pointer">+🐾</span>
 							<button class="btn btn-link p-0" style="color:lightcoral;"
-								@onclick="() => OpenEditPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>✏️</button>
+									@onclick="() => OpenEditPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>
+								✏️
+							</button>
                         </td>
                     </tr>
                 }

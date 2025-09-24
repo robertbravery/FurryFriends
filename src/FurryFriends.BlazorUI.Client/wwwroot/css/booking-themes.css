@@ -1,0 +1,356 @@
+/* ==========================================================================
+   Booking Components - Theme Variations
+   ========================================================================== */
+
+/* ==========================================================================
+   Default Theme (already defined in booking-components.css)
+   ========================================================================== */
+
+/* ==========================================================================
+   Dark Theme
+   ========================================================================== */
+
+[data-booking-theme="dark"] {
+    --booking-primary-color: #4dabf7;
+    --booking-primary-hover: #339af0;
+    --booking-success-color: #51cf66;
+    --booking-success-hover: #40c057;
+    --booking-danger-color: #ff6b6b;
+    --booking-danger-hover: #ff5252;
+    --booking-warning-color: #ffd43b;
+    --booking-warning-hover: #ffcc02;
+    --booking-secondary-color: #868e96;
+    --booking-secondary-hover: #6c757d;
+    
+    --booking-text-primary: #f8f9fa;
+    --booking-text-secondary: #e9ecef;
+    --booking-text-muted: #adb5bd;
+    --booking-text-light: #212529;
+    
+    --booking-border-color: #495057;
+    --booking-bg-primary: #212529;
+    --booking-bg-secondary: #343a40;
+    --booking-bg-tertiary: #495057;
+    
+    --booking-shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+    --booking-shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    --booking-shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+[data-booking-theme="dark"] .booking-container {
+    background: var(--booking-bg-primary);
+    color: var(--booking-text-primary);
+}
+
+[data-booking-theme="dark"] .booking-card {
+    background: var(--booking-bg-secondary);
+    border-color: var(--booking-border-color);
+}
+
+[data-booking-theme="dark"] .booking-form-control {
+    background: var(--booking-bg-secondary);
+    border-color: var(--booking-border-color);
+    color: var(--booking-text-primary);
+}
+
+[data-booking-theme="dark"] .booking-form-control:focus {
+    background: var(--booking-bg-primary);
+}
+
+[data-booking-theme="dark"] .booking-alert-success {
+    background: rgba(81, 207, 102, 0.2);
+    border-color: var(--booking-success-color);
+    color: var(--booking-success-color);
+}
+
+[data-booking-theme="dark"] .booking-alert-danger {
+    background: rgba(255, 107, 107, 0.2);
+    border-color: var(--booking-danger-color);
+    color: var(--booking-danger-color);
+}
+
+[data-booking-theme="dark"] .booking-alert-warning {
+    background: rgba(255, 212, 59, 0.2);
+    border-color: var(--booking-warning-color);
+    color: var(--booking-warning-color);
+}
+
+[data-booking-theme="dark"] .booking-alert-info {
+    background: rgba(77, 171, 247, 0.2);
+    border-color: var(--booking-primary-color);
+    color: var(--booking-primary-color);
+}
+
+/* ==========================================================================
+   High Contrast Theme
+   ========================================================================== */
+
+[data-booking-theme="high-contrast"] {
+    --booking-primary-color: #0000ff;
+    --booking-primary-hover: #0000cc;
+    --booking-success-color: #008000;
+    --booking-success-hover: #006600;
+    --booking-danger-color: #ff0000;
+    --booking-danger-hover: #cc0000;
+    --booking-warning-color: #ffff00;
+    --booking-warning-hover: #cccc00;
+    --booking-secondary-color: #808080;
+    --booking-secondary-hover: #666666;
+    
+    --booking-text-primary: #000000;
+    --booking-text-secondary: #000000;
+    --booking-text-muted: #333333;
+    --booking-text-light: #ffffff;
+    
+    --booking-border-color: #000000;
+    --booking-bg-primary: #ffffff;
+    --booking-bg-secondary: #f0f0f0;
+    
+    --booking-shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
+    --booking-shadow-md: 0 4px 12px rgba(0,0,0,0.6);
+    --booking-shadow-lg: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+[data-booking-theme="high-contrast"] .booking-card {
+    border-width: 3px;
+}
+
+[data-booking-theme="high-contrast"] .booking-btn {
+    border-width: 3px;
+    font-weight: 700;
+}
+
+[data-booking-theme="high-contrast"] .booking-form-control {
+    border-width: 3px;
+}
+
+[data-booking-theme="high-contrast"] .booking-form-control:focus {
+    border-width: 4px;
+    box-shadow: 0 0 0 3px rgba(0,0,255,0.5);
+}
+
+/* ==========================================================================
+   Colorful Theme
+   ========================================================================== */
+
+[data-booking-theme="colorful"] {
+    --booking-primary-color: #6f42c1;
+    --booking-primary-hover: #5a32a3;
+    --booking-success-color: #20c997;
+    --booking-success-hover: #1aa179;
+    --booking-danger-color: #fd7e14;
+    --booking-danger-hover: #e8650e;
+    --booking-warning-color: #ffc107;
+    --booking-warning-hover: #e0a800;
+    --booking-secondary-color: #6c757d;
+    --booking-secondary-hover: #545b62;
+    
+    --booking-text-primary: #495057;
+    --booking-text-secondary: #6c757d;
+    --booking-text-muted: #868e96;
+    
+    --booking-border-color: #dee2e6;
+    --booking-border-radius: 12px;
+    --booking-border-radius-lg: 16px;
+    --booking-border-radius-sm: 8px;
+}
+
+[data-booking-theme="colorful"] .booking-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+[data-booking-theme="colorful"] .booking-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, var(--booking-primary-color), var(--booking-success-color));
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+[data-booking-theme="colorful"] .booking-card:hover::before {
+    opacity: 1;
+}
+
+[data-booking-theme="colorful"] .booking-btn-primary {
+    background: linear-gradient(135deg, var(--booking-primary-color), #8b5cf6);
+    border: none;
+}
+
+[data-booking-theme="colorful"] .booking-btn-success {
+    background: linear-gradient(135deg, var(--booking-success-color), #34d399);
+    border: none;
+}
+
+/* ==========================================================================
+   Minimal Theme
+   ========================================================================== */
+
+[data-booking-theme="minimal"] {
+    --booking-primary-color: #000000;
+    --booking-primary-hover: #333333;
+    --booking-success-color: #000000;
+    --booking-success-hover: #333333;
+    --booking-danger-color: #000000;
+    --booking-danger-hover: #333333;
+    --booking-warning-color: #000000;
+    --booking-warning-hover: #333333;
+    --booking-secondary-color: #666666;
+    --booking-secondary-hover: #333333;
+    
+    --booking-text-primary: #000000;
+    --booking-text-secondary: #333333;
+    --booking-text-muted: #666666;
+    
+    --booking-border-color: #e0e0e0;
+    --booking-border-radius: 0px;
+    --booking-border-radius-lg: 0px;
+    --booking-border-radius-sm: 0px;
+    
+    --booking-shadow-sm: none;
+    --booking-shadow-md: none;
+    --booking-shadow-lg: none;
+}
+
+[data-booking-theme="minimal"] .booking-card {
+    border: 1px solid var(--booking-border-color);
+    box-shadow: none;
+}
+
+[data-booking-theme="minimal"] .booking-card:hover {
+    box-shadow: none;
+    transform: none;
+    border-color: var(--booking-primary-color);
+}
+
+[data-booking-theme="minimal"] .booking-btn {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+[data-booking-theme="minimal"] .booking-form-control {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+[data-booking-theme="minimal"] .booking-form-control:focus {
+    box-shadow: none;
+    border-color: var(--booking-primary-color);
+}
+
+/* ==========================================================================
+   Theme Utilities
+   ========================================================================== */
+
+.booking-theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--booking-primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: var(--booking-shadow-md);
+    transition: var(--booking-transition);
+}
+
+.booking-theme-toggle:hover {
+    background: var(--booking-primary-hover);
+    transform: scale(1.1);
+}
+
+.booking-theme-selector {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 999;
+    background: white;
+    border: 2px solid var(--booking-border-color);
+    border-radius: var(--booking-border-radius);
+    padding: var(--booking-spacing-md);
+    box-shadow: var(--booking-shadow-lg);
+    min-width: 200px;
+}
+
+.booking-theme-option {
+    display: block;
+    width: 100%;
+    padding: var(--booking-spacing-sm) var(--booking-spacing-md);
+    margin-bottom: var(--booking-spacing-xs);
+    background: transparent;
+    border: 1px solid var(--booking-border-color);
+    border-radius: var(--booking-border-radius-sm);
+    cursor: pointer;
+    transition: var(--booking-transition);
+    text-align: left;
+}
+
+.booking-theme-option:hover {
+    background: var(--booking-primary-color);
+    color: white;
+}
+
+.booking-theme-option.active {
+    background: var(--booking-primary-color);
+    color: white;
+    border-color: var(--booking-primary-color);
+}
+
+/* ==========================================================================
+   Animation Themes
+   ========================================================================== */
+
+[data-booking-animation="bouncy"] .booking-card:hover {
+    animation: booking-bounce 0.6s ease;
+}
+
+[data-booking-animation="bouncy"] .booking-btn:active {
+    animation: booking-bounce-small 0.3s ease;
+}
+
+@keyframes booking-bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        transform: translate3d(0, -8px, 0);
+    }
+    70% {
+        transform: translate3d(0, -4px, 0);
+    }
+    90% {
+        transform: translate3d(0, -2px, 0);
+    }
+}
+
+@keyframes booking-bounce-small {
+    0%, 20%, 53%, 80%, 100% {
+        transform: scale(1);
+    }
+    40%, 43% {
+        transform: scale(0.95);
+    }
+}
+
+[data-booking-animation="smooth"] .booking-card,
+[data-booking-animation="smooth"] .booking-btn,
+[data-booking-animation="smooth"] .booking-form-control {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-booking-animation="none"] * {
+    transition: none !important;
+    animation: none !important;
+}

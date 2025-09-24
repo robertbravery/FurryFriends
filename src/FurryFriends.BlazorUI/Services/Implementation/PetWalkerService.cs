@@ -100,8 +100,8 @@ public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
               .Where(x => !string.IsNullOrEmpty(x))
               .Distinct()
               .ToList(),
-        ProfilePicture = petWalkerData.BioPicture,
-        Photos = petWalkerData.Photos
+        ProfilePicture = MapApiPhotoToBasicPhoto(petWalkerData.BioPicture),
+        Photos = petWalkerData.Photos?.Select(MapApiPhotoToBasicPhoto).ToList() ?? new List<PetWalkerBasicPhotoDto>()
       };
 
       return new ApiResponse<PetWalkerDetailDto>
@@ -273,6 +273,18 @@ public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
   public Task<ApiResponse<PetWalkerDetailDto>> GetPetWalkerByIdAsync(Guid petWalkerId)
   {
     throw new NotImplementedException();
+  }
+
+  private static PetWalkerBasicPhotoDto? MapApiPhotoToBasicPhoto(ApiPhotoDto? apiPhoto)
+  {
+    if (apiPhoto == null)
+      return null;
+
+    return new PetWalkerBasicPhotoDto
+    {
+      Uri = apiPhoto.Url,
+      Description = apiPhoto.Description ?? string.Empty
+    };
   }
 }
 

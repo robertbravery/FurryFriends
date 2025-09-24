@@ -25,8 +25,8 @@ public class ListClientTests(CustomWebApplicationFactory<Program> factory) : ICl
     response.StatusCode.Should().Be(HttpStatusCode.OK);
     result.Should().NotBeNull();
     result!.RowsData.Should().HaveCountGreaterThan(0);
-    result.RowsData.Should().Contain(c => c.EmailAddress == "john.smith@example.com");
-    result.RowsData.Should().Contain(c => c.EmailAddress == "jane.doe@example.com");
+    result.RowsData.Should().Contain(c => c.Email == "john.smith@example.com");
+    result.RowsData.Should().Contain(c => c.Email == "jane.doe@example.com");
   }
 
   [Theory]
@@ -50,7 +50,7 @@ public class ListClientTests(CustomWebApplicationFactory<Program> factory) : ICl
     //);
     result!.RowsData
     .Where(client => client.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                     client.EmailAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                     client.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
     .Should()
     .NotBeEmpty();
   }

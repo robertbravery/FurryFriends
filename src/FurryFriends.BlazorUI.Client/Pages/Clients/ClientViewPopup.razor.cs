@@ -25,7 +25,7 @@ public partial class ClientViewPopup
     public ILogger<ClientViewPopup> Logger { get; set; } = default!;
 
     private ClientModel clientModel = new();
-    private Pet[]? clientPets;
+    private PetDto[]? clientPets;
     private bool isLoading = true;
     private bool isPetsLoading = true;
     private string? loadError = null;

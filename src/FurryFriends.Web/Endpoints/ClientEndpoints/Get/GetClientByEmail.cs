@@ -59,3 +59,4 @@ public class GetClientByEmail(IMediator mediator) : Endpoint<GetClientRequest, R
     return;
   }
 }
+

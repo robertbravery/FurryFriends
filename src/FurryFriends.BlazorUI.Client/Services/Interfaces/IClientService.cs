@@ -10,9 +10,11 @@ public interface IClientService
   Task<ClientResponseBase> GetClientByEmailAsync(string email);
   Task CreateClientAsync(ClientRequestDto clientModel);
   Task UpdateClientAsync(ClientRequestDto clientModel);
-  Task UpdatePetAsync(string clientEmail, Pet pet);
-  Task<Guid> AddPetAsync(Guid clientId, Pet pet);
+  Task UpdatePetAsync(string clientEmail, PetDto pet);
+  Task<Guid> AddPetAsync(Guid clientId, PetDto pet);
   Task<List<BreedDto>> GetBreedsAsync();
 
   Task<string> GetDogImageAsync();
+  Task<ClientResponseBase> GetClientAsync(Guid value);
+  ClientDto MapClientDataToDto(ClientData clientData);
 }

@@ -8,7 +8,7 @@ namespace FurryFriends.BlazorUI.Client.Pages.Clients;
 public partial class EditPetPopup
 {
   [Parameter]
-  public Pet Pet { get; set; } = default!;
+  public PetDto Pet { get; set; } = default!;
 
   [Parameter]
   public string ClientEmail { get; set; } = default!;
@@ -33,7 +33,7 @@ public partial class EditPetPopup
     // Make a copy of the pet to avoid modifying the original directly
     if (Pet != null)
     {
-      Pet = new Pet
+      Pet = new PetDto
       {
         Id = Pet.Id,
         Name = Pet.Name,

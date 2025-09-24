@@ -1,8 +1,8 @@
 ﻿namespace FurryFriends.BlazorUI.Client.Models.Clients;
 
-public class Pet
+public class PetDto
 {
-  public string Id { get; set; } = default!;
+  public Guid Id { get; set; } = default!;
   public string Name { get; set; } = default!;
   public string Species { get; set; } = default!;
   public string Breed { get; set; } = default!;

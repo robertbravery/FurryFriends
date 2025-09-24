@@ -27,6 +27,7 @@ public interface IPopupService
 
     // PetWalker view popup events and methods
     void ShowViewPetWalkerPopup(string petWalkerEmail);
+    void CloseViewPetWalkerPopup();
     event Action<string> OnShowViewPetWalkerPopup;
     event Action OnCloseViewPetWalkerPopup;
 

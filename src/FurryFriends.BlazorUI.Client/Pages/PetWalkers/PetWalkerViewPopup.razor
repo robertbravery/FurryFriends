@@ -30,8 +30,8 @@
                         <div class="petwalker-header">
                             <div class="profile-image-container">
                                 @{
-                                    string imageUrl = petWalkerModel.ProfilePicture != null && !string.IsNullOrEmpty(petWalkerModel.ProfilePicture.Url)
-                                        ? petWalkerModel.ProfilePicture.Url
+                                    string imageUrl = petWalkerModel.ProfilePicture != null && !string.IsNullOrEmpty(petWalkerModel.ProfilePicture.Uri)
+                                        ? petWalkerModel.ProfilePicture.Uri
                                         : $"https://placehold.co/400x400/e9ecef/495057?text={Uri.EscapeDataString(petWalkerModel.Name)}";
                                 }
                                 <img src="@imageUrl" alt="@petWalkerModel.Name" class="profile-picture" />
@@ -89,7 +89,7 @@
                                             @foreach (var photo in petWalkerModel.Photos)
                                             {
                                                 <div class="photo-item">
-                                                    <img src="@photo.Url" alt="@(photo.Description ?? "Pet Walker Photo")" />
+                                                    <img src="@photo.Uri" alt="@(photo.Description ?? "Pet Walker Photo")" />
                                                     @if (!string.IsNullOrEmpty(photo.Description))
                                                     {
                                                         <div class="photo-description">@photo.Description</div>

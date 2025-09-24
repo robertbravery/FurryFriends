@@ -1,0 +1,163 @@
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.Extensions.Logging
+
+<div class="datetime-selection-container">
+    <div class="selection-header">
+        <h4>Select Date & Time</h4>
+        <p class="instruction-text">Choose your preferred date and time for the pet walk</p>
+    </div>
+
+    <div class="selection-form">
+        <!-- Date Selection -->
+        <div class="form-group">
+            <label for="booking-date" class="form-label">Select Date</label>
+            <input type="date" 
+                   id="booking-date"
+                   class="form-control @(HasDateError ? "is-invalid" : "")"
+                   @bind="SelectedDate"
+                   @bind:event="oninput"
+                   min="@DateTime.Today.ToString("yyyy-MM-dd")"
+                   max="@DateTime.Today.AddMonths(3).ToString("yyyy-MM-dd")" />
+            @if (HasDateError)
+            {
+                <div class="invalid-feedback">@DateErrorMessage</div>
+            }
+        </div>
+
+        <!-- Time Selection -->
+        @if (SelectedDate.HasValue)
+        {
+            <div class="time-selection-section">
+                @if (isLoadingSlots)
+                {
+                    <div class="loading-slots">
+                        <div class="loading-spinner small"></div>
+                        <span>Loading available times...</span>
+                    </div>
+                }
+                else if (availableSlots.Any())
+                {
+                    <div class="form-group">
+                        <label class="form-label">Available Time Slots</label>
+                        <div class="time-slots-container">
+                            @foreach (var slot in availableSlots)
+                            {
+                                <div class="time-slot-option @(IsSlotSelected(slot) ? "selected" : "")"
+                                     @onclick="() => SelectTimeSlot(slot)">
+                                    <div class="slot-time">
+                                        @slot.StartTime.ToString("HH:mm") - @slot.EndTime.ToString("HH:mm")
+                                    </div>
+                                    <div class="slot-info">
+                                        <span class="duration">@GetSlotDuration(slot) min</span>
+                                        @if (slot.Price > 0)
+                                        {
+                                            <span class="price">$@slot.Price.ToString("F2")</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (HasTimeError)
+                        {
+                            <div class="error-message">@TimeErrorMessage</div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="no-slots-message">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No available time slots for @SelectedDate.Value.ToString("MMMM dd, yyyy")</p>
+                        <small>Please select a different date</small>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Custom Time Selection (Optional) -->
+        @if (AllowCustomTime && SelectedDate.HasValue)
+        {
+            <div class="custom-time-section">
+                <div class="form-check">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           id="custom-time-check"
+                           @bind="UseCustomTime" />
+                    <label class="form-check-label" for="custom-time-check">
+                        Select custom time range
+                    </label>
+                </div>
+
+                @if (UseCustomTime)
+                {
+                    <div class="custom-time-inputs">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="start-time" class="form-label">Start Time</label>
+                                <input type="time" 
+                                       id="start-time"
+                                       class="form-control @(HasStartTimeError ? "is-invalid" : "")"
+                                       @bind="CustomStartTime" />
+                                @if (HasStartTimeError)
+                                {
+                                    <div class="invalid-feedback">@StartTimeErrorMessage</div>
+                                }
+                            </div>
+                            <div class="col-md-6">
+                                <label for="end-time" class="form-label">End Time</label>
+                                <input type="time" 
+                                       id="end-time"
+                                       class="form-control @(HasEndTimeError ? "is-invalid" : "")"
+                                       @bind="CustomEndTime" />
+                                @if (HasEndTimeError)
+                                {
+                                    <div class="invalid-feedback">@EndTimeErrorMessage</div>
+                                }
+                            </div>
+                        </div>
+                        
+                        @if (CustomStartTime.HasValue && CustomEndTime.HasValue)
+                        {
+                            <div class="custom-time-summary">
+                                <strong>Selected Time:</strong> 
+                                @GetCustomDateTime(CustomStartTime.Value).ToString("MMM dd, yyyy HH:mm") - 
+                                @GetCustomDateTime(CustomEndTime.Value).ToString("HH:mm")
+                                <span class="duration">(@GetCustomDuration() minutes)</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Selection Summary -->
+        @if (HasValidSelection())
+        {
+            <div class="selection-summary">
+                <h5>Booking Summary</h5>
+                <div class="summary-details">
+                    <div class="summary-item">
+                        <span class="label">Date:</span>
+                        <span class="value">@SelectedDate!.Value.ToString("dddd, MMMM dd, yyyy")</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Time:</span>
+                        <span class="value">@GetSelectedTimeRange()</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Duration:</span>
+                        <span class="value">@GetSelectedDuration() minutes</span>
+                    </div>
+                    @if (GetSelectedPrice() > 0)
+                    {
+                        <div class="summary-item">
+                            <span class="label">Estimated Cost:</span>
+                            <span class="value price">$@GetSelectedPrice().ToString("F2")</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
