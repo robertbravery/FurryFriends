@@ -13,7 +13,7 @@ public partial class AddPetPopup
   public string ClientEmail { get; set; } = default!;
 
   [Parameter]
-  public EventCallback<Pet> OnSave { get; set; }
+  public EventCallback<PetDto> OnSave { get; set; }
 
   [Parameter]
   public EventCallback OnCancel { get; set; }
@@ -21,7 +21,7 @@ public partial class AddPetPopup
   [Inject]
   public IClientService ClientService { get; set; } = default!;
 
-  private Pet Pet { get; set; } = new Pet();
+  private PetDto Pet { get; set; } = new PetDto();
   private bool isSubmitting = false;
   private string? errorMessage;
   private List<BreedDto>? breeds;
@@ -29,9 +29,9 @@ public partial class AddPetPopup
   protected override async Task OnInitializedAsync()
   {
     // Initialize a new pet with default values
-    Pet = new Pet
+    Pet = new PetDto
     {
-      Id = Guid.NewGuid().ToString(),
+      Id = Guid.NewGuid(),
       Name = string.Empty,
       Species = "Dog", // Default to Dog
       Breed = string.Empty,
@@ -86,7 +86,7 @@ public partial class AddPetPopup
       var petId = await ClientService.AddPetAsync(ClientId, Pet);
 
       // Update the pet's ID with the one returned from the API
-      Pet.Id = petId.ToString();
+      Pet.Id = petId;
 
       // Notify the parent component that the pet was added
       if (OnSave.HasDelegate)

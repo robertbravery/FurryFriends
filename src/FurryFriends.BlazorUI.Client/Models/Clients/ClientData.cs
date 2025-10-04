@@ -15,7 +15,7 @@ public class ClientData
   public int ClientType { get; set; }
   public string PreferredContactTime { get; set; } = default!;
   public int ReferralSource { get; set; }
-  public Pet[] Pets { get; set; } = default!;
+  public PetDto[] Pets { get; set; } = default!;
 
   public static ClientModel MapToModel(ClientData clientData)
   {

@@ -1,0 +1,143 @@
+@page "/booking-test"
+@rendermode InteractiveAuto
+@using FurryFriends.BlazorUI.Client.Components.Bookings
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using Microsoft.Extensions.Logging
+
+<PageTitle>Booking Components Test</PageTitle>
+
+<div class="booking-test-container">
+    <div class="page-header">
+        <h2>Booking Components Test</h2>
+        <p class="page-description">Test the individual booking components we've built so far</p>
+    </div>
+
+    <div class="test-sections">
+        <!-- Component Selection -->
+        <div class="test-controls">
+            <h4>Select Component to Test:</h4>
+            <div class="component-buttons">
+                <button class="btn @(selectedComponent == "petwalker" ? "btn-primary" : "btn-outline-primary")"
+                        @onclick="@(() => SelectComponent("petwalker"))">
+                    PetWalker Selection
+                </button>
+                <button class="btn @(selectedComponent == "schedule" ? "btn-primary" : "btn-outline-primary")"
+                        @onclick="@(() => SelectComponent("schedule"))">
+                    Schedule Display
+                </button>
+                <button class="btn @(selectedComponent == "datetime" ? "btn-primary" : "btn-outline-primary")"
+                        @onclick="@(() => SelectComponent("datetime"))">
+                    Date/Time Selection
+                </button>
+                <button class="btn @(selectedComponent == "all" ? "btn-primary" : "btn-outline-primary")"
+                        @onclick="@(() => SelectComponent("all"))">
+                    All Components
+                </button>
+            </div>
+        </div>
+
+        <!-- Test Data Display -->
+        @if (selectedPetWalker != null || selectedDate.HasValue || selectedStartTime.HasValue)
+        {
+            <div class="test-data-display">
+                <h5>Current Selection:</h5>
+                <div class="selection-info">
+                    @if (selectedPetWalker != null)
+                    {
+                        <div class="info-item">
+                            <strong>Selected PetWalker:</strong> @selectedPetWalker.FullName (@selectedPetWalker.Email)
+                        </div>
+                    }
+                    @if (selectedDate.HasValue)
+                    {
+                        <div class="info-item">
+                            <strong>Selected Date:</strong> @selectedDate.Value.ToString("dddd, MMMM dd, yyyy")
+                        </div>
+                    }
+                    @if (selectedStartTime.HasValue && selectedEndTime.HasValue)
+                    {
+                        <div class="info-item">
+                            <strong>Selected Time:</strong> @selectedStartTime.Value.ToString("HH:mm") - @selectedEndTime.Value.ToString("HH:mm")
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Component Display Area -->
+        <div class="component-display-area">
+            @if (selectedComponent == "petwalker" || selectedComponent == "all")
+            {
+                <div class="component-section">
+                    <h4>PetWalker Selection Component</h4>
+                    <PetWalkerSelectionComponent 
+                        ServiceArea="@testServiceArea"
+                        SelectedPetWalkerId="@selectedPetWalkerId"
+                        OnPetWalkerSelected="OnPetWalkerSelected"
+                        SelectedPetWalkerIdChanged="OnPetWalkerIdChanged" />
+                </div>
+            }
+
+            @if (selectedComponent == "schedule" || selectedComponent == "all")
+            {
+                <div class="component-section">
+                    <h4>Schedule Display Component</h4>
+                    @if (selectedPetWalkerId.HasValue)
+                    {
+                        <ScheduleDisplayComponent 
+                            PetWalkerId="@selectedPetWalkerId"
+                            PetWalkerName="@(selectedPetWalker?.FullName ?? "Selected PetWalker")"
+                            SelectedDate="@selectedDate"
+                            SelectedDateChanged="OnDateChanged"
+                            OnTimeSlotSelected="OnTimeSlotSelected" />
+                    }
+                    else
+                    {
+                        <div class="component-placeholder">
+                            <p>Please select a PetWalker first to view their schedule</p>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (selectedComponent == "datetime" || selectedComponent == "all")
+            {
+                <div class="component-section">
+                    <h4>Date/Time Selection Component</h4>
+                    @if (selectedPetWalkerId.HasValue)
+                    {
+                        <DateTimeSelectionComponent 
+                            PetWalkerId="@selectedPetWalkerId"
+                            SelectedDate="@selectedDate"
+                            SelectedDateChanged="OnDateChanged"
+                            SelectedStartTime="@selectedStartTime"
+                            SelectedStartTimeChanged="OnStartTimeChanged"
+                            SelectedEndTime="@selectedEndTime"
+                            SelectedEndTimeChanged="OnEndTimeChanged"
+                            AllowCustomTime="true"
+                            OnTimeSelectionChanged="OnTimeSelectionChanged" />
+                    }
+                    else
+                    {
+                        <div class="component-placeholder">
+                            <p>Please select a PetWalker first to view available times</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Debug Information -->
+        <div class="debug-section">
+            <h5>Debug Information</h5>
+            <div class="debug-info">
+                <div><strong>Selected Component:</strong> @selectedComponent</div>
+                <div><strong>PetWalker ID:</strong> @(selectedPetWalkerId?.ToString() ?? "None")</div>
+                <div><strong>Service Area:</strong> @(testServiceArea ?? "All")</div>
+                <div><strong>Date:</strong> @(selectedDate?.ToString("yyyy-MM-dd") ?? "None")</div>
+                <div><strong>Start Time:</strong> @(selectedStartTime?.ToString("HH:mm") ?? "None")</div>
+                <div><strong>End Time:</strong> @(selectedEndTime?.ToString("HH:mm") ?? "None")</div>
+            </div>
+        </div>
+    </div>
+</div>

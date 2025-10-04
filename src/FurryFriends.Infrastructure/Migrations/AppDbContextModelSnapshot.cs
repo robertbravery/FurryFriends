@@ -22,6 +22,50 @@ namespace FurryFriends.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FurryFriends.Core.BookingAggregate.Booking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PetOwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PetWalkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0.0m);
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetOwnerId");
+
+                    b.HasIndex("PetWalkerId");
+
+                    b.ToTable("Bookings", (string)null);
+                });
+
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Breed", b =>
                 {
                     b.Property<int>("Id")
@@ -373,6 +417,25 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.ToTable("ServiceAreas", (string)null);
                 });
 
+            modelBuilder.Entity("FurryFriends.Core.BookingAggregate.Booking", b =>
+                {
+                    b.HasOne("FurryFriends.Core.ClientAggregate.Client", "PetOwner")
+                        .WithMany()
+                        .HasForeignKey("PetOwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FurryFriends.Core.PetWalkerAggregate.PetWalker", "PetWalker")
+                        .WithMany()
+                        .HasForeignKey("PetWalkerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PetOwner");
+
+                    b.Navigation("PetWalker");
+                });
+
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Breed", b =>
                 {
                     b.HasOne("FurryFriends.Core.ClientAggregate.Species", "Species")
@@ -722,6 +785,35 @@ namespace FurryFriends.Infrastructure.Migrations
                                 .HasForeignKey("PetWalkerId");
                         });
 
+                    b.OwnsMany("Schedule", "Schedules", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("DayOfWeek")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<TimeOnly>("EndTime")
+                                .HasColumnType("time");
+
+                            b1.Property<Guid>("PetWalkerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<TimeOnly>("StartTime")
+                                .HasColumnType("time");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("PetWalkerId");
+
+                            b1.ToTable("PetWalkerSchedules", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetWalkerId");
+                        });
+
                     b.Navigation("Address")
                         .IsRequired();
 
@@ -739,6 +831,8 @@ namespace FurryFriends.Infrastructure.Migrations
 
                     b.Navigation("PhoneNumber")
                         .IsRequired();
+
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.PetWalkerAggregate.Photo", b =>
@@ -759,7 +853,7 @@ namespace FurryFriends.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FurryFriends.Core.PetWalkerAggregate.PetWalker", "User")
+                    b.HasOne("FurryFriends.Core.PetWalkerAggregate.PetWalker", "PetWalker")
                         .WithMany("ServiceAreas")
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -767,7 +861,7 @@ namespace FurryFriends.Infrastructure.Migrations
 
                     b.Navigation("Locality");
 
-                    b.Navigation("User");
+                    b.Navigation("PetWalker");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Breed", b =>

@@ -1,0 +1,59 @@
+classDiagram
+    class IClientLoggingService {
+        <<interface>>
+        +LogInformation(string message, Dictionary~string,string~ data) Task
+        +LogWarning(string message, Dictionary~string,string~ data) Task
+        +LogError(string message, Exception exception, Dictionary~string,string~ data) Task
+    }
+    
+    class ClientLoggingServiceImpl {
+        -ILogger~ClientLoggingServiceImpl~ _logger
+        +ClientLoggingServiceImpl(ILogger~ClientLoggingServiceImpl~ logger)
+        +LogInformation(string message, Dictionary~string,string~ data) Task
+        +LogWarning(string message, Dictionary~string,string~ data) Task
+        +LogError(string message, Exception exception, Dictionary~string,string~ data) Task
+    }
+    
+    class ServerClientLoggingService {
+        -HttpClient _httpClient
+        -ILogger~ServerClientLoggingService~ _logger
+        +ServerClientLoggingService(HttpClient httpClient, ILogger~ServerClientLoggingService~ logger)
+        +LogInformation(string message, Dictionary~string,string~ data) Task
+        +LogWarning(string message, Dictionary~string,string~ data) Task
+        +LogError(string message, Exception exception, Dictionary~string,string~ data) Task
+        -SendLogToServer(string level, string message, string exception, Dictionary~string,string~ data) Task
+    }
+    
+    class LoggingDelegatingHandler {
+        -ILogger~LoggingDelegatingHandler~ _logger
+        +LoggingDelegatingHandler(ILogger~LoggingDelegatingHandler~ logger)
+        #SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) Task~HttpResponseMessage~
+    }
+    
+    class LogMessage {
+        -ILogger~LogMessage~ _logger
+        +LogMessage(ILogger~LogMessage~ logger)
+        +Configure() void
+        +HandleAsync(LogMessageRequest req, CancellationToken ct) Task
+    }
+    
+    class LogMessageRequest {
+        +string Level
+        +string Message
+        +string? Exception
+        +Dictionary~string,string~? Data
+    }
+    
+    class LogMessageResponse {
+        +bool Success
+    }
+    
+    IClientLoggingService <|.. ClientLoggingServiceImpl : Implements
+    IClientLoggingService <|.. ServerClientLoggingService : Implements
+    
+    ServerClientLoggingService --> LogMessageRequest : Creates
+    LogMessage --> LogMessageResponse : Returns
+    LogMessage ..> LogMessageRequest : Processes
+    
+    DelegatingHandler <|-- LoggingDelegatingHandler
+    Endpoint <|-- LogMessage

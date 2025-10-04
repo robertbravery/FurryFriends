@@ -1,0 +1,86 @@
+@using FurryFriends.BlazorUI.Client.Models.Common
+
+<div class="pagination-container">
+    <div class="page-size-selector">
+        Items per page:
+        <select @bind="PageSize" @bind:after="HandlePageSizeChanged">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+    <div class="pagination-info">
+        @GetPaginationInfo()
+    </div>
+    <div class="pagination-controls">
+        <button class="btn btn-sm @(HasPreviousPage ? "btn-outline-primary" : "btn-outline-secondary")"
+            @onclick="OnPreviousPage" disabled="@(!HasPreviousPage)">
+            &lt;
+        </button>
+        <span class="current-page">@CurrentPage</span>
+        <button class="btn btn-sm @(HasNextPage ? "btn-outline-primary" : "btn-outline-secondary")"
+            @onclick="OnNextPage" disabled="@(!HasNextPage)">
+            &gt;
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public int TotalCount { get; set; } = 0;
+
+    [Parameter]
+    public int TotalPages { get; set; } = 1;
+
+    [Parameter]
+    public bool HasPreviousPage { get; set; } = false;
+
+    [Parameter]
+    public bool HasNextPage { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnPageSizeChanged { get; set; }
+
+    private string GetPaginationInfo()
+    {
+        if (TotalCount == 0)
+        {
+            return "No items";
+        }
+
+        var start = (CurrentPage - 1) * PageSize + 1;
+        var end = Math.Min(CurrentPage * PageSize, TotalCount);
+        return $"{start} - {end} of {TotalCount}";
+    }
+
+    private async Task OnPreviousPage()
+    {
+        if (HasPreviousPage)
+        {
+            await OnPageChanged.InvokeAsync(CurrentPage - 1);
+        }
+    }
+
+    private async Task OnNextPage()
+    {
+        if (HasNextPage)
+        {
+            await OnPageChanged.InvokeAsync(CurrentPage + 1);
+        }
+    }
+
+    private async Task HandlePageSizeChanged()
+    {
+        await OnPageSizeChanged.InvokeAsync(PageSize);
+    }
+}

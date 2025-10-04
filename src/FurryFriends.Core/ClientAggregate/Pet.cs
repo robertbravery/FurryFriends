@@ -24,7 +24,7 @@ public partial class Pet : AuditableEntity<Guid>
   public DateTime? DeactivatedAt { get; private set; }
   public Guid OwnerId { get; set; }
   public virtual Client Owner { get; set; } = default!;
-  public virtual Breed BreedType { get; private set; } = default!;
+  public virtual Breed BreedType { get; set; } = default!;
 
   // Add a convenience property to get Species name through the relationship
   //[NotMapped]
@@ -57,8 +57,18 @@ public partial class Pet : AuditableEntity<Guid>
   }
 
   public static Pet Create(
-    string name, int breedId, int age, double weight, string color, string specialNeeds, Client owner, string? medicalHistory = null, bool isVaccinated = false, string? favoriteActivities = null, string? dietaryRestrictions = null, string? photo = null
-    )
+    string name,
+    int breedId,
+    int age,
+    double weight,
+    string color,
+    string specialNeeds,
+    Client owner,
+    string? medicalHistory = null,
+    bool isVaccinated = false,
+    string? favoriteActivities = null,
+    string? dietaryRestrictions = null,
+    string? photo = null)
   {
     var pet = new Pet(name, breedId, age, weight, color, specialNeeds, owner);
     pet.MedicalHistory = medicalHistory;

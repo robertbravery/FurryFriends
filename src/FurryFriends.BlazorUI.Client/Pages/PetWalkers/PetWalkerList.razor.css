@@ -1,0 +1,25 @@
+﻿.petwalker-list-container {
+    min-height: 100vh;
+}
+
+.petwalker-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-petwalker-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+.add-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Pagination styles moved to Pagination.razor.css */

@@ -5,6 +5,9 @@ namespace FurryFriends.Core.PetWalkerAggregate;
 
 public class PetWalker : UserEntityBase
 {
+
+  private readonly List<Schedule> _schedules = new();
+
   public GenderType Gender { get; private set; } = GenderType.Create(GenderType.GenderCategory.Other).Value;
   public string? Biography { get; private set; }
   public DateTime DateOfBirth { get; private set; }
@@ -15,6 +18,7 @@ public class PetWalker : UserEntityBase
   public bool HasInsurance { get; private set; }
   public bool HasFirstAidCertificatation { get; private set; }
   public int DailyPetWalkLimit { get; private set; }
+  public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
 
   public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
   public virtual ICollection<ServiceArea> ServiceAreas { get; set; } = new HashSet<ServiceArea>();
@@ -47,7 +51,9 @@ public class PetWalker : UserEntityBase
   {
     Guard.Against.NullOrEmpty(newUserName.FirstName, nameof(newUserName.FirstName));
     Guard.Against.StringTooLong(newUserName.FirstName, 30, nameof(newUserName.FirstName));
-    Guard.Against.StringTooShort(newUserName.FirstName, 5, nameof(newUserName.FirstName));
+    Guard.Against.StringTooShort(newUserName.LastName, 5, nameof(newUserName.LastName)); Guard.Against.NullOrEmpty(newUserName.FirstName, nameof(newUserName.FirstName));
+    Guard.Against.StringTooLong(newUserName.LastName, 30, nameof(newUserName.LastName));
+    Guard.Against.StringTooShort(newUserName.LastName, 5, nameof(newUserName.LastName));
     Name = newUserName;
   }
 
@@ -111,5 +117,70 @@ public class PetWalker : UserEntityBase
     Guard.Against.Negative(dailyPetWalkLimit, nameof(dailyPetWalkLimit));
     DailyPetWalkLimit = dailyPetWalkLimit;
   }
+
+  public void UpdateAddress(string street, string city, string state, string zipCode, string country)
+  {
+    Guard.Against.NullOrEmpty(street, nameof(street));
+    Guard.Against.NullOrEmpty(city, nameof(city));
+    Guard.Against.NullOrEmpty(state, nameof(state));
+    Guard.Against.NullOrEmpty(zipCode, nameof(zipCode));
+    Guard.Against.NullOrEmpty(country, nameof(country));
+    Address = Address.Create(street, city, state, zipCode, country);
+  }
+  public void UpdateAddress(Address address)
+  {
+    Guard.Against.Null(address, nameof(address));
+    Address = address;
+  }
+
+  public void UpdatePhoneNumber(string countryCode, string phoneNumber)
+  {
+    Guard.Against.NullOrEmpty(phoneNumber, nameof(phoneNumber));
+    Guard.Against.NullOrEmpty(countryCode, nameof(countryCode));
+    PhoneNumber = PhoneNumber.Create(countryCode, phoneNumber).GetAwaiter().GetResult();
+  }
+  public void UpdatePhoneNumber(PhoneNumber phoneNumber)
+  {
+    Guard.Against.Null(phoneNumber, nameof(phoneNumber));
+    PhoneNumber = phoneNumber;
+  }
+
+  public void UpdateServiceArea(ServiceArea serviceArea)
+  {
+    Guard.Against.Null(serviceArea, nameof(serviceArea));
+    ServiceAreas.Add(serviceArea);
+  }
+
+  public void AddServiceArea(ServiceArea serviceArea)
+  {
+    Guard.Against.Null(serviceArea, nameof(serviceArea));
+    ServiceAreas.Add(serviceArea);
+  }
+
+  public void RemoveServiceArea(ServiceArea serviceArea)
+  {
+    Guard.Against.Null(serviceArea, nameof(serviceArea));
+    ServiceAreas.Remove(serviceArea);
+  }
+
+  public void AddSchedule(Schedule schedule)
+  {
+    // Optional: enforce "no duplicate day" rule
+    if (_schedules.Any(s => s.DayOfWeek == schedule.DayOfWeek &&
+                            s.StartTime == schedule.StartTime &&
+                            s.EndTime == schedule.EndTime))
+    {
+      throw new InvalidOperationException("Schedule already exists.");
+    }
+    _schedules.Add(schedule);
+  }
+
+  public void RemoveSchedule(Schedule schedule)
+  {
+    _schedules.Remove(schedule);
+  }
+
+  public void ClearSchedules() => _schedules.Clear();
+
 }
 

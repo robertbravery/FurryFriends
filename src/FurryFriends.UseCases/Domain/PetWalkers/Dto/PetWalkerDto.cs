@@ -1,0 +1,27 @@
+﻿namespace FurryFriends.UseCases.Domain.PetWalkers.Dto;
+
+public record PetWalkerDto(
+  Guid Id,
+  string Email,
+  string Name,
+  string CountryCode,
+  string PhoneNumber,
+  string Street,
+  string City,
+  string State,
+  string ZipCode,
+  string Country,
+  string? Biography,
+  DateTime DateOfBirth,
+  string Gender,
+  decimal HourlyRate,
+  string Currency,
+  bool IsActive,
+  bool IsVerified,
+  int YearsOfExperience,
+  bool HasInsurance,
+  bool HasFirstAidCertification,
+  int DailyPetWalkLimit,
+  List<string>? ServiceLocation,
+  PhotoDto? BioPicture,
+  List<PhotoDto>? Photos);

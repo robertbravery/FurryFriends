@@ -3,7 +3,6 @@ using FluentValidation;
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.ClientService;
-using MediatR;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdateClient;
 
@@ -22,8 +21,8 @@ public class UpdateClientCommandHandler : ICommandHandler<UpdateClientCommand, R
   {
     Guard.Against.Null(request, nameof(request));
     Guard.Against.NullOrEmpty(request.ClientId, nameof(request.ClientId));
-    
-    Client client = await _clientRepository.GetByIdAsync(request.ClientId, cancellationToken) 
+
+    Client client = await _clientRepository.GetByIdAsync(request.ClientId, cancellationToken)
         ?? throw new NotFoundException(nameof(Client), request.ClientId.ToString());
 
     var nameResult = Name.Create(request.FirstName, request.LastName);
@@ -34,18 +33,18 @@ public class UpdateClientCommandHandler : ICommandHandler<UpdateClientCommand, R
 
     if (!nameResult.IsSuccess || !emailResult.IsSuccess || !phoneResult.IsSuccess || !addressResult.IsSuccess)
     {
-        var errors = new List<string>();
-        errors.AddRange(nameResult.Errors);
-        errors.AddRange(emailResult.Errors);
-        errors.AddRange(phoneResult.Errors);
-        errors.AddRange(addressResult.Errors);
+      var errors = new List<string>();
+      errors.AddRange(nameResult.Errors);
+      errors.AddRange(emailResult.Errors);
+      errors.AddRange(phoneResult.Errors);
+      errors.AddRange(addressResult.Errors);
 
-        errors.AddRange(nameResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
-        errors.AddRange(emailResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
-        errors.AddRange(phoneResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
-        errors.AddRange(addressResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+      errors.AddRange(nameResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+      errors.AddRange(emailResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+      errors.AddRange(phoneResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
+      errors.AddRange(addressResult.ValidationErrors?.Select(v => v.ErrorMessage) ?? []);
 
-        throw new ValidationException(string.Join(", ", errors));
+      throw new ValidationException(string.Join(", ", errors));
     }
 
     client.UpdateDetails(
@@ -60,7 +59,7 @@ public class UpdateClientCommandHandler : ICommandHandler<UpdateClientCommand, R
     client.UpdateReferralSource(request.ReferralSource);
 
     var updateClient = await _clientService.UpdateClientAsync(client);
-return updateClient;
+    return updateClient;
     // return updateClient == null ? Result.Success(updateClient) : Result.NotFound();
   }
 }

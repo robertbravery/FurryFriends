@@ -2,5 +2,5 @@
 
 public record PetWalkerListResponseDto
 (
-    Guid Id, string Name, string EmailAddress, string City, string Location
+    Guid Id, string Name, string EmailAddress, string City, string Location, string PhoneNumber
 );

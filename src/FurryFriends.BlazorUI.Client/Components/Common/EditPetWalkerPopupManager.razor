@@ -1,0 +1,50 @@
+@using FurryFriends.BlazorUI.Client.Pages.PetWalkers
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IPopupService PopupService
+
+@if (showPopup)
+{
+    <EditPetWalkerPopup PetWalkerEmail="@currentPetWalkerEmail" />
+}
+
+@code {
+    private bool showPopup = false;
+    private string currentPetWalkerEmail = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        SubscribeToEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
+        // Unsubscribe first to avoid duplicate subscriptions
+        PopupService.OnShowEditPetWalkerPopup -= ShowPopup;
+        PopupService.OnCloseEditPetWalkerPopup -= ClosePopup;
+
+        // Subscribe to events
+        PopupService.OnShowEditPetWalkerPopup += ShowPopup;
+        PopupService.OnCloseEditPetWalkerPopup += ClosePopup;
+    }
+
+    private void ShowPopup(string email)
+    {
+        currentPetWalkerEmail = email;
+        showPopup = true;
+        StateHasChanged();
+    }
+
+    private void ClosePopup()
+    {
+        showPopup = false;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        PopupService.OnShowEditPetWalkerPopup -= ShowPopup;
+        PopupService.OnCloseEditPetWalkerPopup -= ClosePopup;
+    }
+}

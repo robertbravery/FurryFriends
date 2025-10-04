@@ -7,3 +7,8 @@ public class GetClientByEmailResponse(ClientRecord? data, bool success = true, s
   : ResponseBase<ClientRecord>(data, success, message, errors)
 {
 }
+
+public class GetClientByIdResponse(ClientRecord? data, bool success = true, string message = "Success", List<string>? errors = null)
+  : ResponseBase<ClientRecord>(data, success, message, errors)
+{
+}

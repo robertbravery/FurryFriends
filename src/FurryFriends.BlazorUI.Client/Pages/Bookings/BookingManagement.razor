@@ -1,0 +1,450 @@
+﻿@page "/bookings"
+@page "/bookings/new"
+@rendermode InteractiveAuto
+@using FurryFriends.BlazorUI.Client.Components.Bookings
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.Extensions.Logging
+
+@inject ILogger<BookingManagement> _logger
+@inject IClientService _clientService
+@inject NavigationManager _navigation
+@inject IPopupService _popupService
+
+<PageTitle>Booking Management - FurryFriends</PageTitle>
+
+<div class="booking-management-container">
+    <div class="page-header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-calendar-plus"></i>
+                @if (showBookingForm)
+                {
+                    <span>Create New Booking</span>
+                }
+                else
+                {
+                    <span>Booking Management</span>
+                }
+            </h1>
+            <p class="page-description">
+                @if (showBookingForm)
+                {
+                    <span>Book a professional pet walker for your furry friend</span>
+                }
+                else
+                {
+                    <span>Manage your pet walking bookings and schedule new appointments</span>
+                }
+            </p>
+        </div>
+        
+        @if (!showBookingForm)
+        {
+            <div class="header-actions">
+                <button class="btn btn-primary" @onclick="StartNewBooking">
+                    <i class="fas fa-plus"></i>
+                    New Booking
+                </button>
+            </div>
+        }
+    </div>
+
+    @if (showBookingForm)
+    {
+        <!-- Booking Form Section -->
+        <div class="booking-form-section">
+            @if (selectedPetWalker != null)
+            {
+                <div class="petwalker-info-banner">
+                    <div class="petwalker-info">
+                        <i class="fas fa-walking"></i>
+                        <span>Selected Pet Walker: <strong>@selectedPetWalker.FullName</strong></span>
+                        <small>(@selectedPetWalker.Email)</small>
+                        @if (clientInfo != null)
+                        {
+                            <span class="client-context"> - Booking for: <strong>@clientInfo.FullName</strong></span>
+                        }
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" @onclick="ChangePetWalker">
+                        <i class="fas fa-exchange-alt"></i>
+                        Change Pet Walker
+                    </button>
+                </div>
+            }
+
+            <BookingFormComponent
+                ClientId="@ClientId"
+                @* ServiceArea="@selectedServiceArea" *@
+                OnBookingCompleted="OnBookingCompleted"
+                OnBookingCancelled="OnBookingCancelled" />
+        </div>
+    }
+    else
+    {
+        <!-- Pet Walker Selection Section -->
+        <div class="petwalker-selection-section">
+            @if (isLoadingPetWalkers)
+            {
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading available pet walkers...</p>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-container">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>@errorMessage</span>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="LoadPetWalkersAsync">
+                            <i class="fas fa-redo"></i>
+                            Retry
+                        </button>
+                    </div>
+                </div>
+            }
+            else if (availablePetWalkers == null || !availablePetWalkers.Any())
+            {
+                <div class="no-petwalkers-container">
+                    <div class="empty-state">
+                        <i class="fas fa-walking"></i>
+                        <h3>No Pet Walkers Available</h3>
+                        <p>There are currently no pet walkers available for booking.</p>
+                        <button class="btn btn-primary" @onclick="NavigateToPetWalkers">
+                            <i class="fas fa-user-plus"></i>
+                            Manage Pet Walkers
+                        </button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="petwalkers-grid">
+                    <div class="petwalkers-header">
+                        <div class="header-title">
+                            <h3>Select a Pet Walker</h3>
+                            <p class="section-description">Choose a professional pet walker for your furry friend</p>
+                        </div>
+
+                        <!-- Filters and Search -->
+                        <div class="filters-section">
+                            <div class="filters-row">
+                                <div class="search-box">
+                                    <input type="text"
+                                           class="form-control"
+                                           placeholder="Search by name or email..."
+                                           @bind="_searchTerm"
+                                           @onkeyup="@(async (e) => { if (e.Key == "Enter") await OnSearchTermChanged(_searchTerm); })" />
+                                    <button class="btn btn-outline-secondary" @onclick="() => OnSearchTermChanged(_searchTerm)">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+
+                                <div class="service-area-filter">
+                                    <select class="form-select" @onchange="@(async (e) => await OnServiceAreaChanged(e.Value?.ToString() ?? string.Empty))">
+                                        <option value="">All Service Areas</option>
+                                        @foreach (var area in _availableServiceAreas)
+                                        {
+                                            <option value="@area" selected="@(_selectedServiceArea == area)">@area</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="sort-controls">
+                                    <select class="form-select" @onchange="@(async (e) => await OnSortChanged(e.Value?.ToString() ?? "name", _selectedSortDirection))">
+                                        <option value="name" selected="@(_selectedSortBy == "name")">Name</option>
+                                        <option value="rate" selected="@(_selectedSortBy == "rate")">Hourly Rate</option>
+                                        <option value="experience" selected="@(_selectedSortBy == "experience")">Experience</option>
+                                        <option value="rating" selected="@(_selectedSortBy == "rating")">Rating</option>
+                                    </select>
+                                    <button class="btn btn-outline-secondary sort-direction-btn"
+                                            @onclick="@(async () => await OnSortChanged(_selectedSortBy, _selectedSortDirection == "asc" ? "desc" : "asc"))"
+                                            title="@(_selectedSortDirection == "asc" ? "Sort Ascending": "Sort Descending" )">
+                                        <i class="fas @(_selectedSortDirection == "asc" ? "fa-sort-up" : "fa-sort-down")"></i>
+                                        <span class="sort-text">@(_selectedSortDirection == "asc" ? "↑" : "↓")</span>
+                                    </button>
+                                </div>
+
+                                <button class="btn btn-outline-danger" @onclick="ClearFilters">
+                                    <i class="fas fa-times"></i>
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Results Summary -->
+                        @if (_paginatedResponse != null)
+                        {
+                            <div class="results-summary">
+                                <span>Showing @(_paginatedResponse.PetWalkers.Count) of @(_paginatedResponse.TotalCount) pet walkers</span>
+                                @if (_paginatedResponse.TotalPages > 1)
+                                {
+                                    <span> - Page @(_paginatedResponse.PageNumber) of @(_paginatedResponse.TotalPages)</span>
+                                }
+                                <br />
+                                <small style="color: #999;">
+                                    Debug: PageSize=@(_currentRequest.PageSize), Available in list=@(availablePetWalkers?.Count ?? 0)
+                                </small>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="petwalkers-list">
+                        @if (availablePetWalkers != null)
+                        {
+                            @foreach (var petWalker in availablePetWalkers)
+                        {
+                            <div class="petwalker-card modern @(selectedPetWalker?.Id == petWalker.Id ? "selected" : "")"
+                                 @onclick="() => SelectPetWalker(petWalker)">
+                                <div class="card-selection-indicator">
+                                    @if (selectedPetWalker?.Id == petWalker.Id)
+                                    {
+                                        <i class="fas fa-check-circle"></i>
+                                    }
+                                </div>
+
+                                <!-- Profile Section -->
+                                <div class="card-profile">
+                                    <div class="card-media">
+                                        @if (!string.IsNullOrWhiteSpace(petWalker.BioPicture?.Uri))
+                                        {
+                                            <img class="avatar" src="@petWalker.BioPicture!.Uri" alt="@($"{petWalker.FullName} profile")" />
+                                        }
+                                        else
+                                        {
+                                            <div class="avatar-fallback">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="profile-info">
+                                        <h4>@petWalker.FullName</h4>
+                                        <div class="rating">
+                                            @{
+                                                var fullStars = (int)Math.Floor(petWalker.Rating);
+                                                var hasHalf = (petWalker.Rating - fullStars) >= 0.5;
+                                                var empty = 5 - fullStars - (hasHalf ? 1 : 0);
+                                            }
+                                            <div class="stars">
+                                                @for (var i = 0; i < fullStars; i++)
+                                                {
+                                                    <i class="fas fa-star"></i>
+                                                }
+                                                @if (hasHalf)
+                                                {
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                }
+                                                @for (var i = 0; i < empty; i++)
+                                                {
+                                                    <i class="far fa-star"></i>
+                                                }
+                                            </div>
+                                            <span class="rating-value">@petWalker.Rating.ToString("0.0")</span>
+                                            <span class="review-count">(@petWalker.ReviewCount)</span>
+                                        </div>
+                                        <div class="rate-display">
+                                            <span class="rate-amount">$@petWalker.HourlyRate.ToString("F2")</span>
+                                            <span class="rate-period">/hour</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Key Info Section -->
+                                <div class="card-body">
+                                    <!-- Badges -->
+                                    @if (petWalker.IsVerified || petWalker.HasInsurance || petWalker.HasFirstAidCertification)
+                                    {
+                                        <div class="petwalker-badges">
+                                            @if (petWalker.IsVerified)
+                                            {
+                                                <span class="badge verified"><i class="fas fa-check-circle"></i> Verified</span>
+                                            }
+                                            @if (petWalker.HasInsurance)
+                                            {
+                                                <span class="badge insured"><i class="fas fa-shield-alt"></i> Insured</span>
+                                            }
+                                            @if (petWalker.HasFirstAidCertification)
+                                            {
+                                                <span class="badge first-aid"><i class="fas fa-plus-circle"></i> First Aid</span>
+                                            }
+                                        </div>
+                                    }
+
+                                    <!-- Biography (truncated) -->
+                                    @if (!string.IsNullOrEmpty(petWalker.Biography))
+                                    {
+                                        <div class="biography">
+                                            <p>@TruncateText(petWalker.Biography, 80)</p>
+                                        </div>
+                                    }
+
+                                    <!-- Key Stats -->
+                                    <div class="key-stats">
+                                        @if (petWalker.YearsOfExperience > 0)
+                                        {
+                                            <div class="stat-item">
+                                                <i class="fas fa-briefcase"></i>
+                                                <span>@petWalker.YearsOfExperience yr@(petWalker.YearsOfExperience > 1 ? "s" : "") exp</span>
+                                            </div>
+                                        }
+                                        @if (petWalker.DailyPetWalkLimit > 0)
+                                        {
+                                            <div class="stat-item">
+                                                <i class="fas fa-walking"></i>
+                                                <span>Up to @petWalker.DailyPetWalkLimit walks/day</span>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <!-- Service Areas -->
+                                    @if (petWalker.ServiceAreas.Any())
+                                    {
+                                        <div class="service-areas">
+                                            @foreach (var area in petWalker.ServiceAreas.Take(2))
+                                            {
+                                                <span class="chip"><i class="fas fa-map-marker-alt"></i>@area</span>
+                                            }
+                                            @if (petWalker.ServiceAreas.Count > 2)
+                                            {
+                                                <span class="chip more">+@((petWalker.ServiceAreas.Count) - 2) more</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="card-actions">
+                                    <button class="btn btn-sm btn-outline-primary view-details-btn"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="() => ViewPetWalkerDetails(petWalker)">
+                                        <i class="fas fa-info-circle"></i>
+                                        View Details
+                                    </button>
+                                    @if (selectedPetWalker?.Id == petWalker.Id)
+                                    {
+                                        <button class="btn btn-sm btn-primary book-now-btn"
+                                                @onclick:stopPropagation="true"
+                                                @onclick="() => ProceedToBooking()">
+                                            <i class="fas fa-calendar-plus"></i>
+                                            Book Now
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        }
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    @if (_paginatedResponse != null && _paginatedResponse.TotalPages > 1)
+                    {
+                        <div class="pagination-section">
+                            <div class="pagination-controls">
+                                <!-- Page Size Selector -->
+                                <div class="page-size-selector">
+                                    <label>Show:</label>
+                                    <select class="form-select" @onchange="@(async (e) => await OnPageSizeChanged(int.Parse(e.Value?.ToString() ?? "15")))">
+                                        <option value="15" selected="@(_currentRequest.PageSize == 15)">15</option>
+                                        <option value="30" selected="@(_currentRequest.PageSize == 30)">30</option>
+                                        <option value="45" selected="@(_currentRequest.PageSize == 45)">45</option>
+                                        <option value="60" selected="@(_currentRequest.PageSize == 60)">60</option>
+                                    </select>
+                                    <span>per page</span>
+                                </div>
+
+                                <!-- Page Navigation -->
+                                <div class="page-navigation">
+                                    <!-- First Page -->
+                                    <button class="btn btn-outline-secondary"
+                                            disabled="@(!_paginatedResponse.HasPreviousPage)"
+                                            @onclick="() => OnPageChanged(1)">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </button>
+
+                                    <!-- Previous Page -->
+                                    <button class="btn btn-outline-secondary"
+                                            disabled="@(!_paginatedResponse.HasPreviousPage)"
+                                            @onclick="() => OnPageChanged(_paginatedResponse.PageNumber - 1)">
+                                        <i class="fas fa-angle-left"></i>
+                                    </button>
+
+                                    <!-- Page Numbers -->
+                                    @{
+                                        var startPage = Math.Max(1, _paginatedResponse.PageNumber - 2);
+                                        var endPage = Math.Min(_paginatedResponse.TotalPages, _paginatedResponse.PageNumber + 2);
+                                    }
+
+                                    @for (int page = startPage; page <= endPage; page++)
+                                    {
+                                        var currentPage = page; // Capture for closure
+                                        <button class="btn @(currentPage == _paginatedResponse.PageNumber ? "btn-primary" : "btn-outline-secondary")"
+                                                @onclick="() => OnPageChanged(currentPage)">
+                                            @currentPage
+                                        </button>
+                                    }
+
+                                    <!-- Next Page -->
+                                    <button class="btn btn-outline-secondary"
+                                            disabled="@(!_paginatedResponse.HasNextPage)"
+                                            @onclick="() => OnPageChanged(_paginatedResponse.PageNumber + 1)">
+                                        <i class="fas fa-angle-right"></i>
+                                    </button>
+
+                                    <!-- Last Page -->
+                                    <button class="btn btn-outline-secondary"
+                                            disabled="@(!_paginatedResponse.HasNextPage)"
+                                            @onclick="() => OnPageChanged(_paginatedResponse.TotalPages)">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Page Info -->
+                                <div class="page-info">
+                                    <span>Page @_paginatedResponse.PageNumber of @_paginatedResponse.TotalPages</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+
+
+    <!-- Success Modal -->
+    @if (showSuccessModal)
+    {
+        <div class="modal-overlay" @onclick="CloseSuccessModal">
+            <div class="modal-content success-modal" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Booking Created Successfully!</h3>
+                </div>
+                <div class="modal-body">
+                    @if (completedBooking != null)
+                    {
+                        <p>Your booking has been created with ID: <strong>@completedBooking.BookingId</strong></p>
+                        <p>Date: <strong>@completedBooking.StartDate.ToString("dddd, MMMM dd, yyyy")</strong></p>
+                        <p>Time: <strong>@completedBooking.StartDate.ToString("HH:mm") - @completedBooking.EndDate.ToString("HH:mm")</strong></p>
+                    }
+                    <p class="success-message">@completedBooking?.Message</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" @onclick="CreateAnotherBooking">
+                        <i class="fas fa-plus"></i>
+                        Create Another Booking
+                    </button>
+                    <button class="btn btn-secondary" @onclick="CloseSuccessModal">
+                        <i class="fas fa-times"></i>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,4 +1,5 @@
 ﻿using Azure;
+using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using FurryFriends.UseCases.Domain.PetWalkers.Query.GetPetWalker;
 using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.PetWalkerEndpoints.Records;
@@ -38,8 +39,24 @@ public class GetPetWalkerByEmail(IMediator _mediator) : Endpoint<GetPetWalkerByE
         result.Value.Id,
         result.Value.Name,
         result.Value.Email,
+        result.Value.CountryCode,
         result.Value.PhoneNumber,
-        result.Value.Address,
+        result.Value.Street,
+        result.Value.City,
+        result.Value.State,
+        result.Value.ZipCode,
+        result.Value.Country,
+        result.Value.Biography,
+        result.Value.DateOfBirth,
+        result.Value.Gender,
+        result.Value.HourlyRate,
+        result.Value.Currency,
+        result.Value.IsActive,
+        result.Value.IsVerified,
+        result.Value.YearsOfExperience,
+        result.Value.HasInsurance,
+        result.Value.HasFirstAidCertification,
+        result.Value.DailyPetWalkLimit,
         result.Value.ServiceLocation,
         result.Value.BioPicture,
         result.Value.Photos);

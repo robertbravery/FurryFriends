@@ -19,6 +19,8 @@ public class ListPetWalkerSpecification : Specification<PetWalker>
         .Skip((pageNumber.Value - 1) * pageSize.Value)
         .Take(pageSize.Value);
     }
+    Query.Include(i => i.Address)
+      .Include(i => i.ServiceAreas).ThenInclude(i => i.Locality);
   }
 
 }

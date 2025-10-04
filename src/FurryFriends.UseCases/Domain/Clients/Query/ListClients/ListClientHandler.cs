@@ -3,18 +3,22 @@ using FurryFriends.UseCases.Services.ClientService;
 
 namespace FurryFriends.UseCases.Domain.Clients.Query.ListClients;
 public class ListClientHandler(IClientService clientService)
-  : IQueryHandler<ListClientQuery, Result<List<ClientDTO>>>
+  : IQueryHandler<ListClientQuery, Result<ClientsDto>>
 {
   private readonly IClientService _clientService = clientService;
 
-  public async Task<Result<List<ClientDTO>>> Handle(ListClientQuery request, CancellationToken cancellationToken)
+  public async Task<Result<ClientsDto>> Handle(ListClientQuery request, CancellationToken cancellationToken)
   {
-    var result = await _clientService.ListClientsAsync(request.SearchTerm, request.Page, request.PageSize, cancellationToken);
+    // Get the clients for the current page
+    var result = await _clientService.ListClientsAsync(request, cancellationToken);
     if (!result.IsSuccess)
     {
       return Result.NotFound();
     }
-    var clients = result.Value.Select(client => new ClientDTO(
+
+
+
+    var clients = result.Value.Clients.Select(client => new ClientDTO(
       client.Id,
       client.Name.FullName,
       client.Email.EmailAddress,
@@ -42,6 +46,7 @@ public class ListClientHandler(IClientService clientService)
         p.IsActive))]
 
       )).ToList();
-    return Result<List<ClientDTO>>.Success(clients);
+
+    return Result<ClientsDto>.Success(new ClientsDto(clients, result.Value.TotalCount));
   }
 }

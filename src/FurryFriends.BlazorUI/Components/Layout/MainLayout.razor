@@ -1,6 +1,7 @@
 @inherits LayoutComponentBase
 @using FurryFriends.BlazorUI.Client
 @using FurryFriends.BlazorUI.Client.Components.Common
+@using FurryFriends.BlazorUI.Client.Pages.PetWalkers
 @inject NavigationManager NavigationManager
 
 @code {
@@ -52,5 +53,8 @@
         <ClientEditPopupManager />
         <ClientViewPopupManager />
         <CreateClientPopupManager />
+        <PetWalkerViewPopupManager />
+        <EditPetWalkerPopupManager />
+        <ManagePetWalkerPhotosPopup />
     </div>
 </div>

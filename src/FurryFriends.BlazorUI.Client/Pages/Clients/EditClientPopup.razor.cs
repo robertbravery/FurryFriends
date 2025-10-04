@@ -1,6 +1,7 @@
 ﻿using FurryFriends.BlazorUI.Client.Models.Clients;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace FurryFriends.BlazorUI.Client.Pages.Clients;
@@ -22,15 +23,18 @@ public partial class EditClientPopup
   [Inject]
   public IJSRuntime JS { get; set; } = default!;
 
+  [Inject]
+  public ILogger<EditClientPopup> Logger { get; set; } = default!;
+
   private ClientModel clientModel = new();
-  private Pet[]? clientPets;
+  private PetDto[]? clientPets;
   private bool isLoading = true;
   private bool isPetsLoading = true;
   private string? loadError = null;
   private bool isPetsPanelOpen = false; // Controls the visibility of the pets panel
   private bool showEditPetPopup = false; // Controls the visibility of the edit pet popup
   private bool showAddPetPopup = false; // Controls the visibility of the add pet popup
-  private Pet? selectedPet = null; // The pet being edited
+  private PetDto? selectedPet = null; // The pet being edited
   private Guid clientId = Guid.Empty; // The client ID
 
   protected override async Task OnInitializedAsync()
@@ -90,7 +94,7 @@ public partial class EditClientPopup
         }
         catch (Exception ex)
         {
-          Console.WriteLine($"Error loading pet images: {ex}");
+          Logger.LogError(ex, "Error loading pet images for client: {ClientEmail}", ClientEmail);
           // We don't set loadError here since the client data loaded successfully
         }
         finally
@@ -161,7 +165,7 @@ public partial class EditClientPopup
   }
 
   // Handle the edit pet request from the PetsDisplay component
-  private void HandleEditPet(Pet pet)
+  private void HandleEditPet(PetDto pet)
   {
     // Use Task.Run to ensure the UI thread is not blocked
     Task.Run(async () =>
@@ -221,7 +225,7 @@ public partial class EditClientPopup
   }
 
   // Handle the save event from the AddPetPopup component
-  private async Task HandlePetAdded(Pet pet)
+  private async Task HandlePetAdded(PetDto pet)
   {
     // Use Task.Run to ensure the UI thread is not blocked
     await Task.Run(async () =>

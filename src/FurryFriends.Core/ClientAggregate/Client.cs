@@ -1,4 +1,4 @@
-﻿﻿using FurryFriends.Core.ClientAggregate.Enums;
+﻿using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.Common;
 using FurryFriends.Core.ValueObjects;
 
@@ -14,7 +14,6 @@ public partial class Client : UserEntityBase, IAggregateRoot
   public ReferralSource ReferralSource { get; private set; }
   public bool IsActive { get; private set; } = true;
   public DateTime? DeactivatedAt { get; private set; }
-  //public virtual IEnumerable<Pet> ActivePets => Pets?.Where(p => p.IsActive) ?? Enumerable.Empty<Pet>();
 
 
 
@@ -57,6 +56,12 @@ public partial class Client : UserEntityBase, IAggregateRoot
 
 
     return new Client(name, email, phoneNumber, address, clientType, preferredContactTime, referralSource);
+  }
+  public Result<Pet> AddPet(string name, Breed breed, int age,
+     double weight, string color, string specialNeeds, string? dietaryRestrictions = null)
+  {
+    var result = AddPet(name, breed.Id, age, weight, color, specialNeeds, dietaryRestrictions);
+    return result;
   }
 
   public Result<Pet> AddPet(string name, int breedId, int age,

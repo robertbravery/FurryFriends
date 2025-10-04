@@ -8,6 +8,29 @@ using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Ensure Logs directory exists
+var logsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+if (!Directory.Exists(logsDirectory))
+{
+  Directory.CreateDirectory(logsDirectory);
+}
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(
+        Path.Combine(logsDirectory, "web-log-.txt"),
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+        fileSizeLimitBytes: 10 * 1024 * 1024,
+        retainedFileCountLimit: 31,
+        rollOnFileSizeLimit: true)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 builder.AddServiceDefaults();
 
 // Add CORS configuration
@@ -24,12 +47,6 @@ builder.Services.AddCors(options =>
           .WithExposedHeaders("*"));
 });
 
-builder.Services.AddLogging(logging =>
-{
-  logging.AddConsole();
-  logging.AddOpenTelemetry();
-});
-
 builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => tracing
         .AddAspNetCoreInstrumentation()
@@ -38,14 +55,9 @@ builder.Services.AddOpenTelemetry()
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation());
 
+var logger = Log.Logger;
 
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-
-//builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 
 // Register services
 builder.Services
@@ -81,6 +93,13 @@ app.UseCors("AllowBlazorClient");
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//  FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+//  RequestPath = "/Images"
+//});
+
 await app.UseAppMiddlewareAndSeedDatabase();
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
@@ -106,6 +125,17 @@ app.UseFastEndpoints(
 ).UseSwaggerGen();
 
 
-app.Run();
+try
+{
+  app.Run();
+}
+catch (Exception ex)
+{
+  Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+  Log.CloseAndFlush();
+}
 
 public partial class Program { }

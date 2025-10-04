@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +39,60 @@ public static class Extensions
     // {
     //     options.AllowedSchemes = ["https"];
     // });
+
+    return builder;
+  }
+
+  // Extension method for WebApplicationBuilder
+  public static WebApplicationBuilder AddServiceDefaults(this WebApplicationBuilder builder)
+  {
+    // Access the IHostApplicationBuilder interface through the Host property
+    var hostBuilder = builder.Host;
+
+    // Configure OpenTelemetry
+    builder.Logging.AddOpenTelemetry(options =>
+    {
+      options.IncludeFormattedMessage = true;
+      options.IncludeScopes = true;
+    });
+
+    // Add health checks
+    builder.Services.AddHealthChecks()
+        .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy(), ["live"]);
+
+    // Add service discovery
+    builder.Services.AddServiceDiscovery();
+
+    // Configure HTTP client defaults
+    builder.Services.ConfigureHttpClientDefaults(http =>
+    {
+      // Turn on resilience by default
+      http.AddStandardResilienceHandler();
+
+      // Turn on service discovery by default
+      http.AddServiceDiscovery();
+    });
+
+    // Configure OpenTelemetry
+    builder.Services.AddOpenTelemetry()
+        .WithMetrics(metrics =>
+        {
+          metrics.AddAspNetCoreInstrumentation()
+                 .AddHttpClientInstrumentation()
+                 .AddRuntimeInstrumentation();
+        })
+        .WithTracing(tracing =>
+        {
+          tracing.AddAspNetCoreInstrumentation()
+                 .AddHttpClientInstrumentation();
+        });
+
+    // Add OpenTelemetry exporters if configured
+    var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+    if (useOtlpExporter)
+    {
+      builder.Services.AddOpenTelemetry().UseOtlpExporter();
+    }
 
     return builder;
   }

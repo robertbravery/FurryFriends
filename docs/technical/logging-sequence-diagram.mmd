@@ -1,0 +1,68 @@
+sequenceDiagram
+    title FurryFriends Logging Architecture Flow
+    
+    participant Client as Blazor WebAssembly Client
+    participant ClientLogger as ClientLoggingServiceImpl
+    participant Server as Blazor Server
+    participant ServerLogger as ServerClientLoggingService
+    participant API as Web API
+    participant BackendLogger as LogMessage Endpoint
+    participant Storage as Log Storage
+    
+    %% Client-side logging flow
+    Note over Client, ClientLogger: Client-side logging (local only)
+    Client->>ClientLogger: LogInformation(message, data)
+    ClientLogger->>ClientLogger: Format log message
+    ClientLogger->>ClientLogger: Log to browser console
+    ClientLogger-->>Client: Return (no waiting)
+    
+    %% Server-side logging flow
+    Note over Server, Storage: Server-side logging (local + API)
+    Server->>ServerLogger: LogInformation(message, data)
+    
+    %% Local logging
+    ServerLogger->>ServerLogger: Format log message
+    ServerLogger->>ServerLogger: Log to server logs
+    
+    %% API logging
+    ServerLogger->>ServerLogger: Create log message object
+    ServerLogger->>API: POST /api/logging
+    
+    %% Error handling path
+    alt API call fails
+        API--xServerLogger: Connection error
+        ServerLogger->>ServerLogger: Log error locally
+        ServerLogger-->>Server: Return (no exception thrown)
+    else API call succeeds
+        API->>BackendLogger: Process log message
+        BackendLogger->>BackendLogger: Determine log level
+        
+        alt Log level = Error
+            BackendLogger->>Storage: Log error with exception
+        else Log level = Warning
+            BackendLogger->>Storage: Log warning
+        else Log level = Information
+            BackendLogger->>Storage: Log information
+        end
+        
+        BackendLogger-->>API: Return success response
+        API-->>ServerLogger: 200 OK Response
+        ServerLogger-->>Server: Return (no waiting)
+    end
+    
+    %% Error logging flow
+    Note over Client, Storage: Error logging with exception
+    Client->>ClientLogger: LogError(message, exception, data)
+    ClientLogger->>ClientLogger: Format error with exception
+    ClientLogger->>ClientLogger: Log to browser console
+    ClientLogger-->>Client: Return (no waiting)
+    
+    Server->>ServerLogger: LogError(message, exception, data)
+    ServerLogger->>ServerLogger: Format error with exception
+    ServerLogger->>ServerLogger: Log to server logs
+    ServerLogger->>API: POST /api/logging with exception
+    API->>BackendLogger: Process error log
+    BackendLogger->>Storage: Store error with exception details
+    BackendLogger-->>API: Return success response
+    API-->>ServerLogger: 200 OK Response
+    ServerLogger-->>Server: Return (no waiting)

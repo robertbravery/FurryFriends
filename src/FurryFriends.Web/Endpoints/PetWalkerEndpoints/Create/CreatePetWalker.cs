@@ -9,7 +9,7 @@ public class CreatePetWalker(IMediator _mediator)
   {
     Post(CreatePetWalkerRequest.Route);
     AllowAnonymous();
-    Options(o => o.WithName("CreateUser_" + Guid.NewGuid().ToString())); // Ensure unique name
+    Options(o => o.WithName("CreatePetWalker_" + Guid.NewGuid().ToString())); // Ensure unique name
 
     Summary(s =>
     {
@@ -30,6 +30,7 @@ public class CreatePetWalker(IMediator _mediator)
       };
     });
   }
+
   public override async Task HandleAsync(CreatePetWalkerRequest request, CancellationToken cancellationToken)
   {
     var userCommand = CreateCommand(request);

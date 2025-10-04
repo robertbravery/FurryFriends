@@ -1,0 +1,114 @@
+﻿@namespace FurryFriends.BlazorUI.Client.Pages.PetWalkers
+@using Microsoft.AspNetCore.Components.Forms
+@using FurryFriends.BlazorUI.Client.Models.Picture.Enums
+@using FurryFriends.BlazorUI.Client.Models.Picture
+@rendermode InteractiveServer
+
+@if (_isVisible)
+{
+    <div class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-background">
+                    <h5 class="modal-title">Manage Photos for @(_petWalkerPictures?.PetWalkerName ?? "Pet Walker")</h5>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="ClosePopup"></button>
+                </div>
+                <div class="modal-body">
+                    @if (_isLoading)
+                    {
+                        <p><em>Loading photo information...</em></p>
+                    }
+                    else if (!string.IsNullOrEmpty(_errorMessage))
+                    {
+                        <div class="alert alert-danger">@_errorMessage</div>
+                    }
+                    else if (_petWalkerPictures != null)
+                    {
+                        <div class="row">
+                            @* Bio Picture Section *@
+                            <div class="col-md-4">
+                                <div class="bio-picture-section">
+                                    <h4>Bio Picture</h4>
+                                    <div class="mb-3 text-center">
+										@{
+											// Determine the URL to display.
+											// If a preview exists, use it immediately. Otherwise, use the saved profile picture or a placeholder.
+											string displayedBioPicUrl = _bioPicturePreviewUrl != null
+											? _bioPicturePreviewUrl
+											: (_petWalkerPictures.ProfilePicture != null && !string.IsNullOrEmpty(_petWalkerPictures.ProfilePicture.Url)
+											? GetFullPhotoUrl(_petWalkerPictures.ProfilePicture.Url) // Use helper
+											: $"https://placehold.co/200x200/e9ecef/495057?text=Bio");
+										}
+										<div class="bio-image-container">
+											<img src="@displayedBioPicUrl" alt="Bio Picture" class="img-thumbnail mb-2" />
+										</div>
+
+                                    </div>
+                                    <InputFile OnChange="HandleBioPictureSelected" accept="image/*" class="form-control mb-2" />
+                                    <button class="btn btn-primary w-100" @onclick="UploadBioPicture" disabled="@(_selectedBioPictureFile == null || _isUploadingBioPic)">
+                                        @(_isUploadingBioPic ? "Uploading..." : "Update Bio Picture")
+                                    </button>
+                                    @if (!string.IsNullOrEmpty(_bioPicUploadStatus)) { <p class="mt-2">@_bioPicUploadStatus</p> }
+                                </div>
+                            </div>
+
+                            @* Gallery Photos Section *@
+                            <div class="col-md-8">
+                                <div class="gallery-section">
+                                    <h4>Gallery Photos</h4>
+                                    <div class="upload-section mb-4">
+                                        <InputFile OnChange="HandleGalleryPhotosSelected" multiple accept="image/*" class="form-control mb-2" />
+                                        @* Previews for new gallery photos *@
+                                        @if (_galleryPhotoPreviews.Any())
+                                        {
+                                            <div class="preview-container mb-2">
+                                                @foreach(var preview in _galleryPhotoPreviews)
+                                                {
+                                                    <div class="preview-item">
+                                                        <img src="@preview.Url" title="@preview.Name" />
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        <button class="btn btn-success w-100" @onclick="UploadGalleryPhotos" disabled="@(!_selectedGalleryFiles.Any() || _isUploadingGallery)">
+                                            @(_isUploadingGallery ? "Uploading..." : $"Upload {_selectedGalleryFiles.Count} New Photo(s)")
+                                        </button>
+                                        @if (!string.IsNullOrEmpty(_galleryUploadStatus)) { <p class="status-message">@_galleryUploadStatus</p> }
+                                    </div>
+
+                                    <div class="existing-photos-section">
+                                        <h5>Existing Photos</h5>
+                                        @if (_petWalkerPictures?.Photos != null && _petWalkerPictures.Photos.Any(p => p.PhotoType != PhotoType.BioPic)) // Filter out bio pic if it's in this list
+                                        {
+                                            <div class="photos-gallery">
+                                                @foreach (var photo in _petWalkerPictures.Photos.Where(p => p.PhotoType != PhotoType.BioPic))
+                                                {
+                                                    <div class="position-relative">
+                                                        <img src="@GetFullPhotoUrl(photo.Url)" alt="@(photo.Description ?? "Gallery Photo")" />
+                                                        <button class="btn btn-danger btn-sm" title="Delete Photo"
+                                                                @onclick="() => DeleteGalleryPhoto(photo.Id)" disabled="@_isDeleting">
+                                                            &times;
+                                                        </button>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="no-photos-message">No gallery photos uploaded yet.</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="ClosePopup">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

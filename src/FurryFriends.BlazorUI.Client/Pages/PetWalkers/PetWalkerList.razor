@@ -1,0 +1,217 @@
+﻿@page "/petwalkers"
+@rendermode InteractiveAuto
+@using FurryFriends.BlazorUI.Client.Models
+@using FurryFriends.BlazorUI.Client.Models.PetWalkers
+@using FurryFriends.BlazorUI.Client.Models.Common
+@using FurryFriends.BlazorUI.Client.Services
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using FurryFriends.BlazorUI.Client.Components.Common
+@using Microsoft.Extensions.Logging
+
+@inject IPetWalkerService PetWalkerService
+@inject IPopupService PopupService
+@inject ILogger<PetWalkerList> Logger
+
+@implements IDisposable
+
+<div class="petwalker-list-container">
+	<div class="petwalker-list-header">
+		<div>
+			<h1>Petwalker Directory</h1>
+			<p>View and manage all the Petwalkers.</p>
+		</div>
+		<button class="btn btn-primary add-petwalker-btn">
+			<span class="add-icon">+</span> Add New Petwalker
+		</button>
+	</div>
+
+	@if (isLoading)
+	{
+		<div class="loading-indicator">
+			<p><em>Loading pet walker list...</em></p>
+		</div>
+	}
+	else if (errorMessage != null)
+	{
+		<div class="alert alert-danger">
+			<p>@errorMessage</p>
+			<button class="btn btn-primary mt-2" @onclick="LoadPetWalkers">Retry</button>
+		</div>
+	}
+	else if (petWalkers == null || petWalkers.Count == 0)
+	{
+		<div class="alert alert-info">
+			<p>No pet walkers found.</p>
+		</div>
+	}
+	else
+	{
+		<table class="table">
+			<thead>
+				<tr>
+					<th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
+					<th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
+					<th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
+					<th style="background-color:#e9ecef; text-transform:uppercase;">Service Areas</th>
+					<th style="background-color:#e9ecef; text-transform:uppercase;">Phone Number</th>
+					<th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var petWalker in petWalkers)
+				{
+					<tr key="@petWalker.Id"> @* Add key for better Blazor diffing *@
+						<td>@petWalker.Name</td>
+						<td>@petWalker.EmailAddress</td>
+						<td>@petWalker.City</td>
+						<td>@petWalker.Location</td>
+						<td>@FormatPhoneNumber(petWalker.PhoneNumber)</td>
+						<td style="display: flex; gap: 10px;">
+							<button class="btn btn-link p-0" style="color:brown;" @onclick="() => OpenViewPopup(petWalker.EmailAddress)" title="View Pet Walker">👁️</button>
+							<button class="btn btn-link p-0" style="color:lightcoral;" @onclick="() => OpenEditPopup(petWalker.EmailAddress)" title="Edit Pet Walker">✏️</button>
+							<button class="btn btn-link p-0" style="color:dodgerblue;" @onclick="() => OpenManagePhotosPopup(petWalker.Id)" title="Manage Photos">🖼️</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+		<!-- Pagination Controls -->
+		<Pagination
+			CurrentPage="@currentPage"
+			PageSize="@pageSize"
+			TotalCount="@totalCount"
+			TotalPages="@totalPages"
+			HasPreviousPage="@hasPreviousPage"
+			HasNextPage="@hasNextPage"
+			OnPageChanged="@HandlePageChanged"
+			OnPageSizeChanged="@HandlePageSizeChanged" />
+	}
+</div>
+
+@code {
+	private List<PetWalkerDto>? petWalkers;
+	private int currentPage = 1;
+	private int pageSize = 10;
+	private int totalCount = 0;
+	private int totalPages = 1;
+	private bool hasPreviousPage = false;
+	private bool hasNextPage = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadPetWalkers();
+	}
+
+	private bool isLoading = false;
+	private string? errorMessage = null;
+
+	private async Task LoadPetWalkers()
+	{
+		try
+		{
+			isLoading = true;
+			errorMessage = null;
+
+			Logger.LogInformation("Loading pet walkers - Page: {CurrentPage}, PageSize: {PageSize}", currentPage, pageSize);
+			var response = await PetWalkerService.GetPetWalkersAsync(currentPage, pageSize);
+
+			// Update the component state with data from the response
+			petWalkers = response.RowsData;
+			totalCount = response.TotalCount;
+			totalPages = response.TotalPages;
+			hasPreviousPage = response.HasPreviousPage;
+			hasNextPage = response.HasNextPage;
+
+			// Use the page number from the response (in case it was adjusted on the server)
+			currentPage = response.PageNumber;
+
+			// Ensure current page is valid
+			if (currentPage > totalPages && totalPages > 0)
+			{
+				Logger.LogWarning("Current page {CurrentPage} exceeds total pages {TotalPages}, adjusting to last page",
+					currentPage, totalPages);
+				currentPage = totalPages;
+				await LoadPetWalkers();
+			}
+
+			Logger.LogInformation("Successfully loaded {Count} pet walkers", petWalkers?.Count);
+		}
+		catch (Exception ex)
+		{
+			Logger.LogError(ex, "Error loading pet walkers");
+			errorMessage = $"Error loading pet walkers: {ex.Message}";
+			petWalkers = new List<PetWalkerDto>(); // Empty list to avoid null reference exceptions
+		}
+		finally
+		{
+			isLoading = false;
+			StateHasChanged();
+		}
+	}
+
+	private void OpenViewPopup(string petWalkerEmail)
+	{
+		Logger.LogInformation("Opening view popup for pet walker: {PetWalkerEmail}", petWalkerEmail);
+
+		// Use the popup service to show the view popup
+		PopupService.ShowViewPetWalkerPopup(petWalkerEmail);
+	}
+
+	private async Task HandlePageChanged(int newPage)
+	{
+		currentPage = newPage;
+		await LoadPetWalkers();
+	}
+
+	private async Task HandlePageSizeChanged(int newPageSize)
+	{
+		pageSize = newPageSize;
+		await LoadPetWalkers();
+	}
+
+	private string FormatPhoneNumber(string phoneNumber)
+	{
+		if (string.IsNullOrEmpty(phoneNumber))
+			return string.Empty;
+		// Format the phone number as needed
+		return phoneNumber.Length == 10
+			? $"({phoneNumber.Substring(0, 3)}) {phoneNumber.Substring(3, 3)}-{phoneNumber.Substring(6)}"
+			: phoneNumber;
+	}
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PopupService.OnCloseEditPetWalkerPopup += HandleEditPopupClosed;
+    }
+
+    public void Dispose()
+    {
+        PopupService.OnCloseEditPetWalkerPopup -= HandleEditPopupClosed;
+    }
+
+    private void OpenEditPopup(string petWalkerEmail)
+    {
+        PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
+    }
+
+	private void OpenManagePhotosPopup(Guid petWalkerId)
+	{
+		Logger.LogInformation("Opening manage photos popup for pet walker ID: {PetWalkerId}", petWalkerId);
+		PopupService.ShowManagePetWalkerPhotosPopup(petWalkerId);
+		Logger.LogDebug("ShowManagePetWalkerPhotosPopup service method called successfully");
+	}
+
+    private async void HandleEditPopupClosed()
+    {
+        await RefreshGrid();
+        StateHasChanged();
+    }
+
+    private async Task RefreshGrid()
+    {
+        await LoadPetWalkers();
+        StateHasChanged();
+    }
+}

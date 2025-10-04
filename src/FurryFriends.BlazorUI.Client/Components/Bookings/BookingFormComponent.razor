@@ -1,0 +1,194 @@
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.Extensions.Logging
+
+<div class="booking-form-container">
+    <div class="booking-form-header">
+        <h2>Book a Pet Walk</h2>
+        <p class="form-description">Select a pet walker, choose your preferred date and time, and provide booking details</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>@errorMessage</span>
+            <button type="button" class="btn-close" @onclick="ClearError"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <span>@successMessage</span>
+            <button type="button" class="btn-close" @onclick="ClearSuccess"></button>
+        </div>
+    }
+
+    <div class="booking-form-content">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step @(currentStep >= 1 ? "active" : "") @(currentStep > 1 ? "completed" : "")">
+                <div class="step-number">1</div>
+                <div class="step-label">Select Pet Walker</div>
+            </div>
+            <div class="step @(currentStep >= 2 ? "active" : "") @(currentStep > 2 ? "completed" : "")">
+                <div class="step-number">2</div>
+                <div class="step-label">Choose Date & Time</div>
+            </div>
+            <div class="step @(currentStep >= 3 ? "active" : "") @(currentStep > 3 ? "completed" : "")">
+                <div class="step-number">3</div>
+                <div class="step-label">Booking Details</div>
+            </div>
+            <div class="step @(currentStep >= 4 ? "active" : "")">
+                <div class="step-number">4</div>
+                <div class="step-label">Confirmation</div>
+            </div>
+        </div>
+
+        <!-- Step Content -->
+        <div class="step-content">
+            @if (currentStep == 1)
+            {
+                <!-- Step 1: PetWalker Selection -->
+                <div class="step-section">
+                    <PetWalkerSelectionComponent 
+                        ServiceArea="@ServiceArea"
+                        SelectedPetWalkerId="@bookingRequest.PetWalkerId"
+                        OnPetWalkerSelected="OnPetWalkerSelected"
+                        SelectedPetWalkerIdChanged="OnPetWalkerIdChanged" />
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-primary" 
+                                disabled="@( bookingRequest.PetWalkerId == Guid.Empty)"
+                                @onclick="NextStep">
+                            Next: Choose Date & Time
+                        </button>
+                    </div>
+                </div>
+            }
+            else if (currentStep == 2)
+            {
+                <!-- Step 2: Date & Time Selection -->
+                <div class="step-section">
+                    <DateTimeSelectionComponent 
+                        PetWalkerId="@bookingRequest.PetWalkerId"
+                        SelectedDate="@selectedDate"
+                        SelectedDateChanged="OnDateChanged"
+                        SelectedStartTime="@selectedStartTime"
+                        SelectedStartTimeChanged="OnStartTimeChanged"
+                        SelectedEndTime="@selectedEndTime"
+                        SelectedEndTimeChanged="OnEndTimeChanged"
+                        AllowCustomTime="true"
+                        OnTimeSelectionChanged="OnTimeSelectionChanged" />
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" @onclick="PreviousStep">
+                            Back
+                        </button>
+                        <button class="btn btn-primary" 
+                                disabled="@(!HasValidTimeSelection())"
+                                @onclick="NextStep">
+                            Next: Booking Details
+                        </button>
+                    </div>
+                </div>
+            }
+            else if (currentStep == 3)
+            {
+                <!-- Step 3: Booking Details -->
+                <div class="step-section">
+                    <div class="booking-details-form">
+                        <h4>Booking Details</h4>
+                        
+                        <!-- Pet Selection -->
+                        <div class="form-group">
+                            <label for="pet-select" class="form-label">Select Pet *</label>
+                            <select id="pet-select" 
+                                    class="form-control @(HasPetError ? "is-invalid" : "")"
+                                    @bind="bookingRequest.PetId">
+                                <option value="">-- Select a pet --</option>
+                                @if (availablePets != null)
+                                {
+                                    @foreach (var pet in availablePets)
+                                    {
+                                        <option value="@pet.Id">@pet.Name (@pet.Breed)</option>
+                                    }
+                                }
+                            </select>
+                            @if (HasPetError)
+                            {
+                                <div class="invalid-feedback">Please select a pet for the walk</div>
+                            }
+                        </div>
+
+                        <!-- Special Instructions -->
+                        <div class="form-group">
+                            <label for="notes" class="form-label">Special Instructions</label>
+                            <textarea id="notes" 
+                                      class="form-control" 
+                                      rows="4"
+                                      placeholder="Any special instructions for the pet walker..."
+                                      @bind="bookingRequest.Notes"></textarea>
+                            <small class="form-text text-muted">
+                                Include any special care instructions, behavioral notes, or preferences
+                            </small>
+                        </div>
+
+                        <!-- Booking Summary -->
+                        <div class="booking-summary">
+                            <h5>Booking Summary</h5>
+                            <div class="summary-details">
+                                <div class="summary-item">
+                                    <span class="label">Pet Walker:</span>
+                                    <span class="value">@(selectedPetWalker?.FullName ?? "Not selected")</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Date:</span>
+                                    <span class="value">@(selectedDate?.ToString("dddd, MMMM dd, yyyy") ?? "Not selected")</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Time:</span>
+                                    <span class="value">@GetTimeRangeDisplay()</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Duration:</span>
+                                    <span class="value">@GetDurationDisplay()</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Estimated Cost:</span>
+                                    <span class="value price">$@CalculatePrice().ToString("F2")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" @onclick="PreviousStep">
+                            Back
+                        </button>
+                        <button class="btn btn-primary" 
+                                disabled="@(!IsBookingDetailsValid())"
+                                @onclick="NextStep">
+                            Review Booking
+                        </button>
+                    </div>
+                </div>
+            }
+            else if (currentStep == 4)
+            {
+                <!-- Step 4: Confirmation (will be handled by BookingConfirmationComponent) -->
+                <div class="step-section">
+                    <BookingConfirmationComponent 
+                        BookingRequest="@bookingRequest"
+                        SelectedPetWalker="@selectedPetWalker"
+                        SelectedPet="@GetSelectedPet()"
+                        OnConfirm="SubmitBooking"
+                        OnEdit="PreviousStep"
+                        IsSubmitting="@isSubmitting" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

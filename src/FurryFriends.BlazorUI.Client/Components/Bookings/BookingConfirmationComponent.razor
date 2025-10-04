@@ -1,0 +1,169 @@
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using FurryFriends.BlazorUI.Client.Models.Clients
+
+<div class="booking-confirmation-container">
+    <div class="confirmation-header">
+        <div class="confirmation-icon">
+            <i class="fas fa-clipboard-check"></i>
+        </div>
+        <h3>Review Your Booking</h3>
+        <p class="confirmation-subtitle">Please review the details below and confirm your booking</p>
+    </div>
+
+    <div class="confirmation-content">
+        <!-- Pet Walker Information -->
+        <div class="confirmation-section">
+            <h4><i class="fas fa-user-tie"></i> Pet Walker</h4>
+            <div class="petwalker-info">
+                @if (SelectedPetWalker?.BioPicture?.Uri != null)
+                {
+                    <div class="petwalker-avatar">
+                        <img src="@SelectedPetWalker.BioPicture.Uri" alt="@SelectedPetWalker.FullName" />
+                    </div>
+                }
+                else
+                {
+                    <div class="petwalker-avatar placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                }
+                <div class="petwalker-details">
+                    <h5>@SelectedPetWalker?.FullName</h5>
+                    <p class="email">@SelectedPetWalker?.Email</p>
+                    <div class="petwalker-badges">
+                        @if (SelectedPetWalker?.IsVerified == true)
+                        {
+                            <span class="badge verified">✓ Verified</span>
+                        }
+                        @if (SelectedPetWalker?.HasInsurance == true)
+                        {
+                            <span class="badge insured">🛡️ Insured</span>
+                        }
+                        @if (SelectedPetWalker?.HasFirstAidCertification == true)
+                        {
+                            <span class="badge first-aid">🏥 First Aid</span>
+                        }
+                    </div>
+                    <p class="experience">@SelectedPetWalker?.YearsOfExperience years of experience</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pet Information -->
+        <div class="confirmation-section">
+            <h4><i class="fas fa-paw"></i> Pet</h4>
+            <div class="pet-info">
+                @if (SelectedPet != null)
+                {
+                    <div class="pet-details">
+                        <h5>@SelectedPet.Name</h5>
+                        <p class="pet-breed">@SelectedPet.Breed</p>
+                        @* @if (!string.IsNullOrEmpty(SelectedPet.))
+                        {
+                            <p class="pet-description">@SelectedPet.Description</p>
+                        } *@
+                    </div>
+                }
+                else
+                {
+                    <p class="no-pet">No pet selected</p>
+                }
+            </div>
+        </div>
+
+        <!-- Booking Details -->
+        <div class="confirmation-section">
+            <h4><i class="fas fa-calendar-alt"></i> Booking Details</h4>
+            <div class="booking-details">
+                <div class="detail-row">
+                    <span class="label">Date:</span>
+                    <span class="value">@BookingRequest?.StartDate.ToString("dddd, MMMM dd, yyyy")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Start Time:</span>
+                    <span class="value">@BookingRequest?.StartDate.ToString("HH:mm")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">End Time:</span>
+                    <span class="value">@BookingRequest?.EndDate.ToString("HH:mm")</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Duration:</span>
+                    <span class="value">@GetDurationDisplay()</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Hourly Rate:</span>
+                    <span class="value">$@SelectedPetWalker?.HourlyRate.ToString("F2")/hour</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Special Instructions -->
+        @if (!string.IsNullOrEmpty(BookingRequest?.Notes))
+        {
+            <div class="confirmation-section">
+                <h4><i class="fas fa-sticky-note"></i> Special Instructions</h4>
+                <div class="special-instructions">
+                    <p>@BookingRequest.Notes</p>
+                </div>
+            </div>
+        }
+
+        <!-- Price Summary -->
+        <div class="confirmation-section price-summary">
+            <h4><i class="fas fa-calculator"></i> Price Summary</h4>
+            <div class="price-breakdown">
+                <div class="price-row">
+                    <span class="label">Duration:</span>
+                    <span class="value">@GetDurationDisplay()</span>
+                </div>
+                <div class="price-row">
+                    <span class="label">Rate:</span>
+                    <span class="value">$@SelectedPetWalker?.HourlyRate.ToString("F2")/hour</span>
+                </div>
+                <div class="price-row total">
+                    <span class="label">Total Cost:</span>
+                    <span class="value">$@BookingRequest?.Price.ToString("F2")</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="confirmation-section important-notes">
+            <h4><i class="fas fa-info-circle"></i> Important Information</h4>
+            <ul class="notes-list">
+                <li>Your booking is subject to the pet walker's availability</li>
+                <li>You will receive a confirmation email once the booking is approved</li>
+                <li>Cancellations must be made at least 24 hours in advance</li>
+                <li>Payment will be processed after the walk is completed</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="confirmation-actions">
+        <button class="btn btn-secondary" 
+                @onclick="EditBooking"
+                disabled="@IsSubmitting">
+            <i class="fas fa-edit"></i>
+            Edit Booking
+        </button>
+        
+        <button class="btn btn-primary" 
+                @onclick="ConfirmBooking"
+                disabled="@IsSubmitting">
+            @if (IsSubmitting)
+            {
+                <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span>Creating Booking...</span>
+            }
+            else
+            {
+                <i class="fas fa-check"></i>
+                <span>Confirm Booking</span>
+            }
+        </button>
+    </div>
+</div>

@@ -40,4 +40,10 @@ public abstract class UserEntityBase : AuditableEntity<Guid>
     Guard.Against.InvalidEmail(newEmail.EmailAddress, nameof(newEmail));
     Email = newEmail;
   }
+  public void UpdateEmail(string newEmail)
+  {
+    Guard.Against.InvalidEmail(newEmail, nameof(newEmail));
+    var email = Email.Create(newEmail);
+    Email = email.Value;
+  }
 }

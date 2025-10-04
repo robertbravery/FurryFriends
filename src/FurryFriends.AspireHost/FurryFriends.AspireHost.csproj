@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FurryFriends.Web\FurryFriends.Web.csproj" />
+    <ProjectReference Include="..\FurryFriends.BlazorUI\FurryFriends.BlazorUI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- The IsAspireProjectResource attribute tells .NET Aspire to treat this 

@@ -1,0 +1,126 @@
+@using FurryFriends.BlazorUI.Client.Models.PetWalkers
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.Extensions.Logging
+
+<div class="schedule-display-container">
+    <div class="schedule-header">
+        <h4>@PetWalkerName's Schedule</h4>
+        @if (SelectedDate.HasValue)
+        {
+            <p class="selected-date">Viewing: @SelectedDate.Value.ToString("dddd, MMMM dd, yyyy")</p>
+        }
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading schedule...</p>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <p class="error-message">@errorMessage</p>
+            <button class="btn btn-secondary" @onclick="LoadScheduleAsync">Retry</button>
+        </div>
+    }
+    else if (weeklySchedule == null || !weeklySchedule.Any())
+    {
+        <div class="no-schedule-container">
+            <p>No schedule available for this pet walker.</p>
+        </div>
+    }
+    else
+    {
+        <div class="schedule-view">
+            <!-- Weekly Schedule Overview -->
+            <div class="weekly-schedule">
+                <h5>Weekly Availability</h5>
+                <div class="days-grid">
+                    @foreach (var day in GetWeekDays())
+                    {
+                        var daySchedules = weeklySchedule.Where(s => s.DayOfWeek == day.DayOfWeek).ToList();
+                        <div class="day-column @(day.Date == SelectedDate?.Date ? "selected-day" : "")"
+                             @onclick="() => SelectDate(day)">
+                            <div class="day-header">
+                                <span class="day-name">@day.ToString("ddd")</span>
+                                <span class="day-date">@day.ToString("MM/dd")</span>
+                            </div>
+                            <div class="day-schedule">
+                                @if (daySchedules.Any())
+                                {
+                                    @foreach (var schedule in daySchedules)
+                                    {
+                                        <div class="time-slot available">
+                                            <span class="time-range">
+                                                @schedule.StartTime.ToString("HH:mm") - @schedule.EndTime.ToString("HH:mm")
+                                            </span>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="no-availability">
+                                        <span>Not available</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Daily Detail View -->
+            @if (SelectedDate.HasValue)
+            {
+                <div class="daily-detail">
+                    <h5>Available Time Slots - @SelectedDate.Value.ToString("dddd, MMMM dd")</h5>
+                    
+                    @if (isLoadingSlots)
+                    {
+                        <div class="loading-slots">
+                            <div class="loading-spinner small"></div>
+                            <span>Loading available slots...</span>
+                        </div>
+                    }
+                    else if (availableSlots.Any())
+                    {
+                        <div class="time-slots-grid">
+                            @foreach (var slot in availableSlots)
+                            {
+                                <div class="time-slot-card @(IsSlotSelected(slot) ? "selected" : "")"
+                                     @onclick="() => SelectTimeSlot(slot)">
+                                    <div class="slot-time">
+                                        @slot.StartTime.ToString("HH:mm") - @slot.EndTime.ToString("HH:mm")
+                                    </div>
+                                    <div class="slot-duration">
+                                        @GetSlotDuration(slot) minutes
+                                    </div>
+                                    @if (slot.Price > 0)
+                                    {
+                                        <div class="slot-price">
+                                            $@slot.Price.ToString("F2")
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-slots">
+                            <p>No available time slots for this date.</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="select-date-prompt">
+                    <p>Select a date above to view available time slots.</p>
+                </div>
+            }
+        </div>
+    }
+</div>

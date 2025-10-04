@@ -7,7 +7,7 @@ public class ServiceArea : AuditableEntity<Guid>, IEquatable<ServiceArea>
   public Guid UserID { get; private set; }
   public Guid LocalityID { get; private set; }
 
-  public virtual PetWalker User { get; private set; } = null!;
+  public virtual PetWalker PetWalker { get; private set; } = null!;
   public virtual Locality Locality { get; private set; } = null!;
 
 

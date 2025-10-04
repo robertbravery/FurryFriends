@@ -7,20 +7,26 @@
     <ScopedCssEnabled>true</ScopedCssEnabled>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!--<Content Include="Pages\Home.razor.css" />-->
-  </ItemGroup>
 
- 
  <ItemGroup>
    <ProjectReference Include="..\FurryFriends.BlazorUI.Client\FurryFriends.BlazorUI.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" /> 
+   <ProjectReference Include="..\FurryFriends.ServiceDefaults\FurryFriends.ServiceDefaults.csproj" 
+                     IsAspireProjectResource="false" />
  </ItemGroup>
 
- 
+
  <ItemGroup>
    <Folder Include="Models\" />
    <Folder Include="wwwroot\css\" />
    <Folder Include="wwwroot\images\" />
+ </ItemGroup>
+
+
+ <ItemGroup>
+   <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+   <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly"  />
+   <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+   <PackageReference Include="Serilog.AspNetCore" />
+   <PackageReference Include="Serilog.Sinks.File" />
  </ItemGroup>
 </Project>

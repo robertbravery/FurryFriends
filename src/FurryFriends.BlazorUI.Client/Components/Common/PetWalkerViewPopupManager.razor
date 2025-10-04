@@ -1,0 +1,91 @@
+@using FurryFriends.BlazorUI.Client.Pages.PetWalkers
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IPetWalkerService PetWalkerService
+@inject IPopupService PopupService
+
+@if (showViewPopup && !string.IsNullOrEmpty(petWalkerEmail))
+{
+    <PetWalkerViewPopup PetWalkerEmail="@petWalkerEmail" OnClose="HandleClose" />
+}
+
+@code {
+    private bool showViewPopup = false;
+    private string petWalkerEmail = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        SubscribeToEvents();
+
+        // Check if the popup should be open based on the service state
+        if (PopupService.IsViewPetWalkerPopupOpen())
+        {
+            petWalkerEmail = PopupService.GetCurrentPetWalkerEmail();
+            showViewPopup = true;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Ensure we're subscribed after the component is rendered
+            SubscribeToEvents();
+
+            // Check if the popup should be open based on the service state
+            if (PopupService.IsViewPetWalkerPopupOpen() && !showViewPopup)
+            {
+                petWalkerEmail = PopupService.GetCurrentPetWalkerEmail();
+                showViewPopup = true;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void SubscribeToEvents()
+    {
+        // Unsubscribe first to avoid duplicate subscriptions
+        PopupService.OnShowViewPetWalkerPopup -= ShowPopup;
+        PopupService.OnCloseViewPetWalkerPopup -= ClosePopup;
+
+        // Subscribe to events
+        PopupService.OnShowViewPetWalkerPopup += ShowPopup;
+        PopupService.OnCloseViewPetWalkerPopup += ClosePopup;
+    }
+
+    private void ShowPopup(string email)
+    {
+        petWalkerEmail = email;
+        showViewPopup = true;
+        StateHasChanged();
+    }
+
+    private void ClosePopup()
+    {
+        showViewPopup = false;
+        StateHasChanged();
+    }
+
+    private void HandleClose()
+    {
+        showViewPopup = false;
+        StateHasChanged();
+
+        // Notify any listeners that the popup was closed
+        PopupService.CloseViewPetWalkerPopup();
+    }
+
+    public void Dispose()
+    {
+        try
+        {
+            PopupService.OnShowViewPetWalkerPopup -= ShowPopup;
+            PopupService.OnCloseViewPetWalkerPopup -= ClosePopup;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during Dispose: {ex.Message}");
+        }
+    }
+}

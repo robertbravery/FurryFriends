@@ -1,14 +1,18 @@
-﻿using FurryFriends.Core.ClientAggregate;
+﻿using FurryFriends.Core.BookingAggregate;
+using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.LocationAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 
 namespace FurryFriends.Infrastructure.Data;
+
+
 public class AppDbContext(DbContextOptions<AppDbContext> options,
   IDomainEventDispatcher? dispatcher) : DbContext(options)
 {
   private readonly IDomainEventDispatcher? _dispatcher = dispatcher;
 
   public DbSet<PetWalker> PetWalkers => Set<PetWalker>();
+  public DbSet<Booking> Bookings => Set<Booking>();
   public DbSet<Photo> Photos => Set<Photo>();
   public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
   public DbSet<Client> Clients => Set<Client>();
@@ -21,7 +25,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
 
 
 
-
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
@@ -30,20 +33,29 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
 
   public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
   {
-    int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    try
+    {
+      int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-    // ignore events if no dispatcher provided
-    if (_dispatcher == null) return result;
 
-    // dispatch events only if save was successful
-    var entitiesWithEvents = ChangeTracker.Entries<HasDomainEventsBase>()
-        .Select(e => e.Entity)
-        .Where(e => e.DomainEvents.Any())
-        .ToArray();
+      // ignore events if no dispatcher provided
+      if (_dispatcher == null) return result;
 
-    await _dispatcher.DispatchAndClearEvents(entitiesWithEvents);
+      // dispatch events only if save was successful
+      var entitiesWithEvents = ChangeTracker.Entries<HasDomainEventsBase>()
+          .Select(e => e.Entity)
+          .Where(e => e.DomainEvents.Any())
+          .ToArray();
 
-    return result;
+      await _dispatcher.DispatchAndClearEvents(entitiesWithEvents);
+
+      return result;
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine(ex.Message);
+      throw;
+    }
   }
 
   public override int SaveChanges() =>

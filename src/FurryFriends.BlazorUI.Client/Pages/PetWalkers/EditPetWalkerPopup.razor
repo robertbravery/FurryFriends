@@ -1,0 +1,482 @@
+@using FurryFriends.BlazorUI.Client.Models.PetWalkers
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Forms
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header modal-header-background">
+				<h5 class="modal-title">Edit Pet Walker</h5>
+				<button type="button" class="close" @onclick="OnCancel">&times;</button>
+			</div>
+			<div class="modal-body">
+				@if (isLoading)
+				{
+					<div class="loading-container">
+						<p><em>Loading pet walker data...</em></p>
+					</div>
+				}
+				else if (loadError != null)
+				{
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						@loadError
+						<button type="button" class="btn-close" @onclick="@(() => loadError = null)"
+								aria-label="Close"></button>
+					</div>
+				}
+				else if (petWalkerModel != null)
+				{
+					<!-- Tab Navigation -->
+					<div class="tab-navigation">
+						<ul class="nav nav-tabs" role="tablist">
+							<li class="nav-item" role="presentation">
+								<button class="nav-link @(activeTab == "personal" ? "active" : "") @(HasUnsavedChanges("personal") ? "has-changes" : "")"
+										type="button" role="tab" @onclick="@(() => SetActiveTab("personal"))">
+									<i class="fas fa-user"></i>
+									Personal Info
+									@if (HasUnsavedChanges("personal"))
+									{
+										<span class="unsaved-indicator">*</span>
+									}
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link @(activeTab == "professional" ? "active" : "") @(HasUnsavedChanges("professional") ? "has-changes" : "")"
+										type="button" role="tab" @onclick="@(() => SetActiveTab("professional"))">
+									<i class="fas fa-briefcase"></i>
+									Professional
+									@if (HasUnsavedChanges("professional"))
+									{
+										<span class="unsaved-indicator">*</span>
+									}
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link @(activeTab == "location" ? "active" : "") @(HasUnsavedChanges("location") ? "has-changes" : "")"
+										type="button" role="tab" @onclick="@(() => SetActiveTab("location"))">
+									<i class="fas fa-map-marker-alt"></i>
+									Location & Areas
+									@if (HasUnsavedChanges("location"))
+									{
+										<span class="unsaved-indicator">*</span>
+									}
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link @(activeTab == "schedule" ? "active" : "") @(HasUnsavedChanges("schedule") ? "has-changes" : "")"
+										type="button" role="tab" @onclick="@(() => SetActiveTab("schedule"))">
+									<i class="fas fa-calendar-alt"></i>
+									Schedule
+									@if (HasUnsavedChanges("schedule"))
+									{
+										<span class="unsaved-indicator">*</span>
+									}
+								</button>
+							</li>
+						</ul>
+					</div>
+
+					<!-- Tab Content -->
+					<div class="tab-content">
+						@if (activeTab == "personal")
+						{
+							<div class="tab-pane active">
+								@RenderPersonalInfoTab()
+							</div>
+						}
+						else if (activeTab == "professional")
+						{
+							<div class="tab-pane active">
+								@RenderProfessionalTab()
+							</div>
+						}
+						else if (activeTab == "location")
+						{
+							<div class="tab-pane active">
+								@RenderLocationTab()
+							</div>
+						}
+						else if (activeTab == "schedule")
+						{
+							<div class="tab-pane active">
+								@RenderScheduleTab()
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private RenderFragment RenderPersonalInfoTab() => __builder =>
+	{
+		<EditForm Model="@petWalkerModel" OnValidSubmit="@SavePersonalInfo">
+			<DataAnnotationsValidator />
+
+			<div class="tab-section">
+				<h4>Personal Information</h4>
+
+				@if (tabMessages["personal"] != null)
+				{
+					<div class="alert @(tabMessages["personal"]!.IsSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
+						@tabMessages["personal"]!.Message
+						<button type="button" class="btn-close" @onclick="@(() => ClearTabMessage("personal"))" aria-label="Close"></button>
+					</div>
+				}
+
+				<div class="form-group">
+					<label for="name">Name</label>
+					<InputText id="name" class="form-control" @bind-Value="petWalkerModel.Name" />
+					<ValidationMessage For="@(() => petWalkerModel.Name)" />
+				</div>
+
+				<div class="form-group">
+					<label>Phone Number</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">+</span>
+						</div>
+						<InputText class="form-control country-code" style="max-width: 60px;"
+								   @bind-Value="petWalkerModel.CountryCode" placeholder="Code" />
+						<InputText class="form-control" @bind-Value="petWalkerModel.PhoneNumber"
+								   placeholder="Phone Number" />
+					</div>
+					<ValidationMessage For="@(() => petWalkerModel.CountryCode)" />
+					<ValidationMessage For="@(() => petWalkerModel.PhoneNumber)" />
+				</div>
+
+				<div class="form-group">
+					<label for="gender">Gender</label>
+					<InputSelect id="gender" class="form-control" @bind-Value="petWalkerModel.Gender">
+						<option value="">Select Gender</option>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
+						<option value="Other">Other</option>
+					</InputSelect>
+					<ValidationMessage For="@(() => petWalkerModel.Gender)" />
+				</div>
+
+				<div class="form-group">
+					<label for="biography">Biography</label>
+					<InputTextArea id="biography" class="form-control"
+								   @bind-Value="petWalkerModel.Biography" rows="4" />
+					<ValidationMessage For="@(() => petWalkerModel.Biography)" />
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" @onclick="OnCancel" style="margin-right: 0.5rem;">Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled="@isProcessing">
+						@if (isProcessing && currentProcessingTab == "personal")
+						{
+							<span class="spinner-border spinner-border-sm me-2" role="status"></span>
+						}
+						Save Personal Info
+					</button>
+				</div>
+			</div>
+		</EditForm>
+	};
+
+	private RenderFragment RenderProfessionalTab() => __builder =>
+	{
+		<EditForm Model="@petWalkerModel" OnValidSubmit="@SaveProfessionalInfo">
+			<DataAnnotationsValidator />
+
+			<div class="tab-section">
+				<h4>Professional Details</h4>
+
+				@if (tabMessages["professional"] != null)
+				{
+					<div class="alert @(tabMessages["professional"]!.IsSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
+						@tabMessages["professional"]!.Message
+						<button type="button" class="btn-close" @onclick="@(() => ClearTabMessage("professional"))" aria-label="Close"></button>
+					</div>
+				}
+
+				<div class="form-group">
+					<label for="hourlyRate">Hourly Rate ($)</label>
+					<InputNumber id="hourlyRate" class="form-control"
+								 @bind-Value="petWalkerModel.HourlyRate" />
+					<ValidationMessage For="@(() => petWalkerModel.HourlyRate)" />
+				</div>
+
+				<div class="form-group">
+					<label for="yearsOfExperience">Years of Experience</label>
+					<InputNumber id="yearsOfExperience" class="form-control"
+								 @bind-Value="petWalkerModel.YearsOfExperience" />
+					<ValidationMessage For="@(() => petWalkerModel.YearsOfExperience)" />
+				</div>
+
+				<div class="form-group">
+					<label for="dailyPetWalkLimit">Daily Pet Walk Limit</label>
+					<InputNumber id="dailyPetWalkLimit" class="form-control"
+								 @bind-Value="petWalkerModel.DailyPetWalkLimit" />
+					<ValidationMessage For="@(() => petWalkerModel.DailyPetWalkLimit)" />
+				</div>
+
+				<div class="form-group">
+					<label>Certifications</label>
+					<div class="certification-checkboxes">
+						<div class="form-check">
+							<InputCheckbox id="isVerified" class="form-check-input"
+										   @bind-Value="petWalkerModel.IsVerified" />
+							<label class="form-check-label" for="isVerified">Verified Walker</label>
+						</div>
+						<div class="form-check">
+							<InputCheckbox id="hasInsurance" class="form-check-input"
+										   @bind-Value="petWalkerModel.HasInsurance" />
+							<label class="form-check-label" for="hasInsurance">Has Insurance</label>
+						</div>
+						<div class="form-check">
+							<InputCheckbox id="hasFirstAid" class="form-check-input"
+										   @bind-Value="petWalkerModel.HasFirstAidCertification" />
+							<label class="form-check-label" for="hasFirstAid">First Aid Certified</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" @onclick="OnCancel" style="margin-right: 0.5rem;">Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled="@isProcessing">
+						@if (isProcessing && currentProcessingTab == "professional")
+						{
+							<span class="spinner-border spinner-border-sm me-2" role="status"></span>
+						}
+						Save Professional Details
+					</button>
+				</div>
+			</div>
+		</EditForm>
+	};
+
+	private RenderFragment RenderLocationTab() => __builder =>
+	{
+		<EditForm Model="@petWalkerModel" OnValidSubmit="@SaveLocationInfo">
+			<DataAnnotationsValidator />
+
+			<div class="tab-section">
+				<h4>Location & Service Areas</h4>
+
+				@if (tabMessages["location"] != null)
+				{
+					<div class="alert @(tabMessages["location"]!.IsSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
+						@tabMessages["location"]!.Message
+						<button type="button" class="btn-close" @onclick="@(() => ClearTabMessage("location"))" aria-label="Close"></button>
+					</div>
+				}
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="city">City</label>
+							<InputText id="city" class="form-control" @bind-Value="petWalkerModel.City" />
+							<ValidationMessage For="@(() => petWalkerModel.City)" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="state">State</label>
+							<InputText id="state" class="form-control" @bind-Value="petWalkerModel.State" />
+							<ValidationMessage For="@(() => petWalkerModel.State)" />
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="zipCode">Zip Code</label>
+							<InputText id="zipCode" class="form-control" @bind-Value="petWalkerModel.ZipCode" />
+							<ValidationMessage For="@(() => petWalkerModel.ZipCode)" />
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="country">Country</label>
+							<InputText id="country" class="form-control" @bind-Value="petWalkerModel.Country" />
+							<ValidationMessage For="@(() => petWalkerModel.Country)" />
+						</div>
+					</div>
+				</div>
+
+				<hr class="my-4" />
+
+				<h5>Service Areas</h5>
+				<div class="form-group mb-4">
+					<div class="row mb-2">
+						<div class="col-md-5">
+							<label for="region">Region</label>
+							<select id="region" class="form-control" value="@selectedRegionId" @onchange="OnRegionChanged">
+								<option value="">Select Region</option>
+								@foreach (var region in regions)
+								{
+									<option value="@region.Id">@region.RegionName</option>
+								}
+							</select>
+						</div>
+						<div class="col-md-5">
+							<label for="locality">Locality</label>
+							<select id="locality" class="form-control" value="@selectedLocalityId" @onchange="OnLocalityChanged"
+									disabled="@(selectedRegionId == Guid.Empty)">
+								<option value="">Select Locality</option>
+								@foreach (var locality in localities)
+								{
+									<option value="@locality.Id">@locality.LocalityName</option>
+								}
+							</select>
+						</div>
+						<div class="col-md-2 d-flex align-items-end">
+							<button type="button" class="btn btn-outline-primary w-100" @onclick="AddStructuredServiceArea"
+									disabled="@(selectedRegionId == Guid.Empty || selectedLocalityId == Guid.Empty)">
+								Add
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<h6>Selected Service Areas</h6>
+					@if (petWalkerModel.StructuredServiceAreas.Count > 0)
+					{
+						<div class="service-areas-list">
+							@foreach (var area in petWalkerModel.StructuredServiceAreas)
+							{
+								<div class="service-area-tag @(area.RegionId == Guid.Empty ? "service-area-tag-legacy" : "")">
+									@if (area.RegionId != Guid.Empty)
+									{
+										<span>@area.RegionName - @area.LocalityName</span>
+									}
+									else
+									{
+										<span>@area.LocalityName</span>
+										<span class="legacy-indicator" title="This service area needs to be updated to use the new region-locality structure">*</span>
+									}
+									<button type="button" class="remove-button"
+											@onclick="() => RemoveStructuredServiceArea(area.Id)"
+											title="Remove this service area">
+										×
+									</button>
+								</div>
+							}
+						</div>
+					}
+					else
+					{
+						<p class="text-muted">No service areas selected. Please add at least one service area.</p>
+					}
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" @onclick="OnCancel" style="margin-right: 0.5rem;">Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled="@isProcessing">
+						@if (isProcessing && currentProcessingTab == "location")
+						{
+							<span class="spinner-border spinner-border-sm me-2" role="status"></span>
+						}
+						Save Location & Areas
+					</button>
+				</div>
+			</div>
+		</EditForm>
+	};
+
+	private RenderFragment RenderScheduleTab() => __builder =>
+	{
+		<EditForm Model="@petWalkerModel" OnValidSubmit="@SaveScheduleInfo">
+			<DataAnnotationsValidator />
+
+			<div class="tab-section">
+				<h4>Weekly Schedule</h4>
+
+				@if (tabMessages["schedule"] != null)
+				{
+					<div class="alert @(tabMessages["schedule"]!.IsSuccess ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
+						@tabMessages["schedule"]!.Message
+						<button type="button" class="btn-close" @onclick="@(() => ClearTabMessage("schedule"))" aria-label="Close"></button>
+					</div>
+				}
+
+				<p class="text-muted mb-3">Set your availability for each day of the week. Toggle the checkbox to enable/disable a day, then set your start and end times.</p>
+
+				<div class="schedule-grid">
+					@foreach (var day in ScheduleHelper.WeekDays)
+					{
+						var daySchedule = scheduleItems.FirstOrDefault(s => s.DayOfWeek == day);
+						if (daySchedule == null)
+						{
+							daySchedule = new ScheduleItemDto
+							{
+								DayOfWeek = day,
+								StartTime = new TimeOnly(9, 0),
+								EndTime = new TimeOnly(17, 0),
+								IsActive = false
+							};
+							scheduleItems.Add(daySchedule);
+						}
+
+						<div class="schedule-day-row">
+							<div class="day-header">
+								<label class="day-checkbox">
+									<InputCheckbox @bind-Value="daySchedule.IsActive" />
+									<span class="day-name">@ScheduleHelper.GetDayDisplayName(day)</span>
+								</label>
+							</div>
+
+							<div class="time-controls @(daySchedule.IsActive ? "" : "disabled")">
+								<div class="time-input-group">
+									<label>Start Time:</label>
+									<input type="time"
+										   @bind="daySchedule.StartTime"
+										   @bind:format="HH:mm"
+										   disabled="@(!daySchedule.IsActive)"
+										   class="form-control time-input" />
+								</div>
+
+								<div class="time-separator">to</div>
+
+								<div class="time-input-group">
+									<label>End Time:</label>
+									<input type="time"
+										   @bind="daySchedule.EndTime"
+										   @bind:format="HH:mm"
+										   disabled="@(!daySchedule.IsActive)"
+										   class="form-control time-input" />
+								</div>
+							</div>
+
+							@if (daySchedule.IsActive && !ScheduleHelper.IsValidScheduleItem(daySchedule))
+							{
+								<div class="validation-error">
+									<small class="text-danger">End time must be after start time</small>
+								</div>
+							}
+						</div>
+					}
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" @onclick="OnCancel" style="margin-right: 0.5rem;">Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled="@isProcessing">
+						@if (isProcessing && currentProcessingTab == "schedule")
+						{
+							<span class="spinner-border spinner-border-sm me-2" role="status"></span>
+						}
+						Save Schedule
+					</button>
+				</div>
+
+				@* Legacy Service Areas (Hidden) *@
+				<div class="d-none">
+					@for (int i = 0; i < petWalkerModel.ServiceAreas.Count; i++)
+					{
+						var index = i;
+						<InputText @bind-Value="petWalkerModel.ServiceAreas[index]" />
+					}
+				</div>
+			</div>
+		</EditForm>
+	};
+}

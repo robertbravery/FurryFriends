@@ -56,10 +56,13 @@ public static class ClientTestHelpers
     breed.Species = species;
     for (int i = 0; i < 3; i++)
     {
-        var pet = client.AddPet($"Pet{i}", 1, 2, 5.5, "White", "None");
+      client.AddPet($"Pet{i}", breed, 1, 2, "White", "None");
 
     }
-
+    foreach (var pet in client.Pets)
+    {
+      pet.BreedType = breed;
+    }
 
     if (id.HasValue)
     {

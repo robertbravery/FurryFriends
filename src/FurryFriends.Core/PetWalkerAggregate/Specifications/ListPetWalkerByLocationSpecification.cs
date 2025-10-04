@@ -1,4 +1,6 @@
-﻿namespace FurryFriends.Core.PetWalkerAggregate.Specifications;
+﻿using FurryFriends.Core.PetWalkerAggregate.Enums;
+
+namespace FurryFriends.Core.PetWalkerAggregate.Specifications;
 
 public class ListPetWalkerByLocationSpecification : Specification<PetWalker>
 {
@@ -19,6 +21,7 @@ public class ListPetWalkerByLocationSpecification : Specification<PetWalker>
     Query.OrderBy(x => x.Name.FirstName)
       .Skip((page - 1) * pageSize)
       .Take(pageSize)
+      .Include(i => i.Photos.Where(w => w.PhotoType == PhotoType.BioPic))
       .Include(i => i.ServiceAreas.Where(sa => sa.LocalityID == localityId)).ThenInclude(i => i.Locality);
   }
 }
