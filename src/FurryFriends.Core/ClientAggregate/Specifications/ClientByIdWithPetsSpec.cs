@@ -9,3 +9,4 @@ public sealed class ClientByIdWithPetsSpec : SingleResultSpecification<Client>
       .AsTracking();  // Explicitly enable tracking
   }
 }
+

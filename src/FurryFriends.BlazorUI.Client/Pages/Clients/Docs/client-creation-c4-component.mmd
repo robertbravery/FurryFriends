@@ -1,0 +1,56 @@
+C4Component
+    title Component diagram for Client Creation in FurryFriends
+
+    Container_Boundary(blazorUI, "Blazor UI") {
+        Component(createClientPage, "CreateClient Page", "Blazor Component", "Provides the client registration form")
+        Component(clientForm, "ClientForm", "Blazor Component", "Reusable form component for client data")
+        Component(clientService, "ClientService", "C# Service", "Handles API communication for client operations")
+    }
+    
+    Container_Boundary(webAPI, "Web API") {
+        Component(clientEndpoint, "ClientEndpoints", "ASP.NET Endpoint", "Exposes client creation API")
+        Component(mediator, "MediatR", "Library", "Mediates commands and queries")
+        Component(commandHandler, "CreateClientCommandHandler", "C# Class", "Handles client creation command")
+        Component(domainService, "ClientService", "C# Service", "Implements domain logic for clients")
+        Component(validator, "Validators", "FluentValidation", "Validates client data")
+    }
+    
+    Container_Boundary(domain, "Domain Layer") {
+        Component(clientEntity, "Client Entity", "C# Class", "Client aggregate root")
+        Component(valueObjects, "Value Objects", "C# Classes", "Name, Email, PhoneNumber, Address")
+    }
+    
+    Container_Boundary(infrastructure, "Infrastructure") {
+        Component(repository, "ClientRepository", "C# Class", "Handles data access for clients")
+        Component(dbContext, "AppDbContext", "EF Core DbContext", "Entity Framework context")
+    }
+    
+    ContainerDb(database, "SQL Database", "SQL Server", "Stores client information")
+    
+    Rel(createClientPage, clientForm, "Uses")
+    Rel(createClientPage, clientService, "Uses")
+    Rel(clientService, clientEndpoint, "HTTP POST")
+    
+    Rel(clientEndpoint, mediator, "Sends command to")
+    Rel(mediator, commandHandler, "Routes command to")
+    Rel(commandHandler, validator, "Validates using")
+    Rel(commandHandler, valueObjects, "Creates")
+    Rel(commandHandler, domainService, "Uses")
+    
+    Rel(domainService, clientEntity, "Creates")
+    Rel(domainService, repository, "Uses")
+    Rel(repository, dbContext, "Uses")
+    Rel(dbContext, database, "Reads/Writes")
+    
+    UpdateRelStyle(createClientPage, clientForm, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(createClientPage, clientService, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(clientService, clientEndpoint, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(clientEndpoint, mediator, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(mediator, commandHandler, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(commandHandler, validator, $textColor="green", $lineColor="green")
+    UpdateRelStyle(commandHandler, valueObjects, $textColor="green", $lineColor="green")
+    UpdateRelStyle(commandHandler, domainService, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(domainService, clientEntity, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(domainService, repository, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(repository, dbContext, $textColor="blue", $lineColor="blue")
+    UpdateRelStyle(dbContext, database, $textColor="blue", $lineColor="blue")

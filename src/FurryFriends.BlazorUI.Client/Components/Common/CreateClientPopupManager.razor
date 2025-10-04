@@ -1,0 +1,96 @@
+@using FurryFriends.BlazorUI.Client.Pages.Clients
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IPopupService PopupService
+@inject IClientService ClientService
+
+@if (showCreatePopup)
+{
+    <CreateClientPopup OnSave="HandleSave" OnCancel="HandleCancel" />
+}
+
+@code {
+    private bool showCreatePopup = false;
+
+    protected override void OnInitialized()
+    {
+        SubscribeToEvents();
+
+        // Check if the popup should be open based on the service state
+        if (PopupService.IsCreateClientPopupOpen())
+        {
+            showCreatePopup = true;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Ensure we're subscribed after the component is rendered
+            SubscribeToEvents();
+
+            // Check if the popup should be open based on the service state
+            if (PopupService.IsCreateClientPopupOpen() && !showCreatePopup)
+            {
+                showCreatePopup = true;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void SubscribeToEvents()
+    {
+        // Unsubscribe first to avoid duplicate subscriptions
+        PopupService.OnShowCreateClientPopup -= ShowPopup;
+        PopupService.OnCloseCreateClientPopup -= ClosePopup;
+
+        // Subscribe to events
+        PopupService.OnShowCreateClientPopup += ShowPopup;
+        PopupService.OnCloseCreateClientPopup += ClosePopup;
+    }
+
+    private void ShowPopup()
+    {
+        showCreatePopup = true;
+        StateHasChanged();
+    }
+
+    private void ClosePopup()
+    {
+        showCreatePopup = false;
+        StateHasChanged();
+    }
+
+    private void HandleSave()
+    {
+        showCreatePopup = false;
+        StateHasChanged();
+
+        // Notify any listeners that might need to refresh their data
+        PopupService.CloseCreateClientPopup();
+    }
+
+    private void HandleCancel()
+    {
+        showCreatePopup = false;
+        StateHasChanged();
+
+        // Notify any listeners that the popup was closed
+        PopupService.CloseCreateClientPopup();
+    }
+
+    public void Dispose()
+    {
+        try
+        {
+            PopupService.OnShowCreateClientPopup -= ShowPopup;
+            PopupService.OnCloseCreateClientPopup -= ClosePopup;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during Dispose: {ex.Message}");
+        }
+    }
+}

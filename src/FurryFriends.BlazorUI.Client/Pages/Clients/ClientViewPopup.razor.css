@@ -1,0 +1,507 @@
+/* Modal-specific styles */
+.modal-backdrop {
+    display: block;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    animation: backdropFadeIn 0.2s ease-out;
+}
+
+@keyframes backdropFadeIn {
+    from {
+        background-color: rgba(0,0,0,0);
+    }
+    to {
+        background-color: rgba(0,0,0,0.5);
+    }
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 1.25rem auto;
+    max-width: 1400px; /* Increased width to accommodate two columns */
+    width: 90%; /* Use most of the screen width */
+    z-index: 1050;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 0.3rem;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 0.3rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensures the shadow respects the border radius */
+    transition: box-shadow 0.3s ease;
+}
+
+.modal-content:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.modal-header-background {
+    background-color: #f5f5f5; /* Very light gray */
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    font-weight: 700; /* Bold text */
+    font-size: 1.25rem;
+}
+
+/* Modal body styling */
+.modal-body {
+    padding: 1rem;
+    max-height: calc(95vh - 110px); /* Limit height to 90% of viewport minus header/footer */
+    overflow-y: auto; /* Enable scrolling if content is too tall */
+}
+
+.loading-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.error-container {
+    color: red;
+    padding: 20px;
+}
+
+/* Modal footer styling */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Header actions container */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: #dc3545; /* Red color on hover */
+}
+
+/* Pets toggle button */
+.pets-toggle-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.pets-toggle-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.pets-toggle-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.pets-toggle-icon.open {
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* Layout */
+.view-client-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.client-details-section {
+    /* Left column */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.pets-section {
+    /* Right column */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.pets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.3rem 0.3rem 0 0;
+    border: 1px solid #dee2e6;
+    border-bottom: none;
+}
+
+.section-title {
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.pets-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 0 0 0.3rem 0.3rem;
+    border: 1px solid #dee2e6;
+    max-height: calc(100vh - 250px); /* Limit height to viewport minus header/footer */
+}
+
+/* Client details card styling */
+.client-details-card {
+    background-color: white;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    border: 1px solid #dee2e6;
+    margin-bottom: 0rem;
+    overflow: hidden;
+}
+
+.client-details-header {
+    padding: 0.75rem 1rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.client-details-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.client-details-body {
+    padding: 1rem;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 0.55rem;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-label {
+    font-weight: 700;
+    color: #495057;
+    width: 120px;
+    flex-shrink: 0;
+}
+
+.detail-value {
+    color: #212529;
+}
+
+.detail-value.notes {
+    white-space: pre-line;
+}
+
+/* Status indicators */
+.status-active {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+/* Pet cards styling */
+.pet-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Custom scrollbar styling for WebKit browsers */
+.pets-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pets-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.pets-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.pets-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.pet-card {
+    background-color: white;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    border: 1px solid #dee2e6;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.pet-card-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+}
+
+.pet-card-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #007bff;
+}
+
+.pet-card-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.pet-card-species {
+    font-size: 0.75rem;
+    color: #fff;
+    background-color: #007bff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.pet-card-breed {
+    font-size: 0.75rem;
+    font-weight:600;
+    color: #6c757d;
+    background-color: #e9ecef;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.pet-card-content {
+    display: flex;
+    flex-direction: row;
+    min-height: 200px;
+}
+
+.pet-card-image {
+    width: 200px;
+    min-width: 200px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    position: relative; /* For image positioning */
+    border-right: 1px solid #dee2e6;
+}
+
+.pet-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    max-width: 100%;
+    transition: transform 0.3s ease; /* Smooth zoom effect on hover */
+}
+
+.pet-card:hover .pet-image {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.pet-image-placeholder {
+    color: #6c757d;
+    font-style: italic;
+    background-color: #e9ecef;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.pet-card-body {
+    padding: 0.75rem;
+    flex: 1;
+    word-wrap: break-word; /* Break long words to prevent overflow */
+}
+
+.pet-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.pet-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.pet-detail-full {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.pet-detail-full .detail-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    width: 100%;
+}
+
+.pet-detail .detail-label {
+    font-weight: 700;
+    color: #495057;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.pet-detail .detail-value {
+    color: #212529;
+    font-size: 0.9rem;
+}
+
+.pet-card-body p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.pet-card-body p:last-child {
+    margin-bottom: 0;
+}
+
+.pet-card-body strong {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Truncate long text with ellipsis */
+.truncate-text {
+    display: inline-block;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Add tooltip-like behavior on hover */
+.truncate-text:hover {
+    text-decoration: underline;
+    cursor: help;
+}
+
+/* Loading and empty states */
+.pets-loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.pets-loading-message {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.no-pets-message {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Responsive overrides */
+@media (max-width: 992px) {
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .view-client-layout {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+        gap: 1rem;
+    }
+
+    .detail-row {
+        flex-direction: column;
+    }
+
+    .detail-label {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+
+    .pet-card-content {
+        flex-direction: column; /* Stack image and content on mobile */
+    }
+
+    .pet-card-image {
+        width: 100%;
+        height: 180px;
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .pet-details-grid {
+        grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
+    }
+}

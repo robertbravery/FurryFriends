@@ -1,5 +1,7 @@
-﻿namespace FurryFriends.Core.ClientAggregate;
-public class Breed
+﻿using FurryFriends.Core.Common;
+
+namespace FurryFriends.Core.ClientAggregate;
+public class Breed : IAggregateRoot
 {
 
   public int Id { get; set; }

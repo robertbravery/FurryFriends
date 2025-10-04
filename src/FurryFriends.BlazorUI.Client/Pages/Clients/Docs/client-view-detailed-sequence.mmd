@@ -1,0 +1,53 @@
+sequenceDiagram
+    participant User
+    participant ClientList
+    participant PopupService
+    participant ViewPopupManager
+    participant ClientViewPopup
+    participant PetsViewDisplay
+    participant ClientService
+    participant API
+    participant Database
+
+    User->>ClientList: Click "View" button on client row
+    ClientList->>PopupService: ShowViewClientPopup(clientEmail)
+    
+    PopupService->>PopupService: Set _currentClientEmail
+    PopupService->>PopupService: Set _isViewClientPopupOpen = true
+    PopupService-->>ViewPopupManager: OnShowViewClientPopup event
+    
+    ViewPopupManager->>ViewPopupManager: ShowPopup(clientEmail)
+    ViewPopupManager->>ViewPopupManager: Set showViewPopup = true
+    ViewPopupManager->>ClientViewPopup: Render with ClientEmail parameter
+    
+    ClientViewPopup->>ClientViewPopup: OnInitializedAsync()
+    ClientViewPopup->>ClientViewPopup: Set isLoading = true
+    ClientViewPopup->>ClientService: GetClientByEmailAsync(ClientEmail)
+    
+    ClientService->>API: GET /Clients/email/{email}
+    API->>Database: Query client with pets
+    Database-->>API: Return client data with pets
+    API-->>ClientService: Return ClientResponseBase
+    
+    ClientService-->>ClientViewPopup: Return client data with pets array
+    
+    ClientViewPopup->>ClientViewPopup: Set clientModel = ClientData.MapToModel(response.Data)
+    ClientViewPopup->>ClientViewPopup: Set clientPets = response.Data.Pets
+    ClientViewPopup->>ClientViewPopup: Set isLoading = false
+    
+    ClientViewPopup->>PetsViewDisplay: Render with Pets parameter
+    
+    ClientViewPopup-->>User: Display client personal information
+    PetsViewDisplay-->>User: Display client pets in cards
+    
+    User->>ClientViewPopup: View client details and pets
+    
+    User->>ClientViewPopup: Click close button
+    ClientViewPopup->>PopupService: CloseViewClientPopup()
+    
+    PopupService->>PopupService: Set _isViewClientPopupOpen = false
+    PopupService-->>ViewPopupManager: OnCloseViewClientPopup event
+    
+    ViewPopupManager->>ViewPopupManager: ClosePopup()
+    ViewPopupManager->>ViewPopupManager: Set showViewPopup = false
+    ViewPopupManager-->>User: Popup is closed

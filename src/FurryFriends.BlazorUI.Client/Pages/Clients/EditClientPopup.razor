@@ -1,5 +1,6 @@
 @using FurryFriends.BlazorUI.Client.Models.Clients
 @using FurryFriends.BlazorUI.Client.Components.Common
+@using FurryFriends.BlazorUI.Client.Pages.Clients
 @rendermode InteractiveAuto
 
 <div class="modal-backdrop">
@@ -67,6 +68,15 @@
 		ClientEmail="ClientEmail"
 		OnSave="HandlePetSaved"
 		OnCancel="HandlePetEditCancel" />
+}
+
+@if (showAddPetPopup)
+{
+	<AddPetPopup
+		ClientId="clientId"
+		ClientEmail="ClientEmail"
+		OnSave="HandlePetAdded"
+		OnCancel="HandleAddPetCancel" />
 }
 
 

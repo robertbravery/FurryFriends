@@ -1,0 +1,22 @@
+C4Container
+    title Container diagram for Client Creation in FurryFriends
+
+    Person(user, "Pet Owner", "A person who owns pets and wants to register as a client")
+    
+    System_Boundary(furryFriends, "FurryFriends System") {
+        Container(blazorUI, "Blazor UI", "Blazor WebAssembly", "Provides the user interface for client registration")
+        Container(webAPI, "Web API", "ASP.NET Core", "Handles client creation requests and business logic")
+        Container(database, "Database", "SQL Server", "Stores client information")
+        
+        Container_Ext(emailService, "Email Service", "Sends confirmation emails to new clients")
+    }
+    
+    Rel(user, blazorUI, "Uses", "HTTPS")
+    Rel(blazorUI, webAPI, "Makes API calls to", "JSON/HTTPS")
+    Rel(webAPI, database, "Reads from and writes to", "Entity Framework Core")
+    Rel(webAPI, emailService, "Sends emails using", "SMTP")
+    
+    UpdateRelStyle(user, blazorUI, $textColor="blue", $lineColor="blue", $offsetY="-10")
+    UpdateRelStyle(blazorUI, webAPI, $textColor="blue", $lineColor="blue", $offsetY="-10")
+    UpdateRelStyle(webAPI, database, $textColor="blue", $lineColor="blue", $offsetY="-10")
+    UpdateRelStyle(webAPI, emailService, $textColor="green", $lineColor="green", $offsetY="-10")

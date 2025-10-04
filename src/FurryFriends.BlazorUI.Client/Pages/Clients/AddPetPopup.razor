@@ -1,0 +1,110 @@
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@rendermode InteractiveAuto
+
+<div class="modal-backdrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-background">
+                <h5 class="modal-title">Add New Pet</h5>
+                <button type="button" class="close" @onclick="HandleCancel">&times;</button>
+            </div>
+            <div class="modal-body">
+                @if (isSubmitting)
+                {
+                    <div class="loading-container">
+                        <p><em>Adding pet...</em></p>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="error-container">
+                        <p class="text-danger">@errorMessage</p>
+                    </div>
+                }
+                else
+                {
+                    <EditForm Model="@Pet" OnValidSubmit="HandleValidSubmit" FormName="AddPet">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group">
+                            <label for="petName">Name <span class="required">*</span></label>
+                            <InputText id="petName" @bind-Value="Pet.Name" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Name)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petSpecies">Species <span class="required">*</span></label>
+                            <InputSelect id="petSpecies" @bind-Value="Pet.Species" class="form-control" @oninput="SpeciesChanged">
+                                <option value="">-- Select Species --</option>
+                                @if (breeds != null)
+                                {
+                                    @foreach (var species in breeds.Distinct())
+                                    {
+                                        <option value="@species">@species</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Pet.Species)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petBreed">Breed <span class="required">*</span></label>
+                            <InputSelect id="petBreed" @bind-Value="Pet.BreedId" class="form-control">
+                                <option value="0">-- Select Breed --</option>
+                                @if (breeds != null)
+                                {
+                                    @foreach (var breed in breeds)
+                                    {
+                                        <option value="@breed.Id">@breed.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Pet.BreedId)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petAge">Age (years) <span class="required">*</span></label>
+                            <InputNumber id="petAge" @bind-Value="Pet.Age" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Age)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petWeight">Weight (lbs) <span class="required">*</span></label>
+                            <InputNumber id="petWeight" @bind-Value="Pet.Weight" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Weight)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petSpecialNeeds">Special Needs</label>
+                            <InputTextArea id="petSpecialNeeds" @bind-Value="Pet.SpecialNeeds" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.SpecialNeeds)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petMedicalConditions">Medical Conditions</label>
+                            <InputTextArea id="petMedicalConditions" @bind-Value="Pet.MedicalConditions" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.MedicalConditions)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petPhoto">Photo URL</label>
+                            <InputText id="petPhoto" @bind-Value="Pet.Photo" class="form-control" />
+                            <ValidationMessage For="@(() => Pet.Photo)" />
+                        </div>
+
+                        <div class="form-group form-check">
+                            <InputCheckbox id="petIsActive" @bind-Value="Pet.isActive" class="form-check-input" />
+                            <label class="form-check-label" for="petIsActive">Active</label>
+                            <ValidationMessage For="@(() => Pet.isActive)" />
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Add Pet</button>
+                            <button type="button" class="btn btn-secondary" @onclick="HandleCancel">Cancel</button>
+                        </div>
+                    </EditForm>
+                }
+            </div>
+        </div>
+    </div>
+</div>

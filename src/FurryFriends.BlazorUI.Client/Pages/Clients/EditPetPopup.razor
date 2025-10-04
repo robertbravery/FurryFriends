@@ -29,8 +29,17 @@
 
                         <div class="form-group">
                             <label for="petBreed">Breed</label>
-                            <InputText id="petBreed" @bind-Value="Pet.Breed" class="form-control" />
-                            <ValidationMessage For="@(() => Pet.Breed)" />
+                            <InputSelect id="petBreed" @bind-Value="Pet.BreedId" class="form-control">
+                                <option value="0">-- Select Breed --</option>
+                                @if (breeds != null)
+                                {
+                                    @foreach (var breed in breeds)
+                                    {
+                                        <option value="@breed.Id">@breed.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Pet.BreedId)" />
                         </div>
 
                         <div class="form-group">

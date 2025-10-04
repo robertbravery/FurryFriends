@@ -1,0 +1,128 @@
+classDiagram
+    class CreateClient {
+        -ClientModel clientModel
+        -bool isSubmitting
+        -string errorMessage
+        +OnInitialized()
+        +HandleSaveClient(EditContext)
+        +HandleCancel()
+    }
+    
+    class ClientModel {
+        +string FirstName
+        +string LastName
+        +string EmailAddress
+        +string CountryCode
+        +string PhoneNumber
+        +Address Address
+        +string Notes
+        +ClientType ClientType
+        +string PreferredContactTime
+        +ReferralSource ReferralSource
+        +bool IsActive
+        +DateTime? DeactivatedAt
+        +static MapToRequest(ClientModel)
+    }
+    
+    class Address {
+        +string Street
+        +string City
+        +string State
+        +string ZipCode
+        +string Country
+    }
+    
+    class ClientForm {
+        +ClientModel ClientModel
+        +EventCallback~EditContext~ OnSubmit
+        +EventCallback OnCancel
+        +string FormName
+        +bool Enhance
+        +bool IsSubmitting
+        +string ErrorMessage
+        +string SubmitButtonText
+        +bool ShowCancelButton
+        +string ButtonContainerClass
+        +string CancelButtonStyle
+        +OnInitialized()
+        +HandleCancel()
+    }
+    
+    class ClientRequestDto {
+        +string FirstName
+        +string LastName
+        +string Email
+        +string PhoneCountryCode
+        +string PhoneNumber
+        +string Street
+        +string City
+        +string State
+        +string ZipCode
+        +string Country
+        +string Notes
+        +static MapToDto(ClientModel)
+    }
+    
+    class IClientService {
+        +Task~List~ClientDto~~ GetClientsAsync()
+        +Task~ClientResponseBase~ GetClientByEmailAsync(string)
+        +Task CreateClientAsync(ClientRequestDto)
+        +Task UpdateClientAsync(ClientRequestDto)
+        +Task UpdatePetAsync(string, Pet)
+        +Task~string~ GetDogImageAsync()
+    }
+    
+    class Client {
+        +Guid Id
+        +Name Name
+        +Email Email
+        +PhoneNumber PhoneNumber
+        +Address Address
+        +ClientType ClientType
+        +TimeOnly? PreferredContactTime
+        +ReferralSource ReferralSource
+        +IReadOnlyCollection~Pet~ Pets
+        +static Create(valueObjects)
+        +AddPet(Pet)
+    }
+    
+    class Name {
+        +string FirstName
+        +string LastName
+        +string FullName
+        +static Create(string, string)
+    }
+    
+    class Email {
+        +string EmailAddress
+        +static Create(string)
+    }
+    
+    class PhoneNumber {
+        +string CountryCode
+        +string Number
+        +static Create(string, string)
+    }
+    
+    class DomainAddress {
+        +string Street
+        +string City
+        +string StateProvinceRegion
+        +string ZipCode
+        +string Country
+        +static Create(string, string, string, string, string)
+    }
+    
+    CreateClient --> ClientModel : uses
+    CreateClient --> IClientService : injects
+    CreateClient --> ClientRequestDto : creates
+    ClientModel --> Address : contains
+    CreateClient --> ClientForm : renders
+    ClientForm --> ClientModel : binds to
+    
+    Client --> Name : contains
+    Client --> Email : contains
+    Client --> PhoneNumber : contains
+    Client --> DomainAddress : contains
+    
+    class DomainAddress as "Address"

@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FurryFriends.BlazorUI.Client.Models.Clients.Enums;
 
 namespace FurryFriends.BlazorUI.Client.Models.Clients;
 
 public class ClientModel
 {
+  public Guid Id { get; set; }
+
   [Required(ErrorMessage = "Full name is required")]
   [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
   [RegularExpression(@"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$",
@@ -37,8 +40,16 @@ public class ClientModel
   [StringLength(500, ErrorMessage = "Notes cannot exceed 500 characters")]
   public string Notes { get; set; } = string.Empty;
 
+  // Additional properties from Client aggregate
+  public ClientType ClientType { get; set; } = ClientType.Regular;
+  public string PreferredContactTime { get; set; } = string.Empty;
+  public ReferralSource ReferralSource { get; set; } = ReferralSource.None;
+  public bool IsActive { get; set; } = true;
+  public DateTime? DeactivatedAt { get; set; }
+
   public static ClientRequestDto MapToRequest(ClientModel clientDto) => new()
   {
+    Id = clientDto.Id,
     FirstName = clientDto.FirstName,
     LastName = clientDto.LastName,
     Email = clientDto.EmailAddress,

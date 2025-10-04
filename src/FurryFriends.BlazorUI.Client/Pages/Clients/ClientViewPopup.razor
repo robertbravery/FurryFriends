@@ -1,0 +1,230 @@
+@namespace FurryFriends.BlazorUI.Client.Pages.Clients
+@using FurryFriends.BlazorUI.Client.Models.Clients
+@using FurryFriends.BlazorUI.Client.Models.Clients.Enums
+@using FurryFriends.BlazorUI.Client.Components.Common
+@rendermode InteractiveServer
+
+<div class="modal-backdrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-background">
+                <h5 class="modal-title">Client Details</h5>
+                <div class="header-actions">
+                    <button type="button" class="close" @onclick="OnClose">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                @if (isLoading)
+                {
+                    <div class="loading-container">
+                        <p><em>Loading client data...</em></p>
+                    </div>
+                }
+                else if (loadError != null)
+                {
+                    <div class="error-container">
+                        <p>Error: @loadError</p>
+                    </div>
+                }
+                else if (clientModel != null)
+                {
+                    <div class="view-client-layout">
+                        <div class="client-details-section">
+                            <div class="client-details-card">
+                                <div class="client-details-header">
+                                    <h4>Personal Information</h4>
+                                </div>
+                                <div class="client-details-body">
+                                    <div class="detail-row">
+                                        <div class="detail-label">Name:</div>
+                                        <div class="detail-value">@clientModel.FirstName @clientModel.LastName</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Email:</div>
+                                        <div class="detail-value">@clientModel.EmailAddress</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Phone:</div>
+										<div class="detail-value">+@clientModel.CountryCode @(clientModel.PhoneNumber.StartsWith("0")
+											? clientModel.PhoneNumber.Substring(1) : clientModel.PhoneNumber)</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Status:</div>
+                                        <div class="detail-value @(clientModel.IsActive ? "status-active" : "status-inactive")">
+                                            @(clientModel.IsActive ? "Active" : "Inactive")
+                                        </div>
+                                    </div>
+                                    @if (!clientModel.IsActive && clientModel.DeactivatedAt.HasValue)
+                                    {
+                                        <div class="detail-row">
+                                            <div class="detail-label">Deactivated:</div>
+                                            <div class="detail-value">@clientModel.DeactivatedAt.Value.ToShortDateString()</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="client-details-card">
+                                <div class="client-details-header">
+                                    <h4>Client Details</h4>
+                                </div>
+                                <div class="client-details-body">
+                                    <div class="detail-row">
+                                        <div class="detail-label">Client Type:</div>
+                                        <div class="detail-value">@clientModel.ClientType</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Referral Source:</div>
+                                        <div class="detail-value">@GetReferralSourceDescription(clientModel.ReferralSource)</div>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(clientModel.PreferredContactTime))
+                                    {
+                                        <div class="detail-row">
+                                            <div class="detail-label">Preferred Contact Time:</div>
+                                            <div class="detail-value">@clientModel.PreferredContactTime</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="client-details-card">
+                                <div class="client-details-header">
+                                    <h4>Address</h4>
+                                </div>
+                                <div class="client-details-body">
+                                    <div class="detail-row">
+                                        <div class="detail-label">Street:</div>
+                                        <div class="detail-value">@clientModel.Address.Street</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">City:</div>
+                                        <div class="detail-value">@clientModel.Address.City</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">State:</div>
+                                        <div class="detail-value">@clientModel.Address.State</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Zip Code:</div>
+                                        <div class="detail-value">@clientModel.Address.ZipCode</div>
+                                    </div>
+                                    <div class="detail-row">
+                                        <div class="detail-label">Country:</div>
+                                        <div class="detail-value">@clientModel.Address.Country</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(clientModel.Notes))
+                            {
+                                <div class="client-details-card">
+                                    <div class="client-details-header">
+                                        <h4>Notes</h4>
+                                    </div>
+                                    <div class="client-details-body">
+                                        <div class="detail-value notes">@clientModel.Notes</div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                        <!-- Pets section -->
+                        <div class="pets-section">
+                            <div class="pets-header">
+                                <h4 class="section-title">Client's Pets @(clientPets != null && clientPets.Any() ? $"({clientPets.Length})" : "")</h4>
+                            </div>
+                            <div class="pets-container">
+                                @if (isPetsLoading)
+                                {
+                                    <div class="pets-loading-container">
+                                        <p class="pets-loading-message">Loading pets...</p>
+                                    </div>
+                                }
+                                else if (clientPets == null || !clientPets.Any())
+                                {
+                                    <p class="no-pets-message">No pets found for this client.</p>
+                                }
+                                else
+                                {
+                                    <div class="pet-cards-container">
+                                        @foreach (var pet in clientPets)
+                                        {
+                                            <div class="pet-card">
+                                                <div class="pet-card-header">
+                                                    <h4>@pet.Name</h4>
+                                                    <div class="pet-card-tags">
+                                                        @if (!string.IsNullOrEmpty(pet.Species) && pet.Species != "string")
+                                                        {
+                                                            <span class="pet-card-species">@pet.Species</span>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(pet.Breed) && pet.Breed != "string")
+                                                        {
+                                                            <span class="pet-card-breed">@pet.Breed</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="pet-card-breed">Unknown Breed</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                <div class="pet-card-content">
+                                                    <div class="pet-card-image">
+                                                        @{
+                                                            string imageUrl = string.IsNullOrEmpty(pet.Photo) || pet.Photo == "string"
+                                                                ? $"https://placehold.co/400x300/e9ecef/495057?text={Uri.EscapeDataString(pet.Name)}"
+                                                                : pet.Photo;
+                                                        }
+                                                        <img src="@imageUrl" alt="@pet.Name" class="pet-image"
+                                                             onerror="this.onerror=null; this.src='https://placehold.co/400x300/e9ecef/495057?text=No+Image'; this.alt='No image available';" />
+                                                    </div>
+                                                    <div class="pet-card-body">
+                                                        <div class="pet-details-grid">
+                                                            <div class="pet-detail">
+                                                                <span class="detail-label">Age:</span>
+                                                                <span class="detail-value">@(pet.Age > 0 ? $"{pet.Age} years" : "Unknown")</span>
+                                                            </div>
+                                                            <div class="pet-detail">
+                                                                <span class="detail-label">Weight:</span>
+                                                                <span class="detail-value">@(pet.Weight > 0 ? $"{pet.Weight} lbs" : "Unknown")</span>
+                                                            </div>
+                                                            <div class="pet-detail">
+                                                                <span class="detail-label">Active:</span>
+                                                                <span class="detail-value">@(pet.isActive ? "Yes" : "No")</span>
+                                                            </div>
+                                                        </div>
+
+                                                        @if (!string.IsNullOrEmpty(pet.SpecialNeeds) && pet.SpecialNeeds != "string")
+                                                        {
+                                                            <div class="pet-detail-full">
+                                                                <span class="detail-label">Special Needs:</span>
+                                                                <span class="detail-value">@pet.SpecialNeeds</span>
+                                                            </div>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(pet.MedicalConditions) && pet.MedicalConditions != "string")
+                                                        {
+                                                            <div class="pet-detail-full">
+                                                                <span class="detail-label">Medical:</span>
+                                                                <span class="detail-value">@pet.MedicalConditions</span>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="OnClose">Close</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

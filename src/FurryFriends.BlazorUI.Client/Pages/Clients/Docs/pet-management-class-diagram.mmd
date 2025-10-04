@@ -1,0 +1,121 @@
+classDiagram
+    class EditClientPopup {
+        -ClientModel clientModel
+        -Pet[] clientPets
+        -bool isPetsPanelOpen
+        -bool showEditPetPopup
+        -bool showAddPetPopup
+        -Pet selectedPet
+        -Guid clientId
+        +OnInitializedAsync()
+        +LoadClientData()
+        +TogglePetsPanel()
+        +HandleAddPet(string)
+        +HandleEditPet(Pet)
+        +HandlePetSaved()
+        +HandlePetAdded(Pet)
+        +HandleAddPetCancel()
+        +HandlePetEditCancel()
+    }
+    
+    class PetsDisplay {
+        +Pet[] Pets
+        +bool IsLoading
+        +string ClientEmail
+        +EventCallback~string~ OnAddPet
+        +EventCallback~Pet~ OnEditPet
+        +AddNewPet()
+        +EditPet(Pet)
+    }
+    
+    class AddPetPopup {
+        +Guid ClientId
+        +string ClientEmail
+        +EventCallback~Pet~ OnSave
+        +EventCallback OnCancel
+        -Pet Pet
+        -bool isSubmitting
+        -string errorMessage
+        -List~BreedDto~ breeds
+        +OnInitializedAsync()
+        +HandleValidSubmit()
+        +HandleCancel()
+        +SpeciesChanged(ChangeEventArgs)
+    }
+    
+    class EditPetPopup {
+        +Pet Pet
+        +string ClientEmail
+        +EventCallback OnSave
+        +EventCallback OnCancel
+        -bool isLoading
+        -List~BreedDto~ breeds
+        +OnInitializedAsync()
+        +HandleValidSubmit()
+        +HandleCancel()
+    }
+    
+    class Pet {
+        +string Id
+        +string Name
+        +string Species
+        +string Breed
+        +int BreedId
+        +int Age
+        +int Weight
+        +string SpecialNeeds
+        +string MedicalConditions
+        +bool isActive
+        +string Photo
+    }
+    
+    class BreedDto {
+        +int Id
+        +string Name
+        +string Description
+        +int SpeciesId
+        +string Species
+    }
+    
+    class IClientService {
+        +Task~List~ClientDto~~ GetClientsAsync()
+        +Task~ClientResponseBase~ GetClientByEmailAsync(string)
+        +Task CreateClientAsync(ClientRequestDto)
+        +Task UpdateClientAsync(ClientRequestDto)
+        +Task UpdatePetAsync(string, Pet)
+        +Task~Guid~ AddPetAsync(Guid, Pet)
+        +Task~List~BreedDto~~ GetBreedsAsync()
+        +Task~string~ GetDogImageAsync()
+    }
+    
+    class ClientService {
+        -HttpClient _httpClient
+        -HttpClient _dogClient
+        +GetClientsAsync()
+        +GetClientByEmailAsync(string)
+        +CreateClientAsync(ClientRequestDto)
+        +UpdateClientAsync(ClientRequestDto)
+        +UpdatePetAsync(string, Pet)
+        +AddPetAsync(Guid, Pet)
+        +GetBreedsAsync()
+        +GetDogImageAsync()
+    }
+    
+    EditClientPopup --> PetsDisplay : contains
+    EditClientPopup --> AddPetPopup : shows
+    EditClientPopup --> EditPetPopup : shows
+    EditClientPopup --> Pet : manages
+    
+    PetsDisplay --> Pet : displays
+    
+    AddPetPopup --> Pet : creates
+    AddPetPopup --> BreedDto : uses
+    
+    EditPetPopup --> Pet : updates
+    EditPetPopup --> BreedDto : uses
+    
+    EditClientPopup --> IClientService : uses
+    AddPetPopup --> IClientService : uses
+    EditPetPopup --> IClientService : uses
+    
+    IClientService <|.. ClientService : implements
