@@ -59,12 +59,41 @@ All code MUST follow Clean Architecture with strict dependency rules:
 ### II. API Design Standards
 
 All API endpoints MUST follow FastEndpoints patterns:
-- Separate files for Request, Response, and Endpoint per feature
-- Feature folder organization (e.g., `/BookingEndpoints/GetAvailablePetWalkers/`)
-- Consistent pagination: `PageNumber`, `PageSize`, `TotalCount`, `TotalPages`, `HasPreviousPage`, `HasNextPage`
-- Result pattern (Ardalis.Result) for operation outcomes (see Principle XI)
-- FluentValidation for request validation (see Principle XII)
-- Proper HTTP status codes (200, 201, 400, 404, 500)
+- Separate files for Request, Response, and Endpoint per feature.
+- Feature folder organization (e.g., `/BookingEndpoints/GetAvailablePetWalkers/`).
+- Endpoints MUST override the `Configure()` method to define their behavior.
+- Inside `Configure()`, a specific HTTP verb method (e.g., `Get()`, `Post()`, `Put()`, `Delete()`) MUST be called, passing the route from the request DTO.
+- The route MUST be a constant in the request DTO (e.g., `public const string Route = "/api/clients/{ID}";`).
+- Endpoints MUST include OpenAPI documentation via the `Summary()` method, detailing the summary, description, and possible responses.
+- The `Options()` method should be used to provide a unique name for the endpoint to avoid conflicts.
+- Consistent pagination: `PageNumber`, `PageSize`, `TotalCount`, `TotalPages`, `HasPreviousPage`, `HasNextPage`.
+- Result pattern (Ardalis.Result) for operation outcomes (see Principle XI).
+- FluentValidation for request validation (see Principle XII).
+- Proper HTTP status codes (200, 201, 400, 404, 500).
+
+**Example - Endpoint Configuration**:
+```csharp
+// In the Request DTO, e.g., GetClientByIdRequest.cs
+public class GetClientByIdRequest
+{
+    public const string Route = "/api/clients/{ID}";
+    public Guid ID { get; set; }
+}
+
+// In the Endpoint class, e.g., GetClientById.cs
+public override void Configure()
+{
+    Get(GetClientByIdRequest.Route);
+    Options(o => o.WithName("GetClientById"));
+    Summary(s =>
+    {
+        s.Summary = "Get a client by their ID";
+        s.Description = "This endpoint returns a single client based on the provided ID.";
+        s.Response<ClientRecord>(200, "Client found and returned.");
+        s.Response(404, "The client was not found.");
+    });
+}
+```
 
 **Rationale**: Ensures API consistency, discoverability, and maintainability across the team.
 
