@@ -57,14 +57,15 @@
 - [ ] T007 [P] Integration test attempt to cancel a completed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py
 - [ ] T008 [P] Integration test attempt to cancel a cancelled booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py
 
+
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
-- [ ] T009 [P] Booking model in src/FurryFriends.Core/PetWalkerAggregate/Booking.cs
-- [ ] T010 [P] Cancellation model in src/FurryFriends.Core/PetWalkerAggregate/Cancellation.cs
-- [ ] T011 [P] AuditLog model in src/FurryFriends.Core/PetWalkerAggregate/AuditLog.cs
-- [ ] T012 [P] BookingService CRUD in src/FurryFriends.UseCases/PetWalkerAggregate/Services/BookingService.cs
-- [ ] T013 POST /api/bookings/{BookingId}/cancel endpoint in src/FurryFriends.Web/Endpoints/PetWalkerAggregate/BookingEndpoints/CancelBooking.cs
-- [ ] T014 Input validation in src/FurryFriends.Web/Endpoints/PetWalkerAggregate/BookingEndpoints/CancelBookingValidator.cs
-- [ ] T015 Error handling and logging in src/FurryFriends.Web/Endpoints/PetWalkerAggregate/BookingEndpoints/CancelBooking.cs
+- [ ] T009 [P] Booking cancellation method in src/FurryFriends.Core/BookingAggregate/Booking.cs
+- [ ] T010 [P] Cancellation model in src/FurryFriends.Core/BookingAggregate/Cancellation.cs
+- [ ] T011 [P] AuditLog model in src/FurryFriends.Core/BookingAggregate/AuditLog.cs
+- [ ] T012 [P] BookingService CRUD in src/FurryFriends.UseCases/Services/BookingService/BookingService.cs
+- [ ] T013 POST src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBookingbookings/{BookingId} endpoint in src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBooking.cs
+- [ ] T014 Input validation in src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBookingbookings/CancelBookingValidator.cs
+- [ ] T015 Error handling and logging in src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBooking.cs
 
 ## Phase 3.4: Integration
 - [ ] T016 Connect BookingService to DB
