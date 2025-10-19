@@ -87,9 +87,7 @@ As a client or pet walker, I want to be able to cancel a booking so that I can m
 - **FR-004**: System MUST provide clear feedback to users about cancellation success or failure.
 - **FR-005**: System MUST log all cancellation events for business analytics.
 - **FR-006**: System MUST send cancellation confirmation to the client and pet walker.
-- **FR-007**: System MUST record the cancellation reason provided by the user. [NEEDS CLARIFICATION: Should there be a predefined list of reasons or free text?]
-- **FR-008**: System MUST validate that the user initiating the cancellation is either the client or the pet walker associated with the booking.
-- **FR-009**: System MUST use Role-Based Access Control (RBAC) and verify the user ID against the booking to authorize cancellation requests.
+- **FR-007**: System MUST record the cancellation reason provided by the user from a predefined list of reasons.
 
 ### Key Entities *(include if feature involves data)*
 - **Booking**: Represents a scheduled pet walking service, including details such as date, time, location, client, pet walker, price, service type, and pet details.
