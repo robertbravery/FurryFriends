@@ -1,130 +1,53 @@
-# Tasks: Add Booking Cancellation
+# Feature Tasks: Booking Cancellation
 
-**Input**: Design documents from `/specs/002-add-booking-cancellation/`
-**Prerequisites**: plan.md (required), research.md, data-model.md, contracts/
+This document outlines the tasks required to implement the Booking Cancellation feature, ordered by dependencies and indicating opportunities for parallel execution.
 
-## Execution Flow (main)
-```
-1. Load plan.md from feature directory
-   → If not found: ERROR "No implementation plan found"
-   → Extract: tech stack, libraries, structure
-2. Load optional design documents:
-   → data-model.md: Extract entities → model tasks
-   → contracts/: Each file → contract test task
-   → research.md: Extract decisions → setup tasks
-3. Generate tasks by category:
-   → Setup: project init, dependencies, linting
-   → Tests: contract tests, integration tests
-   → Core: models, services, CLI commands
-   → Integration: DB, middleware, logging
-   → Polish: unit tests, performance, docs
-4. Apply task rules:
-   → Different files = mark [P] for parallel
-   → Same file = sequential (no [P])
-   → Tests before implementation (TDD)
-5. Number tasks sequentially (T001, T002...)
-6. Generate dependency graph
-7. Create parallel execution examples
-8. Validate task completeness:
-   → All contracts have tests?
-   → All entities have models?
-   → All endpoints implemented?
-9. Return: SUCCESS (tasks ready for execution)
-```
+## Setup Tasks
+*   [ ] No explicit setup tasks are required as the project and solution are already initialized.
 
-## Format: `[ID] [P?] Description`
-- **[P]**: Can run in parallel (different files, no dependencies)
-- Include exact file paths in descriptions
+## Phase 1: Core Backend Implementation
 
-## Path Conventions
-- **API**: `src/FurryFriends.Web`
-- **Use Cases**: `src/FurryFriends.UseCases`
-- **Core**: `src/FurryFriends.Core`
-- **Infrastructure**: `src/FurryFriends.Infrastructure`
-- **Blazor UI**: `src/FurryFriends.BlazorUI`
-- **Blazor UI Client**: `src/FurryFriends.BlazorUI.Client`
+### Data Model & Persistence
+*   [ ] **T001**: Update `Booking` entity in `src/FurryFriends.Core/Bookings/Booking.cs` to include a `Status` property and a reference to `Cancellation`.
+*   [ ] **T002**: Create `Cancellation` entity in `src/FurryFriends.Core/Bookings/Cancellation.cs` with properties: `Id`, `BookingId`, `CancellationDate`, `Reason`, `CancelledBy`.
+*   [ ] **T003**: Update `AuditLog` entity in `src/FurryFriends.Core/Audits/AuditLog.cs` to ensure it can capture cancellation-specific details.
+*   [ ] **T004**: Create EF Core configuration for `Cancellation` in `src/FurryFriends.Infrastructure/Data/Config/CancellationConfiguration.cs`.
+*   [ ] **T005**: Update EF Core configuration for `Booking` in `src/FurryFriends.Infrastructure/Data/Config/BookingConfiguration.cs` to include the `Cancellation` relationship.
+*   [ ] **T006**: Create a new database migration to apply the changes to the `Booking`, `Cancellation`, and `AuditLog` entities.
 
-## Phase 3.1: Setup
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize .NET 9 project with FastEndpoints, MediatR, FluentValidation, Ardalis.Specification, Ardalis.Result, Ardalis.GuardClauses, Serilog, Entity Framework Core, Blazor Server + WebAssembly dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+### Use Cases (CQRS)
+*   [ ] **T007**: Create `CancelBookingCommand` in `src/FurryFriends.UseCases/Domain/Bookings/Command/CancelBookingCommand.cs` with `BookingId` and `Reason`.
+*   [ ] **T008**: Create `CancelBookingHandler` in `src/FurryFriends.UseCases/Domain/Bookings/Command/CancelBookingHandler.cs` to process the cancellation logic, update booking status, create audit log, and handle refund logic.
+*   [ ] **T009**: Create `CancelBookingValidator` in `src/FurryFriends.UseCases/Domain/Bookings/Command/CancelBookingValidator.cs` to validate cancellation requests (e.g., booking status, user authorization, time window).
 
-## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
-**CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T004 [P] Contract test POST /api/bookings/{BookingId}/cancel in specs/002-add-booking-cancellation/contracts/CancelBookingContractTests.cs
-- [ ] T005 [P] Integration test client cancels a confirmed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py
-- [ ] T006 [P] Integration test pet walker cancels a confirmed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py
-- [ ] T007 [P] Integration test attempt to cancel a completed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py
-- [ ] T008 [P] Integration test attempt to cancel a cancelled booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py
+## Phase 2: API Endpoint Implementation
 
+*   [ ] **T010**: Create `CancelBookingEndpoint` in `src/FurryFriends.Web/Endpoints/BookingEndpoints/Cancel/CancelBooking.cs` to expose the cancellation functionality via an API.
 
-## Phase 3.3: Core Implementation (ONLY after tests are failing)
-- [ ] T009 [P] Booking cancellation method in src/FurryFriends.Core/BookingAggregate/Booking.cs
-- [ ] T010 [P] Cancellation model in src/FurryFriends.Core/BookingAggregate/Cancellation.cs
-- [ ] T011 [P] AuditLog model in src/FurryFriends.Core/BookingAggregate/AuditLog.cs
-- [ ] T012 [P] BookingService CRUD in src/FurryFriends.UseCases/Services/BookingService/BookingService.cs
-- [ ] T013 POST src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBookingbookings/{BookingId} endpoint in src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBooking.cs
-- [ ] T014 Input validation in src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBookingbookings/CancelBookingValidator.cs
-- [ ] T015 Error handling and logging in src/FurryFriends.Web/Endpoints/BookingEndpoints/CancelBooking.cs
+## Phase 3: Testing
 
-## Phase 3.4: Integration
-- [ ] T016 Connect BookingService to DB
-- [ ] T017 Implement pessimistic locking mechanism using EF Core to prevent race conditions during concurrent cancellation requests
-- [ ] T018 Update Blazor UI to allow booking cancellation
+### Contract Tests
+*   [ ] **T011 [P]**: Verify `CancelBookingContractTests.cs` in `specs/002-add-booking-cancellation/contracts/CancelBookingContractTests.cs` passes against the implemented contract.
 
-## Phase 3.5: Polish
-- [ ] T019 [P] Unit tests for validation in tests/FurryFriends.UnitTests/UseCases/test_validation.py
-- [ ] T020 Performance tests (<200ms)
-- [ ] T021 [P] Update docs/api.md
-- [ ] T022 Remove duplication
-- [ ] T023 Run manual-testing.md
+### Unit Tests
+*   [ ] **T012 [P]**: Write unit tests for `CancelBookingCommand` and `CancelBookingHandler` in `tests/FurryFriends.UnitTests/FurrFriends.UnitTests/UseCase/Bookings/CancelBookingTests.cs`.
+*   [ ] **T013 [P]**: Write unit tests for `CancelBookingValidator` in `tests/FurryFriends.UnitTests/FurrFriends.UnitTests/UseCase/Bookings/CancelBookingValidatorTests.cs`.
 
-## Dependencies
-- Tests (T004-T008) before implementation (T009-T015)
-- T009 blocks T012, T016
-- T016 blocks T018
-- Implementation before polish (T019-T023)
+### Integration Tests
+*   [ ] **T014**: Write integration tests for the `CancelBookingEndpoint` in `tests/FurryFriends.FunctionalTests/ApiEndpoints/Bookings/CancelBookingTests.cs` to cover various scenarios (successful cancellation, invalid status, unauthorized user, concurrent requests).
 
-## Parallel Example
-```
-# Launch T004-T008 together:
-Task: "Contract test POST /api/bookings/{BookingId}/cancel in specs/002-add-booking-cancellation/contracts/CancelBookingContractTests.cs"
-Task: "Integration test client cancels a confirmed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py"
-Task: "Integration test pet walker cancels a confirmed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py"
-Task: "Integration test attempt to cancel a completed booking in tests/FurryFriends.IntegrationTests/BookingEndpoints/test_booking_cancellation.py"
-```
+## Phase 4: UI Implementation (Blazor)
 
-## Notes
-- [P] tasks = different files, no dependencies
-- Verify tests fail before implementing
-- Commit after each task
-- Avoid: vague tasks, same file conflicts
+*   [ ] **T015**: Update the relevant Blazor page (e.g., `src/FurryFriends.BlazorUI/Components/Pages/Bookings/BookingDetails.razor`) to include a cancellation button and handle user interaction.
+*   [ ] **T016**: Implement client-side logic in `src/FurryFriends.BlazorUI/Services/Implementation/BookingService.cs` to call the `CancelBookingEndpoint`.
+*   [ ] **T017**: Implement UI feedback mechanisms (toast messages, confirmation dialogs) for cancellation success or failure.
 
-## Task Generation Rules
-*Applied during main() execution*
+## Phase 5: Polish & Documentation
 
-1. **From Contracts**:
-   - Each contract file → contract test task [P]
-   - Each endpoint → implementation task
-   
-2. **From Data Model**:
-   - Each entity → model creation task [P]
-   - Relationships → service layer tasks
-   
-3. **From User Stories**:
-   - Each story → integration test [P]
-   - Quickstart scenarios → validation tasks
+*   [ ] **T018**: Update `docs/FurryFriends_Technical_Guide.md` with details on the new cancellation functionality.
+*   [ ] **T019**: Review and update `specs/002-add-booking-cancellation/spec.md` to reflect any final decisions or changes during implementation.
 
-4. **Ordering**:
-   - Setup → Tests → Models → Services → Endpoints → Polish
-   - Dependencies block parallel execution
+## Parallel Execution Opportunities
 
-## Validation Checklist
-*GATE: Checked by main() before returning*
-
-- [ ] All contracts have corresponding tests
-- [ ] All entities have model tasks
-- [ ] All tests come before implementation
-- [ ] Parallel tasks truly independent
-- [ ] Each task specifies exact file path
-- [ ] No task modifies same file as another [P] task
+The following tasks can be executed in parallel:
+*   **T011, T012, T013** (Contract and Unit Tests)

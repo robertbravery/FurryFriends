@@ -3,11 +3,11 @@
 ## 1. Local Development Environment Setup
 
 ### 1.1 Prerequisites
-- .NET 8.0 SDK
+- .NET 9.0 SDK
 - SQL Server 2019 or later
 - Visual Studio 2022 or VS Code
 - Git
-- Node.js (for front-end development)
+- Blazor WebAssembly Hybrid (for front-end development)
 
 ### 1.2 Initial Setup Steps
 1. Clone the repository:

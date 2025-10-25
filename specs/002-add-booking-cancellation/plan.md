@@ -50,9 +50,9 @@
 **Testing**: xUnit (unit/integration), bUnit (Blazor components)
 **Target Platform**: Web application (Blazor Hybrid)
 **Project Type**: Web (backend API + Blazor UI)
-**Performance Goals**: [e.g., <200ms API response time, 60fps UI or NEEDS CLARIFICATION]
-**Constraints**: [e.g., must work with existing Client/PetWalker aggregates or NEEDS CLARIFICATION]
-**Scale/Scope**: [e.g., affects 3 aggregates, 5 endpoints, 2 Blazor pages or NEEDS CLARIFICATION]
+**Performance Goals**: <200ms API response time for cancellation, <100ms for UI updates
+**Constraints**: Must integrate with existing Booking, Client, and PetWalker aggregates.
+**Scale/Scope**: Affects Booking aggregate, adds 1 new API endpoint, updates 1 Blazor page.
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
@@ -274,8 +274,8 @@ This feature will add files to the appropriate layers based on the aggregate bei
 
 **Gate Status**:
 - [x] Initial Constitution Check: PASS
-- [ ] Post-Design Constitution Check: PASS
-- [ ] All NEEDS CLARIFICATION resolved
+- [x] Post-Design Constitution Check: PASS
+- [x] All NEEDS CLARIFICATION resolved
 - [ ] Complexity deviations documented
 
 ---
