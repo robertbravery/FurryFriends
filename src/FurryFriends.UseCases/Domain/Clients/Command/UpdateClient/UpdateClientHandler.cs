@@ -3,6 +3,7 @@ using FluentValidation;
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.ClientService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdateClient;
 
@@ -61,5 +62,10 @@ public class UpdateClientCommandHandler : ICommandHandler<UpdateClientCommand, R
     var updateClient = await _clientService.UpdateClientAsync(client);
     return updateClient;
     // return updateClient == null ? Result.Success(updateClient) : Result.NotFound();
+  }
+
+  ValueTask<Result<Client>> ICommandHandler<UpdateClientCommand, Result<Client>>.Handle(UpdateClientCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

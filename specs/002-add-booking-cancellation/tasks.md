@@ -8,8 +8,8 @@ This document outlines the tasks required to implement the Booking Cancellation 
 ## Phase 1: Core Backend Implementation
 
 ### Data Model & Persistence
-*   [ ] **T001**: Update `Booking` entity in `src/FurryFriends.Core/Bookings/Booking.cs` to include a `Status` property and a reference to `Cancellation`.
-*   [ ] **T002**: Create `Cancellation` entity in `src/FurryFriends.Core/Bookings/Cancellation.cs` with properties: `Id`, `BookingId`, `CancellationDate`, `Reason`, `CancelledBy`.
+*   [x] **T001**: Update `Booking` entity in `src/FurryFriends.Core/BookingAggregate/Booking.cs` to include a `Status` property and a reference to `Cancellation`. Add a reference to `Cancellation` in the `Booking` entity. `Bookings` should inherit from `IAggregateRoot`.
+*   [x] **T002**: Create `Cancellation` entity in `src/FurryFriends.Core/BookingAggregate/Cancellation.cs` with properties: `Id`, `BookingId`, `CancellationDate`, `Reason`, `CancelledBy`.
 *   [ ] **T003**: Update `AuditLog` entity in `src/FurryFriends.Core/Audits/AuditLog.cs` to ensure it can capture cancellation-specific details.
 *   [ ] **T004**: Create EF Core configuration for `Cancellation` in `src/FurryFriends.Infrastructure/Data/Config/CancellationConfiguration.cs`.
 *   [ ] **T005**: Update EF Core configuration for `Booking` in `src/FurryFriends.Infrastructure/Data/Config/BookingConfiguration.cs` to include the `Cancellation` relationship.

@@ -7,14 +7,15 @@ using FurryFriends.Core.PetWalkerAggregate;
 
 namespace FurryFriends.Core.BookingAggregate;
 
-public partial class Booking : AuditableEntity<Guid>
+public partial class Booking : AuditableEntity<Guid>, IAggregateRoot
 {
   public Guid PetWalkerId { get; private set; }
   public Guid PetOwnerId { get; private set; }
   public DateTime StartTime { get; private set; }
   public DateTime EndTime { get; private set; }
-  public BookingStatus Status { get; private set; }
   public decimal Price { get; private set; }
+  public BookingStatus Status { get; private set; } = BookingStatus.Confirmed; // Default status
+        public Cancellation? Cancellation { get; private set; }
   public string? Notes { get; private set; }
 
   public virtual PetWalker PetWalker { get; private set; } = default!;
@@ -100,7 +101,7 @@ public partial class Booking : AuditableEntity<Guid>
     RegisterDomainEvent(new BookingCompletedEvent(this));
   }
 
-  public void Cancel(string? reason = null)
+  public void Cancel(Guid cancelledBy, string reason)
   {
     if (Status == BookingStatus.Completed || Status == BookingStatus.Cancelled)
     {
@@ -108,8 +109,8 @@ public partial class Booking : AuditableEntity<Guid>
     }
 
     Status = BookingStatus.Cancelled;
-    Notes = reason;
-    RegisterDomainEvent(new BookingCancelledEvent(this));
+    Cancellation = new Cancellation(Id, cancelledBy, reason) { Id = Guid.NewGuid() };
+    RegisterDomainEvent(new BookingCancelledEvent(this, reason));
   }
 
   public void MarkAsNoShow()

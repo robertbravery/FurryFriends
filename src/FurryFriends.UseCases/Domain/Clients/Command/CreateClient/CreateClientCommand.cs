@@ -1,4 +1,5 @@
 ﻿using FurryFriends.Core.ClientAggregate.Enums;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
 public record CreateClientCommand

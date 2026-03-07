@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FurryFriends.UseCases.Services.ClientService;
+using Mediator;
 using Serilog;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.AddPet;
@@ -79,5 +80,10 @@ public class AddPetCommandHandler : ICommandHandler<AddPetCommand, Result<Guid>>
       _logger.Error(ex, "Error adding pet to client {ClientId}", command.ClientId);
       return Result.Error($"Error adding pet: {ex.Message}");
     }
+  }
+
+  ValueTask<Result<Guid>> ICommandHandler<AddPetCommand, Result<Guid>>.Handle(AddPetCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

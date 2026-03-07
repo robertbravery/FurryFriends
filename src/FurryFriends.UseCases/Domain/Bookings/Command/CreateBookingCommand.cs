@@ -1,5 +1,6 @@
 ﻿// Application/Scheduling/Commands/CreateBookingCommand.cs
 using FurryFriends.UseCases.Domain.Bookings.Dto;
+using Mediator;
 
 public record CreateBookingCommand(
     Guid PetWalkerId,

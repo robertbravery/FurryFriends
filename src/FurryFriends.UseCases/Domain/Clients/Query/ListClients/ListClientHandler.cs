@@ -1,5 +1,6 @@
 ﻿using FurryFriends.UseCases.Domain.Clients.DTO;
 using FurryFriends.UseCases.Services.ClientService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Query.ListClients;
 public class ListClientHandler(IClientService clientService)
@@ -48,5 +49,10 @@ public class ListClientHandler(IClientService clientService)
       )).ToList();
 
     return Result<ClientsDto>.Success(new ClientsDto(clients, result.Value.TotalCount));
+  }
+
+  ValueTask<Result<ClientsDto>> IQueryHandler<ListClientQuery, Result<ClientsDto>>.Handle(ListClientQuery query, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

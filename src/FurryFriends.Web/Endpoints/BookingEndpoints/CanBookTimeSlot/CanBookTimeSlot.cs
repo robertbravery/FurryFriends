@@ -1,5 +1,7 @@
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using FurryFriends.UseCases.Services.BookingService;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using IBookingService = FurryFriends.UseCases.Services.BookingService.IBookingService;
 
 namespace FurryFriends.Web.Endpoints.BookingEndpoints.CanBookTimeSlot;
@@ -34,6 +36,7 @@ public class CanBookTimeSlot(IBookingService bookingService) : Endpoint<CanBookT
             request.StartTime, 
             request.EndTime);
 
-        await SendOkAsync(canBook, ct);
-    }
+    //await SendOkAsync(canBook, ct);
+    return;
+  }
 }

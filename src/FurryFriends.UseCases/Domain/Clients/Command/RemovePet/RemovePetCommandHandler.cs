@@ -1,6 +1,7 @@
 ﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.Core.Interfaces;
+using Mediator;
 using Serilog;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.RemovePet;
@@ -47,5 +48,10 @@ public class RemovePetCommandHandler(
           command.PetId);
       return Result.Error($"Error removing pet: {ex.Message}");
     }
+  }
+
+  ValueTask<Result> ICommandHandler<RemovePetCommand, Result>.Handle(RemovePetCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

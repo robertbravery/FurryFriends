@@ -2,6 +2,7 @@
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Specifications;
 using FurryFriends.UseCases.Domain.Clients.DTO;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Query.ListBreeds;
 
@@ -39,5 +40,10 @@ public class ListBreedsHandler : IQueryHandler<ListBreedsQuery, Result<List<Bree
     {
       return Result.Error($"Error retrieving breeds: {ex.Message}");
     }
+  }
+
+  ValueTask<Result<List<BreedDto>>> IQueryHandler<ListBreedsQuery, Result<List<BreedDto>>>.Handle(ListBreedsQuery query, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

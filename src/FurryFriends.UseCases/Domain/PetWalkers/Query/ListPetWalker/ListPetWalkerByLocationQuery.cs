@@ -1,4 +1,5 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
 

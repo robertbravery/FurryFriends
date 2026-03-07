@@ -1,5 +1,6 @@
 ﻿using FurryFriends.UseCases.Domain.Clients.DTO;
 using FurryFriends.UseCases.Services.ClientService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Query.GetClient;
 public class GetClientQueryHandler(IClientService clientService)
@@ -44,5 +45,10 @@ public class GetClientQueryHandler(IClientService clientService)
             p.IsActive
         ))]
       );
+  }
+
+  ValueTask<Result<ClientDTO>> IQueryHandler<GetClientQuery, Result<ClientDTO>>.Handle(GetClientQuery query, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

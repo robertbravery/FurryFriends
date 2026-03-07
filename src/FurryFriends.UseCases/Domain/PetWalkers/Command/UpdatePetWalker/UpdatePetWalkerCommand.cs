@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿//using MediatR;
+
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 

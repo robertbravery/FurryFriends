@@ -1,4 +1,5 @@
 ﻿using Ardalis.SharedKernel;
+using FastEndpoints;
 using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using Microsoft.AspNetCore.Http;
 using System;

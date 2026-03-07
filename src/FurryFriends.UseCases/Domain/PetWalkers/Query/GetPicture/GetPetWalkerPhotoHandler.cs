@@ -2,6 +2,7 @@
 using FurryFriends.Core.PetWalkerAggregate.Enums;
 using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using FurryFriends.UseCases.Services.PictureService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Query.GetPicture;
 
@@ -38,6 +39,11 @@ public class GetPetWalkerPhotoHandler : IQueryHandler<GetPetWalkerPhotoQuery, Re
     if (photo == null) return null;
 
     return new PhotoDto(photo.Url, photo.Description);
+  }
+
+  ValueTask<Result<DetailPictureDto>> IQueryHandler<GetPetWalkerPhotoQuery, Result<DetailPictureDto>>.Handle(GetPetWalkerPhotoQuery query, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }
 

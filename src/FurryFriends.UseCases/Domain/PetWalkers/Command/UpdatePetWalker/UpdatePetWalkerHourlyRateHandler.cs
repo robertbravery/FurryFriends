@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using FluentValidation;
 using FurryFriends.UseCases.Services.PetWalkerService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 public class UpdatePetWalkerHourlyRateHandler(IPetWalkerService _petWalkerService, IValidator<UpdatePetWalkerHourlyRateCommand> _validator) : ICommandHandler<UpdatePetWalkerHourlyRateCommand, Result<bool>>
@@ -20,5 +21,10 @@ public class UpdatePetWalkerHourlyRateHandler(IPetWalkerService _petWalkerServic
       return Result.NotFound(errorMessages);
     }
     return Result.Success(true);
+  }
+
+  ValueTask<Result<bool>> ICommandHandler<UpdatePetWalkerHourlyRateCommand, Result<bool>>.Handle(UpdatePetWalkerHourlyRateCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

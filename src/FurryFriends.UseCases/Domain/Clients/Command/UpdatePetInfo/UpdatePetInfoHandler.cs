@@ -1,5 +1,6 @@
 ﻿﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
 
@@ -38,4 +39,9 @@ public class UpdatePetInfoHandler : ICommandHandler<UpdatePetInfoCommand, Result
         await _clientRepository.UpdateAsync(client, cancellationToken);
         return Result.Success();
     }
+
+  ValueTask<Result> ICommandHandler<UpdatePetInfoCommand, Result>.Handle(UpdatePetInfoCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
+  }
 }

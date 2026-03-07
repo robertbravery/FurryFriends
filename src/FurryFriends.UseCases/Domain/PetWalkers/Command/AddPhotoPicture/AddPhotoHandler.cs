@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FurryFriends.UseCases.Services.PetWalkerService;
+using Mediator;
 using Serilog;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.AddPhotoPicture;
@@ -22,5 +23,10 @@ public class AddPhotoHandler(IPetWalkerService petWalkerService, IValidator<AddP
     await _userService.AddBioPictureAsync(command.BioPicture, command.UserId);
     return Result.Success();
 
+  }
+
+  ValueTask<Result> ICommandHandler<AddPhotoCommand, Result>.Handle(AddPhotoCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

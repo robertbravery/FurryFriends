@@ -3,6 +3,7 @@ using FurryFriends.Core.BookingAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.UseCases.Domain.Bookings.Dto;
 using FurryFriends.UseCases.Services.BookingService;
+using Mediator;
 
 // Application/Scheduling/Handlers/CreateBookingHandler.cs
 public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result<BookingDto>>
@@ -46,5 +47,10 @@ public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result
     return booking == null
       ? Result<BookingDto>.Error("Failed to create booking")
       : Result<BookingDto>.Success(new BookingDto(booking.Id, booking.StartTime, booking.EndTime));
+  }
+
+  ValueTask<Result<BookingDto>> ICommandHandler<CreateBookingCommand, Result<BookingDto>>.Handle(CreateBookingCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

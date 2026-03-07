@@ -1,5 +1,6 @@
 ﻿using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.ClientService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.CreateClient;
 internal class CreateClientCommandHandler(IClientService clientService) : ICommandHandler<CreateClientCommand, Result<Guid>>
@@ -36,5 +37,10 @@ internal class CreateClientCommandHandler(IClientService clientService) : IComma
     return clientCreationResult.IsSuccess
       ? Result<Guid>.Success(clientCreationResult.Value.Id)
       : Result.Error(new ErrorList(clientCreationResult.Errors));
+  }
+
+  ValueTask<Result<Guid>> ICommandHandler<CreateClientCommand, Result<Guid>>.Handle(CreateClientCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

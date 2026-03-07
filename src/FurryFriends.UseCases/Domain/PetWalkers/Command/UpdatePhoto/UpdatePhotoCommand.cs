@@ -1,5 +1,6 @@
 ﻿﻿using Ardalis.SharedKernel;
 using FurryFriends.UseCases.Services.PictureService;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using System;
 

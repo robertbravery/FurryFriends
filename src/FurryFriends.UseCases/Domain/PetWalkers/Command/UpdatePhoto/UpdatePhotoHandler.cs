@@ -3,6 +3,7 @@ using FluentValidation;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.UseCases.Services.PictureService;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePhoto;
@@ -85,5 +86,10 @@ public class UpdatePhotoHandler : ICommandHandler<UpdatePhotoCommand, Result<Det
       _logger.LogError(ex, "Error updating photo for PetWalker {PetWalkerId}", command.PetWalkerId);
       return Result.Error($"Error updating photo: {ex.Message}");
     }
+  }
+
+  ValueTask<Result<DetailedPhotoDto>> ICommandHandler<UpdatePhotoCommand, Result<DetailedPhotoDto>>.Handle(UpdatePhotoCommand command, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }

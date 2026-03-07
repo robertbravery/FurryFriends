@@ -1,4 +1,5 @@
 ﻿using FurryFriends.UseCases.Services.PictureService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Query.GetPicture;
 

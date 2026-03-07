@@ -1,11 +1,12 @@
 ﻿using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.PetWalkerService;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 
 public class CreatePetWalkeCommandrHandler(IPetWalkerService petWalkerService) : ICommandHandler<CreatePetWalkerCommand, Result<Guid>>
 {
-  public async Task<Result<Guid>> Handle(CreatePetWalkerCommand command, CancellationToken cancellationToken)
+  async ValueTask<Result<Guid>> ICommandHandler<CreatePetWalkerCommand, Result<Guid>>.Handle(CreatePetWalkerCommand command, CancellationToken cancellationToken)
   {
     var phoneNumberCreationResult = await PhoneNumber.Create(command.CountryCode, command.Number);
     var addressCreationResult = Address.Create(command.Street, command.City, command.State, command.Country, command.ZipCode);
@@ -56,5 +57,9 @@ public class CreatePetWalkeCommandrHandler(IPetWalkerService petWalkerService) :
          Result<Guid>.Error(string.Join(", ", result.Errors));
   }
 
+  //ValueTask<Result<Guid>> ICommandHandler<CreatePetWalkerCommand, Result<Guid>>.Handle(CreatePetWalkerCommand command, CancellationToken cancellationToken)
+  //{
+  //  throw new NotImplementedException();
+  //}
 }
 

@@ -4,7 +4,9 @@ using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using FurryFriends.UseCases.Services.PetWalkerService;
 using FurryFriends.UseCases.Services.PictureService;
-using MediatR;
+using Mediator;
+
+//using MediatR;
 using Microsoft.Extensions.Logging;
 using static FurryFriends.Core.ValueObjects.GenderType;
 
@@ -47,37 +49,42 @@ public class UpdatePetWalkerHandler(
        );
     return updatePetWalkerDto;
   }
-}
 
-
-public class UpdateBioPictureHandler : IRequestHandler<UpdateBioPictureCommand, Result<PhotoDto>>
-{
-  private readonly IPictureService _pictureService;
-  private readonly ILogger<UpdatePetWalkerHandler> _logger;
-
-  public UpdateBioPictureHandler(
-      IPictureService pictureService,
-      ILogger<UpdatePetWalkerHandler> logger)
+  ValueTask<Unit> IRequestHandler<UpdatePetWalkerCommand, Unit>.Handle(UpdatePetWalkerCommand request, CancellationToken cancellationToken)
   {
-    _pictureService = pictureService;
-    _logger = logger;
+    throw new NotImplementedException();
   }
 
-  public async Task<Result<PhotoDto>> Handle(UpdateBioPictureCommand command, CancellationToken cancellationToken)
-  {
-    Guard.Against.Null(command, nameof(command));
 
-    _logger.LogInformation("Updating bio picture for pet walker with id: {PetWalkerId}", command.PetWalkerId);
 
-    var result = await _pictureService.UpdatePetWalkerBioPictureAsync(command.PetWalkerId, command.File, cancellationToken);
+//public class UpdateBioPictureHandler : IRequestHandler<UpdateBioPictureCommand, Result<PhotoDto>>
+//{
+//  private readonly IPictureService _pictureService;
+//  private readonly ILogger<UpdatePetWalkerHandler> _logger;
 
-    if (!result.IsSuccess)
-    {
-      _logger.LogWarning("Failed to update bio picture: {Error}", result.Errors);
-      return Result.Error((ErrorList)result.Errors);
-    }
+//  public UpdateBioPictureHandler(
+//      IPictureService pictureService,
+//      ILogger<UpdatePetWalkerHandler> logger)
+//  {
+//    _pictureService = pictureService;
+//    _logger = logger;
+//  }
 
-    var photo = result.Value;
-    return Result.Success(new PhotoDto(photo.Url, photo.Description));
-  }
+//  public async Task<Result<PhotoDto>> Handle(UpdateBioPictureCommand command, CancellationToken cancellationToken)
+//  {
+//    Guard.Against.Null(command, nameof(command));
+
+//    _logger.LogInformation("Updating bio picture for pet walker with id: {PetWalkerId}", command.PetWalkerId);
+
+//    var result = await _pictureService.UpdatePetWalkerBioPictureAsync(command.PetWalkerId, command.File, cancellationToken);
+
+//    if (!result.IsSuccess)
+//    {
+//      _logger.LogWarning("Failed to update bio picture: {Error}", result.Errors);
+//      return Result.Error((ErrorList)result.Errors);
+//    }
+
+//    var photo = result.Value;
+//    return Result.Success(new PhotoDto(photo.Url, photo.Description));
+//  }
 }

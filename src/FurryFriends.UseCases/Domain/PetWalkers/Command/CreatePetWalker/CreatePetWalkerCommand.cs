@@ -1,4 +1,5 @@
 ﻿using FurryFriends.Core.ValueObjects;
+using Mediator;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 

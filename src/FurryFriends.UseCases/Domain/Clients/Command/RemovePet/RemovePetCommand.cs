@@ -1,3 +1,4 @@
+﻿using Mediator;
 using MediatR;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.RemovePet;

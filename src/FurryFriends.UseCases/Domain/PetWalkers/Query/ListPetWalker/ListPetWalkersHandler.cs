@@ -1,4 +1,5 @@
 ﻿using FurryFriends.UseCases.Services.PetWalkerService;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
@@ -30,6 +31,11 @@ public class ListPetWalkersHandler : IQueryHandler<ListPetWalkerQuery, Result<Pe
       _logger.LogError(ex, "An error occurred while handling ListPetWalkerQuery: {ErrorMessage}", ex.Message);
       return Result<PetWalkerListDto>.Error(ex.Message);
     }
+  }
+
+  ValueTask<Result<PetWalkerListDto>> IQueryHandler<ListPetWalkerQuery, Result<PetWalkerListDto>>.Handle(ListPetWalkerQuery query, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }
 

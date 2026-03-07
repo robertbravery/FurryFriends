@@ -1,5 +1,5 @@
-using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
-
+﻿using FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
+using Mediator;
 namespace FurryFriends.Web.Endpoints.BookingEndpoints.GetAvailablePetWalkers;
 
 /// <summary>

@@ -1,5 +1,6 @@
 ﻿using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.UseCases.Services.PetWalkerService;
+using Mediator;
 using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Query.ListPetWalker;
@@ -28,6 +29,11 @@ public class ListUsersByLocationHandler(IPetWalkerService petWalkerService, ILog
       _logger.LogError(ex, "An error occurred while handling ListUsersQuery: {ErrorMessage}", ex.Message);
       return Result<(List<PetWalker> users, int totalCount)>.Error(ex.Message);
     }
+  }
+
+  ValueTask<Result<(List<PetWalker> users, int TotalCount)>> IQueryHandler<ListPetWalkerByLocationQuery, Result<(List<PetWalker> users, int TotalCount)>>.Handle(ListPetWalkerByLocationQuery query, CancellationToken cancellationToken)
+  {
+    throw new NotImplementedException();
   }
 }
 

@@ -1,8 +1,13 @@
 ﻿using Ardalis.GuardClauses;
+//using FastEndpoints;
 using FurryFriends.Core.PetWalkerAggregate;
-using MediatR;
+using Mediator;
 
-public class SetScheduleHandler : IRequestHandler<SetScheduleCommand, Unit>
+//using MediatR;
+
+namespace FurryFriends.UseCases.Domain.PetWalkers.Command.SetPetWalkerSchedule;
+
+public class SetScheduleHandler :  ICommandHandler<SetScheduleCommand>
 {
   private readonly IRepository<PetWalker> _walkerRepo;
 
@@ -11,28 +16,33 @@ public class SetScheduleHandler : IRequestHandler<SetScheduleCommand, Unit>
     _walkerRepo = walkerRepo;
   }
 
-  public async Task<Unit> Handle(SetScheduleCommand request, CancellationToken cancellationToken)
+  public ValueTask<Unit> Handle(SetScheduleCommand command, CancellationToken cancellationToken)
   {
-    try
-    {
-      var walker = await _walkerRepo.GetByIdAsync(request.PetWalkerId, cancellationToken)
-          ?? throw new NotFoundException("PetWalker ID", request.PetWalkerId.ToString());
-
-      walker.ClearSchedules();
-
-      foreach (var dto in request.Schedules)
-      {
-        walker.AddSchedule(new Schedule(dto.DayOfWeek, dto.StartTime, dto.EndTime));
-      }
-      await _walkerRepo.UpdateAsync(walker, cancellationToken);
-    }
-    catch (Exception ex)
-    {
-
-      throw new Exception(ex.Message);
-    }
-
-    return Unit.Value;
+    throw new NotImplementedException();
   }
+
+  //async ValueTask<Unit> ICommandHandler<SetScheduleCommand, Unit>.Handle(SetScheduleCommand command, CancellationToken cancellationToken)
+  //{
+  //  try
+  //  {
+  //    var walker = await _walkerRepo.GetByIdAsync(command.PetWalkerId, cancellationToken)
+  //        ?? throw new NotFoundException("PetWalker ID", command.PetWalkerId.ToString());
+
+  //    walker.ClearSchedules();
+
+  //    foreach (var dto in command.Schedules)
+  //    {
+  //      walker.AddSchedule(new Schedule(dto.DayOfWeek, dto.StartTime, dto.EndTime));
+  //    }
+  //    await _walkerRepo.UpdateAsync(walker, cancellationToken);
+  //  }
+  //  catch (Exception ex)
+  //  {
+
+  //    throw new Exception(ex.Message);
+  //  }
+
+  //  return Unit.Value;
+  //}
 }
 

@@ -111,9 +111,9 @@ public class BookingService : IBookingService
       case BookingStatus.Completed:
         booking.Complete();
         break;
-      case BookingStatus.Cancelled:
-        booking.Cancel(notes);
-        break;
+      // case BookingStatus.Cancelled:
+      //   booking.Cancel(notes);
+      //   break;
       case BookingStatus.NoShow:
         booking.MarkAsNoShow();
         break;

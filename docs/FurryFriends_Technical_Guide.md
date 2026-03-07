@@ -10,7 +10,7 @@ Before you start this technical guide, you should have the following prerequisit
 
 -   A basic understanding of Blazor and Dotnet.
 -   Visual Studio 2022 or later.
--   .NET 7 SDK or later.
+-   .NET 9 SDK or later.
 -   A basic understanding of Git and GitHub.
 
 ## Intermediate Techniques

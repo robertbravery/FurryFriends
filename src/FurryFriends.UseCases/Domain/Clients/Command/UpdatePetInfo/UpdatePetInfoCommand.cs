@@ -1,4 +1,6 @@
-﻿﻿namespace FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
+﻿using Mediator;
+
+namespace FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
 
 public record UpdatePetInfoCommand(
     Guid ClientId,

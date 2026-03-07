@@ -273,3 +273,75 @@ services.AddAuthorization(options =>
 - TLS 1.3 for data in transit
 - Password hashing using BCrypt
 - Input validation and sanitization
+
+### 6 Folder structure
+**Project Structure**:
+- Feature folders in Web project (e.g., `/BookingEndpoints/GetAvailablePetWalkers/`)
+- Aggregate folders in Core project (e.g., `/PetWalkerAggregate/`)
+- Shared components in BlazorUI.Client `/Components/Common/`
+- Static assets in `wwwroot/`
+- Documentation in `/docs/` with Mermaid diagrams
+
+**Complete Directory Structure**:
+```
+src/FurryFriends.Core/
+├── [Aggregate]Aggregate/
+│   ├── [Entity].cs
+│   ├── Specifications/
+│   │   └── [Entity]Specification.cs
+│   └── Events/
+
+src/FurryFriends.UseCases/
+├── [Aggregate]/
+│   ├── Commands/
+│   │   ├── [Command].cs
+│   │   └── [Command]Handler.cs
+│   ├── Queries/
+│   │   ├── [Query].cs
+│   │   └── [Query]Handler.cs
+│   └── DTOs/
+└── Services/
+    └── [Entity]Service/
+
+src/FurryFriends.Web/
+├── Endpoints/
+│   └── [Entity]Endpoints/
+│       ├── [Action].cs
+│       ├── [Action]Request.cs
+│       ├── [Action]Response.cs
+│       └── [Action]Validator.cs
+
+tests/FurryFriends.UnitTests/
+├── Core/
+│   └── [Aggregate]/
+│       ├── [Entity]Tests.cs
+│       └── Specifications/
+│           └── [Entity]SpecificationTests.cs
+├── UseCases/
+│   └── [Aggregate]/
+│       ├── Commands/
+│       │   └── [Command]HandlerTests.cs
+│       └── Queries/
+│           └── [Query]HandlerTests.cs
+└── Web/
+    └── Endpoints/
+        └── [Entity]Endpoints/
+            └── [Action]ValidatorTests.cs
+
+tests/FurryFriends.IntegrationTests/
+├── [Entity]Endpoints/
+│   └── [test_scenario].py
+├── Database/
+│   └── [Entity]RepositoryTests.cs
+└── Common/
+    ├── TestBase.cs
+    └── TestFixtures.cs
+
+tests/FurryFriends.ComponentTests/
+├── Pages/
+│   └── [Feature]/
+│       └── [Page]Tests.cs
+└── Components/
+    └── Common/
+        └── [Component]Tests.cs
+```
