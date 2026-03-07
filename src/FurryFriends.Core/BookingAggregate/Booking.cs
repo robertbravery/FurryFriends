@@ -19,6 +19,8 @@ public partial class Booking : AuditableEntity<Guid>
 
   public virtual PetWalker PetWalker { get; private set; } = default!;
   public virtual Client PetOwner { get; private set; } = default!;
+  // TODO: T002 will create Cancellation entity in Bookings namespace
+  // Reference will be: public virtual Bookings.Cancellation? Cancellation { get; private set; }
 
   internal Booking() { } // Required by EF Core
 
