@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
 
   public DbSet<PetWalker> PetWalkers => Set<PetWalker>();
   public DbSet<Booking> Bookings => Set<Booking>();
+  public DbSet<Cancellation> Cancellations => Set<Cancellation>();
   public DbSet<Photo> Photos => Set<Photo>();
   public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
   public DbSet<Client> Clients => Set<Client>();

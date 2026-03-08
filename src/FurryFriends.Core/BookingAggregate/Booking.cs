@@ -16,11 +16,10 @@ public partial class Booking : AuditableEntity<Guid>
   public BookingStatus Status { get; private set; }
   public decimal Price { get; private set; }
   public string? Notes { get; private set; }
+  public virtual Cancellation? Cancellation { get; private set; }
 
   public virtual PetWalker PetWalker { get; private set; } = default!;
   public virtual Client PetOwner { get; private set; } = default!;
-  // TODO: T002 will create Cancellation entity in Bookings namespace
-  // Reference will be: public virtual Bookings.Cancellation? Cancellation { get; private set; }
 
   internal Booking() { } // Required by EF Core
 
@@ -111,6 +110,18 @@ public partial class Booking : AuditableEntity<Guid>
 
     Status = BookingStatus.Cancelled;
     Notes = reason;
+    RegisterDomainEvent(new BookingCancelledEvent(this));
+  }
+
+  public void CancelWithCancellation(Cancellation cancellation)
+  {
+    if (Status == BookingStatus.Completed || Status == BookingStatus.Cancelled)
+    {
+      throw new InvalidOperationException($"Cannot cancel booking in {Status} status");
+    }
+
+    Status = BookingStatus.Cancelled;
+    Cancellation = cancellation;
     RegisterDomainEvent(new BookingCancelledEvent(this));
   }
 
