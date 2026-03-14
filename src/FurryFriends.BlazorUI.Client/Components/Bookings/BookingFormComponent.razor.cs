@@ -13,6 +13,7 @@ public partial class BookingFormComponent
 
   [Parameter] public Guid? ClientId { get; set; }
   [Parameter] public string? ServiceArea { get; set; }
+  [Parameter] public PetWalkerSummaryDto? SelectedPetWalker { get; set; }
   [Parameter] public EventCallback<BookingResponseDto> OnBookingCompleted { get; set; }
   [Parameter] public EventCallback OnBookingCancelled { get; set; }
 
@@ -42,10 +43,28 @@ public partial class BookingFormComponent
 
   protected override async Task OnParametersSetAsync()
   {
+    // Handle ClientId change
     if (ClientId.HasValue && ClientId != bookingRequest.PetOwnerId)
     {
       bookingRequest.PetOwnerId = ClientId.Value;
       await LoadClientPetsAsync();
+    }
+
+    // Handle pre-selected pet walker - auto-advance to step 2
+    if (SelectedPetWalker != null && selectedPetWalker == null)
+    {
+      Logger.LogInformation("Pre-selected pet walker received: {PetWalkerId} - {PetWalkerName}", 
+        SelectedPetWalker.Id, SelectedPetWalker.FullName);
+      
+      selectedPetWalker = SelectedPetWalker;
+      bookingRequest.PetWalkerId = SelectedPetWalker.Id;
+      
+      // Auto-advance to step 2 if we're still on step 1
+      if (currentStep == 1)
+      {
+        currentStep = 2;
+        Logger.LogInformation("Auto-advancing to step 2 due to pre-selected pet walker");
+      }
     }
   }
 
