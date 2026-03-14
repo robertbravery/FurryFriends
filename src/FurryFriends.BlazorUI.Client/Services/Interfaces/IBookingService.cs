@@ -63,4 +63,12 @@ public interface IBookingService
     /// <param name="request">Request parameters including pagination, sorting, and filtering options</param>
     /// <returns>API response with paginated PetWalkers</returns>
     Task<ApiResponse<PaginatedPetWalkersResponse>> GetAvailablePetWalkersAsync(GetAvailablePetWalkersRequest request);
+
+    /// <summary>
+    /// Cancel a booking
+    /// </summary>
+    /// <param name="bookingId">ID of the booking to cancel</param>
+    /// <param name="request">Cancellation request details including reason, cancelled by, and optional notes</param>
+    /// <returns>API response with cancellation result</returns>
+    Task<ApiResponse<CancelBookingResponseDto>> CancelBookingAsync(Guid bookingId, CancelBookingRequestDto request);
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using FromQueryAttribute = FastEndpoints.FromQueryAttribute;
 
 namespace FurryFriends.Web.Endpoints.BookingEndpoints.GetAvailableSlots;
 
@@ -9,6 +10,6 @@ public class GetAvailableSlotsRequest
   [FromRoute]
   public Guid PetWalkerId { get; set; }
 
-  [FastEndpoints.FromQuery]
+  [FromQuery]
   public DateTime Date { get; set; }
 }

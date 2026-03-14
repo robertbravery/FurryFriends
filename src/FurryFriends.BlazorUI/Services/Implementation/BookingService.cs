@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using FurryFriends.BlazorUI.Client.Models.Bookings;
 using FurryFriends.BlazorUI.Client.Models.Common;
@@ -459,6 +459,67 @@ public class BookingService : IBookingService
         }
     }
 
+    /// <summary>
+    /// Cancel a booking
+    /// </summary>
+    public async Task<ApiResponse<CancelBookingResponseDto>> CancelBookingAsync(Guid bookingId, CancelBookingRequestDto request)
+    {
+        try
+        {
+            _logger.LogInformation("Cancelling booking: {BookingId}, Reason: {Reason}, CancelledBy: {CancelledBy}",
+                bookingId, request.Reason, request.CancelledBy);
+
+            var json = JsonSerializer.Serialize(request, _jsonOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/api/bookings/{bookingId}/cancel", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<CancelBookingResponseDto>(responseContent, _jsonOptions);
+
+                _logger.LogInformation("Successfully cancelled booking: {BookingId}", bookingId);
+
+                return new ApiResponse<CancelBookingResponseDto>
+                {
+                    Success = true,
+                    Message = result?.Message ?? "Booking cancelled successfully",
+                    Data = result,
+                    Timestamp = DateTime.Now
+                };
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogWarning("Failed to cancel booking: {BookingId}. Status: {StatusCode}, Error: {Error}",
+                    bookingId, response.StatusCode, errorContent);
+
+                return new ApiResponse<CancelBookingResponseDto>
+                {
+                    Success = false,
+                    Message = $"Failed to cancel booking. Status: {response.StatusCode}",
+                    Errors = new List<string> { errorContent },
+                    Data = null,
+                    Timestamp = DateTime.Now
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error cancelling booking: {BookingId}", bookingId);
+
+            return new ApiResponse<CancelBookingResponseDto>
+            {
+                Success = false,
+                Message = "An error occurred while cancelling the booking",
+                Errors = new List<string> { ex.Message },
+                Data = null,
+                Timestamp = DateTime.Now
+            };
+        }
+    }
+
     private static PetWalkerSummaryDto MapApiResponseToClientModel(PetWalkerSummaryApiResponse apiModel)
     {
         return new PetWalkerSummaryDto
@@ -487,37 +548,4 @@ public class BookingService : IBookingService
             ServiceAreas = apiModel.ServiceAreas
         };
     }
-}
-
-// API Response Models (matching the actual API response structure)
-public class GetAvailablePetWalkersApiResponse
-{
-    public List<PetWalkerSummaryApiResponse> PetWalkers { get; set; } = new();
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
-    public int TotalCount { get; set; }
-    public int TotalPages { get; set; }
-    public bool HasPreviousPage { get; set; }
-    public bool HasNextPage { get; set; }
-    public List<string> AvailableServiceAreas { get; set; } = new();
-}
-
-public class PetWalkerSummaryApiResponse
-{
-    public Guid Id { get; set; }
-    public string FullName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string? Biography { get; set; }
-    public decimal HourlyRate { get; set; }
-    public string Currency { get; set; } = "USD";
-    public bool IsActive { get; set; }
-    public bool IsVerified { get; set; }
-    public int YearsOfExperience { get; set; }
-    public bool HasInsurance { get; set; }
-    public bool HasFirstAidCertification { get; set; }
-    public int DailyPetWalkLimit { get; set; }
-    public string? BioPictureUrl { get; set; }
-    public double Rating { get; set; } = 0.0;
-    public int ReviewCount { get; set; } = 0;
-    public List<string> ServiceAreas { get; set; } = new();
 }
