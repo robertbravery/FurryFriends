@@ -1,41 +1,14 @@
 <!--
 Sync Impact Report:
-- Version change: 0.1.0 -> 2.0.0
-- List of modified principles:
-  - "Library-First" -> "Clean Architecture Layers"
-  - "CLI Interface" -> REMOVED (not applicable to .NET API + Blazor)
-  - "Test-First" -> Enhanced with .NET testing specifics
-  - "Integration Testing" -> Enhanced with API and Blazor testing
-  - "Observability, Versioning & Breaking Changes, Simplicity" -> Split into separate principles
-- Added sections (MAJOR additions):
-  - I. Clean Architecture Layers (NON-NEGOTIABLE)
-  - II. API Design Standards
-  - III. Blazor UI Architecture
-  - IV. CQRS & MediatR Usage
-  - V. Data Access Patterns
-  - VI. Test-First Development (NON-NEGOTIABLE)
-  - VII. Integration Testing Standards
-  - VIII. Observability & Logging (Serilog)
-  - IX. Versioning & Breaking Changes
-  - X. Simplicity & YAGNI
-  - XI. Result Pattern (Ardalis.Result) (NON-NEGOTIABLE) - DETAILED
-  - XII. FluentValidation (NON-NEGOTIABLE) - DETAILED
-  - XIII. Specification Pattern (Ardalis.Specification) (NON-NEGOTIABLE) - DETAILED
-  - XIV. Serilog Structured Logging (NON-NEGOTIABLE) - DETAILED
-  - XV. Guard Clauses (Ardalis.GuardClauses) (NON-NEGOTIABLE) - DETAILED
-- Removed sections:
-  - CLI Interface (not applicable)
-  - Library-First (not applicable)
-- Templates requiring updates:
-  - .specify/templates/plan-template.md: ⚠ pending review
-  - .specify/templates/spec-template.md: ⚠ pending review
-  - .specify/templates/tasks-template.md: ⚠ pending review
-- Documentation References Added:
-  - Link to Technical Guide (docs/FurryFriends_Technical_Guide.md)
-  - Documentation & Learning Resources section
-  - Clear distinction between Constitution (governance) and Technical Guide (education)
-- Follow-up TODOs: None
-- Notes: MAJOR version bump due to complete restructuring from generic library/CLI to .NET API + Blazor architecture
+- Version change: 2.0.0 -> 2.0.1
+- Modified items:
+  - Version bumped (PATCH): 2.0.0 -> 2.0.1
+  - Date updated: 2025-10-04 -> 2026-03-14
+  - Example paths replaced with actual project examples:
+    - [Aggregate] -> BookingAggregate, ClientAggregate, PetWalkerAggregate, LocationAggregate, RatingAggregate
+    - [Entity]Endpoints -> BookingEndpoints, ClientEndpoints, LocationEndpoints, PetWalkerEndpoints
+  - Test project reference updated: tests/FurryFriends.UnitTests/ -> FurryFriends.FunctionalTests/
+- Templates status: ⚠ pending check
 -->
 # FurryFriends Constitution
 
@@ -1088,65 +1061,84 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 **Complete Directory Structure**:
 ```
 src/FurryFriends.Core/
-├── [Aggregate]Aggregate/
-│   ├── [Entity].cs
+├── BookingAggregate/
+│   ├── Booking.cs
 │   ├── Specifications/
-│   │   └── [Entity]Specification.cs
+│   │   └── BookingSpecification.cs
 │   └── Events/
+├── ClientAggregate/
+│   ├── Client.cs
+│   ├── Specifications/
+│   │   └── ClientSpecification.cs
+│   └── Events/
+├── PetWalkerAggregate/
+│   ├── PetWalker.cs
+│   ├── Specifications/
+│   │   └── PetWalkerSpecification.cs
+│   └── Events/
+├── LocationAggregate/
+│   ├── Location.cs
+│   ├── Specifications/
+│   │   └── LocationSpecification.cs
+│   └── Events/
+└── RatingAggregate/
+    ├── Rating.cs
+    ├── Specifications/
+    │   └── RatingSpecification.cs
+    └── Events/
 
 src/FurryFriends.UseCases/
-├── [Aggregate]/
+├── Booking/
 │   ├── Commands/
-│   │   ├── [Command].cs
-│   │   └── [Command]Handler.cs
+│   │   ├── CreateBookingCommand.cs
+│   │   └── CreateBookingCommandHandler.cs
 │   ├── Queries/
-│   │   ├── [Query].cs
-│   │   └── [Query]Handler.cs
+│   │   ├── GetBookingQuery.cs
+│   │   └── GetBookingQueryHandler.cs
 │   └── DTOs/
-└── Services/
-    └── [Entity]Service/
+├── Client/
+│   ├── Commands/
+│   ├── Queries/
+│   └── DTOs/
+├── PetWalker/
+│   ├── Commands/
+│   ├── Queries/
+│   └── DTOs/
+├── Location/
+│   ├── Commands/
+│   ├── Queries/
+│   └── DTOs/
+└── Rating/
+    ├── Commands/
+    ├── Queries/
+    └── DTOs/
 
 src/FurryFriends.Web/
 ├── Endpoints/
-│   └── [Entity]Endpoints/
-│       ├── [Action].cs
-│       ├── [Action]Request.cs
-│       ├── [Action]Response.cs
-│       └── [Action]Validator.cs
+│   ├── BookingEndpoints/
+│   │   ├── CreateBooking.cs
+│   │   ├── CreateBookingRequest.cs
+│   │   ├── CreateBookingResponse.cs
+│   │   └── CreateBookingValidator.cs
+│   ├── ClientEndpoints/
+│   ├── LocationEndpoints/
+│   └── PetWalkerEndpoints/
 
-tests/FurryFriends.UnitTests/
-├── Core/
-│   └── [Aggregate]/
-│       ├── [Entity]Tests.cs
-│       └── Specifications/
-│           └── [Entity]SpecificationTests.cs
-├── UseCases/
-│   └── [Aggregate]/
-│       ├── Commands/
-│       │   └── [Command]HandlerTests.cs
-│       └── Queries/
-│           └── [Query]HandlerTests.cs
-└── Web/
-    └── Endpoints/
-        └── [Entity]Endpoints/
-            └── [Action]ValidatorTests.cs
-
-tests/FurryFriends.IntegrationTests/
-├── [Entity]Endpoints/
-│   └── [test_scenario].cs
+FurryFriends.FunctionalTests/
+├── ApiEndpoints/
+│   ├── Clients/
+│   │   └── [test_scenario].cs
+│   ├── PetWalkers/
+│   │   └── [test_scenario].cs
+│   ├── Bookings/
+│   │   └── [test_scenario].cs
+│   └── Locations/
+│       └── [test_scenario].cs
 ├── Database/
 │   └── [Entity]RepositoryTests.cs
 └── Common/
     ├── TestBase.cs
     └── TestFixtures.cs
-
-tests/FurryFriends.ComponentTests/
-├── Pages/
-│   └── [Feature]/
-│       └── [Page]Tests.cs
-└── Components/
-    └── Common/
-        └── [Component]Tests.cs
 ```
 ### Security Standards
 
@@ -1245,4 +1237,4 @@ Constitution amendments require:
 - Sync Impact Report maintained at top of file
 - Breaking changes documented in CHANGELOG.md
 
-**Version**: 2.0.0 | **Ratified**: 2025-10-04 | **Last Amended**: 2025-10-04
+**Version**: 2.0.1 | **Ratified**: 2025-10-04 | **Last Amended**: 2026-03-14
