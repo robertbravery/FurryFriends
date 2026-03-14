@@ -40,7 +40,7 @@ Sync Impact Report:
 # FurryFriends Constitution
 
 **Project**: FurryFriends - Pet Care Management System
-**Architecture**: .NET 9 Clean Architecture with FastEndpoints API + Blazor Hybrid UI
+**Architecture**: .NET 9 Clean Architecture with FastEndpoints API + Blazor Hybrid UI, using DDD & CQRS
 
 ## Core Principles
 
@@ -1085,6 +1085,69 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 - Static assets in `wwwroot/`
 - Documentation in `/docs/` with Mermaid diagrams
 
+**Complete Directory Structure**:
+```
+src/FurryFriends.Core/
+├── [Aggregate]Aggregate/
+│   ├── [Entity].cs
+│   ├── Specifications/
+│   │   └── [Entity]Specification.cs
+│   └── Events/
+
+src/FurryFriends.UseCases/
+├── [Aggregate]/
+│   ├── Commands/
+│   │   ├── [Command].cs
+│   │   └── [Command]Handler.cs
+│   ├── Queries/
+│   │   ├── [Query].cs
+│   │   └── [Query]Handler.cs
+│   └── DTOs/
+└── Services/
+    └── [Entity]Service/
+
+src/FurryFriends.Web/
+├── Endpoints/
+│   └── [Entity]Endpoints/
+│       ├── [Action].cs
+│       ├── [Action]Request.cs
+│       ├── [Action]Response.cs
+│       └── [Action]Validator.cs
+
+tests/FurryFriends.UnitTests/
+├── Core/
+│   └── [Aggregate]/
+│       ├── [Entity]Tests.cs
+│       └── Specifications/
+│           └── [Entity]SpecificationTests.cs
+├── UseCases/
+│   └── [Aggregate]/
+│       ├── Commands/
+│       │   └── [Command]HandlerTests.cs
+│       └── Queries/
+│           └── [Query]HandlerTests.cs
+└── Web/
+    └── Endpoints/
+        └── [Entity]Endpoints/
+            └── [Action]ValidatorTests.cs
+
+tests/FurryFriends.IntegrationTests/
+├── [Entity]Endpoints/
+│   └── [test_scenario].cs
+├── Database/
+│   └── [Entity]RepositoryTests.cs
+└── Common/
+    ├── TestBase.cs
+    └── TestFixtures.cs
+
+tests/FurryFriends.ComponentTests/
+├── Pages/
+│   └── [Feature]/
+│       └── [Page]Tests.cs
+└── Components/
+    └── Common/
+        └── [Component]Tests.cs
+```
 ### Security Standards
 
 **Required**:

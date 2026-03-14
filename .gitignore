@@ -400,3 +400,4 @@ FodyWeavers.xsd
 *.sln.iml
 .aider*
 .env
+.roo/grock.txt
