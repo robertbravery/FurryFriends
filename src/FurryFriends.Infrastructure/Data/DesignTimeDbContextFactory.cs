@@ -16,7 +16,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbConte
             .Build();
 
         var builder = new DbContextOptionsBuilder<AppDbContext>();
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString("FurryFriendsSqlConnection");
 
         builder.UseSqlServer(connectionString);
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env pwsh
 <#!
 .SYNOPSIS
 Update agent context files with information from plan.md (PowerShell version)

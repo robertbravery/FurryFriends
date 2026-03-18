@@ -44,7 +44,7 @@ public class ScheduleService : IScheduleService
   public ScheduleService(HttpClient httpClient, IConfiguration configuration, ILogger<ScheduleService> logger)
   {
     _httpClient = httpClient;
-    _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;
+    _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://api";
     _logger = logger;
     _jsonOptions = new JsonSerializerOptions
     {

@@ -4,6 +4,7 @@ using FurryFriends.UseCases.Services.ClientService;
 using FurryFriends.UseCases.Services.LocationService;
 using FurryFriends.UseCases.Services.PetWalkerService;
 using FurryFriends.UseCases.Services.PictureService;
+using FurryFriends.UseCases.Timeslots.Booking;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -20,6 +21,7 @@ public static class ServicesConfigs
     services.AddScoped<IServiceAreaService, ServiceAreaService>();
     services.AddScoped<IPictureService, PictureService>();
     services.AddScoped<IBookingService, BookingService>();
+    services.AddScoped<TravelBufferCalculator>();
     services.AddScoped(provider => Log.Logger);
 
     return services;

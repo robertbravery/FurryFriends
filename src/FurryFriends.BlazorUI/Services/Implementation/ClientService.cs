@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using FurryFriends.BlazorUI.Client.Models.Clients;
 using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
@@ -18,6 +18,7 @@ public class ClientService : IClientService
 {
   private readonly HttpClient _httpClient;
   private readonly HttpClient _dogClient;
+  private readonly string _apiBaseUrl;
   private readonly ILogger<ClientService> _logger;
 
   public ClientService(HttpClient httpClient, HttpClient dogClient, IConfiguration configuration, ILogger<ClientService> logger)
@@ -25,6 +26,7 @@ public class ClientService : IClientService
     _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     _dogClient = dogClient ?? throw new ArgumentNullException(nameof(dogClient));
     _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://api";
   }
 
 
@@ -41,7 +43,7 @@ public class ClientService : IClientService
 
   public async Task<ClientResponseBase> GetClientAsync(Guid value)
   {
-    var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"Clients/id/{value}");
+    var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"{_apiBaseUrl}/Clients/id/{value}");
     if (response is null)
     {
       return new ClientResponseBase();
@@ -53,7 +55,7 @@ public class ClientService : IClientService
   {
     try
     {
-      var url = $"Clients/list?page={page}&pageSize={pageSize}";
+      var url = $"{_apiBaseUrl}/Clients/list?page={page}&pageSize={pageSize}";
       if (!string.IsNullOrEmpty(searchTerm))
       {
         url += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
@@ -130,7 +132,7 @@ public class ClientService : IClientService
 
   public async Task<ClientResponseBase> GetClientByEmailAsync(string email)
   {
-    var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"Clients/email/{email}");
+    var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"{_apiBaseUrl}/Clients/email/{email}");
     if (response is null)
     {
       return new ClientResponseBase();
@@ -142,7 +144,7 @@ public class ClientService : IClientService
   {
     _logger.LogInformation("Creating new client with email: {Email}", clientModel.Email);
 
-    var response = await _httpClient.PostAsJsonAsync("Clients", clientModel);
+    var response = await _httpClient.PostAsJsonAsync($"{_apiBaseUrl}/Clients", clientModel);
 
     if (!response.IsSuccessStatusCode)
     {
@@ -159,7 +161,7 @@ public class ClientService : IClientService
   {
     _logger.LogInformation("Updating client with ID: {ClientId}, Email: {Email}", clientModel.Id, clientModel.Email);
 
-    var response = await _httpClient.PutAsJsonAsync($"Clients/{clientModel.Id}", clientModel);
+    var response = await _httpClient.PutAsJsonAsync($"{_apiBaseUrl}/Clients/{clientModel.Id}", clientModel);
 
     if (!response.IsSuccessStatusCode)
     {
@@ -189,7 +191,7 @@ public class ClientService : IClientService
   {
     try
     {
-      var response = await _httpClient.GetFromJsonAsync<List<BreedDto>>("Clients/breeds");
+      var response = await _httpClient.GetFromJsonAsync<List<BreedDto>>($"{_apiBaseUrl}/Clients/breeds");
       if (response is null || response.Count == 0)
       {
         _logger.LogInformation("No breeds found or empty response from API");
@@ -226,7 +228,7 @@ public class ClientService : IClientService
     };
 
     // Send the update request to the API
-    var response = await _httpClient.PutAsJsonAsync("Clients/pets", updatePetRequest);
+    var response = await _httpClient.PutAsJsonAsync($"{_apiBaseUrl}/Clients/pets", updatePetRequest);
 
     if (!response.IsSuccessStatusCode)
     {
@@ -262,7 +264,7 @@ public class ClientService : IClientService
     };
 
     // Send the add request to the API
-    var response = await _httpClient.PostAsJsonAsync("/Clients/pets", addPetRequest);
+    var response = await _httpClient.PostAsJsonAsync($"{_apiBaseUrl}/Clients/pets", addPetRequest);
 
     if (!response.IsSuccessStatusCode)
     {

@@ -1,4 +1,3 @@
-#!/usr/bin/env pwsh
 # Common PowerShell functions analogous to common.sh
 
 function Get-RepoRoot {
@@ -122,6 +121,28 @@ function Test-FileExists {
         Write-Output "  ✗ $Description"
         return $false
     }
+}
+
+function Get-HighestNumberFromSpecs {
+    param(
+        [string]$SpecsDir
+    )
+    
+    $highest = 0
+    
+    if (Test-Path $SpecsDir) {
+        $dirs = Get-ChildItem -Path $SpecsDir -Directory -ErrorAction SilentlyContinue
+        foreach ($dir in $dirs) {
+            if ($dir.Name -match '^[0-9]{3}-') {
+                $num = [int]$matches[1]
+                if ($num -gt $highest) {
+                    $highest = $num
+                }
+            }
+        }
+    }
+    
+    return $highest
 }
 
 function Test-DirHasFiles {

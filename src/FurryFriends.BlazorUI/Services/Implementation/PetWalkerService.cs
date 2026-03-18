@@ -17,7 +17,7 @@ public class PetWalkerService : BaseListService<PetWalkerDto>, IPetWalkerService
       : base(httpClient, configuration, "PetWalker/list", logger)
   {
     _httpClient = httpClient;
-    _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;
+    _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://api";
     _logger = logger;
   }
 

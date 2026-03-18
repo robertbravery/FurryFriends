@@ -12,4 +12,11 @@ public class BookingByDateSpec : Specification<Booking>
                      b.StartTime >= startOfDay &&
                      b.StartTime < endOfDay);
   }
+
+  public BookingByDateSpec(Guid walkerId, DateTime startOfDay, DateTime endOfDay)
+  {
+    Query.Where(b => b.PetWalkerId == walkerId &&
+                     b.StartTime >= startOfDay &&
+                     b.StartTime < endOfDay);
+  }
 }

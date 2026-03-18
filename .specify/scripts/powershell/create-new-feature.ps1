@@ -1,4 +1,3 @@
-#!/usr/bin/env pwsh
 # Create a new feature
 [CmdletBinding()]
 param(
@@ -12,6 +11,31 @@ $ErrorActionPreference = 'Stop'
 
 # Load common functions (includes Resolve-Template)
 . "$PSScriptRoot/common.ps1"
+
+# Add missing function if not defined
+if (-not (Get-Command Get-HighestNumberFromSpecs -ErrorAction SilentlyContinue)) {
+    function Get-HighestNumberFromSpecs {
+        param(
+            [string]$SpecsDir
+        )
+        
+        $highest = 0
+        
+        if (Test-Path $SpecsDir) {
+            $dirs = Get-ChildItem -Path $SpecsDir -Directory -ErrorAction SilentlyContinue
+            foreach ($dir in $dirs) {
+                if ($dir.Name -match '^[0-9]{3}-') {
+                    $num = [int]$matches[1]
+                    if ($num -gt $highest) {
+                        $highest = $num
+                    }
+                }
+            }
+        }
+        
+        return $highest
+    }
+}
 
 if (-not $FeatureDescription -or $FeatureDescription.Count -eq 0) {
     Write-Error "Usage: ./create-new-feature.ps1 [-Json] [-ShortName <name>] [-Number <num>] <feature description>"

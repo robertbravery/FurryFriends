@@ -16,7 +16,7 @@ public class LocationService : ILocationService
   public LocationService(HttpClient httpClient, IConfiguration configuration, ILogger<LocationService> logger)
   {
     _httpClient = httpClient;
-    _apiBaseUrl = configuration["ApiBaseUrl"] ?? string.Empty;
+    _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://api";
     _logger = logger;
   }
 
