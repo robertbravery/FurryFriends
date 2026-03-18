@@ -11,4 +11,8 @@
     <ProjectReference Include="..\FurryFriends.Core\FurryFriends.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="FurryFriends.UnitTests" />
+  </ItemGroup>
+
 </Project>

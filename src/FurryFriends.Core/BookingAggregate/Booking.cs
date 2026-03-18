@@ -16,6 +16,14 @@ public partial class Booking : AuditableEntity<Guid>
   public BookingStatus Status { get; private set; }
   public decimal Price { get; private set; }
   public string? Notes { get; private set; }
+  public Guid? TimeslotId { get; private set; }
+  public string ClientAddress { get; private set; } = string.Empty;
+
+  public void SetTimeslotInfo(Guid? timeslotId, string clientAddress)
+  {
+      TimeslotId = timeslotId;
+      ClientAddress = clientAddress;
+  }
   public virtual Cancellation? Cancellation { get; private set; }
 
   public virtual PetWalker PetWalker { get; private set; } = default!;

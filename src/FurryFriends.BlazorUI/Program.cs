@@ -46,6 +46,7 @@ builder.Services.AddScoped<IPetWalkerService, PetWalkerService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ITimeslotService, TimeslotService>();
 builder.Services.AddSingleton<IPopupService, PopupService>();
 builder.Services.AddScoped<IPictureService, PictureService>();
 builder.Services.AddScoped<FurryFriends.BlazorUI.Client.Services.Interfaces.IClientLoggingService, ServerClientLoggingService>();
@@ -72,7 +73,7 @@ builder.Services.AddHttpClient<IPetWalkerService, PetWalkerService>((sp, client)
     var apiBaseUrl = config?["ApiBaseUrl"];
     client.BaseAddress = !string.IsNullOrEmpty(apiBaseUrl)
         ? new Uri(apiBaseUrl)
-        : new Uri("http://api");
+        : new Uri("http://api/api");
 }).AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 // Configure other HttpClients similarly
@@ -82,7 +83,7 @@ builder.Services.AddHttpClient<IClientService, ClientService>((sp, client) =>
     var apiBaseUrl = config?["ApiBaseUrl"];
     client.BaseAddress = !string.IsNullOrEmpty(apiBaseUrl)
         ? new Uri(apiBaseUrl)
-        : new Uri("http://api");
+        : new Uri("http://api/api");
 }).AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddHttpClient<ILocationService, LocationService>((sp, client) =>
@@ -98,6 +99,12 @@ builder.Services.AddHttpClient<IPictureService, PictureService>((sp, client) =>
 }).AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddHttpClient<IBookingService, BookingService>((sp, client) =>
+{
+  var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
+  client.BaseAddress = new Uri(apiUrl);
+}).AddHttpMessageHandler<LoggingDelegatingHandler>();
+
+builder.Services.AddHttpClient<ITimeslotService, TimeslotService>((sp, client) =>
 {
   var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
   client.BaseAddress = new Uri(apiUrl);

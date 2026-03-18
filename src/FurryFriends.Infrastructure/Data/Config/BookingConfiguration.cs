@@ -36,6 +36,14 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
 
     builder.Property(b => b.Notes);
 
+    builder.Property(b => b.TimeslotId)
+        .IsRequired(false);
+
+    builder.Property(b => b.ClientAddress)
+        .HasMaxLength(500)
+        .HasColumnType("nvarchar(500)")
+        .IsRequired();
+
     builder.HasOne(b => b.PetWalker)
         .WithMany()
         .HasForeignKey(b => b.PetWalkerId)

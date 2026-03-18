@@ -242,3 +242,52 @@ Aspire is a collection of tools and guidance for building observable, production
 The FurryFriends solution uses Aspire to orchestrate the different services that make up the application. The `FurryFriends.AspireHost` project defines the Aspire host, which is responsible for deploying and managing the other services.
 
 By using Aspire, the FurryFriends solution can be easily deployed to a variety of cloud environments, such as Azure, AWS, and GCP. Aspire also provides built-in support for observability, which makes it easy to monitor the health and performance of the application.
+
+## Timeslots Feature
+
+The Timeslots feature (003-petwalker-timeslots) enables pet walkers to manage their availability and allows clients to book time slots for pet walking services.
+
+### Domain Entities
+
+The feature includes the following domain entities:
+
+- **Timeslot**: Represents a time slot that a pet walker offers for booking
+- **WorkingHours**: Represents the regular working hours for a pet walker on specific days
+- **CustomTimeRequest**: Represents a client's request for a custom time outside regular hours
+- **TravelBuffer**: Represents the travel time between bookings
+
+### API Endpoints
+
+The feature provides the following API endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/working-hours` | POST | Create working hours for a pet walker |
+| `/api/working-hours/{petWalkerId}` | GET | Get working hours for a pet walker |
+| `/api/working-hours/{id}` | PUT | Update working hours |
+| `/api/working-hours/{id}` | DELETE | Delete working hours |
+| `/api/timeslots` | POST | Create a new timeslot |
+| `/api/timeslots/{petWalkerId}/{date}` | GET | Get timeslots for a pet walker on a specific date |
+| `/api/timeslots/available/{petWalkerId}/{date}` | GET | Get available timeslots |
+| `/api/timeslots/{id}` | PUT | Update a timeslot |
+| `/api/timeslots/{id}` | DELETE | Delete a timeslot |
+| `/api/bookings` | POST | Book a timeslot |
+| `/api/custom-time-requests` | POST | Request a custom time |
+| `/api/custom-time-requests/{id}` | PUT | Respond to a custom time request |
+
+### User Stories
+
+1. **US1 - Working Hours Management**: Pet walkers can define their regular working hours for each day of the week
+2. **US2 - Timeslot Creation**: Pet walkers can create time slots based on their working hours
+3. **US3 - View Available Timeslots**: Clients can view available timeslots for a pet walker on a specific date
+4. **US4 - Book a Timeslot**: Clients can book an available timeslot
+5. **US5 - Custom Time Request**: Clients can request a custom time outside regular hours
+6. **US6 - Manage Timeslots**: Pet walkers can update or delete their timeslots
+
+### Key Implementation Details
+
+- Uses **Ardalis.Result** for operation results
+- Uses **FluentValidation** for input validation
+- Uses **Serilog** for structured logging
+- Includes **travel buffer calculations** to prevent overlapping bookings
+- Supports **counter-offers** for custom time requests

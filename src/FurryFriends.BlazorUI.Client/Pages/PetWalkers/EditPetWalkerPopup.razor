@@ -1,4 +1,5 @@
 @using FurryFriends.BlazorUI.Client.Models.PetWalkers
+@using FurryFriends.BlazorUI.Client.Models.Timeslots
 @using FurryFriends.BlazorUI.Client.Services.Interfaces
 @using Microsoft.AspNetCore.Components.Forms
 @rendermode InteractiveAuto
@@ -457,6 +458,157 @@
 					}
 				</div>
 
+				<hr class="my-4" />
+
+				@* Timeslot Management Section *@
+				<h4>Timeslots</h4>
+				<p class="text-muted mb-3">Create and manage specific timeslots that clients can book. Select a date to view and add timeslots.</p>
+
+				@if (isLoadingTimeslots)
+				{
+					<div class="text-center my-3">
+						<span class="spinner-border spinner-border-sm" role="status"></span>
+						<span class="ms-2">Loading timeslots...</span>
+					</div>
+				}
+				else
+				{
+					@* Date Selection *@
+					<div class="row mb-3">
+						<div class="col-md-4">
+							<label for="timeslotDate">Select Date:</label>
+							<input type="date" 
+								   id="timeslotDate" 
+								   class="form-control" 
+								   min="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")"
+								   max="@DateOnly.FromDateTime(DateTime.Today.AddDays(30)).ToString("yyyy-MM-dd")"
+								   @bind="selectedTimeslotDate" />
+						</div>
+					</div>
+
+					@* Add New Timeslot Form *@
+					<div class="card mb-3">
+						<div class="card-header bg-light">
+							<h5 class="mb-0">Add New Timeslot</h5>
+						</div>
+						<div class="card-body">
+							<div class="row align-items-end">
+								<div class="col-md-3">
+									<label for="newStartTime">Start Time:</label>
+									<input type="time" 
+										   id="newStartTime" 
+										   class="form-control" 
+										   @bind="newTimeslotStartTime" 
+										   @bind:format="HH:mm" />
+								</div>
+								<div class="col-md-3">
+									<label for="newDuration">Duration (minutes):</label>
+									<select id="newDuration" class="form-control" @bind="newTimeslotDuration">
+										<option value="15">15 minutes</option>
+										<option value="30">30 minutes</option>
+										<option value="45">45 minutes</option>
+										<option value="60">1 hour</option>
+										<option value="90">1.5 hours</option>
+										<option value="120">2 hours</option>
+									</select>
+								</div>
+								<div class="col-md-3">
+									<button type="button" class="btn btn-primary w-100" @onclick="CreateTimeslotAsync">
+										<i class="fas fa-plus"></i> Add Timeslot
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					@* Timeslots List for Selected Date *@
+					<div class="timeslots-list">
+						<h5>Timeslots for @selectedTimeslotDate.ToString("ddd, MMM d, yyyy")</h5>
+						
+						@{
+							var dateTimeslots = GetTimeslotsForDate(selectedTimeslotDate);
+						}
+						
+						@if (dateTimeslots.Count == 0)
+						{
+							<div class="alert alert-info">
+								No timeslots found for this date. Use the form above to add one.
+							</div>
+						}
+						else
+						{
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>Start Time</th>
+										<th>End Time</th>
+										<th>Duration</th>
+										<th>Status</th>
+										<th>Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var slot in dateTimeslots)
+									{
+										<tr>
+											@if (isEditingTimeslot && editingTimeslotId == slot.TimeslotId)
+											{
+												<td>
+													<input type="time" 
+														   class="form-control" 
+														   @bind="editingTimeslot!.StartTime" 
+														   @bind:format="HH:mm" />
+												</td>
+												<td>
+													@slot.EndTime.ToString("HH:mm")
+												</td>
+												<td>
+													<select class="form-control" @bind="editingTimeslot.DurationInMinutes">
+														<option value="15">15 min</option>
+														<option value="30">30 min</option>
+														<option value="45">45 min</option>
+														<option value="60">1 hour</option>
+														<option value="90">1.5 hours</option>
+														<option value="120">2 hours</option>
+													</select>
+												</td>
+												<td>@slot.Status</td>
+												<td>
+													<button type="button" class="btn btn-success btn-sm" @onclick="UpdateTimeslotAsync">
+														<i class="fas fa-check"></i> Save
+													</button>
+													<button type="button" class="btn btn-secondary btn-sm" @onclick="CancelEditTimeslot">
+														<i class="fas fa-times"></i> Cancel
+													</button>
+												</td>
+											}
+											else
+											{
+												<td>@slot.StartTime.ToString("HH:mm")</td>
+												<td>@slot.EndTime.ToString("HH:mm")</td>
+												<td>@slot.DurationInMinutes min</td>
+												<td>
+													<span class="badge @GetStatusBadgeClass(slot.Status)">
+														@slot.Status
+													</span>
+												</td>
+												<td>
+													<button type="button" class="btn btn-primary btn-sm" @onclick="() => StartEditTimeslot(slot)">
+														<i class="fas fa-edit"></i> Edit
+													</button>
+													<button type="button" class="btn btn-danger btn-sm" @onclick="() => DeleteTimeslotAsync(slot.TimeslotId)">
+														<i class="fas fa-trash"></i> Delete
+													</button>
+												</td>
+											}
+									</tr>
+								}
+							</tbody>
+						</table>
+						}
+					</div>
+				}
+
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" @onclick="OnCancel" style="margin-right: 0.5rem;">Cancel</button>
 					<button type="submit" class="btn btn-primary" disabled="@isProcessing">
@@ -479,4 +631,15 @@
 			</div>
 		</EditForm>
 	};
+
+	private string GetStatusBadgeClass(string status)
+	{
+		return status switch
+		{
+			"Available" => "bg-success",
+			"Booked" => "bg-warning",
+			"Cancelled" => "bg-danger",
+			_ => "bg-secondary"
+		};
+	}
 }

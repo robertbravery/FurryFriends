@@ -1,8 +1,10 @@
 ﻿using FurryFriends.BlazorUI.Client.Models.Common;
 using FurryFriends.BlazorUI.Client.Models.Locations;
 using FurryFriends.BlazorUI.Client.Models.PetWalkers;
+using FurryFriends.BlazorUI.Client.Models.Timeslots;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
 namespace FurryFriends.BlazorUI.Client.Pages.PetWalkers;
 
@@ -21,7 +23,13 @@ public partial class EditPetWalkerPopup
   public IScheduleService ScheduleService { get; set; } = default!;
 
   [Inject]
+  public ITimeslotService TimeslotService { get; set; } = default!;
+
+  [Inject]
   public IPopupService PopupService { get; set; } = default!;
+
+  [Inject]
+  public ILogger<EditPetWalkerPopup> Logger { get; set; } = default!;
 
   [Parameter]
   public EventCallback OnPetWalkerUpdated { get; set; }
@@ -50,6 +58,18 @@ public partial class EditPetWalkerPopup
 
   // Schedule management
   private List<ScheduleItemDto> scheduleItems = new();
+
+  // Timeslot management
+  private List<TimeslotDto> timeslots = new();
+  private bool isLoadingTimeslots = false;
+  private string? timeslotError;
+  private bool isEditingTimeslot = false;
+  private TimeslotDto? editingTimeslot;
+  private TimeslotDto newTimeslot = new();
+  private DateOnly selectedTimeslotDate = DateOnly.FromDateTime(DateTime.Today);
+  private TimeOnly newTimeslotStartTime = new TimeOnly(9, 0);
+  private int newTimeslotDuration = 30;
+  private Guid? editingTimeslotId;
 
   // Track unsaved changes per tab
   private Dictionary<string, bool> unsavedChanges = new()
@@ -436,6 +456,232 @@ public partial class EditPetWalkerPopup
     }
   }
 
+  private async Task LoadTimeslotsAsync()
+  {
+    if (petWalkerModel == null || petWalkerModel.Id == Guid.Empty)
+      return;
+
+    try
+    {
+      isLoadingTimeslots = true;
+      timeslotError = null;
+
+      // Load timeslots for the next 30 days
+      var startDate = DateOnly.FromDateTime(DateTime.Today);
+      var endDate = startDate.AddDays(30);
+
+      var request = new GetTimeslotsRequest
+      {
+        PetWalkerId = petWalkerModel.Id,
+        StartDate = startDate,
+        EndDate = endDate,
+        Status = null
+      };
+
+      var response = await TimeslotService.GetTimeslotsAsync(request);
+
+      if (response.Success && response.Data != null)
+      {
+        timeslots = response.Data;
+      }
+      else
+      {
+        timeslots = new List<TimeslotDto>();
+        timeslotError = response.Message ?? "Failed to load timeslots";
+      }
+    }
+    catch (Exception ex)
+    {
+      timeslots = new List<TimeslotDto>();
+      timeslotError = $"Error loading timeslots: {ex.Message}";
+    }
+    finally
+    {
+      isLoadingTimeslots = false;
+    }
+  }
+
+  private List<TimeslotDto> GetTimeslotsForDate(DateOnly date)
+  {
+    return timeslots.Where(t => t.Date == date).OrderBy(t => t.StartTime).ToList();
+  }
+
+  private async Task CreateTimeslotAsync()
+  {
+    Logger.LogInformation("DEBUG: CreateTimeslotAsync called - petWalkerModel is null: {IsNull}, Id: {Id}", 
+        petWalkerModel == null, petWalkerModel?.Id);
+    
+    if (petWalkerModel == null || petWalkerModel.Id == Guid.Empty)
+    {
+        Logger.LogWarning("DEBUG: CreateTimeslotAsync early return - petWalkerModel null: {IsNull}, Id is Empty: {IdIsEmpty}", 
+            petWalkerModel == null, petWalkerModel?.Id == Guid.Empty);
+        return;
+    }
+
+    try
+    {
+      Logger.LogInformation("DEBUG: Creating timeslot - Date: {Date}, StartTime: {StartTime}, Duration: {Duration}",
+          selectedTimeslotDate, newTimeslotStartTime, newTimeslotDuration);
+      
+      var request = new CreateTimeslotRequest
+      {
+        PetWalkerId = petWalkerModel.Id,
+        Date = selectedTimeslotDate,
+        StartTime = newTimeslotStartTime,
+        DurationInMinutes = newTimeslotDuration
+      };
+
+      var response = await TimeslotService.CreateTimeslotAsync(request);
+
+      if (response.Success && response.Data != null)
+      {
+        // Add the new timeslot to the list
+        timeslots.Add(new TimeslotDto
+        {
+          TimeslotId = response.Data.TimeslotId,
+          PetWalkerId = petWalkerModel.Id,
+          Date = response.Data.Date,
+          StartTime = response.Data.StartTime,
+          EndTime = response.Data.EndTime,
+          DurationInMinutes = response.Data.DurationInMinutes,
+          Status = response.Data.Status
+        });
+
+        // Reset form
+        newTimeslotStartTime = new TimeOnly(9, 0);
+        newTimeslotDuration = 30;
+        SetTabMessage("schedule", "Timeslot created successfully!", true);
+
+        // Auto-hide success message after 3 seconds
+        _ = Task.Delay(3000).ContinueWith(_ =>
+        {
+          InvokeAsync(() =>
+          {
+            ClearTabMessage("schedule");
+            StateHasChanged();
+          });
+        });
+      }
+      else
+      {
+        SetTabMessage("schedule", response.Message ?? "Failed to create timeslot", false);
+      }
+    }
+    catch (Exception ex)
+    {
+      SetTabMessage("schedule", $"Error creating timeslot: {ex.Message}", false);
+    }
+  }
+
+  private async Task UpdateTimeslotAsync()
+  {
+    if (editingTimeslot == null || editingTimeslotId == null)
+      return;
+
+    try
+    {
+      var request = new UpdateTimeslotRequest
+      {
+        TimeslotId = editingTimeslotId.Value,
+        Date = editingTimeslot.Date,
+        StartTime = editingTimeslot.StartTime,
+        DurationInMinutes = editingTimeslot.DurationInMinutes
+      };
+
+      var response = await TimeslotService.UpdateTimeslotAsync(request);
+
+      if (response.Success && response.Data != null)
+      {
+        // Update the timeslot in the list
+        var index = timeslots.FindIndex(t => t.TimeslotId == editingTimeslotId.Value);
+        if (index >= 0)
+        {
+          timeslots[index] = response.Data;
+        }
+
+        // Reset edit mode
+        isEditingTimeslot = false;
+        editingTimeslot = null;
+        editingTimeslotId = null;
+        SetTabMessage("schedule", "Timeslot updated successfully!", true);
+
+        // Auto-hide success message after 3 seconds
+        _ = Task.Delay(3000).ContinueWith(_ =>
+        {
+          InvokeAsync(() =>
+          {
+            ClearTabMessage("schedule");
+            StateHasChanged();
+          });
+        });
+      }
+      else
+      {
+        SetTabMessage("schedule", response.Message ?? "Failed to update timeslot", false);
+      }
+    }
+    catch (Exception ex)
+    {
+      SetTabMessage("schedule", $"Error updating timeslot: {ex.Message}", false);
+    }
+  }
+
+  private async Task DeleteTimeslotAsync(Guid timeslotId)
+  {
+    try
+    {
+      var response = await TimeslotService.DeleteTimeslotAsync(timeslotId);
+
+      if (response.Success)
+      {
+        // Remove from the list
+        timeslots.RemoveAll(t => t.TimeslotId == timeslotId);
+        SetTabMessage("schedule", "Timeslot deleted successfully!", true);
+
+        // Auto-hide success message after 3 seconds
+        _ = Task.Delay(3000).ContinueWith(_ =>
+        {
+          InvokeAsync(() =>
+          {
+            ClearTabMessage("schedule");
+            StateHasChanged();
+          });
+        });
+      }
+      else
+      {
+        SetTabMessage("schedule", response.Message ?? "Failed to delete timeslot", false);
+      }
+    }
+    catch (Exception ex)
+    {
+      SetTabMessage("schedule", $"Error deleting timeslot: {ex.Message}", false);
+    }
+  }
+
+  private void StartEditTimeslot(TimeslotDto timeslot)
+  {
+    editingTimeslot = new TimeslotDto
+    {
+      TimeslotId = timeslot.TimeslotId,
+      PetWalkerId = timeslot.PetWalkerId,
+      Date = timeslot.Date,
+      StartTime = timeslot.StartTime,
+      EndTime = timeslot.EndTime,
+      DurationInMinutes = timeslot.DurationInMinutes,
+      Status = timeslot.Status
+    };
+    editingTimeslotId = timeslot.TimeslotId;
+    isEditingTimeslot = true;
+  }
+
+  private void CancelEditTimeslot()
+  {
+    isEditingTimeslot = false;
+    editingTimeslot = null;
+    editingTimeslotId = null;
+  }
+
   private async Task SaveScheduleChanges()
   {
     try
@@ -472,6 +718,13 @@ public partial class EditPetWalkerPopup
   {
     activeTab = tabName;
     ClearTabMessage(tabName);
+    
+    // Load timeslots when switching to schedule tab
+    if (tabName == "schedule" && petWalkerModel != null && petWalkerModel.Id != Guid.Empty)
+    {
+      _ = LoadTimeslotsAsync();
+    }
+    
     StateHasChanged();
   }
 

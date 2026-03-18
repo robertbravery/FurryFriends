@@ -2,6 +2,7 @@
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.LocationAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.Core.TimeslotAggregate;
 
 namespace FurryFriends.Infrastructure.Data;
 
@@ -23,6 +24,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options,
   public DbSet<Pet> Pets => Set<Pet>();
   public DbSet<Breed> Breeds => Set<Breed>();
   public DbSet<Species> Species => Set<Species>();
+  public DbSet<Timeslot> Timeslots => Set<Timeslot>();
+  public DbSet<WorkingHours> WorkingHours => Set<WorkingHours>();
+  public DbSet<TravelBuffer> TravelBuffers => Set<TravelBuffer>();
+  public DbSet<CustomTimeRequest> CustomTimeRequests => Set<CustomTimeRequest>();
 
 
 
