@@ -1,0 +1,93 @@
+@page "/petwalker/{petWalkerId:guid}/ratings"
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using FurryFriends.BlazorUI.Client.Components.Common
+@inject IRatingService RatingService
+
+<PageTitle>PetWalker Ratings - FurryFriends</PageTitle>
+
+<h3>PetWalker Ratings Dashboard</h3>
+
+@if (IsLoading)
+{
+    <p><em>Loading ratings...</em></p>
+}
+else if (Summary == null)
+{
+    <p><em>No ratings found for this pet walker.</em></p>
+}
+else
+{
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Rating Summary</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <StarRating Rating="@Summary.AverageRating" MaxRating="5" ShowNumeric="true" />
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Total Ratings:</strong> @Summary.TotalRatings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Recent Reviews</h4>
+    
+    @if (Summary.RecentRatings == null || !Summary.RecentRatings.Any())
+    {
+        <p>No reviews yet.</p>
+    }
+    else
+    {
+        @foreach (var rating in Summary.RecentRatings)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <StarRating Rating="@rating.RatingValue" MaxRating="5" />
+                        <small class="text-muted">@rating.CreatedDate.ToString("MMM dd, yyyy")</small>
+                    </div>
+                    @if (!string.IsNullOrEmpty(rating.Comment))
+                    {
+                        <p class="mt-2">@rating.Comment</p>
+                    }
+                    @if (!string.IsNullOrEmpty(rating.ClientName))
+                    {
+                        <small class="text-muted">By: @rating.ClientName</small>
+                    }
+                </div>
+            </div>
+        }
+    }
+}
+
+@code {
+    [Parameter]
+    public Guid petWalkerId { get; set; }
+
+    private bool IsLoading { get; set; } = true;
+    private RatingSummaryDto? Summary { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        IsLoading = true;
+        
+        try
+        {
+            Summary = await RatingService.GetRatingSummaryAsync(petWalkerId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading ratings: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}
