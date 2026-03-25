@@ -1,0 +1,74 @@
+@page "/rating/submit"
+@rendermode InteractiveServer
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+
+<PageTitle>Submit Rating - FurryFriends</PageTitle>
+
+<h3>Submit Your Rating</h3>
+
+@if (hasSubmitted)
+{
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Thank you!</h4>
+        <p>Your rating has been submitted successfully.</p>
+        <hr>
+        <button class="btn btn-primary" @onclick="ResetForm">Submit Another Rating</button>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <h5>Rate Your Experience</h5>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    @errorMessage
+                </div>
+            }
+
+            <div class="mb-3">
+                <label for="bookingId" class="form-label">Booking ID</label>
+                <input type="text" class="form-control" id="bookingId" 
+                       @bind="BookingIdText" placeholder="Enter your booking ID" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Rating</label>
+                <div class="d-flex gap-2">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        var starValue = i;
+                        <button type="button" 
+                                class="btn @(SelectedRating >= starValue ? "btn-warning" : "btn-outline-secondary")"
+                                @onclick="() => SelectRating(starValue)"
+                                style="font-size: 1.5rem;">
+                            ★
+                        </button>
+                    }
+                </div>
+                <small class="text-muted">@SelectedRating of 5 stars selected</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment (optional)</label>
+                <textarea class="form-control" id="comment" rows="3" 
+                          @bind="Comment" placeholder="Share your experience..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" @onclick="SubmitRating" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span> Submitting...</span>
+                }
+                else
+                {
+                    <span>Submit Rating</span>
+                }
+            </button>
+        </div>
+    </div>
+}

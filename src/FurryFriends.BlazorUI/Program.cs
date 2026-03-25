@@ -47,6 +47,7 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ITimeslotService, TimeslotService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddSingleton<IPopupService, PopupService>();
 builder.Services.AddScoped<IPictureService, PictureService>();
 builder.Services.AddScoped<FurryFriends.BlazorUI.Client.Services.Interfaces.IClientLoggingService, ServerClientLoggingService>();
@@ -105,6 +106,12 @@ builder.Services.AddHttpClient<IBookingService, BookingService>((sp, client) =>
 }).AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddHttpClient<ITimeslotService, TimeslotService>((sp, client) =>
+{
+  var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
+  client.BaseAddress = new Uri(apiUrl);
+}).AddHttpMessageHandler<LoggingDelegatingHandler>();
+
+builder.Services.AddHttpClient<IRatingService, RatingService>((sp, client) =>
 {
   var apiUrl = builder.Configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("ApiBaseUrl not found in configuration");
   client.BaseAddress = new Uri(apiUrl);

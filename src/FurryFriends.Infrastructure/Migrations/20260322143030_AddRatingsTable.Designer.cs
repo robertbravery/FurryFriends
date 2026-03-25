@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250924180645_AddRatingsTable")]
+    [Migration("20260322143030_AddRatingsTable")]
     partial class AddRatingsTable
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace FurryFriends.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -30,6 +30,11 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ClientAddress")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -57,6 +62,9 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("TimeslotId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -67,6 +75,41 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.HasIndex("PetWalkerId");
 
                     b.ToTable("Bookings", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.BookingAggregate.Cancellation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdditionalNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CancellationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CancelledBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Reason")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.ToTable("Cancellations", (string)null);
                 });
 
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Breed", b =>
@@ -420,6 +463,240 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.ToTable("ServiceAreas", (string)null);
                 });
 
+            modelBuilder.Entity("FurryFriends.Core.RatingAggregate.Rating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PetWalkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RatingValue")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("PetWalkerId");
+
+                    b.ToTable("Ratings", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.TimeslotAggregate.CustomTimeRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ClientAddress")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly?>("CounterOfferedDate")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly?>("CounterOfferedTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PetWalkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("PreferredDurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("PreferredEndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeOnly>("PreferredStartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateOnly>("RequestedDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ResponseReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("PetWalkerId");
+
+                    b.HasIndex("RequestedDate");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("CustomTimeRequests", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.TimeslotAggregate.Timeslot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("DurationInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<Guid>("PetWalkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("PetWalkerId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("PetWalkerId", "Date");
+
+                    b.ToTable("Timeslots", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.TimeslotAggregate.TravelBuffer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("BufferDurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DestinationAddress")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OriginAddress")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("PreviousBookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("PreviousBookingId");
+
+                    b.ToTable("TravelBuffers", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.TimeslotAggregate.WorkingHours", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<Guid>("PetWalkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DayOfWeek");
+
+                    b.HasIndex("PetWalkerId");
+
+                    b.HasIndex("PetWalkerId", "DayOfWeek");
+
+                    b.ToTable("WorkingHours", (string)null);
+                });
+
             modelBuilder.Entity("FurryFriends.Core.BookingAggregate.Booking", b =>
                 {
                     b.HasOne("FurryFriends.Core.ClientAggregate.Client", "PetOwner")
@@ -437,6 +714,17 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Navigation("PetOwner");
 
                     b.Navigation("PetWalker");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.BookingAggregate.Cancellation", b =>
+                {
+                    b.HasOne("FurryFriends.Core.BookingAggregate.Booking", "Booking")
+                        .WithOne("Cancellation")
+                        .HasForeignKey("FurryFriends.Core.BookingAggregate.Cancellation", "BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Breed", b =>
@@ -865,6 +1153,11 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Navigation("Locality");
 
                     b.Navigation("PetWalker");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.BookingAggregate.Booking", b =>
+                {
+                    b.Navigation("Cancellation");
                 });
 
             modelBuilder.Entity("FurryFriends.Core.ClientAggregate.Breed", b =>
