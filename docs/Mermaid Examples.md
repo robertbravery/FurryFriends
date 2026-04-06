@@ -62,7 +62,7 @@ sequenceDiagram
 ```
 
 ```mermaid
-   ---
+---
 title: Class example
 ---
 classDiagram

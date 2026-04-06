@@ -1,5 +1,5 @@
 
-```
+```csharp
 public class User : IAggregateRoot
 {
     public Guid Id { get; private set; }
