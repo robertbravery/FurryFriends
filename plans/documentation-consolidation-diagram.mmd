@@ -1,0 +1,41 @@
+```mermaid
+flowchart TD
+    A[Current Documentation State] --> B{Consolidation Analysis}
+    B --> C[Identify Duplicates]
+    B --> D[Analyze Content Quality]
+    B --> E[Map References]
+    
+    C --> F[User Aggregate: 8+ files]
+    C --> G[Architecture: 3+ files]
+    C --> H[Requirements: 3 files]
+    C --> I[Diagrams: 10+ .mmd files]
+    
+    D --> J[Select Best Content]
+    E --> K[Update Reference Targets]
+    
+    J --> L[Create Consolidated<br>User Aggregate.md]
+    K --> M[Point to technical/2-architecture.md]
+    
+    F --> N[Archive to docs/archive/]
+    G --> O[Archive duplicates]
+    H --> P[Archive BRD.md, Requirements.md]
+    I --> Q[Move to docs/diagrams/]
+    
+    L --> R[New Documentation Structure]
+    M --> R
+    N --> R
+    O --> R
+    P --> R
+    Q --> R
+    
+    subgraph R [Consolidated Structure]
+        S[technical/<br>2-architecture.md]
+        T[technical/<br>user-aggregate.md]
+        U[technical/<br>1-requirements.md]
+        V[diagrams/<br>organized by type]
+        W[archive/<br>historical reference]
+    end
+    
+    R --> X[Updated Navigation]
+    X --> Y[Single Source of Truth]
+```
