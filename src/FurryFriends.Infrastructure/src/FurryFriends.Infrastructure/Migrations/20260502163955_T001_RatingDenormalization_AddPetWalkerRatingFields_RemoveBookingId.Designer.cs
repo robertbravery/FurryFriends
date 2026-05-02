@@ -4,16 +4,19 @@ using FurryFriends.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace FurryFriends.Infrastructure.Migrations
+namespace FurryFriends.Infrastructure.src.FurryFriends.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260502163955_T001_RatingDenormalization_AddPetWalkerRatingFields_RemoveBookingId")]
+    partial class T001_RatingDenormalization_AddPetWalkerRatingFields_RemoveBookingId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

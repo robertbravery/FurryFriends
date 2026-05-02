@@ -10,6 +10,7 @@ Sync Impact Report:
   - Test project reference updated: tests/FurryFriends.UnitTests/ -> FurryFriends.FunctionalTests/
 - Templates status: ⚠ pending check
 -->
+
 # FurryFriends Constitution
 
 **Project**: FurryFriends - Pet Care Management System
@@ -20,6 +21,7 @@ Sync Impact Report:
 ### I. Clean Architecture Layers (NON-NEGOTIABLE)
 
 All code MUST follow Clean Architecture with strict dependency rules:
+
 - **Core**: Domain entities, value objects, aggregates, specifications (no external dependencies except Ardalis.Specification)
 - **UseCases**: CQRS commands/queries, DTOs, handlers using MediatR (depends only on Core)
 - **Infrastructure**: EF Core repositories, database access (depends on Core and UseCases)
@@ -32,6 +34,7 @@ All code MUST follow Clean Architecture with strict dependency rules:
 ### II. API Design Standards
 
 All API endpoints MUST follow FastEndpoints patterns:
+
 - Separate files for Request, Response, and Endpoint per feature.
 - Feature folder organization (e.g., `/BookingEndpoints/GetAvailablePetWalkers/`).
 - Endpoints MUST override the `Configure()` method to define their behavior.
@@ -45,6 +48,7 @@ All API endpoints MUST follow FastEndpoints patterns:
 - Proper HTTP status codes (200, 201, 400, 404, 500).
 
 **Example - Endpoint Configuration**:
+
 ```csharp
 // In the Request DTO, e.g., GetClientByIdRequest.cs
 public class GetClientByIdRequest
@@ -73,6 +77,7 @@ public override void Configure()
 ### III. Blazor UI Architecture
 
 Blazor components MUST follow these patterns:
+
 - **Blazor Server handles ALL HTTP communication** - Client project NEVER calls HttpClient directly
 - Service interfaces in BlazorUI.Client, implementations in BlazorUI (server-side)
 - Code-behind files (.razor.cs) for complex component logic
@@ -86,6 +91,7 @@ Blazor components MUST follow these patterns:
 ### IV. CQRS & MediatR Usage
 
 All business operations MUST use CQRS pattern via MediatR:
+
 - Commands for state changes (Create, Update, Delete)
 - Queries for data retrieval (Get, List, Search)
 - Handlers in UseCases project with single responsibility
@@ -98,6 +104,7 @@ All business operations MUST use CQRS pattern via MediatR:
 ### V. Data Access Patterns
 
 All data access MUST follow repository and specification patterns:
+
 - Generic repository pattern with Ardalis.Specification
 - Specifications for complex queries (suffix with `Specification`) - see Principle XIII
 - Aggregate-based organization in Core project
@@ -110,6 +117,7 @@ All data access MUST follow repository and specification patterns:
 ### VI. Test-First Development (NON-NEGOTIABLE)
 
 TDD is mandatory for all new features:
+
 - **Unit Tests**: Domain logic, handlers, specifications (xUnit)
 - **Integration Tests**: API endpoints with in-memory database or test containers
 - **Component Tests**: Blazor components with bUnit
@@ -122,6 +130,7 @@ TDD is mandatory for all new features:
 ### VII. Integration Testing Standards
 
 Integration tests REQUIRED for:
+
 - New API endpoints (request/response validation)
 - Database migrations and data access
 - API contract changes (breaking changes detection)
@@ -140,6 +149,7 @@ All components MUST implement proper logging using Serilog - see Principle XIV f
 ### IX. Versioning & Breaking Changes
 
 API versioning MUST follow semantic versioning:
+
 - Version format: `MAJOR.MINOR.PATCH`
 - MAJOR: Breaking API changes (incompatible)
 - MINOR: New features (backward compatible)
@@ -152,6 +162,7 @@ API versioning MUST follow semantic versioning:
 ### X. Simplicity & YAGNI
 
 Code MUST prioritize simplicity:
+
 - Start with simplest solution that works
 - YAGNI (You Aren't Gonna Need It) - no speculative features
 - Refactor when patterns emerge (Rule of Three)
@@ -166,12 +177,14 @@ Code MUST prioritize simplicity:
 All business operations MUST return `Result<T>` or `Result` instead of throwing exceptions for expected failures:
 
 **Required Usage**:
+
 - Command handlers MUST return `Result` or `Result<T>`
 - Query handlers MUST return `Result<T>`
 - Service methods MUST return `Result<T>` for operations that can fail
 - API endpoints MUST map Result to appropriate HTTP status codes
 
 **Result Types**:
+
 - `Result.Success()` - Operation succeeded with no return value
 - `Result<T>.Success(value)` - Operation succeeded with return value
 - `Result.NotFound()` - Entity not found (404)
@@ -181,6 +194,7 @@ All business operations MUST return `Result<T>` or `Result` instead of throwing 
 - `Result.Unauthorized()` - Authentication failed (401)
 
 **Example - Command Handler**:
+
 ```csharp
 public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result<Guid>>
 {
@@ -205,6 +219,7 @@ public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result
 ```
 
 **Example - API Endpoint**:
+
 ```csharp
 public class CreateBookingEndpoint : Endpoint<CreateBookingRequest, CreateBookingResponse>
 {
@@ -237,12 +252,14 @@ public class CreateBookingEndpoint : Endpoint<CreateBookingRequest, CreateBookin
 ```
 
 **Prohibited**:
+
 - Throwing exceptions for expected business failures (e.g., entity not found, validation errors)
 - Returning null to indicate failure
 - Using boolean return values without error information
 - Catching exceptions and returning success Result
 
 **When to Throw Exceptions**:
+
 - Unexpected system failures (database connection lost, out of memory)
 - Programming errors (null reference, index out of range)
 - Infrastructure failures (file system errors, network timeouts)
@@ -254,12 +271,14 @@ public class CreateBookingEndpoint : Endpoint<CreateBookingRequest, CreateBookin
 All input validation MUST use FluentValidation for commands, queries, and API requests:
 
 **Required Usage**:
+
 - Every Command MUST have a corresponding Validator (suffix with `Validator`)
 - Every API Request MUST have a corresponding Validator
 - Validators MUST be registered in DI container
 - FastEndpoints automatically executes validators before endpoint execution
 
 **Validation Rules**:
+
 - `NotEmpty()` - Required fields
 - `NotNull()` - Non-nullable reference types
 - `MaximumLength(n)` - String length limits
@@ -269,6 +288,7 @@ All input validation MUST use FluentValidation for commands, queries, and API re
 - `SetValidator(new ChildValidator())` - Nested object validation
 
 **Example - Command Validator**:
+
 ```csharp
 public class CreateBookingCommandValidator : AbstractValidator<CreateBookingCommand>
 {
@@ -310,6 +330,7 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 ```
 
 **Example - API Request Validator**:
+
 ```csharp
 public class CreateBookingRequestValidator : Validator<CreateBookingRequest>
 {
@@ -332,8 +353,10 @@ public class CreateBookingRequestValidator : Validator<CreateBookingRequest>
 ```
 
 **Validation Error Handling**:
+
 - FastEndpoints automatically returns 400 Bad Request with validation errors
 - Validation errors MUST be returned in consistent format:
+
 ```json
 {
   "errors": {
@@ -344,6 +367,7 @@ public class CreateBookingRequestValidator : Validator<CreateBookingRequest>
 ```
 
 **Prohibited**:
+
 - Manual validation with if/else statements for simple rules
 - Throwing exceptions for validation failures
 - Returning generic error messages without field-specific details
@@ -356,12 +380,14 @@ public class CreateBookingRequestValidator : Validator<CreateBookingRequest>
 All complex database queries MUST use Specification pattern with Ardalis.Specification:
 
 **Required Usage**:
+
 - Specifications MUST be in Core project under `{Aggregate}/Specifications/` folder
 - Specifications MUST suffix with `Specification`
 - Repository methods MUST accept specifications for queries
 - Specifications MUST be reusable and composable
 
 **Specification Components**:
+
 - `Query.Where()` - Filtering criteria
 - `Query.Include()` - Eager loading related entities
 - `Query.OrderBy()` / `Query.OrderByDescending()` - Sorting
@@ -369,6 +395,7 @@ All complex database queries MUST use Specification pattern with Ardalis.Specifi
 - `Query.AsNoTracking()` - Read-only queries for performance
 
 **Example - Simple Specification**:
+
 ```csharp
 public class PetWalkerByIdSpecification : Specification<PetWalker>
 {
@@ -384,6 +411,7 @@ public class PetWalkerByIdSpecification : Specification<PetWalker>
 ```
 
 **Example - Complex Specification with Pagination**:
+
 ```csharp
 public class ListPetWalkerByLocationSpecification : Specification<PetWalker>
 {
@@ -434,6 +462,7 @@ public class ListPetWalkerByLocationSpecification : Specification<PetWalker>
 ```
 
 **Example - Count Specification**:
+
 ```csharp
 public class CountPetWalkerByLocationSpecification : Specification<PetWalker>
 {
@@ -458,6 +487,7 @@ public class CountPetWalkerByLocationSpecification : Specification<PetWalker>
 ```
 
 **Example - Repository Usage**:
+
 ```csharp
 public class ListPetWalkerByLocationHandler : IQueryHandler<ListPetWalkerByLocationQuery, Result<PaginatedList<PetWalkerDto>>>
 {
@@ -491,6 +521,7 @@ public class ListPetWalkerByLocationHandler : IQueryHandler<ListPetWalkerByLocat
 ```
 
 **Specification Best Practices**:
+
 - Keep specifications focused on single query purpose
 - Create separate specifications for count queries (no includes, no pagination)
 - Use `AsNoTracking()` for read-only queries
@@ -499,6 +530,7 @@ public class ListPetWalkerByLocationHandler : IQueryHandler<ListPetWalkerByLocat
 - Test specifications independently with in-memory database
 
 **Prohibited**:
+
 - Writing raw SQL queries
 - Using LINQ directly in handlers or services
 - Mixing business logic with query logic
@@ -512,6 +544,7 @@ public class ListPetWalkerByLocationHandler : IQueryHandler<ListPetWalkerByLocat
 All logging MUST use Serilog with structured logging patterns:
 
 **Required Configuration**:
+
 - Serilog configured in `Program.cs` with file and console sinks
 - Log files written to `Logs/` folder with rolling file policy
 - File naming: `log-{Date}.txt` (e.g., `log-20251004.txt`)
@@ -519,6 +552,7 @@ All logging MUST use Serilog with structured logging patterns:
 - Minimum level: Information (Debug in Development environment)
 
 **Example - Serilog Configuration**:
+
 ```csharp
 // Program.cs
 Log.Logger = new LoggerConfiguration()
@@ -541,6 +575,7 @@ builder.Host.UseSerilog();
 ```
 
 **Log Levels**:
+
 - **Trace**: Very detailed diagnostic information (rarely used)
 - **Debug**: Detailed information for debugging (Development only)
 - **Information**: General informational messages (default minimum)
@@ -551,6 +586,7 @@ builder.Host.UseSerilog();
 **Structured Logging Patterns**:
 
 **Example - Handler Logging**:
+
 ```csharp
 public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result<Guid>>
 {
@@ -592,6 +628,7 @@ public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result
 ```
 
 **Example - Service Logging**:
+
 ```csharp
 public class BookingService : IBookingService
 {
@@ -638,6 +675,7 @@ public class BookingService : IBookingService
 ```
 
 **Example - API Endpoint Logging**:
+
 ```csharp
 public class GetAvailablePetWalkersEndpoint : Endpoint<GetAvailablePetWalkersRequest, GetAvailablePetWalkersResponse>
 {
@@ -677,6 +715,7 @@ public class GetAvailablePetWalkersEndpoint : Endpoint<GetAvailablePetWalkersReq
 ```
 
 **Logging Best Practices**:
+
 - Use structured logging with named properties (not string interpolation)
 - Log method entry with key parameters (Information level)
 - Log method exit with results (Information level)
@@ -687,6 +726,7 @@ public class GetAvailablePetWalkersEndpoint : Endpoint<GetAvailablePetWalkersReq
 - Use consistent property names across application
 
 **Example - Structured Properties**:
+
 ```csharp
 // ✅ CORRECT - Structured logging
 _logger.LogInformation(
@@ -703,6 +743,7 @@ _logger.LogInformation("User " + userId + " created booking " + bookingId);
 ```
 
 **Prohibited**:
+
 - Using `Console.WriteLine()` for logging
 - String interpolation in log messages
 - Logging sensitive data (passwords, tokens, credit cards)
@@ -717,12 +758,14 @@ _logger.LogInformation("User " + userId + " created booking " + bookingId);
 All method parameters and preconditions MUST be validated using Guard Clauses:
 
 **Required Usage**:
+
 - Guard clauses MUST be at the beginning of methods
 - Use Ardalis.GuardClauses library for consistency
 - Guard against null, empty, invalid ranges, and business rule violations
 - Throw descriptive exceptions with parameter names
 
 **Common Guard Clauses**:
+
 - `Guard.Against.Null(parameter, nameof(parameter))` - Null checks
 - `Guard.Against.NullOrEmpty(string, nameof(string))` - Null or empty strings
 - `Guard.Against.NullOrWhiteSpace(string, nameof(string))` - Null or whitespace strings
@@ -732,6 +775,7 @@ All method parameters and preconditions MUST be validated using Guard Clauses:
 - `Guard.Against.Default(guid, nameof(guid))` - Non-default GUID validation
 
 **Example - Entity Constructor**:
+
 ```csharp
 public class Booking : EntityBase<Guid>
 {
@@ -777,6 +821,7 @@ public class Booking : EntityBase<Guid>
 ```
 
 **Example - Value Object**:
+
 ```csharp
 public class Email : ValueObject
 {
@@ -809,6 +854,7 @@ public class Email : ValueObject
 ```
 
 **Example - Handler with Guard Clauses**:
+
 ```csharp
 public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result<Guid>>
 {
@@ -880,6 +926,7 @@ public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result
 ```
 
 **Example - Service Method**:
+
 ```csharp
 public class BookingService : IBookingService
 {
@@ -922,6 +969,7 @@ public class BookingService : IBookingService
 ```
 
 **Custom Guard Clauses**:
+
 ```csharp
 public static class CustomGuards
 {
@@ -954,10 +1002,12 @@ Guard.Against.InvalidEmail(email, nameof(email));
 ```
 
 **Guard Clauses vs FluentValidation**:
+
 - **Guard Clauses**: Use for method preconditions, constructor parameters, dependency injection
 - **FluentValidation**: Use for command/query validation, API request validation, complex business rules
 
 **Example - When to Use Each**:
+
 ```csharp
 // Guard Clauses - Constructor validation
 public class Booking
@@ -998,6 +1048,7 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 ```
 
 **Prohibited**:
+
 - Skipping null checks on method parameters
 - Using if/throw statements instead of guard clauses
 - Allowing invalid state in constructors
@@ -1006,11 +1057,58 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 
 **Rationale**: Guard clauses fail fast with clear error messages, prevent invalid state, improve code readability, and make preconditions explicit. They complement FluentValidation by handling method-level validation while FluentValidation handles command/query-level validation.
 
+### XVI. Blazor Hybrid UI Best Practices and Patterns
+
+All Blazor Hybrid components MUST follow these enhanced patterns:
+
+#### 1. Component Structure and Organization
+
+- Use partial classes (.razor.cs for logic, .razor for markup) to maintain separation
+- Implement component lifecycle methods (OnInitialized, OnParametersSet) for state management
+- Organize components in logical folders (e.g., /Components/Bookings/, /Components/Common/)
+- Example: `Components/Bookings/BookingFormComponent.razor` (markup) + `BookingFormComponent.razor.cs` (logic) + `BookingFormComponent.razor.css` (styles)
+
+#### 2. State Management
+
+- Use services for cross-component state sharing (e.g., `IBookingService`)
+- Avoid global state where possible; prefer component-level state
+- Example: `Services/Implementation/BookingService.cs` managing booking status
+
+#### 3. Routing and Navigation
+
+- Implement client-side routing with `<Router>` component
+- Use `NavigationManager` for server-side navigation
+- Example: Define routes in `Program.cs` for Blazor Hybrid
+
+#### 4. Styling and Theming
+
+- Apply scoped CSS (.razor.css) for component-specific styles
+- Use CSS variables for theme customization (e.g., `@theme-color`)
+- Implement responsive design with `@media` queries
+- Example: `Components/Common/Icon.razor.css` for icon styling
+
+#### 5. Accessibility
+
+- Add ARIA attributes (e.g., `aria-label`, `role`) for screen readers
+- Ensure keyboard navigation support
+- Maintain sufficient color contrast
+- Example: Add `aria-label` to `Components/Common/Icon.razor`
+
+#### 6. Performance Optimization
+
+- Implement lazy loading for large components
+- Use `ShouldRender` to minimize re-renders
+- Optimize state updates with `SetState`
+- Example: Virtual scrolling in `Components/Pages/Timeslots/ScheduleDisplayComponent.razor`
+
+**Rationale**: These patterns ensure maintainable, performant, and accessible Blazor Hybrid applications while aligning with the project's Clean Architecture principles.
+
 ## Additional Constraints
 
 ### Technology Stack
 
 **Required Technologies**:
+
 - **.NET 9** (preview accepted for development)
 - **Entity Framework Core** with SQL Server for data persistence
 - **FastEndpoints** for API endpoints (minimal API approach)
@@ -1027,6 +1125,7 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 - **bUnit** for Blazor component testing
 
 **Prohibited**:
+
 - Direct SQL queries (use EF Core with specifications)
 - Reflection-heavy solutions (impacts performance)
 - Global state/singletons (except DI-registered services)
@@ -1039,6 +1138,7 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 ### Naming Conventions
 
 **MUST follow**:
+
 - Private fields: `_camelCase` with underscore prefix
 - Public properties: `PascalCase`
 - Methods: `PascalCase`
@@ -1052,6 +1152,7 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 ### File Organization
 
 **Project Structure**:
+
 - Feature folders in Web project (e.g., `/BookingEndpoints/GetAvailablePetWalkers/`)
 - Aggregate folders in Core project (e.g., `/PetWalkerAggregate/`)
 - Shared components in BlazorUI.Client `/Components/Common/`
@@ -1059,6 +1160,7 @@ public class CreateBookingCommandValidator : AbstractValidator<CreateBookingComm
 - Documentation in `/docs/` with Mermaid diagrams
 
 **Complete Directory Structure**:
+
 ```
 src/FurryFriends.Core/
 ├── BookingAggregate/
@@ -1140,9 +1242,11 @@ FurryFriends.FunctionalTests/
     ├── TestBase.cs
     └── TestFixtures.cs
 ```
+
 ### Security Standards
 
 **Required**:
+
 - Input validation on all API endpoints
 - SQL injection prevention (use parameterized queries via EF Core)
 - XSS prevention in Blazor (automatic with Razor)
@@ -1153,27 +1257,32 @@ FurryFriends.FunctionalTests/
 ### Documentation & Learning Resources
 
 **Required Documentation**:
+
 - XML documentation for all public APIs
 - README files for each major project
 - Mermaid diagrams for architecture (C4, sequence, class diagrams)
 - API endpoint documentation (FastEndpoints summaries)
 
 **Learning Resources**:
+
 - **Technical Guide**: `docs/FurryFriends_Technical_Guide.md` - Comprehensive guide for learning intermediate and advanced techniques
 - **Architecture Diagrams**: `docs/` folder - C4 models, sequence diagrams, class diagrams
 - **Constitution**: `.specify/memory/constitution.md` - This document (governance and standards)
 
 **Technical Guide Coverage**:
 The Technical Guide provides detailed explanations and examples for:
+
 - **Intermediate Techniques**: Dependency Injection, Async Programming, LINQ, Entity Framework Core, FluentValidation
 - **Advanced Techniques**: Clean Architecture, CQRS, MediatR, FastEndpoints, Aspire
 
 **When to Use Each**:
+
 - **Constitution**: Reference for "what" and "why" (principles, rules, standards)
 - **Technical Guide**: Reference for "how" (implementation details, learning, examples)
 - **Code Examples**: Both documents provide examples, but Technical Guide is more educational
 
 **Keeping Documentation Updated**:
+
 - Update Technical Guide when adding new patterns or techniques
 - Update Constitution when changing architectural decisions or standards
 - Keep both documents in sync regarding technology stack and patterns
@@ -1184,6 +1293,7 @@ The Technical Guide provides detailed explanations and examples for:
 ### Code Review Requirements
 
 All code changes MUST:
+
 - Pass all automated tests (unit, integration, component)
 - Follow naming conventions and coding standards
 - Include XML documentation for public APIs
@@ -1194,6 +1304,7 @@ All code changes MUST:
 ### Testing Gates
 
 Before merge, code MUST:
+
 - Have 80%+ code coverage for business logic
 - Pass all existing tests
 - Include new tests for new functionality
@@ -1203,6 +1314,7 @@ Before merge, code MUST:
 ### Deployment Process
 
 Deployments MUST:
+
 - Run database migrations before application deployment
 - Verify health checks pass
 - Monitor logs for errors post-deployment
@@ -1218,6 +1330,7 @@ This Constitution supersedes all other development practices and guidelines. Whe
 ### Amendment Process
 
 Constitution amendments require:
+
 1. Documented proposal with rationale
 2. Team discussion and approval
 3. Version bump following semantic versioning
@@ -1237,4 +1350,4 @@ Constitution amendments require:
 - Sync Impact Report maintained at top of file
 - Breaking changes documented in CHANGELOG.md
 
-**Version**: 2.0.1 | **Ratified**: 2025-10-04 | **Last Amended**: 2026-03-14
+**Version**: 2.0.2 | **Ratified**: 2025-10-04 | **Last Amended**: 2026-04-12

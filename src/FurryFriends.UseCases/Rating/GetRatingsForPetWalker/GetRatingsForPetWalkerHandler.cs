@@ -32,11 +32,10 @@ public class GetRatingsForPetWalkerHandler : IRequestHandler<GetRatingsForPetWal
             r.Id,
             r.PetWalkerId,
             r.ClientId,
-            r.BookingId,
             r.RatingValue,
             r.Comment,
-            r.CreatedDate,
-            r.ModifiedDate,
+            r.CreatedAt,
+            r.UpdatedAt,
             null // ClientName - would need to be fetched from Client aggregate
         )).ToList();
 

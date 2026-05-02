@@ -54,16 +54,15 @@ public class GetPetWalkerRatingSummaryEndpoint(IMediator mediator, ILogger<GetPe
         }
 
         var summary = result.Value;
-        var recentRatings = summary.RecentRatings.Select(r => new GetRatingsForPetWalkerResponse(
-            r.Id,
-            r.PetWalkerId,
-            r.ClientId,
-            r.BookingId,
-            r.RatingValue,
-            r.Comment,
-            r.CreatedDate,
-            r.ModifiedDate,
-            r.ClientName)).ToList();
+         var recentRatings = summary.RecentRatings.Select(r => new GetRatingsForPetWalkerResponse(
+             r.Id,
+             r.PetWalkerId,
+             r.ClientId,
+             r.RatingValue,
+             r.Comment,
+             r.CreatedAt,
+             r.UpdatedAt,
+             r.ClientName)).ToList();
 
         Response = Result.Success(new GetPetWalkerRatingSummaryResponse(
             summary.PetWalkerId,

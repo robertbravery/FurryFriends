@@ -58,16 +58,15 @@ public class GetRatingsForPetWalkerEndpoint(IMediator mediator, ILogger<GetRatin
             return;
         }
 
-        var ratings = result.Value.Select(r => new GetRatingsForPetWalkerResponse(
-            r.Id,
-            r.PetWalkerId,
-            r.ClientId,
-            r.BookingId,
-            r.RatingValue,
-            r.Comment,
-            r.CreatedDate,
-            r.ModifiedDate,
-            r.ClientName)).ToList();
+             var ratings = result.Value.Select(r => new GetRatingsForPetWalkerResponse(
+             r.Id,
+             r.PetWalkerId,
+             r.ClientId,
+             r.RatingValue,
+             r.Comment,
+             r.CreatedAt,
+             r.UpdatedAt,
+             r.ClientName)).ToList();
 
         Response = Result.Success(ratings);
     }

@@ -31,23 +31,16 @@ public class UpdateRatingHandler : IRequestHandler<UpdateRatingCommand, Result<G
             return Result<Guid>.Error("Rating not found.");
         }
 
-        if (!rating.CanUpdate())
-        {
-            _logger.LogWarning("Rating cannot be updated: {RatingId}", request.RatingId);
-            return Result<Guid>.Error("Rating cannot be updated. Either 7 days have passed or it has already been updated.");
-        }
+        // Use domain method that checks 24h window and status
+        var updateResult = rating.UpdateRating(
+            request.RatingValue ?? rating.RatingValue,
+            request.Comment ?? rating.Comment);
 
-        if (request.RatingValue.HasValue)
+        if (!updateResult.IsSuccess)
         {
-            rating.UpdateRatingValue(request.RatingValue.Value);
-            _logger.LogInformation("Rating value updated to {RatingValue} for Rating: {RatingId}",
-                request.RatingValue.Value, request.RatingId);
-        }
-
-        if (request.Comment != null)
-        {
-            rating.UpdateComment(request.Comment);
-            _logger.LogInformation("Comment updated for Rating: {RatingId}", request.RatingId);
+            _logger.LogWarning("Rating update failed: {RatingId}, Reason: {Error}", 
+                request.RatingId, string.Join("; ", updateResult.Errors));
+            return Result<Guid>.Error(string.Join("; ", updateResult.Errors));
         }
 
         await _repository.UpdateAsync(rating, cancellationToken);

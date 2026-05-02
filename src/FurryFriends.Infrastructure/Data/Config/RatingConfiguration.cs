@@ -22,9 +22,6 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>
         builder.Property(r => r.ClientId)
             .IsRequired();
 
-        builder.Property(r => r.BookingId)
-            .IsRequired();
-
         builder.Property(r => r.RatingValue)
             .IsRequired();
 
@@ -32,20 +29,20 @@ public class RatingConfiguration : IEntityTypeConfiguration<Rating>
             .HasMaxLength(1000)
             .HasColumnType("nvarchar(1000)");
 
-        builder.Property(r => r.CreatedDate)
+        builder.Property(r => r.Status)
+            .HasConversion<int>()
             .IsRequired();
 
-        builder.Property(r => r.ModifiedDate)
-            .IsRequired(false);
+        builder.Property(r => r.CreatedAt)
+            .IsRequired();
 
-        // Unique constraint on BookingId - one rating per booking
-        builder.HasIndex(r => r.BookingId)
-            .IsUnique();
+        builder.Property(r => r.UpdatedAt)
+            .IsRequired();
 
-        // Index for PetWalker ratings query performance
         builder.HasIndex(r => r.PetWalkerId);
 
-        // Index for date-based queries
-        builder.HasIndex(r => r.CreatedDate);
+        builder.HasIndex(r => r.ClientId);
+
+        builder.HasIndex(r => new { r.PetWalkerId, r.Status });
     }
 }

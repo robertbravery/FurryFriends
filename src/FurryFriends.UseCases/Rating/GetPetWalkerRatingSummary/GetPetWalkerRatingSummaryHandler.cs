@@ -45,17 +45,16 @@ public class GetPetWalkerRatingSummaryHandler : IRequestHandler<GetPetWalkerRati
 
         // Get recent ratings (last 10)
         var recentRatings = allRatings
-            .OrderByDescending(r => r.CreatedDate)
+            .OrderByDescending(r => r.CreatedAt)
             .Take(10)
             .Select(r => new RatingDto(
                 r.Id,
                 r.PetWalkerId,
                 r.ClientId,
-                r.BookingId,
                 r.RatingValue,
                 r.Comment,
-                r.CreatedDate,
-                r.ModifiedDate,
+                r.CreatedAt,
+                r.UpdatedAt,
                 null // ClientName - would need to be fetched from Client aggregate
             )).ToList();
 

@@ -50,21 +50,22 @@ public class CreateRatingHandler : IRequestHandler<CreateRatingCommand, Result<G
             return Result.Error("Ratings can only be submitted for completed bookings.");
         }
 
-        // Check if rating already exists for this booking
-        var existingRatingSpec = new GetRatingByBookingIdSpecification(request.BookingId);
-        var existingRating = await _ratingRepository.FirstOrDefaultAsync(existingRatingSpec, cancellationToken);
+        // Check if rating already exists for this PetWalker+Client pair (one active rating per client per petwalker rule)
+        var existingRatingSpec = new GetActiveRatingsForPetWalkerSpecification(booking.PetWalkerId);
+        var allActiveRatings = await _ratingRepository.ListAsync(existingRatingSpec, cancellationToken);
+        var existingRating = allActiveRatings.FirstOrDefault(r => r.ClientId == booking.PetOwnerId);
 
         if (existingRating != null)
         {
-            _logger.LogWarning("Rating already exists for Booking: {BookingId}", request.BookingId);
-            return Result.Error("A rating has already been submitted for this booking.");
+            _logger.LogWarning("Rating already exists for PetWalker {PetWalkerId} by Client {ClientId}",
+                booking.PetWalkerId, booking.PetOwnerId);
+            return Result.Error("A rating has already been submitted for this petwalker by this client.");
         }
 
-        // Create rating with actual PetWalkerId and ClientId from the booking
+        // Create rating with actual PetWalkerId and ClientId from the booking (Rating entity no longer stores BookingId)
         var rating = Core.RatingAggregate.Rating.Create(
             booking.PetWalkerId,
             booking.PetOwnerId,
-            request.BookingId,
             request.RatingValue,
             request.Comment);
 

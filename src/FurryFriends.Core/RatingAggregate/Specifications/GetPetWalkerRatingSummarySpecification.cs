@@ -8,7 +8,7 @@ public class GetPetWalkerRatingSummarySpecification : Specification<Rating>
     public GetPetWalkerRatingSummarySpecification(Guid petWalkerId)
     {
         Query.Where(r => r.PetWalkerId == petWalkerId)
-            .OrderByDescending(r => r.CreatedDate)
+            .OrderByDescending(r => r.CreatedAt)
             .Take(10);
     }
 }
