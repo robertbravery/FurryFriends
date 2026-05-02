@@ -4,6 +4,7 @@
 **Prerequisites**: plan.md, research.md, data-model.md, contracts/
 
 ## Format: `[ID] [P?] [Story?] Description`
+
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[US1]**: User Story 1 (Rating submission, viewing, and aggregate display)
 - Include exact file paths in descriptions
@@ -32,16 +33,16 @@
 
 **Independent Test**: Create a completed booking between client and petwalker, submit rating via POST endpoint, verify GET summary reflects new average, verify GET ratings list includes the new entry.
 
-- [ ] T011 [P] [US1] Unit tests for Rating entity (creation with valid 1-5 range, CanEdit within/after 24h of CreatedDate, invalid values rejected) in `tests/FurryFriends.UnitTests/Core/RatingAggregate/RatingTests.cs`
-- [ ] T012 [P] [US1] Unit tests for PetWalker rating aggregate recalculation (average of multiple ratings, zero ratings, single rating, rounding to 1 decimal) in `tests/FurryFriends.UnitTests/Core/PetWalkerAggregate/PetWalkerTests.cs`
-- [ ] T013 [P] [US1] Use case tests for CreateRatingHandler (valid eligibility, no completed booking, ratings exceed bookings, ratings ≤ bookings constraint replaced active) in `tests/FurryFriends.UnitTests/UseCases/Rating/CreateRatingTests.cs`
-- [ ] T014 [P] [US1] Use case tests for GetRatingsForPetWalkerHandler (paginated results, empty list) in `tests/FurryFriends.UnitTests/UseCases/Rating/GetRatingsForPetWalkerTests.cs`
-- [ ] T015 [P] [US1] Use case tests for GetPetWalkerRatingSummaryHandler (with ratings, no ratings displays "No ratings yet") in `tests/FurryFriends.UnitTests/UseCases/Rating/GetPetWalkerRatingSummaryTests.cs`
-- [ ] T016 [P] [US1] Integration tests for POST /api/ratings (create with valid eligibility, reject without completed booking, reject exceeding booking limit, replace previous active rating) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/CreateRatingTests.cs`
-- [ ] T017 [P] [US1] Integration tests for PUT /api/ratings/{id} (update within 24h of CreatedDate succeeds, update after 24h fails, update Moderated rating fails) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/UpdateRatingTests.cs`
-- [ ] T018 [P] [US1] Integration tests for DELETE /api/ratings/{id} (delete within 24h of CreatedDate succeeds, delete after 24h fails, delete Moderated rating fails) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/DeleteRatingTests.cs`
-- [ ] T019 [P] [US1] Integration tests for GET /api/ratings/petwalker/{petWalkerId} (paginated list, empty result) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/GetRatingsTests.cs`
-- [ ] T020 [P] [US1] Integration tests for GET /api/ratings/petwalker/{petWalkerId}/summary (average and count, petwalker not found) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/GetRatingSummaryTests.cs`
+- [x] T011 [P] [US1] Unit tests for Rating entity (creation with valid 1-5 range, CanEdit within/after 24h of CreatedDate, invalid values rejected) in `tests/FurryFriends.UnitTests/Core/RatingAggregate/RatingTests.cs`
+- [x] T012 [P] [US1] Unit tests for PetWalker rating aggregate recalculation (average of multiple ratings, zero ratings, single rating, rounding to 1 decimal) in `tests/FurryFriends.UnitTests/Core/PetWalkerAggregate/PetWalkerTests.cs`
+- [x] T013 [P] [US1] Use case tests for CreateRatingHandler (valid eligibility, no completed booking, ratings exceed bookings, ratings ≤ bookings constraint replaced active) in `tests/FurryFriends.UnitTests/UseCases/Rating/CreateRatingTests.cs`
+- [x] T014 [P] [US1] Use case tests for GetRatingsForPetWalkerHandler (paginated results, empty list) in `tests/FurryFriends.UnitTests/UseCases/Rating/GetRatingsForPetWalkerTests.cs`
+- [x] T015 [P] [US1] Use case tests for GetPetWalkerRatingSummaryHandler (with ratings, no ratings displays "No ratings yet") in `tests/FurryFriends.UnitTests/UseCases/Rating/GetPetWalkerRatingSummaryTests.cs`
+- [x] T016 [P] [US1] Integration tests for POST /api/ratings (create with valid eligibility, reject without completed booking, reject exceeding booking limit, replace previous active rating) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/CreateRatingTests.cs`
+- [x] T017 [P] [US1] Integration tests for PUT /api/ratings/{id} (update within 24h of CreatedDate succeeds, update after 24h fails, update Moderated rating fails) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/UpdateRatingTests.cs`
+- [x] T018 [P] [US1] Integration tests for DELETE /api/ratings/{id} (delete within 24h of CreatedDate succeeds, delete after 24h fails, delete Moderated rating fails) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/DeleteRatingTests.cs`
+- [x] T019 [P] [US1] Integration tests for GET /api/ratings/petwalker/{petWalkerId} (paginated list, empty result) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/GetRatingsTests.cs`
+- [x] T020 [P] [US1] Integration tests for GET /api/ratings/petwalker/{petWalkerId}/summary (average and count, petwalker not found) in `tests/FurryFriends.FunctionalTests/RatingEndpoints/GetRatingSummaryTests.cs`
 
 ## Phase 4: User Story 1 — Use Cases (Business Logic)
 
@@ -92,27 +93,33 @@
 - **T042, T043, T044 (bUnit tests)** depend on Phase 6 (components must exist first)
 
 **Within Phase 2 (parallel opportunities)**:
+
 - T002, T003, T006, T007, T008 can run in parallel (different files)
 - T004 blocks T022 (Rating entity required for handler)
 - T009, T010 can run in parallel with other Phase 2 tasks
 
 **Within Phase 3 (parallel opportunities)**:
+
 - T011-T020 all marked [P] — fully parallelizable (separate test files, all should fail first)
 
 **Within Phase 4 (parallel opportunities)**:
+
 - T021 can run in parallel with T022-T028 (DTOs are independent)
 - T023 depends on T022 (validator for existing command)
 - T027, T028 are independent of T022-T026 (read queries vs write commands)
 
 **Within Phase 5 (parallel opportunities)**:
+
 - T029-T033 all marked [P] — different endpoint files/directories
 - T034 depends on T029-T033 (register all endpoints)
 
 **Within Phase 6 (parallel opportunities)**:
+
 - T035, T037, T038, T039 all marked [P] — different component files
 - T036 depends on T035 (implementation needs interface)
 
 **Within Phase 7 (parallel opportunities)**:
+
 - T042, T043, T044 are [P] — different test files, all depend on Phase 6 completion
 
 ## Parallel Example
@@ -149,17 +156,20 @@ Task: "T033 Create GET /api/ratings/petwalker/{petWalkerId}/summary endpoint"
 ## Implementation Strategy
 
 ### MVP (User Story 1 — Rating submission and display)
+
 - Phase 1 → Phase 2 → Phase 3 (tests fail) → Phase 4 → Phase 5 → Phase 6 → Phase 7
 - All phases contribute to the single user story
 - After Phase 5, the core API is functional; Phase 6 adds the UI layer
 
 ### Incremental Delivery
+
 1. Core domain + tests failing (Phase 1-3): Foundation ready ✅
 2. Business logic + API (Phase 4-5): Backend functional, integrable ✅
 3. Blazor UI (Phase 6): Full user-facing feature ✅
 4. Polish + bUnit tests (Phase 7): Production quality ✅
 
 ## Notes
+
 - [P] tasks = different files, no dependencies within phase
 - TDD order: Tests must fail before implementation
 - FR-011 (moderation) and FR-012 (account deletion) are deferred to v2 per DEFERRED_REQUIREMENTS.md — no tasks for them
