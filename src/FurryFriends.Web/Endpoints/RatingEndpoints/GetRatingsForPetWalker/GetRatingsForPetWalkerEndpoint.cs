@@ -1,7 +1,4 @@
-using Ardalis.Result;
 using FurryFriends.UseCases.Domain.Ratings.GetRatingsForPetWalker;
-using FurryFriends.Web.Endpoints.Base;
-using FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 

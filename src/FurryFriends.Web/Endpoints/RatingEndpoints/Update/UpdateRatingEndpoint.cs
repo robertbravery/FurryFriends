@@ -1,6 +1,4 @@
-using Ardalis.Result;
 using FurryFriends.UseCases.Domain.Ratings.UpdateRating;
-using FurryFriends.Web.Endpoints.RatingEndpoints.Update;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.Update;
 

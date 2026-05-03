@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.Create;
 
 public class CreateRatingValidator : Validator<CreateRatingRequest>
