@@ -1,4 +1,3 @@
-using Ardalis.Result;
 using FurryFriends.UseCases.Timeslots.WorkingHours.Dto;
 
 namespace FurryFriends.UseCases.Timeslots.WorkingHours;

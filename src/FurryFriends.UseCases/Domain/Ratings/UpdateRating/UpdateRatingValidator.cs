@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FurryFriends.UseCases.Rating.UpdateRating;
+namespace FurryFriends.UseCases.Domain.Ratings.UpdateRating;
 
 public class UpdateRatingValidator : AbstractValidator<UpdateRatingCommand>
 {

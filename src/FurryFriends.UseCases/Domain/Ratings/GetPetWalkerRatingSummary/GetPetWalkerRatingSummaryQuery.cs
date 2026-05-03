@@ -1,6 +1,5 @@
-using Ardalis.Result;
 using MediatR;
 
-namespace FurryFriends.UseCases.Rating.GetPetWalkerRatingSummary;
+namespace FurryFriends.UseCases.Domain.Ratings.GetPetWalkerRatingSummary;
 
 public record GetPetWalkerRatingSummaryQuery(Guid PetWalkerId) : IRequest<Result<PetWalkerRatingSummaryDto>>;

@@ -1,10 +1,6 @@
-using Ardalis.Result;
-using FurryFriends.Core.BookingAggregate;
 using FurryFriends.Core.BookingAggregate.Enums;
-using FurryFriends.Core.BookingAggregate.Specifications;
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.Enums;
-using FurryFriends.Core.TimeslotAggregate;
 using FurryFriends.Core.TimeslotAggregate.Specifications;
 using Microsoft.Extensions.Logging;
 using BookingEntity = FurryFriends.Core.BookingAggregate.Booking;

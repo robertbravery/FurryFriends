@@ -1,8 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using Ardalis.Result;
-using FluentAssertions;
-using FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 
 namespace FurryFriends.FunctionalTests.RatingEndpoints;
 

@@ -1,10 +1,7 @@
 using Ardalis.Result;
-using Ardalis.SharedKernel;
 using FurryFriends.Core.BookingAggregate;
 using FurryFriends.Core.BookingAggregate.Enums;
-using FurryFriends.Core.RatingAggregate;
-using FurryFriends.UseCases.Rating.CreateRating;
-using Microsoft.Extensions.Logging;
+using FurryFriends.UseCases.Domain.Ratings.CreateRating;
 using NSubstitute;
 using RatingEntity = FurryFriends.Core.RatingAggregate.Rating;
 
@@ -118,11 +115,16 @@ public class CreateRatingTests
 
     private static Booking CreateBookingWithStatus(Guid bookingId, Guid petWalkerId, Guid clientId, BookingStatus status)
     {
-        var booking = Substitute.For<Booking>();
-        booking.Id.Returns(bookingId);
-        booking.PetWalkerId.Returns(petWalkerId);
-        booking.PetOwnerId.Returns(clientId);
-        booking.Status.Returns(status);
+        // Use internal parameterless constructor (accessible via InternalsVisibleTo)
+        var booking = new Booking();
+        booking.Id = bookingId;
+
+        // Use reflection to set properties with private setters
+        var type = typeof(Booking);
+        type.GetProperty(nameof(Booking.PetWalkerId))?.SetValue(booking, petWalkerId);
+        type.GetProperty(nameof(Booking.PetOwnerId))?.SetValue(booking, clientId);
+        type.GetProperty(nameof(Booking.Status))?.SetValue(booking, status);
+
         return booking;
     }
 }

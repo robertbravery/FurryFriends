@@ -47,7 +47,7 @@ dotnet ef database update --startup-project ../FurryFriends.Web
 
 ### Step 3: Use Cases Layer
 
-1. Update/Create handlers in `FurryFriends.UseCases/Rating/`:
+1. Update/Create handlers in `FurryFriends.UseCases/Domain/Ratings/`:
    - `CreateRatingCommand.cs` - Remove BookingId, add eligibility check
    - `CreateRatingHandler.cs` - Implement eligibility logic
    - `CreateRatingValidator.cs` - Update for new model

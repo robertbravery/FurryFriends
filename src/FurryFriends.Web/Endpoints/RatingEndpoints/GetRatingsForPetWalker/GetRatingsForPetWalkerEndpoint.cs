@@ -1,5 +1,5 @@
 using Ardalis.Result;
-using FurryFriends.UseCases.Rating.GetRatingsForPetWalker;
+using FurryFriends.UseCases.Domain.Ratings.GetRatingsForPetWalker;
 using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 

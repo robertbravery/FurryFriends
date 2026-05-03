@@ -17,15 +17,15 @@
 
 **⚠️ MUST complete before any user story work**
 
-- [ ] T002 [P] Add RatingStatus enum (Active, Moderated, Removed) in `src/FurryFriends.Core/RatingAggregate/RatingStatus.cs`
-- [ ] T003 [P] Add domain events (RatingAddedEvent, RatingUpdatedEvent, RatingRemovedEvent) in `src/FurryFriends.Core/PetWalkerAggregate/Events/`
-- [ ] T004 Update Rating entity — remove BookingId property, add Status property (RatingStatus), add CreatedDate/ModifiedDate, update Create() factory method, add CanEdit() method (24h window based on CreatedDate) in `src/FurryFriends.Core/RatingAggregate/Rating.cs`
-- [ ] T005 Update PetWalker entity — add AverageRating (`double?`) and TotalRatingsCount (int) fields, add UpdateRatingAggregate() method (recalculates average rounded to 1 decimal), add RegisterDomainEvent calls in `src/FurryFriends.Core/PetWalkerAggregate/PetWalker.cs`
-- [ ] T006 [P] Create domain event handler RecalculateRatingOnEventChangeHandler that recalculates AverageRating (rounded to 1 decimal) and TotalRatingsCount from active ratings when events fire in `src/FurryFriends.Core/PetWalkerAggregate/Events/RecalculateRatingOnEventChangeHandler.cs`
-- [ ] T007 [P] Create CountCompletedBookingsForClientPetWalkerSpecification in `src/FurryFriends.Core/BookingAggregate/Specifications/`
-- [ ] T008 [P] Create GetActiveRatingsForPetWalkerSpecification in `src/FurryFriends.Core/RatingAggregate/Specifications/`
-- [ ] T009 Update RatingConfiguration (EF) — remove BookingId mapping, add Status mapping in `src/FurryFriends.Infrastructure/Data/Config/RatingConfiguration.cs`
-- [ ] T010 Update PetWalkerConfiguration (EF) — add AverageRating (`double?`) and TotalRatingsCount column mappings in `src/FurryFriends.Infrastructure/Data/Config/PetWalkerConfiguration.cs`
+- [x] T002 [P] Add RatingStatus enum (Active, Moderated, Removed) in `src/FurryFriends.Core/RatingAggregate/RatingStatus.cs`
+- [x] T003 [P] Add domain events (RatingAddedEvent, RatingUpdatedEvent, RatingRemovedEvent) in `src/FurryFriends.Core/PetWalkerAggregate/Events/`
+- [x] T004 Update Rating entity — remove BookingId property, add Status property (RatingStatus), add CreatedDate/ModifiedDate, update Create() factory method, add CanEdit() method (24h window based on CreatedDate) in `src/FurryFriends.Core/RatingAggregate/Rating.cs`
+- [x] T005 Update PetWalker entity — add AverageRating (`double?`) and TotalRatingsCount (int) fields, add UpdateRatingAggregate() method (recalculates average rounded to 1 decimal), add RegisterDomainEvent calls in `src/FurryFriends.Core/PetWalkerAggregate/PetWalker.cs`
+- [x] T006 [P] Create domain event handler RecalculateRatingOnEventChangeHandler that recalculates AverageRating (rounded to 1 decimal) and TotalRatingsCount from active ratings when events fire in `src/FurryFriends.Core/PetWalkerAggregate/Events/RecalculateRatingOnEventChangeHandler.cs`
+- [x] T007 [P] Create CountCompletedBookingsForClientPetWalkerSpecification in `src/FurryFriends.Core/BookingAggregate/Specifications/`
+- [x] T008 [P] Create GetActiveRatingsForPetWalkerSpecification in `src/FurryFriends.Core/RatingAggregate/Specifications/`
+- [x] T009 Update RatingConfiguration (EF) — remove BookingId mapping, add Status mapping in `src/FurryFriends.Infrastructure/Data/Config/RatingConfiguration.cs`
+- [x] T010 Update PetWalkerConfiguration (EF) — add AverageRating (`double?`) and TotalRatingsCount column mappings in `src/FurryFriends.Infrastructure/Data/Config/PetWalkerConfiguration.cs`
 
 ## Phase 3: User Story 1 — Tests (MUST FAIL before implementation)
 
@@ -46,14 +46,14 @@
 
 ## Phase 4: User Story 1 — Use Cases (Business Logic)
 
-- [ ] T021 [P] [US1] Create DTOs: RatingDto and PetWalkerRatingSummaryDto (AverageRating as `double?`) in `src/FurryFriends.UseCases/Rating/`
-- [ ] T022 [US1] Implement CreateRatingCommand and CreateRatingHandler with eligibility checks (completed bookings count, ratings ≤ bookings constraint, replace active rating, dispatch domain event) in `src/FurryFriends.UseCases/Rating/CreateRating/`
-- [ ] T023 [US1] Implement CreateRatingValidator (PetWalkerId not empty, ClientId not empty, RatingValue 1-5 inclusive, Comment max 1000 chars) in `src/FurryFriends.UseCases/Rating/CreateRating/CreateRatingValidator.cs`
-- [ ] T024 [US1] Implement UpdateRatingCommand and UpdateRatingHandler with 24h window check (using CreatedDate) and Status = Active requirement in `src/FurryFriends.UseCases/Rating/UpdateRating/`
-- [ ] T025 [US1] Implement UpdateRatingValidator — validates RatingId not empty, RatingValue 1-5 inclusive (if provided), Comment max 1000 chars, at least RatingValue or Comment must be provided in `src/FurryFriends.UseCases/Rating/UpdateRating/UpdateRatingValidator.cs`
-- [ ] T026 [US1] Implement DeleteRatingCommand, DeleteRatingHandler, and DeleteRatingValidator (RatingId not empty, ClientId not empty) with 24h window check (using CreatedDate), Status = Active requirement, set status to Removed, dispatch RatingRemovedEvent in `src/FurryFriends.UseCases/Rating/DeleteRating/`
-- [ ] T027 [US1] Implement GetRatingsForPetWalkerQuery and handler (paginated, active-only by default), with FluentValidation pagination validator (PageNumber ≥ 1, PageSize 1-100) in `src/FurryFriends.UseCases/Rating/GetRatingsForPetWalker/`
-- [ ] T028 [US1] Implement GetPetWalkerRatingSummaryQuery and handler (return AverageRating + TotalRatingsCount, handle 0 ratings gracefully) in `src/FurryFriends.UseCases/Rating/GetPetWalkerRatingSummary/`
+- [x] T021 [P] [US1] Create DTOs: RatingDto and PetWalkerRatingSummaryDto (AverageRating as `double?`) in `src/FurryFriends.UseCases/Domain/Ratings/`
+- [x] T022 [US1] Implement CreateRatingCommand and CreateRatingHandler with eligibility checks (completed bookings count, ratings ≤ bookings constraint, replace active rating, dispatch domain event) in `src/FurryFriends.UseCases/Domain/Ratings/CreateRating/`
+- [x] T023 [US1] Implement CreateRatingValidator (PetWalkerId not empty, ClientId not empty, RatingValue 1-5 inclusive, Comment max 1000 chars) in `src/FurryFriends.UseCases/Domain/Ratings/CreateRating/CreateRatingValidator.cs`
+- [x] T024 [US1] Implement UpdateRatingCommand and UpdateRatingHandler with 24h window check (using CreatedDate) and Status = Active requirement in `src/FurryFriends.UseCases/Domain/Ratings/UpdateRating/`
+- [x] T025 [US1] Implement UpdateRatingValidator — validates RatingId not empty, RatingValue 1-5 inclusive (if provided), Comment max 1000 chars, at least RatingValue or Comment must be provided in `src/FurryFriends.UseCases/Domain/Ratings/UpdateRating/UpdateRatingValidator.cs`
+- [x] T026 [US1] Implement DeleteRatingCommand, DeleteRatingHandler, and DeleteRatingValidator (RatingId not empty, ClientId not empty) with 24h window check (using CreatedDate), Status = Active requirement, set status to Removed, dispatch RatingRemovedEvent in `src/FurryFriends.UseCases/Domain/Ratings/DeleteRating/`
+- [x] T027 [US1] Implement GetRatingsForPetWalkerQuery and handler (paginated, active-only by default), with FluentValidation pagination validator (PageNumber ≥ 1, PageSize 1-100) in `src/FurryFriends.UseCases/Domain/Ratings/GetRatingsForPetWalker/`
+- [x] T028 [US1] Implement GetPetWalkerRatingSummaryQuery and handler (return AverageRating + TotalRatingsCount, handle 0 ratings gracefully) in `src/FurryFriends.UseCases/Domain/Ratings/GetPetWalkerRatingSummary/`
 
 ## Phase 5: API Endpoints (FastEndpoints)
 

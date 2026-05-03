@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FurryFriends.UseCases.Rating.CreateRating;
+namespace FurryFriends.UseCases.Domain.Ratings.CreateRating;
 
 public class CreateRatingValidator : AbstractValidator<CreateRatingCommand>
 {

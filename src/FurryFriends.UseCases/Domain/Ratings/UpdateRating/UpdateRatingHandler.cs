@@ -1,10 +1,8 @@
 using Ardalis.GuardClauses;
-using Ardalis.Result;
-using FurryFriends.Core.RatingAggregate;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace FurryFriends.UseCases.Rating.UpdateRating;
+namespace FurryFriends.UseCases.Domain.Ratings.UpdateRating;
 
 public class UpdateRatingHandler : IRequestHandler<UpdateRatingCommand, Result<Guid>>
 {

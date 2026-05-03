@@ -1,5 +1,3 @@
-using Ardalis.Result;
-
 namespace FurryFriends.UseCases.Timeslots.CustomTimeRequest;
 
 public enum CustomTimeRequestResponse

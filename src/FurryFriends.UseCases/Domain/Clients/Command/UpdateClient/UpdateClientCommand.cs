@@ -1,6 +1,5 @@
 ﻿using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Enums;
-using MediatR;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdateClient;
 

@@ -1,13 +1,10 @@
-using Ardalis.Result;
 using Ardalis.Specification;
 using FurryFriends.Core.Enums;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
-using FurryFriends.Core.TimeslotAggregate;
 using FurryFriends.Core.TimeslotAggregate.Specifications;
 using Microsoft.Extensions.Logging;
 using TimeslotEntity = FurryFriends.Core.TimeslotAggregate.Timeslot;
-using WorkingHoursEntity = FurryFriends.Core.TimeslotAggregate.WorkingHours;
 
 namespace FurryFriends.UseCases.Timeslots.Timeslot;
 

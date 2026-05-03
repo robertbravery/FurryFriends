@@ -1,5 +1,5 @@
 using Ardalis.Result;
-using FurryFriends.UseCases.Rating.CreateRating;
+using FurryFriends.UseCases.Domain.Ratings.CreateRating;
 using FurryFriends.Web.Endpoints.RatingEndpoints;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.Create;

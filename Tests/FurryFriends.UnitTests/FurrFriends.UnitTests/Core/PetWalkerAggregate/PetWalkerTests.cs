@@ -1,4 +1,3 @@
-using FluentAssertions;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 

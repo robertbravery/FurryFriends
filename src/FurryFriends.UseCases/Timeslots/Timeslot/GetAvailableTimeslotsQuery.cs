@@ -1,6 +1,3 @@
-using Ardalis.Result;
-using FurryFriends.UseCases.Timeslots.Timeslot;
-
 namespace FurryFriends.UseCases.Timeslots.Timeslot;
 
 public record GetAvailableTimeslotsQuery(

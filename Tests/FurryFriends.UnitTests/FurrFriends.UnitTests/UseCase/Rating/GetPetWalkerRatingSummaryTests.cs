@@ -1,8 +1,5 @@
-using Ardalis.Result;
-using Ardalis.SharedKernel;
-using FurryFriends.Core.RatingAggregate;
-using FurryFriends.UseCases.Rating.GetPetWalkerRatingSummary;
-using Microsoft.Extensions.Logging;
+
+using FurryFriends.UseCases.Domain.Ratings.GetPetWalkerRatingSummary;
 using NSubstitute;
 using RatingEntity = FurryFriends.Core.RatingAggregate.Rating;
 

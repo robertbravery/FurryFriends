@@ -71,25 +71,25 @@
 - [ ] T017 [P] Create GetPetWalkerRatingSummarySpecification in `src/FurryFriends.Core/RatingAggregate/Specifications/GetPetWalkerRatingSummarySpecification.cs`
 
 ### UseCases - Create Rating
-- [ ] T018 CreateRatingCommand in `src/FurryFriends.UseCases/Rating/CreateRating/CreateRatingCommand.cs`
-- [ ] T019 CreateRatingHandler in `src/FurryFriends.UseCases/Rating/CreateRating/CreateRatingHandler.cs`
-- [ ] T020 CreateRatingValidator in `src/FurryFriends.UseCases/Rating/CreateRating/CreateRatingValidator.cs`
-- [ ] T021 CreateRatingDto in `src/FurryFriends.UseCases/Rating/CreateRating/CreateRatingDto.cs`
+- [ ] T018 CreateRatingCommand in `src/FurryFriends.UseCases/Domain/Ratings/CreateRating/CreateRatingCommand.cs`
+- [ ] T019 CreateRatingHandler in `src/FurryFriends.UseCases/Domain/Ratings/CreateRating/CreateRatingHandler.cs`
+- [ ] T020 CreateRatingValidator in `src/FurryFriends.UseCases/Domain/Ratings/CreateRating/CreateRatingValidator.cs`
+- [ ] T021 CreateRatingDto in `src/FurryFriends.UseCases/Domain/Ratings/CreateRating/CreateRatingDto.cs`
 
 ### UseCases - Update Rating
-- [ ] T022 UpdateRatingCommand in `src/FurryFriends.UseCases/Rating/UpdateRating/UpdateRatingCommand.cs`
-- [ ] T023 UpdateRatingHandler in `src/FurryFriends.UseCases/Rating/UpdateRating/UpdateRatingHandler.cs`
-- [ ] T024 UpdateRatingValidator in `src/FurryFriends.UseCases/Rating/UpdateRating/UpdateRatingValidator.cs`
+- [ ] T022 UpdateRatingCommand in `src/FurryFriends.UseCases/Domain/Ratings/UpdateRating/UpdateRatingCommand.cs`
+- [ ] T023 UpdateRatingHandler in `src/FurryFriends.UseCases/Domain/Ratings/UpdateRating/UpdateRatingHandler.cs`
+- [ ] T024 UpdateRatingValidator in `src/FurryFriends.UseCases/Domain/Ratings/UpdateRating/UpdateRatingValidator.cs`
 
 ### UseCases - Get Ratings for PetWalker
-- [ ] T025 GetRatingsForPetWalkerQuery in `src/FurryFriends.UseCases/Rating/GetRatingsForPetWalker/GetRatingsForPetWalkerQuery.cs`
-- [ ] T026 GetRatingsForPetWalkerHandler in `src/FurryFriends.UseCases/Rating/GetRatingsForPetWalker/GetRatingsForPetWalkerHandler.cs`
-- [ ] T027 RatingDto in `src/FurryFriends.UseCases/Rating/GetRatingsForPetWalker/RatingDto.cs`
+- [ ] T025 GetRatingsForPetWalkerQuery in `src/FurryFriends.UseCases/Domain/Ratings/GetRatingsForPetWalker/GetRatingsForPetWalkerQuery.cs`
+- [ ] T026 GetRatingsForPetWalkerHandler in `src/FurryFriends.UseCases/Domain/Ratings/GetRatingsForPetWalker/GetRatingsForPetWalkerHandler.cs`
+- [ ] T027 RatingDto in `src/FurryFriends.UseCases/Domain/Ratings/GetRatingsForPetWalker/RatingDto.cs`
 
 ### UseCases - Get PetWalker Rating Summary
-- [ ] T028 GetPetWalkerRatingSummaryQuery in `src/FurryFriends.UseCases/Rating/GetPetWalkerRatingSummary/GetPetWalkerRatingSummaryQuery.cs`
-- [ ] T029 GetPetWalkerRatingSummaryHandler in `src/FurryFriends.UseCases/Rating/GetPetWalkerRatingSummary/GetPetWalkerRatingSummaryHandler.cs`
-- [ ] T030 PetWalkerRatingSummaryDto in `src/FurryFriends.UseCases/Rating/GetPetWalkerRatingSummary/PetWalkerRatingSummaryDto.cs`
+- [ ] T028 GetPetWalkerRatingSummaryQuery in `src/FurryFriends.UseCases/Domain/Ratings/GetPetWalkerRatingSummary/GetPetWalkerRatingSummaryQuery.cs`
+- [ ] T029 GetPetWalkerRatingSummaryHandler in `src/FurryFriends.UseCases/Domain/Ratings/GetPetWalkerRatingSummary/GetPetWalkerRatingSummaryHandler.cs`
+- [ ] T030 PetWalkerRatingSummaryDto in `src/FurryFriends.UseCases/Domain/Ratings/GetPetWalkerRatingSummary/PetWalkerRatingSummaryDto.cs`
 
 ### API Endpoints
 - [ ] T031 CreateRating endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/CreateRating/CreateRating.cs`

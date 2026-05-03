@@ -1,6 +1,6 @@
-using FurryFriends.UseCases.Rating.GetRatingsForPetWalker;
+using FurryFriends.UseCases.Domain.Ratings.GetRatingsForPetWalker;
 
-namespace FurryFriends.UseCases.Rating.GetPetWalkerRatingSummary;
+namespace FurryFriends.UseCases.Domain.Ratings.GetPetWalkerRatingSummary;
 
 public record PetWalkerRatingSummaryDto(
     Guid PetWalkerId,

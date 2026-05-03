@@ -1,6 +1,3 @@
-using Ardalis.Specification;
-using FurryFriends.Core.RatingAggregate;
-
 namespace FurryFriends.Core.RatingAggregate.Specifications;
 
 public class GetRatingsForPetWalkerSpecification : Specification<Rating>, ISingleResultSpecification<Rating>

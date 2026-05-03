@@ -1,5 +1,3 @@
-using Ardalis.Result;
-using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.TimeslotAggregate.Specifications;
 using Microsoft.Extensions.Logging;

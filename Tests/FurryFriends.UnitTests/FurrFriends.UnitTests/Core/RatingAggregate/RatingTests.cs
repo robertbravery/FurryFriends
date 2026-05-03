@@ -1,4 +1,3 @@
-using FluentAssertions;
 using FurryFriends.Core.RatingAggregate;
 
 namespace FurrFriends.UnitTests.Core.RatingAggregate;

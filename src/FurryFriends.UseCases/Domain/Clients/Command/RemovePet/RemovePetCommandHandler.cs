@@ -1,6 +1,4 @@
 ﻿using FurryFriends.Core.ClientAggregate;
-using FurryFriends.Core.ClientAggregate.Specifications;
-using FurryFriends.Core.Interfaces;
 using Serilog;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.RemovePet;

@@ -1,11 +1,9 @@
 using Ardalis.GuardClauses;
-using Ardalis.Result;
-using FurryFriends.Core.RatingAggregate;
 using FurryFriends.Core.RatingAggregate.Specifications;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace FurryFriends.UseCases.Rating.GetRatingsForPetWalker;
+namespace FurryFriends.UseCases.Domain.Ratings.GetRatingsForPetWalker;
 
 public class GetRatingsForPetWalkerHandler : IRequestHandler<GetRatingsForPetWalkerQuery, Result<List<RatingDto>>>
 {

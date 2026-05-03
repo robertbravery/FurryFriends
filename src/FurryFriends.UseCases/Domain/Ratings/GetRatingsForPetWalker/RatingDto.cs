@@ -1,4 +1,4 @@
-namespace FurryFriends.UseCases.Rating.GetRatingsForPetWalker;
+namespace FurryFriends.UseCases.Domain.Ratings.GetRatingsForPetWalker;
 
 public record RatingDto(
     Guid Id,
