@@ -20,12 +20,14 @@ public class CreateRatingEndpoint : BaseEndpoint<CreateRatingRequest, CreateRati
     public override async Task HandleAsync(CreateRatingRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation(
-            "Creating rating for Booking: {BookingId}, Rating: {RatingValue}",
-            request.BookingId,
+            "Creating rating for PetWalker: {PetWalkerId} by Client: {ClientId}, Rating: {RatingValue}",
+            request.PetWalkerId,
+            request.ClientId,
             request.RatingValue);
 
         var command = new CreateRatingCommand(
-            request.BookingId,
+            request.PetWalkerId,
+            request.ClientId,
             request.RatingValue,
             request.Comment);
 
@@ -34,7 +36,7 @@ public class CreateRatingEndpoint : BaseEndpoint<CreateRatingRequest, CreateRati
             (Guid ratingId, CancellationToken ct) =>
                 Task.FromResult(new CreateRatingResponse(
                     ratingId,
-                    request.BookingId,
+                    request.PetWalkerId,
                     request.RatingValue,
                     request.Comment)),
             cancellationToken);

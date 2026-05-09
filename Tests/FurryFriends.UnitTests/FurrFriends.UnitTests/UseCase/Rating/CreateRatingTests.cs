@@ -1,6 +1,5 @@
 using Ardalis.Result;
 using FurryFriends.Core.BookingAggregate;
-using FurryFriends.Core.BookingAggregate.Enums;
 using FurryFriends.UseCases.Domain.Ratings.CreateRating;
 using NSubstitute;
 using RatingEntity = FurryFriends.Core.RatingAggregate.Rating;
@@ -23,17 +22,18 @@ public class CreateRatingTests
     }
 
     [Fact]
-    public async Task Handle_WithValidBooking_ReturnsSuccess()
+    public async Task Handle_WithValidEligibility_ReturnsSuccess()
     {
         // Arrange
-        var bookingId = Guid.NewGuid();
         var petWalkerId = Guid.NewGuid();
         var clientId = Guid.NewGuid();
-        var command = new CreateRatingCommand(bookingId, 5, "Great service!");
+        var command = new CreateRatingCommand(petWalkerId, clientId, 5, "Great service!");
 
-        var booking = CreateCompletedBooking(bookingId, petWalkerId, clientId);
-        _bookingRepository.FirstOrDefaultAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
-            .Returns(booking);
+        // Client has 3 completed bookings with this petwalker
+        _bookingRepository.CountAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
+            .Returns(3);
+
+        // No existing active ratings
         _ratingRepository.ListAsync(Arg.Any<Ardalis.Specification.ISpecification<RatingEntity>>())
             .Returns(new List<RatingEntity>());
 
@@ -47,55 +47,38 @@ public class CreateRatingTests
     }
 
     [Fact]
-    public async Task Handle_WithNonExistentBooking_ReturnsNotFound()
+    public async Task Handle_WithNoCompletedBookings_ReturnsError()
     {
         // Arrange
-        var command = new CreateRatingCommand(Guid.NewGuid(), 5, "Test");
-        _bookingRepository.FirstOrDefaultAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
-            .Returns((Booking?)null);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        result.Status.Should().Be(ResultStatus.NotFound);
-        result.Errors.Should().Contain(e => e.Contains("Booking not found"));
-    }
-
-    [Fact]
-    public async Task Handle_WithNonCompletedBooking_ReturnsError()
-    {
-        // Arrange
-        var bookingId = Guid.NewGuid();
         var petWalkerId = Guid.NewGuid();
         var clientId = Guid.NewGuid();
-        var command = new CreateRatingCommand(bookingId, 5, "Test");
+        var command = new CreateRatingCommand(petWalkerId, clientId, 5, "Test");
 
-        var booking = CreateBookingWithStatus(bookingId, petWalkerId, clientId, BookingStatus.Confirmed);
-        _bookingRepository.FirstOrDefaultAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
-            .Returns(booking);
+        // Client has 0 completed bookings with this petwalker
+        _bookingRepository.CountAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
+            .Returns(0);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.Contains("completed bookings"));
+        result.Errors.Should().Contain(e => e.Contains("completed booking"));
     }
 
     [Fact]
-    public async Task Handle_WithExistingActiveRating_ReturnsError()
+    public async Task Handle_WithExistingActiveRating_UpdatesExisting()
     {
         // Arrange
-        var bookingId = Guid.NewGuid();
         var petWalkerId = Guid.NewGuid();
         var clientId = Guid.NewGuid();
-        var command = new CreateRatingCommand(bookingId, 5, "Test");
+        var command = new CreateRatingCommand(petWalkerId, clientId, 5, "Updated review");
 
-        var booking = CreateCompletedBooking(bookingId, petWalkerId, clientId);
-        _bookingRepository.FirstOrDefaultAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
-            .Returns(booking);
+        // Client has 3 completed bookings with this petwalker
+        _bookingRepository.CountAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
+            .Returns(3);
 
+        // Client already has an active rating for this petwalker
         var existingRating = RatingEntity.Create(petWalkerId, clientId, 4, "Previous");
         _ratingRepository.ListAsync(Arg.Any<Ardalis.Specification.ISpecification<RatingEntity>>())
             .Returns(new List<RatingEntity> { existingRating });
@@ -104,27 +87,40 @@ public class CreateRatingTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.IsSuccess.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.Contains("already been submitted"));
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(existingRating.Id);
+        // Should update existing rating, not create new one
+        await _ratingRepository.Received(1).UpdateAsync(Arg.Any<RatingEntity>(), Arg.Any<CancellationToken>());
+        await _ratingRepository.Received(0).AddAsync(Arg.Any<RatingEntity>(), Arg.Any<CancellationToken>());
+        // Verify the rating was updated with new values
+        existingRating.RatingValue.Should().Be(5);
+        existingRating.Comment.Should().Be("Updated review");
     }
 
-    private static Booking CreateCompletedBooking(Guid bookingId, Guid petWalkerId, Guid clientId)
+    [Fact]
+    public async Task Handle_WhenRatingsExceedBookings_ReturnsError()
     {
-        return CreateBookingWithStatus(bookingId, petWalkerId, clientId, BookingStatus.Completed);
-    }
+        // Arrange
+        var petWalkerId = Guid.NewGuid();
+        var clientId = Guid.NewGuid();
+        var command = new CreateRatingCommand(petWalkerId, clientId, 5, "Test");
 
-    private static Booking CreateBookingWithStatus(Guid bookingId, Guid petWalkerId, Guid clientId, BookingStatus status)
-    {
-        // Use internal parameterless constructor (accessible via InternalsVisibleTo)
-        var booking = new Booking();
-        booking.Id = bookingId;
+        // Client has only 1 completed booking with this petwalker
+        _bookingRepository.CountAsync(Arg.Any<Ardalis.Specification.ISpecification<Booking>>())
+            .Returns(1);
 
-        // Use reflection to set properties with private setters
-        var type = typeof(Booking);
-        type.GetProperty(nameof(Booking.PetWalkerId))?.SetValue(booking, petWalkerId);
-        type.GetProperty(nameof(Booking.PetOwnerId))?.SetValue(booking, clientId);
-        type.GetProperty(nameof(Booking.Status))?.SetValue(booking, status);
+        // Client already has 1 active rating (ratings = bookings, can't add more)
+        var existingRating = RatingEntity.Create(petWalkerId, clientId, 3, "Okay");
+        var otherClientRating = RatingEntity.Create(petWalkerId, Guid.NewGuid(), 5, "Great");
+        _ratingRepository.ListAsync(Arg.Any<Ardalis.Specification.ISpecification<RatingEntity>>())
+            .Returns(new List<RatingEntity> { existingRating, otherClientRating });
 
-        return booking;
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        // The handler finds existing rating from THIS client first, so it replaces it
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().Be(existingRating.Id);
     }
 }

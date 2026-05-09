@@ -6,9 +6,13 @@ public class CreateRatingValidator : AbstractValidator<CreateRatingCommand>
 {
     public CreateRatingValidator()
     {
-        RuleFor(x => x.BookingId)
+        RuleFor(x => x.PetWalkerId)
             .NotEmpty()
-            .WithMessage("Booking ID is required");
+            .WithMessage("PetWalker ID is required");
+
+        RuleFor(x => x.ClientId)
+            .NotEmpty()
+            .WithMessage("Client ID is required");
 
         RuleFor(x => x.RatingValue)
             .InclusiveBetween(1, 5)

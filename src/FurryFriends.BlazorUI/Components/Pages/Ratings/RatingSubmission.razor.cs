@@ -16,6 +16,9 @@ public partial class RatingSubmission
     public Guid PetWalkerId { get; set; }
 
     [Parameter]
+    public Guid ClientId { get; set; }
+
+    [Parameter]
     public Guid? ExistingRatingId { get; set; }
 
     [Parameter]
@@ -31,16 +34,10 @@ public partial class RatingSubmission
     public bool CanDelete { get; set; }
 
     [Parameter]
-    public Guid ClientId { get; set; }
-
-    [Parameter]
     public string HeaderText { get; set; } = "Rate Your Experience";
 
     [Parameter]
     public string SubmitButtonText { get; set; } = "Submit Rating";
-
-    [Parameter]
-    public bool ShowBookingField { get; set; } = true;
 
     [Parameter]
     public bool ShowCancelButton { get; set; }
@@ -54,7 +51,6 @@ public partial class RatingSubmission
     [Parameter]
     public EventCallback OnRatingDeleted { get; set; }
 
-    public string BookingIdText { get; set; } = string.Empty;
     public int SelectedRating { get; set; }
     public string? Comment { get; set; }
     public bool IsLoading { get; set; }
@@ -78,7 +74,6 @@ public partial class RatingSubmission
 
         if (ExistingRatingId.HasValue)
         {
-            ShowBookingField = false;
             HeaderText = "Edit Your Rating";
             SubmitButtonText = "Save Changes";
             CanDelete = true;
@@ -121,37 +116,20 @@ public partial class RatingSubmission
 
     private async Task CreateNewRating()
     {
-        var bookingId = Guid.Empty;
-
-        if (ShowBookingField)
-        {
-            if (string.IsNullOrWhiteSpace(BookingIdText))
-            {
-                ErrorMessage = "Please enter a Booking ID.";
-                return;
-            }
-
-            if (!Guid.TryParse(BookingIdText, out bookingId))
-            {
-                ErrorMessage = "Please enter a valid Booking ID.";
-                return;
-            }
-        }
-
         try
         {
             IsLoading = true;
             StateHasChanged();
 
-            var request = new CreateRatingRequest(bookingId, SelectedRating, Comment);
+            var request = new CreateRatingRequest(PetWalkerId, ClientId, SelectedRating, Comment);
 
-            Logger.LogInformation("Submitting rating for Booking: {BookingId}, Rating: {Rating}", bookingId, SelectedRating);
+            Logger.LogInformation("Submitting rating for PetWalker: {PetWalkerId}, Rating: {Rating}", PetWalkerId, SelectedRating);
 
             var result = await RatingService.CreateRatingAsync(request);
 
             if (result.IsSuccess)
             {
-                Logger.LogInformation("Rating submitted successfully for Booking: {BookingId}", bookingId);
+                Logger.LogInformation("Rating submitted successfully for PetWalker: {PetWalkerId}", PetWalkerId);
                 IsSaved = true;
                 SuccessMessage = "Your rating has been submitted successfully!";
                 await OnRatingSubmitted.InvokeAsync();
@@ -257,7 +235,6 @@ public partial class RatingSubmission
 
     public void ResetForm()
     {
-        BookingIdText = string.Empty;
         SelectedRating = 0;
         Comment = null;
         IsSaved = false;

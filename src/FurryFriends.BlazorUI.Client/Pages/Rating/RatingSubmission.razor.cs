@@ -12,8 +12,14 @@ public partial class RatingSubmission : ComponentBase
     [Inject]
     public ILogger<RatingSubmission> Logger { get; set; } = default!;
 
-    // Use string for binding - parse to Guid on submit
-    public string BookingIdText { get; set; } = string.Empty;
+    [Parameter]
+    public Guid PetWalkerId { get; set; }
+
+    [Parameter]
+    public Guid ClientId { get; set; }
+
+    [Parameter]
+    public EventCallback OnRatingSubmitted { get; set; }
 
     public int SelectedRating { get; set; }
 
@@ -33,12 +39,6 @@ public partial class RatingSubmission : ComponentBase
     {
         errorMessage = null;
 
-        if (string.IsNullOrWhiteSpace(BookingIdText) || !Guid.TryParse(BookingIdText, out var bookingId))
-        {
-            errorMessage = "Please enter a valid Booking ID.";
-            return;
-        }
-
         if (SelectedRating < 1 || SelectedRating > 5)
         {
             errorMessage = "Please select a rating between 1 and 5 stars.";
@@ -50,26 +50,27 @@ public partial class RatingSubmission : ComponentBase
             isLoading = true;
             await InvokeAsync(StateHasChanged);
 
-            Logger.LogInformation("Submitting rating for Booking: {BookingId}, Rating: {Rating}",
-                bookingId, SelectedRating);
+            Logger.LogInformation("Submitting rating for PetWalker: {PetWalkerId}, Rating: {Rating}",
+                PetWalkerId, SelectedRating);
 
-            var request = new CreateRatingRequest(bookingId, SelectedRating, Comment);
+            var request = new CreateRatingRequest(PetWalkerId, ClientId, SelectedRating, Comment);
             var result = await RatingService.CreateRatingAsync(request);
 
             if (result.IsSuccess)
             {
-                Logger.LogInformation("Rating submitted successfully for Booking: {BookingId}", bookingId);
+                Logger.LogInformation("Rating submitted successfully for PetWalker: {PetWalkerId}", PetWalkerId);
                 hasSubmitted = true;
+                await OnRatingSubmitted.InvokeAsync();
             }
             else
             {
-                errorMessage = "Failed to submit rating. Please check your booking ID and try again.";
-                Logger.LogWarning("Failed to submit rating for Booking: {BookingId}", bookingId);
+                errorMessage = result.ErrorMessage ?? "Failed to submit rating. Please try again.";
+                Logger.LogWarning("Failed to submit rating for PetWalker: {PetWalkerId}", PetWalkerId);
             }
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Error submitting rating for Booking: {BookingId}", bookingId);
+            Logger.LogError(ex, "Error submitting rating for PetWalker: {PetWalkerId}", PetWalkerId);
             errorMessage = $"Error submitting rating: {ex.Message}";
         }
         finally
@@ -81,7 +82,6 @@ public partial class RatingSubmission : ComponentBase
 
     public void ResetForm()
     {
-        BookingIdText = string.Empty;
         SelectedRating = 0;
         Comment = null;
         hasSubmitted = false;

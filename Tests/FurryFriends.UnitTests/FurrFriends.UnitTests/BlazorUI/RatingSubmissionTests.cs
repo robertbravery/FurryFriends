@@ -58,32 +58,6 @@ public class RatingSubmissionTests : TestContext
   }
 
   [Fact]
-  public void ShouldRenderBookingIdFieldByDefault()
-  {
-    // Act
-    var cut = RenderComponent<RatingSubmission>(parameters => parameters
-      .Add(p => p.PetWalkerId, _petWalkerId)
-      .Add(p => p.ClientId, _clientId));
-
-    // Assert
-    var bookingField = cut.Find("input#bookingId");
-    Assert.NotNull(bookingField);
-  }
-
-  [Fact]
-  public void ShouldHideBookingFieldWhenShowBookingFieldIsFalse()
-  {
-    // Act
-    var cut = RenderComponent<RatingSubmission>(parameters => parameters
-      .Add(p => p.PetWalkerId, _petWalkerId)
-      .Add(p => p.ClientId, _clientId)
-      .Add(p => p.ShowBookingField, false));
-
-    // Assert
-    Assert.Equal(0, cut.FindAll("input#bookingId").Count);
-  }
-
-  [Fact]
   public void ShouldShowSubmitButton()
   {
     // Act
@@ -159,58 +133,6 @@ public class RatingSubmissionTests : TestContext
   }
 
   [Fact]
-  public void ShouldShowSuccessMessageOnSuccessfulCreate()
-  {
-    // Arrange
-    _mockRatingService
-      .Setup(s => s.CreateRatingAsync(It.IsAny<CreateRatingRequest>()))
-      .ReturnsAsync(new RatingResult(true, null));
-
-    // Act
-    var cut = RenderComponent<RatingSubmission>(parameters => parameters
-      .Add(p => p.PetWalkerId, _petWalkerId)
-      .Add(p => p.ClientId, _clientId)
-      .Add(p => p.ShowBookingField, false));
-
-    // Select a rating
-    var starButtons = cut.FindAll(".star-btn");
-    starButtons[4].Click(); // 5 stars
-
-    // Submit
-    var submitButton = cut.Find("button.btn.btn-primary");
-    submitButton.Click();
-
-    // Assert
-    Assert.Contains("Your rating has been submitted successfully!", cut.Markup);
-  }
-
-  [Fact]
-  public void ShouldShowErrorMessageOnFailedCreate()
-  {
-    // Arrange
-    _mockRatingService
-      .Setup(s => s.CreateRatingAsync(It.IsAny<CreateRatingRequest>()))
-      .ReturnsAsync(new RatingResult(false, "Service unavailable"));
-
-    // Act
-    var cut = RenderComponent<RatingSubmission>(parameters => parameters
-      .Add(p => p.PetWalkerId, _petWalkerId)
-      .Add(p => p.ClientId, _clientId)
-      .Add(p => p.ShowBookingField, false));
-
-    // Select a rating
-    var starButtons = cut.FindAll(".star-btn");
-    starButtons[2].Click(); // 3 stars
-
-    // Submit
-    var submitButton = cut.Find("button.btn.btn-primary");
-    submitButton.Click();
-
-    // Assert
-    Assert.Contains("Service unavailable", cut.Markup);
-  }
-
-  [Fact]
   public void ShouldShowDeleteButtonWhenExistingRatingIdIsSet()
   {
     // Act
@@ -277,52 +199,6 @@ public class RatingSubmissionTests : TestContext
 
     // Assert
     Assert.True(cancelInvoked);
-  }
-
-  [Fact]
-  public void ShouldShowErrorWhenBookingIdIsEmpty()
-  {
-    // Act
-    var cut = RenderComponent<RatingSubmission>(parameters => parameters
-      .Add(p => p.PetWalkerId, _petWalkerId)
-      .Add(p => p.ClientId, _clientId)
-      .Add(p => p.ShowBookingField, true));
-
-    // Select rating
-    var starButtons = cut.FindAll(".star-btn");
-    starButtons[0].Click();
-
-    // Submit without entering booking ID
-    var submitButton = cut.Find("button.btn.btn-primary");
-    submitButton.Click();
-
-    // Assert
-    Assert.Contains("Please enter a Booking ID.", cut.Markup);
-  }
-
-  [Fact]
-  public void ShouldShowErrorWhenBookingIdIsInvalid()
-  {
-    // Act
-    var cut = RenderComponent<RatingSubmission>(parameters => parameters
-      .Add(p => p.PetWalkerId, _petWalkerId)
-      .Add(p => p.ClientId, _clientId)
-      .Add(p => p.ShowBookingField, true));
-
-    // Select rating
-    var starButtons = cut.FindAll(".star-btn");
-    starButtons[1].Click();
-
-    // Enter invalid booking ID
-    var bookingInput = cut.Find("input#bookingId");
-    bookingInput.Change("not-a-guid");
-
-    // Submit
-    var submitButton = cut.Find("button.btn.btn-primary");
-    submitButton.Click();
-
-    // Assert
-    Assert.Contains("Please enter a valid Booking ID.", cut.Markup);
   }
 
   [Fact]

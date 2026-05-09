@@ -48,6 +48,7 @@ builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ITimeslotService, TimeslotService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
+builder.Services.AddScoped<IClientContextService, ClientContextService>();
 builder.Services.AddSingleton<IPopupService, PopupService>();
 builder.Services.AddScoped<IPictureService, PictureService>();
 builder.Services.AddScoped<FurryFriends.BlazorUI.Client.Services.Interfaces.IClientLoggingService, ServerClientLoggingService>();
@@ -59,32 +60,32 @@ builder.Services.AddTransient<LoggingDelegatingHandler>();
 builder.Services.AddServiceDiscovery();
 builder.Services.ConfigureHttpClientDefaults(http =>
 {
-    // Turn on resilience by default
-    http.AddStandardResilienceHandler();
+  // Turn on resilience by default
+  http.AddStandardResilienceHandler();
 
-    // Turn on service discovery by default
-    http.AddServiceDiscovery();
+  // Turn on service discovery by default
+  http.AddServiceDiscovery();
 });
 
 // Configure HttpClient with service discovery
 builder.Services.AddHttpClient<IPetWalkerService, PetWalkerService>((sp, client) =>
 {
-    // Use service discovery to find the API
-    var config = sp.GetService<IConfiguration>();
-    var apiBaseUrl = config?["ApiBaseUrl"];
-    client.BaseAddress = !string.IsNullOrEmpty(apiBaseUrl)
-        ? new Uri(apiBaseUrl)
-        : new Uri("http://api/api");
+  // Use service discovery to find the API
+  var config = sp.GetService<IConfiguration>();
+  var apiBaseUrl = config?["ApiBaseUrl"];
+  client.BaseAddress = !string.IsNullOrEmpty(apiBaseUrl)
+      ? new Uri(apiBaseUrl)
+      : new Uri("http://api/api");
 }).AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 // Configure other HttpClients similarly
 builder.Services.AddHttpClient<IClientService, ClientService>((sp, client) =>
 {
-    var config = sp.GetService<IConfiguration>();
-    var apiBaseUrl = config?["ApiBaseUrl"];
-    client.BaseAddress = !string.IsNullOrEmpty(apiBaseUrl)
-        ? new Uri(apiBaseUrl)
-        : new Uri("http://api/api");
+  var config = sp.GetService<IConfiguration>();
+  var apiBaseUrl = config?["ApiBaseUrl"];
+  client.BaseAddress = !string.IsNullOrEmpty(apiBaseUrl)
+      ? new Uri(apiBaseUrl)
+      : new Uri("http://api/api");
 }).AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddHttpClient<ILocationService, LocationService>((sp, client) =>

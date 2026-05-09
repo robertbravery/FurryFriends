@@ -9,7 +9,7 @@ public interface IRatingService
     Task<RatingResult> DeleteRatingAsync(Guid ratingId, Guid clientId);
 }
 
-public record CreateRatingRequest(Guid BookingId, int RatingValue, string? Comment);
+public record CreateRatingRequest(Guid PetWalkerId, Guid ClientId, int RatingValue, string? Comment);
 public record UpdateRatingRequest(int? RatingValue, string? Comment);
 
 public record RatingDto(

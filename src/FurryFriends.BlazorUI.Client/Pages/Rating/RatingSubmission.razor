@@ -30,21 +30,14 @@ else
             }
 
             <div class="mb-3">
-                <label for="bookingId" class="form-label">Booking ID</label>
-                <input type="text" class="form-control" id="bookingId" 
-                       @bind="BookingIdText" placeholder="Enter your booking ID" />
-            </div>
-
-            <div class="mb-3">
                 <label class="form-label">Select Rating</label>
                 <div class="d-flex gap-2">
                     @for (int i = 1; i <= 5; i++)
                     {
                         var starValue = i;
-                        <button type="button" 
+                        <button type="button"
                                 class="btn @(SelectedRating >= starValue ? "btn-warning" : "btn-outline-secondary")"
-                                @onclick="() => SelectRating(starValue)"
-                                style="font-size: 1.5rem;">
+                                @onclick="() => SelectRating(starValue)" style="font-size: 1.5rem;">
                             ★
                         </button>
                     }
@@ -54,8 +47,8 @@ else
 
             <div class="mb-3">
                 <label for="comment" class="form-label">Comment (optional)</label>
-                <textarea class="form-control" id="comment" rows="3" 
-                          @bind="Comment" placeholder="Share your experience..."></textarea>
+                <textarea class="form-control" id="comment" rows="3" @bind="Comment"
+                          placeholder="Share your experience..."></textarea>
             </div>
 
             <button class="btn btn-primary" @onclick="SubmitRating" disabled="@isLoading">

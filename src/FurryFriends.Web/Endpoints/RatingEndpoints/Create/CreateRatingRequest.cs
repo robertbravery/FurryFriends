@@ -4,7 +4,8 @@ public class CreateRatingRequest
 {
     public const string Route = "/ratings";
 
-    public Guid BookingId { get; set; }
+    public Guid PetWalkerId { get; set; }
+    public Guid ClientId { get; set; }
     public int RatingValue { get; set; }
     public string? Comment { get; set; }
 }

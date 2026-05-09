@@ -363,3 +363,196 @@
     color: #6c757d;
     font-size: 14px;
 }
+
+/* Rating display styles */
+.profile-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.rating-count {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Rating submission section */
+.rating-section {
+    padding: 1.5rem;
+    border-top: 1px solid #dee2e6;
+    margin-top: 1rem;
+}
+
+.rating-section h4 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+/* ========================================
+   Ratings List Section - New
+   ======================================== */
+
+.ratings-section {
+    padding: 1.5rem;
+    border-top: 1px solid #dee2e6;
+    margin-top: 1rem;
+}
+
+.ratings-section h4 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+/* Loading state */
+.ratings-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    padding: 1rem 0;
+}
+
+/* Error state */
+.ratings-error {
+    color: #dc3545;
+    padding: 0.5rem 0;
+}
+
+/* Empty state */
+.ratings-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    border: 2px dashed #dee2e6;
+}
+
+.ratings-empty .empty-state-icon {
+    font-size: 2.5rem;
+    color: #dee2e6;
+    margin-bottom: 0.75rem;
+}
+
+.ratings-empty .empty-state-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.ratings-empty .empty-state-subtext {
+    font-size: 0.875rem;
+    color: #adb5bd;
+    margin: 0;
+}
+
+/* Ratings list */
+.ratings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.rating-item {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    transition: box-shadow 0.2s ease;
+}
+
+.rating-item:hover {
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.rating-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 0.15rem;
+}
+
+.rating-star {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.rating-star.star-filled {
+    color: #ffc107;
+}
+
+.rating-star.star-empty {
+    color: #dee2e6;
+}
+
+.rating-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.rating-author {
+    font-weight: 600;
+    color: #495057;
+}
+
+.rating-date {
+    color: #6c757d;
+}
+
+.rating-comment {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f0f0f0;
+    color: #212529;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.rating-comment p {
+    margin: 0;
+}
+
+/* Ratings footer with pagination */
+.ratings-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ratings-summary-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.ratings-pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-page-info {
+    font-size: 0.85rem;
+    color: #6c757d;
+    white-space: nowrap;
+}

@@ -63,15 +63,6 @@
                         </div>
                     </div>
 
-                    @if (ShowBookingField)
-                    {
-                        <div class="mb-3">
-                            <label for="bookingId" class="form-label fw-bold">Booking ID</label>
-                            <input type="text" id="bookingId" class="form-control" @bind="BookingIdText"
-                                   placeholder="Enter your booking ID" />
-                        </div>
-                    }
-
                     <div class="d-flex gap-2">
                         <button class="btn btn-primary" @onclick="SubmitRating" disabled="@IsLoading">
                             @if (IsLoading)

@@ -90,8 +90,8 @@ public class RatingService : IRatingService
     {
         try
         {
-            _logger.LogInformation("Creating rating for Booking: {BookingId}, Rating: {RatingValue}",
-                request.BookingId, request.RatingValue);
+            _logger.LogInformation("Creating rating for PetWalker: {PetWalkerId}, Client: {ClientId}, Rating: {RatingValue}",
+                request.PetWalkerId, request.ClientId, request.RatingValue);
 
             var response = await _httpClient.PostAsJsonAsync($"{_apiBaseUrl}/ratings", request);
 
@@ -103,12 +103,12 @@ public class RatingService : IRatingService
                 return new RatingResult(false, errorBody ?? "Failed to create rating.");
             }
 
-            _logger.LogInformation("Rating created successfully for Booking: {BookingId}", request.BookingId);
+            _logger.LogInformation("Rating created successfully for PetWalker: {PetWalkerId}", request.PetWalkerId);
             return new RatingResult(true, null);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating rating for Booking: {BookingId}", request.BookingId);
+            _logger.LogError(ex, "Error creating rating for PetWalker: {PetWalkerId}", request.PetWalkerId);
             return new RatingResult(false, $"Error creating rating: {ex.Message}");
         }
     }
