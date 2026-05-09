@@ -1,0 +1,8 @@
+# Exclude auto-generated EF Core migration designer files
+**/*.Designer.cs
+
+# Exclude duplicated paths that confuse the parser
+src/FurryFriends.Infrastructure/src/
+
+# Exclude large generated files
+src/FurryFriends.Infrastructure/Migrations/
