@@ -57,12 +57,12 @@
 
 ## Phase 5: API Endpoints (FastEndpoints)
 
-- [ ] T029 [P] [US1] Create POST /api/ratings endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/Create/CreateRatingEndpoint.cs`
-- [ ] T030 [P] [US1] Create PUT /api/ratings/{id} endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/Update/UpdateRatingEndpoint.cs`
-- [ ] T031 [P] [US1] Create DELETE /api/ratings/{id} endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/Delete/DeleteRatingEndpoint.cs`
-- [ ] T032 [P] [US1] Create GET /api/ratings/petwalker/{petWalkerId} endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/GetRatingsForPetWalker/GetRatingsForPetWalkerEndpoint.cs`
-- [ ] T033 [P] [US1] Create GET /api/ratings/petwalker/{petWalkerId}/summary endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/GetPetWalkerRatingSummary/GetPetWalkerRatingSummaryEndpoint.cs`
-- [ ] T034 Register Rating-related services, validators, and MediatR handlers in `src/FurryFriends.Web/Program.cs`
+- [x] T029 [P] [US1] Create POST /api/ratings endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/Create/CreateRatingEndpoint.cs`
+- [x] T030 [P] [US1] Create PUT /api/ratings/{id} endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/Update/UpdateRatingEndpoint.cs`
+- [x] T031 [P] [US1] Create DELETE /api/ratings/{id} endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/Delete/DeleteRatingEndpoint.cs`
+- [x] T032 [P] [US1] Create GET /api/ratings/petwalker/{petWalkerId} endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/GetRatingsForPetWalker/GetRatingsForPetWalkerEndpoint.cs`
+- [x] T033 [P] [US1] Create GET /api/ratings/petwalker/{petWalkerId}/summary endpoint in `src/FurryFriends.Web/Endpoints/RatingEndpoints/GetPetWalkerRatingSummary/GetPetWalkerRatingSummaryEndpoint.cs`
+- [x] T034 Register Rating-related services, validators, and MediatR handlers in `src/FurryFriends.Web/Program.cs`
 
 ## Phase 6: Blazor UI
 

@@ -1,10 +1,10 @@
-
 # Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
 ## Execution Flow (/plan command scope)
+
 ```
 1. Load feature spec from Input path
    → If not found: ERROR "No feature spec at {path}"
@@ -27,15 +27,19 @@
 ```
 
 **IMPORTANT**: The /plan command STOPS at step 7. Phases 2-4 are executed by other commands:
+
 - Phase 2: /tasks command creates tasks.md
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
+
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
+
 **Language/Version**: .NET 9 (FurryFriends standard)
 **Primary Dependencies**:
+
 - FastEndpoints (API endpoints)
 - MediatR (CQRS)
 - FluentValidation (validation)
@@ -55,9 +59,11 @@
 **Scale/Scope**: [e.g., affects 3 aggregates, 5 endpoints, 2 Blazor pages or NEEDS CLARIFICATION]
 
 ## Constitution Check
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Architecture Compliance** (Constitution v2.0.0):
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
+
+**Architecture Compliance** (Constitution v2.1.0):
+
 - [ ] Follows Clean Architecture layers (Core → UseCases → Infrastructure/Web/BlazorUI)
 - [ ] API endpoints use FastEndpoints pattern (Request/Response/Endpoint separation)
 - [ ] Blazor components follow server-side HTTP pattern (no direct HttpClient in client)
@@ -65,24 +71,49 @@
 - [ ] Data access uses Repository + Specification pattern
 
 **Required Patterns**:
+
 - [ ] All handlers return `Result<T>` or `Result` (Ardalis.Result)
 - [ ] All commands/queries have FluentValidation validators
 - [ ] All database queries use Specifications (Ardalis.Specification)
 - [ ] All method parameters validated with Guard Clauses (Ardalis.GuardClauses)
-- [ ] All logging uses Serilog structured logging
+- [ ] All logging uses Serilog structured logging with OpenTelemetry
 
 **Testing Requirements**:
+
 - [ ] Test-First approach (tests written before implementation)
 - [ ] Unit tests for handlers, validators, specifications
-- [ ] Integration tests for API endpoints
-- [ ] Blazor component tests with bUnit
+- [ ] Integration tests for API endpoints (functional tests)
+- [ ] Blazor component tests with bUnit (Principle XX)
+- [ ] Contract tests for API contract changes (specs/[###-feature]/contracts/)
+
+**CI/CD & Automation** (Principle XVII):
+
+- [ ] Build passes all projects
+- [ ] Unit and functional tests pass
+- [ ] Code coverage meets 80% minimum
+- [ ] No known vulnerable dependencies
+
+**Dependency Management** (Principle XVIII):
+
+- [ ] Package versions in Directory.Packages.props only (not .csproj files)
+- [ ] No packages with known critical vulnerabilities
+- [ ] No unnecessary dependencies added
+
+**Error Handling** (Principle XIX):
+
+- [ ] Idempotency considered for mutation endpoints
+- [ ] Distributed transaction patterns evaluated (Outbox/Saga)
+- [ ] Graceful degradation for external dependencies
 
 **Prohibited Practices**:
+
 - [ ] No direct SQL queries (use EF Core + Specifications)
 - [ ] No `Console.WriteLine` (use Serilog)
 - [ ] No throwing exceptions for expected failures (use Result pattern)
 - [ ] No manual null checks (use Guard Clauses)
 - [ ] No LINQ queries in handlers (use Specifications)
+- [ ] No package versions in .csproj files (use Directory.Packages.props)
+- [ ] No skipping bUnit component tests for interactive components
 
 **Violations Requiring Justification**:
 [List any violations with justification in Complexity Tracking section]
@@ -90,6 +121,7 @@
 ## Project Structure
 
 ### Documentation (this feature)
+
 ```
 specs/[###-feature]/
 ├── plan.md              # This file (/plan command output)
@@ -101,6 +133,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (FurryFriends Clean Architecture)
+
 ```
 src/FurryFriends.Core/
 ├── [Aggregate]Aggregate/
@@ -172,12 +205,14 @@ tests/FurryFriends.IntegrationTests/
 This feature will add files to the appropriate layers based on the aggregate being modified.
 
 ## Phase 0: Outline & Research
+
 1. **Extract unknowns from Technical Context** above:
    - For each NEEDS CLARIFICATION → research task
    - For each dependency → best practices task
    - For each integration → patterns task
 
 2. **Generate and dispatch research agents**:
+
    ```
    For each unknown in Technical Context:
      Task: "Research {unknown} for {feature context}"
@@ -193,7 +228,8 @@ This feature will add files to the appropriate layers based on the aggregate bei
 **Output**: research.md with all NEEDS CLARIFICATION resolved
 
 ## Phase 1: Design & Contracts
-*Prerequisites: research.md complete*
+
+_Prerequisites: research.md complete_
 
 1. **Extract entities from feature spec** → `data-model.md`:
    - Entity name, fields, relationships
@@ -223,21 +259,24 @@ This feature will add files to the appropriate layers based on the aggregate bei
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**Output**: data-model.md, /contracts/*, failing tests, quickstart.md, agent-specific file
+**Output**: data-model.md, /contracts/\*, failing tests, quickstart.md, agent-specific file
 
 ## Phase 2: Task Planning Approach
-*This section describes what the /tasks command will do - DO NOT execute during /plan*
+
+_This section describes what the /tasks command will do - DO NOT execute during /plan_
 
 **Task Generation Strategy**:
+
 - Load `.specify/templates/tasks-template.md` as base
 - Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
 - Each contract → contract test task [P]
-- Each entity → model creation task [P] 
+- Each entity → model creation task [P]
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
 **Ordering Strategy**:
-- TDD order: Tests before implementation 
+
+- TDD order: Tests before implementation
 - Dependency order: Models before services before UI
 - Mark [P] for parallel execution (independent files)
 
@@ -246,25 +285,28 @@ This feature will add files to the appropriate layers based on the aggregate bei
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 
 ## Phase 3+: Future Implementation
-*These phases are beyond the scope of the /plan command*
+
+_These phases are beyond the scope of the /plan command_
 
 **Phase 3**: Task execution (/tasks command creates tasks.md)  
 **Phase 4**: Implementation (execute tasks.md following constitutional principles)  
 **Phase 5**: Validation (run tests, execute quickstart.md, performance validation)
 
 ## Complexity Tracking
-*Fill ONLY if Constitution Check has violations that must be justified*
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+_Fill ONLY if Constitution Check has violations that must be justified_
 
+| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
+| -------------------------- | ------------------ | ------------------------------------ |
+| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |
 
 ## Progress Tracking
-*This checklist is updated during execution flow*
+
+_This checklist is updated during execution flow_
 
 **Phase Status**:
+
 - [ ] Phase 0: Research complete (/plan command)
 - [ ] Phase 1: Design complete (/plan command)
 - [ ] Phase 2: Task planning complete (/plan command - describe approach only)
@@ -273,11 +315,13 @@ This feature will add files to the appropriate layers based on the aggregate bei
 - [ ] Phase 5: Validation passed
 
 **Gate Status**:
+
 - [ ] Initial Constitution Check: PASS
 - [ ] Post-Design Constitution Check: PASS
 - [ ] All NEEDS CLARIFICATION resolved
 - [ ] Complexity deviations documented
 
 ---
-*Based on Constitution v2.0.0 - See `.specify/memory/constitution.md`*
-*For implementation guidance, see `docs/FurryFriends_Technical_Guide.md`*
+
+_Based on Constitution v2.1.0 - See `.specify/memory/constitution.md`_
+_For implementation guidance, see `docs/FurryFriends_Technical_Guide.md`_
