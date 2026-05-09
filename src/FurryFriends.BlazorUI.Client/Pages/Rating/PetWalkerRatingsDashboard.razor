@@ -45,7 +45,7 @@ else
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <StarRating Rating="@rating.RatingValue" MaxRating="5" />
-                        <small class="text-muted">@rating.CreatedDate.ToString("MMM dd, yyyy")</small>
+                        <small class="text-muted">@rating.CreatedAt.ToString("MMM dd, yyyy")</small>
                     </div>
                     @if (!string.IsNullOrEmpty(rating.Comment))
                     {

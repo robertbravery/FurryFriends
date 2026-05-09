@@ -3,9 +3,10 @@ namespace FurryFriends.BlazorUI.Client.Services.Interfaces;
 public interface IRatingService
 {
     Task<RatingSummaryDto?> GetRatingSummaryAsync(Guid petWalkerId);
-    Task<List<RatingDto>> GetRatingsAsync(Guid petWalkerId, int page = 1, int pageSize = 20);
-    Task<bool> CreateRatingAsync(CreateRatingRequest request);
-    Task<bool> UpdateRatingAsync(Guid ratingId, UpdateRatingRequest request);
+    Task<PaginatedRatingResponse> GetRatingsAsync(Guid petWalkerId, int page = 1, int pageSize = 10);
+    Task<RatingResult> CreateRatingAsync(CreateRatingRequest request);
+    Task<RatingResult> UpdateRatingAsync(Guid ratingId, UpdateRatingRequest request);
+    Task<RatingResult> DeleteRatingAsync(Guid ratingId, Guid clientId);
 }
 
 public record CreateRatingRequest(Guid BookingId, int RatingValue, string? Comment);
@@ -15,11 +16,10 @@ public record RatingDto(
     Guid Id,
     Guid PetWalkerId,
     Guid ClientId,
-    Guid BookingId,
     int RatingValue,
     string? Comment,
-    DateTime CreatedDate,
-    DateTime? ModifiedDate,
+    DateTime CreatedAt,
+    DateTime UpdatedAt,
     string? ClientName);
 
 public record RatingSummaryDto(
@@ -27,3 +27,14 @@ public record RatingSummaryDto(
     double AverageRating,
     int TotalRatings,
     List<RatingDto> RecentRatings);
+
+public record PaginatedRatingResponse(
+    List<RatingDto> Items,
+    int PageNumber,
+    int PageSize,
+    int TotalCount,
+    int TotalPages,
+    bool HasPreviousPage,
+    bool HasNextPage);
+
+public record RatingResult(bool IsSuccess, string? ErrorMessage);

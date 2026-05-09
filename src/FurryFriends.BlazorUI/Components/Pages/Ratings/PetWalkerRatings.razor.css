@@ -1,0 +1,144 @@
+.petwalker-ratings-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.ratings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.ratings-header h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.loading-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.ratings-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    border: 2px dashed #dee2e6;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+.empty-state-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state-subtext {
+    font-size: 0.9rem;
+    color: #adb5bd;
+    margin: 0;
+}
+
+.ratings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rating-item {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.rating-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 0.15rem;
+}
+
+.rating-star {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.star-filled {
+    color: #ffc107;
+}
+
+.star-empty {
+    color: #dee2e6;
+}
+
+.rating-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.rating-author {
+    font-weight: 600;
+    color: #495057;
+}
+
+.rating-date {
+    color: #6c757d;
+}
+
+.rating-comment {
+    padding-top: 0.5rem;
+    border-top: 1px solid #f0f0f0;
+    color: #212529;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.ratings-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ratings-summary-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.ratings-pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-page-info {
+    font-size: 0.85rem;
+    color: #6c757d;
+    white-space: nowrap;
+}

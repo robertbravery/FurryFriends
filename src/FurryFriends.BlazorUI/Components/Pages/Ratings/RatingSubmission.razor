@@ -1,0 +1,105 @@
+@namespace FurryFriends.BlazorUI.Components.Pages.Ratings
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@rendermode InteractiveServer
+
+<div class="rating-submission-container">
+    <div class="card">
+        <div class="card-header">
+            <h5>@HeaderText</h5>
+        </div>
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @ErrorMessage
+                    <button type="button" class="btn-close" @onclick="ClearError" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (SuccessMessage != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @SuccessMessage
+                </div>
+            }
+
+            @if (!IsSaved)
+            {
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Rating</label>
+                    <div class="star-selector">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            var starValue = i;
+                            <button type="button"
+                                    class="star-btn @(SelectedRating >= starValue ? "star-active" : "star-inactive")"
+                                    @onclick="() => SelectRating(starValue)"
+                                    aria-label="@starValue star@(starValue > 1 ? "s" : "")">
+                                &#9733;
+                            </button>
+                        }
+                    </div>
+                    <div class="rating-label">
+                        @(SelectedRating > 0 ? GetRatingLabel(SelectedRating) : "Select a rating")
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="comment" class="form-label fw-bold">Comment <span
+                        class="text-muted fw-normal">(optional)</span></label>
+                        <textarea id="comment" class="form-control @(CommentLengthExceeded ? "is-invalid" : "")" rows="3"
+                                  @bind="Comment" @bind:event="oninput" maxlength="1000"
+                                  placeholder="Share your experience..."></textarea>
+                        <div class="d-flex justify-content-between mt-1">
+                            @if (CommentLengthExceeded)
+                            {
+                                <small class="text-danger">Comment must be 1000 characters or less.</small>
+                            }
+                            else
+                            {
+                                <small class="text-muted">&nbsp;</small>
+                            }
+                            <small class="text-muted">@(Comment?.Length ?? 0) / 1000</small>
+                        </div>
+                    </div>
+
+                    @if (ShowBookingField)
+                    {
+                        <div class="mb-3">
+                            <label for="bookingId" class="form-label fw-bold">Booking ID</label>
+                            <input type="text" id="bookingId" class="form-control" @bind="BookingIdText"
+                                   placeholder="Enter your booking ID" />
+                        </div>
+                    }
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary" @onclick="SubmitRating" disabled="@IsLoading">
+                            @if (IsLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            }
+                            @SubmitButtonText
+                        </button>
+                        @if (ShowCancelButton)
+                        {
+                            <button class="btn btn-outline-secondary" @onclick="Cancel" @disabled="@IsLoading">Cancel</button>
+                        }
+                    </div>
+
+                    @if (ExistingRatingId.HasValue && CanDelete)
+                    {
+                        <div class="mt-4 pt-3 border-top">
+                            <button class="btn btn-outline-danger btn-sm" @onclick="DeleteRating" @disabled="@IsLoading">
+                                @if (IsLoading)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                }
+                                Delete Rating
+                            </button>
+                            <small class="text-muted ms-2">This action cannot be undone.</small>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>

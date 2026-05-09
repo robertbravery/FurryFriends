@@ -14,9 +14,9 @@ public partial class RatingSubmission : ComponentBase
 
     // Use string for binding - parse to Guid on submit
     public string BookingIdText { get; set; } = string.Empty;
-    
+
     public int SelectedRating { get; set; }
-    
+
     public string? Comment { get; set; }
     public bool isLoading { get; set; }
     public bool hasSubmitted { get; set; }
@@ -54,9 +54,9 @@ public partial class RatingSubmission : ComponentBase
                 bookingId, SelectedRating);
 
             var request = new CreateRatingRequest(bookingId, SelectedRating, Comment);
-            var success = await RatingService.CreateRatingAsync(request);
+            var result = await RatingService.CreateRatingAsync(request);
 
-            if (success)
+            if (result.IsSuccess)
             {
                 Logger.LogInformation("Rating submitted successfully for Booking: {BookingId}", bookingId);
                 hasSubmitted = true;

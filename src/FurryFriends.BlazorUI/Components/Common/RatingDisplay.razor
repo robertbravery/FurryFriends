@@ -1,0 +1,39 @@
+@namespace FurryFriends.BlazorUI.Components.Common
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+@using System.Globalization
+
+<div class="rating-display">
+    @if (RatingSummary == null)
+    {
+        <div class="rating-empty">
+            <span class="rating-empty-text">No ratings yet</span>
+        </div>
+    }
+    else
+    {
+        <div class="rating-stars-container">
+            @for (int i = 1; i <= MaxStars; i++)
+            {
+                var starIndex = i;
+                <span class="rating-star @(starIndex <= RoundedAverage ? "star-filled" : "star-empty")">&#9733;</span>
+            }
+        </div>
+
+        @if (ShowNumericValue)
+        {
+            <div class="rating-numeric">
+                <span class="rating-average">@RatingSummary.AverageRating.ToString("F1", CultureInfo.InvariantCulture)</span>
+                <span class="rating-separator">|</span>
+                <span class="rating-count">@RatingSummary.TotalRatings @(RatingSummary.TotalRatings == 1 ? "rating" :
+                        "ratings")</span>
+                </div>
+            }
+        else
+            {
+                <div class="rating-count-only">
+                    <span class="rating-count">@RatingSummary.TotalRatings @(RatingSummary.TotalRatings == 1 ? "rating" :
+                              "ratings")</span>
+                    </div>
+                }
+            }
+        </div>
