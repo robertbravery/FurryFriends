@@ -1,12 +1,14 @@
 using FurryFriends.UseCases.Domain.Ratings.DeleteRating;
+using FurryFriends.Web.Endpoints.Base;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.Delete;
 
-public class DeleteRatingEndpoint(IMediator mediator, ILogger<DeleteRatingEndpoint> logger)
-    : Endpoint<DeleteRatingRequest, Result<DeleteRatingResponse>>
+public class DeleteRatingEndpoint : BaseEndpoint<DeleteRatingRequest, DeleteRatingResponse>
 {
-    private readonly IMediator _mediator = mediator;
-    private readonly ILogger<DeleteRatingEndpoint> _logger = logger;
+    public DeleteRatingEndpoint(IMediator mediator, ILogger<DeleteRatingEndpoint> logger)
+        : base(mediator, logger) { }
+
+    protected override string OperationName => "DeleteRating";
 
     public override void Configure()
     {
@@ -32,32 +34,8 @@ public class DeleteRatingEndpoint(IMediator mediator, ILogger<DeleteRatingEndpoi
             request.RatingId,
             request.ClientId);
 
-        var result = await _mediator.Send(command, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            foreach (var error in result.Errors)
-            {
-                AddError(error);
-            }
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                await SendNotFoundAsync(cancellationToken);
-                return;
-            }
-
-            if (result.Status == ResultStatus.Invalid)
-            {
-                await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
-                return;
-            }
-
-            Response = Result.Error();
-            await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
-            return;
-        }
-
-        await SendNoContentAsync(cancellationToken);
+        await HandleResultAsync(
+            ct => _mediator.Send(command, ct),
+            cancellationToken);
     }
 }

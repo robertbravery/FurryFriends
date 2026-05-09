@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace FurryFriends.Web.Endpoints.TimeslotEndpoints.Timeslot;
 
-public class CreateTimeslotValidator : AbstractValidator<CreateTimeslotRequest>
+public class CreateTimeslotValidator : Validator<CreateTimeslotRequest>
 {
     public CreateTimeslotValidator()
     {

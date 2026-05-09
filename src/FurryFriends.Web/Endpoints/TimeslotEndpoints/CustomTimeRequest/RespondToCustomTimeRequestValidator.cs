@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace FurryFriends.Web.Endpoints.TimeslotEndpoints.CustomTimeRequest;
 
-public class RespondToCustomTimeRequestValidator : AbstractValidator<RespondToCustomTimeRequestRequest>
+public class RespondToCustomTimeRequestValidator : Validator<RespondToCustomTimeRequestRequest>
 {
     private static readonly string[] ValidResponses = { "Accept", "Decline", "CounterOffer" };
 
@@ -38,7 +36,7 @@ public class RespondToCustomTimeRequestValidator : AbstractValidator<RespondToCu
             RuleFor(x => x.CounterOfferedTime)
                 .NotEmpty()
                 .WithMessage("Counter-offered time is required when counter-offering.");
-                
+
             RuleFor(x => x.Reason)
                 .NotEmpty()
                 .WithMessage("Reason is required when counter-offering.");

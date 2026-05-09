@@ -1,15 +1,20 @@
 using FurryFriends.UseCases.Domain.Bookings.Command;
+using FurryFriends.Web.Endpoints.Base;
 
 namespace FurryFriends.Web.Endpoints.BookingEndpoints.Cancel;
 
-public class CancelBooking(IMediator Mediator)
-  : Endpoint<CancelBookingRequest, Result<CancelBookingResponse>>
+public class CancelBookingEndpoint : BaseEndpoint<CancelBookingRequest, CancelBookingResponse>
 {
+  public CancelBookingEndpoint(IMediator mediator, ILogger<CancelBookingEndpoint> logger)
+      : base(mediator, logger) { }
+
+  protected override string OperationName => "CancelBooking";
+
   public override void Configure()
   {
     Post(CancelBookingRequest.Route);
     AllowAnonymous();
-    Options(o => o.WithName("CancelBooking_" + Guid.NewGuid().ToString())); // Ensure unique name
+    Options(o => o.WithName("CancelBooking"));
 
     Summary(s =>
     {
@@ -20,44 +25,29 @@ public class CancelBooking(IMediator Mediator)
 
   public override async Task HandleAsync(CancelBookingRequest request, CancellationToken cancellationToken)
   {
+    _logger.LogInformation(
+        "Cancelling booking {BookingId}, Reason: {Reason}",
+        request.BookingId,
+        request.Reason);
+
     var cancelCommand = new CancelBookingCommand(
-      request.BookingId,
-      request.Reason,
-      request.CancelledBy,
-      request.AdditionalNotes
+        request.BookingId,
+        request.Reason,
+        request.CancelledBy,
+        request.AdditionalNotes
     );
 
-    var result = await Mediator.Send(cancelCommand, cancellationToken);
+    var result = await _mediator.Send(cancelCommand, cancellationToken);
 
     if (result.IsSuccess)
     {
       Response = Result<CancelBookingResponse>.Success(
-        new CancelBookingResponse(true, "Booking cancelled successfully", request.BookingId));
+          new CancelBookingResponse(true, "Booking cancelled successfully", request.BookingId));
       return;
     }
 
-    // Handle errors
-    await HandleResultErrorsAsync(result, cancellationToken);
-  }
+    AddResultErrors(result);
 
-  private async Task HandleResultErrorsAsync(Result result, CancellationToken cancellationToken)
-  {
-    if (result.ValidationErrors?.Any() == true)
-    {
-      foreach (var error in result.ValidationErrors)
-      {
-        AddError(error.ErrorMessage);
-      }
-    }
-
-    if (result.Errors?.Any() == true)
-    {
-      foreach (var error in result.Errors)
-      {
-        AddError(error);
-      }
-    }
-
-    await SendErrorsAsync(result.IsSuccess ? StatusCodes.Status500InternalServerError : StatusCodes.Status400BadRequest, cancellationToken);
+    await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
   }
 }
