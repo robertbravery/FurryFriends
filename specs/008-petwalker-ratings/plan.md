@@ -33,6 +33,12 @@
 ## Summary
 Implement per-petwalker rating system replacing the current per-booking system. Ratings are submitted per petwalker (not per booking), with eligibility based on having at least one completed booking. PetWalker entity gets denormalized AverageRating and TotalRatingsCount fields updated via domain events. One active rating per client per petwalker, with new ratings replacing previous ones (subject to ratings ≤ bookings rule).
 
+**UI/UX Updates (Blazor)**:
+- Refactored `PetWalkerViewPopup.razor` from a long scrolling layout to a premium tabbed layout containing three tabs: "About", "Schedule & Areas", and "Reviews".
+- Relocated "Write a Review" and rating list to the dedicated "Reviews" tab.
+- Integrated a fast-access "Write a Review" secondary CTA and interactive star rating details link directly in the profile header, allowing users to jump straight to the reviews and open the submission form.
+- Rendered the `RatingSubmission` form conditionally (inline toggled) to maximize readability, collapsing it automatically upon successful rating submission.
+
 ## Technical Context
 **Language/Version**: .NET 9 (FurryFriends standard)
 **Primary Dependencies**:
@@ -286,10 +292,10 @@ New domain events (RatingAdded, RatingUpdated, RatingRemoved) will be added to P
 **Phase Status**:
 - [x] Phase 0: Research complete (/plan command)
 - [x] Phase 1: Design complete (/plan command)
-- [ ] Phase 2: Task planning complete (/plan command - describe approach only)
-- [ ] Phase 3: Tasks generated (/tasks command)
-- [ ] Phase 4: Implementation complete
-- [ ] Phase 5: Validation passed
+- [x] Phase 2: Task planning complete (/plan command - describe approach only)
+- [x] Phase 3: Tasks generated (/tasks command)
+- [x] Phase 4: Implementation complete
+- [x] Phase 5: Validation passed
 
 **Gate Status**:
 - [x] Initial Constitution Check: PASS

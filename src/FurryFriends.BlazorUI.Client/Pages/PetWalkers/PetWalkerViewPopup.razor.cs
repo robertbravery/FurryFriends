@@ -56,6 +56,18 @@ public partial class PetWalkerViewPopup
     private bool _isLoadingRatings;
     private string? _ratingsError;
 
+    // Tab state
+    private string ActiveTab { get; set; } = "about";
+    private bool ShowRatingForm { get; set; } = false;
+
+    private void SwitchTab(string tabName) => ActiveTab = tabName;
+    
+    private void ToggleRatingForm() 
+    {
+        ActiveTab = "reviews";
+        ShowRatingForm = !ShowRatingForm;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await LoadPetWalkerData();
@@ -163,6 +175,7 @@ public partial class PetWalkerViewPopup
         await LoadRatingSummary();
         _ratingsCurrentPage = 1;
         await LoadRatingsAsync();
+        ShowRatingForm = false; // Hide form after successful submission
         StateHasChanged();
     }
 

@@ -89,6 +89,7 @@ Update endpoints in `FurryFriends.Web/Endpoints/RatingEndpoints/`:
    - `RatingSubmission.razor` - Submit/edit ratings
    - `PetWalkerRatings.razor` - Display all ratings
    - `RatingDisplay.razor` - Star rating component
+   - `PetWalkerViewPopup.razor` - Refactored into a modern tabbed layout (About, Schedule & Areas, Reviews) with a prominent "Write a Review" button in the header and toggleable inline rating submission.
 
 ---
 

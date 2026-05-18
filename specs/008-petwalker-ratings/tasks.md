@@ -71,6 +71,7 @@
 - [x] T037 [P] [US1] Create reusable RatingDisplay component (stars, average, total count, "No ratings yet" for zero) in `src/FurryFriends.BlazorUI/Components/Common/RatingDisplay.razor` + `.razor.cs` + `.razor.css`
 - [x] T038 [P] [US1] Create RatingSubmission component (score 1-5 selector, optional comment textarea, validation feedback, submit/save/delete actions) in `src/FurryFriends.BlazorUI/Components/Pages/Ratings/RatingSubmission.razor` + `.razor.cs` + `.razor.css`
 - [x] T039 [P] [US1] Create PetWalkerRatings component (paginated rating list, individual rating details) in `src/FurryFriends.BlazorUI/Components/Pages/Ratings/PetWalkerRatings.razor` + `.razor.cs` + `.razor.css`
+- [x] T039b [US1] Refactor PetWalkerViewPopup to use a tabbed layout (About, Schedule & Areas, Reviews) to accommodate ratings cleanly without excessive scrolling. Add "Write a Review" button in profile header in `src/FurryFriends.BlazorUI.Client/Pages/PetWalkers/PetWalkerViewPopup.razor`
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
