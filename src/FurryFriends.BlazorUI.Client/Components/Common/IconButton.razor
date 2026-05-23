@@ -1,0 +1,60 @@
+@* IconButton - Vector action button with FontAwesome icon, tooltip, and hover effects *@
+
+<button class="icon-button @SizeClass @ColorClass @GetCustomColorClass()" title="@Title" disabled="@Disabled"
+        @onclick="OnClickHandler" aria-label="@Title">
+    <i class="@IconClass" aria-hidden="true"></i>
+</button>
+
+@code {
+    [Parameter]
+    public string IconClass { get; set; } = "fa-solid fa-circle";
+
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; } = false;
+
+    [Parameter]
+    public IconButtonSize Size { get; set; } = IconButtonSize.Medium;
+
+    [Parameter]
+    public IconButtonColor Color { get; set; } = IconButtonColor.Default;
+
+    [Parameter]
+    public string? CustomColor { get; set; }
+
+    private string SizeClass => Size switch
+    {
+        IconButtonSize.Small => "small",
+        IconButtonSize.Medium => "medium",
+        IconButtonSize.Large => "large",
+        _ => "medium"
+    };
+
+    private string ColorClass => Color switch
+    {
+        IconButtonColor.Primary => "primary",
+        IconButtonColor.Success => "success",
+        IconButtonColor.Danger => "danger",
+        IconButtonColor.Warning => "warning",
+        IconButtonColor.Info => "info",
+        _ => ""
+    };
+
+    private string GetCustomColorClass()
+    {
+        return string.IsNullOrEmpty(CustomColor) ? "" : "custom-color";
+    }
+
+    private async Task OnClickHandler()
+    {
+        if (!Disabled)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}

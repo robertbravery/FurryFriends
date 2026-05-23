@@ -4,16 +4,6 @@
 @using FurryFriends.BlazorUI.Client.Pages.PetWalkers
 @inject NavigationManager NavigationManager
 
-@code {
-    private void NavigateToHome()
-    {
-        NavigationManager.NavigateTo("/");
-    }
-}
-
-@* <link rel="stylesheet" href="MainLayout.Razor.css" /> *@
-
-
 <div class="app-layout">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -22,7 +12,7 @@
                 <span class="logo-icon">🐾</span> Furry Friends
             </a>
         </div>
-		<NavMenu />
+        <NavMenu />
         <div class="sidebar-footer">
             Version 1.0.0
         </div>
@@ -32,15 +22,46 @@
     <div class="main-content">
         <!-- Top Header -->
         <header class="top-header">
+            <div class="header-search">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" placeholder="Search dashboard..." disabled />
+                <span class="search-badge">Ctrl K</span>
+            </div>
             <div class="header-actions">
-                 <!-- Placeholder Icons -->
-                <span class="icon-button">🔔<sup>1</sup></span>
-                <div class="user-menu">
+                <!-- Notification Tray -->
+                <div class="notification-badge">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="badge-count pulse">3</span>
+                </div>
+
+                <!-- Profile Dropdown -->
+                <div class="user-menu" @onclick="ToggleProfileDropdown" @onclick:preventDefault="true">
                     <div class="user-avatar">RB</div>
                     <span class="user-name">Robert Bravery</span>
-                     <span class="icon-button">▼</span>
+                    <i class="fa-solid fa-angle-down dropdown-arrow"></i>
                 </div>
-                <span class="icon-button">➡️</span> <!-- Logout placeholder -->
+
+                <!-- Profile Dropdown Menu -->
+                <div class="profile-dropdown @(_profileDropdownOpen ? "open" : "")">
+                    <div class="profile-dropdown-item">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </div>
+                    <div class="profile-dropdown-item">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </div>
+                    <div class="profile-dropdown-divider"></div>
+                    <div class="profile-dropdown-item" title="Log Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Sign Out</span>
+                    </div>
+                </div>
+
+                <!-- Logout Action -->
+                <div class="icon-button logout-btn" title="Log Out">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
             </div>
         </header>
 
@@ -58,3 +79,17 @@
         <ManagePetWalkerPhotosPopup />
     </div>
 </div>
+
+@code {
+    private bool _profileDropdownOpen = false;
+
+    private void NavigateToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void ToggleProfileDropdown()
+    {
+        _profileDropdownOpen = !_profileDropdownOpen;
+    }
+}

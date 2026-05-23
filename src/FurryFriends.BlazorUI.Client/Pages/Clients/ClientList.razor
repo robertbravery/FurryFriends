@@ -13,77 +13,83 @@
             <p>View and manage all your clients.</p>
         </div>
         <button class="btn btn-primary add-client-btn" @onclick="OpenCreatePopup">
-            <span class="add-icon">+</span> Add New Client
+            <i class="fa-solid fa-plus"></i> Add New Client
         </button>
     </div>
 
     @if (isLoading)
     {
-        <div class="loading-indicator">
-            <p><em>Loading client list...</em></p>
-        </div>
+        <SkeletonLoader Type="SkeletonType.Table" Rows="5" Columns="4" />
     }
     else if (errorMessage != null)
     {
         <div class="alert alert-danger">
-            <p>@errorMessage</p>
-            <button class="btn btn-primary mt-2" @onclick="LoadClients">Retry</button>
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>@errorMessage</span>
+            <button class="btn btn-sm btn-primary mt-2" @onclick="LoadClients">Retry</button>
         </div>
     }
     else if (clients == null || clients.Count == 0)
     {
-        <div class="alert alert-info">
-            <p>No clients found.</p>
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fa-solid fa-users-slash"></i>
+            </div>
+            <h3>No Clients Found</h3>
+            <p>Get started by adding your first client.</p>
+            <button class="btn btn-primary" @onclick="OpenCreatePopup">
+                <i class="fa-solid fa-plus"></i> Add New Client
+            </button>
         </div>
     }
     else
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
-                    <th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
-                    <th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
-                    <th style="background-color:#e9ecef; text-transform:uppercase;">Pets</th>
-                    <th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var client in clients)
-                {
-                    <tr style="@(clients.IndexOf(client) % 2 == 0 ? "background-color:#f8f9fa;" : "")">
-                        <td>@client.FullName</td>
-                        <td>@client.EmailAddress</td>
-                        <td>@client.City</td>
-                        <td>@client.TotalPets</td>
-                        <td style="display: flex; gap: 10px;">
-                            <button class="btn btn-link p-0" style="color:brown;"
-                                @onclick="() => OpenViewPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>👁️</button>
-                            <span style="color:steelblue; cursor:pointer">+🐾</span>
-							<button class="btn btn-link p-0" style="color:lightcoral;"
-									@onclick="() => OpenEditPopup(client.EmailAddress)" @onclick:preventDefault @onclick:stopPropagation>
-								✏️
-							</button>
-                        </td>
+        <div class="data-table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>City</th>
+                        <th>Pets</th>
+                        <th class="actions">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var client in clients)
+                    {
+                        <tr>
+                            <td>
+                                <span class="client-name">@client.FullName</span>
+                            </td>
+                            <td>
+                                <span class="client-email">@client.EmailAddress</span>
+                            </td>
+                            <td>@client.City</td>
+                            <td>
+                                <span class="status-chip info">@client.TotalPets</span>
+                            </td>
+                            <td class="actions-cell">
+                                <IconButton IconClass="fa-solid fa-eye" Title="View Client" Color="IconButtonColor.Primary"
+                                            Size="IconButtonSize.Small" OnClick="() => OpenViewPopup(client.EmailAddress)" />
+                                <IconButton IconClass="fa-solid fa-paw" Title="Add Pet" Color="IconButtonColor.Success"
+                                            Size="IconButtonSize.Small" OnClick="() => OpenEditPopup(client.EmailAddress)" />
+                                <IconButton IconClass="fa-solid fa-pen-to-square" Title="Edit Client"
+                                            Color="IconButtonColor.Warning" Size="IconButtonSize.Small"
+                                            OnClick="() => OpenEditPopup(client.EmailAddress)" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 
     @if (clients is not null)
     {
         <!-- Pagination Controls -->
-        <Pagination
-            CurrentPage="@currentPage"
-            PageSize="@pageSize"
-            TotalCount="@totalCount"
-            TotalPages="@totalPages"
-            HasPreviousPage="@hasPreviousPage"
-            HasNextPage="@hasNextPage"
-            OnPageChanged="@HandlePageChanged"
-            OnPageSizeChanged="@HandlePageSizeChanged" />
+        <Pagination CurrentPage="@currentPage" PageSize="@pageSize" TotalCount="@totalCount" TotalPages="@totalPages"
+                    HasPreviousPage="@hasPreviousPage" HasNextPage="@hasNextPage" OnPageChanged="@HandlePageChanged"
+                    OnPageSizeChanged="@HandlePageSizeChanged" />
     }
 </div>
-
-

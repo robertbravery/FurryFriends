@@ -49,7 +49,7 @@ public partial class BookingManagement
   protected override async Task OnInitializedAsync()
   {
     Logger.LogInformation("INIT: BookingManagement page initialized with ClientId: {ClientId}", ClientId);
-    Logger.LogInformation("INIT: Page route is /bookings or /bookings/new - showBookingForm will be: {ShowForm}", 
+    Logger.LogInformation("INIT: Page route is /bookings or /bookings/new - showBookingForm will be: {ShowForm}",
       ClientId.HasValue);
 
     if (ClientId.HasValue)
@@ -80,7 +80,7 @@ public partial class BookingManagement
     if (petWalkerId.HasValue)
     {
       Logger.LogInformation("PARAM SET: petWalkerId found in URL - {PetWalkerId}", petWalkerId.Value);
-      
+
       // If pet walkers are already loaded, try to find and select the pet walker
       if (availablePetWalkers != null && availablePetWalkers.Any())
       {
@@ -111,7 +111,7 @@ public partial class BookingManagement
     {
       isLoadingPetWalkers = true;
       errorMessage = null;
-      Logger.LogInformation("LOAD PETWALKERS: Starting to load pet walkers - Page: {Page}, PageSize: {PageSize}", 
+      Logger.LogInformation("LOAD PETWALKERS: Starting to load pet walkers - Page: {Page}, PageSize: {PageSize}",
         _currentRequest.Page, _currentRequest.PageSize);
       StateHasChanged();
 
@@ -165,7 +165,7 @@ public partial class BookingManagement
     finally
     {
       isLoadingPetWalkers = false;
-      Logger.LogInformation("LOAD PETWALKERS COMPLETE: availablePetWalkers count: {Count}, errorMessage: {Error}", 
+      Logger.LogInformation("LOAD PETWALKERS COMPLETE: availablePetWalkers count: {Count}, errorMessage: {Error}",
         availablePetWalkers?.Count ?? 0, errorMessage ?? "none");
       StateHasChanged();
     }
@@ -200,12 +200,16 @@ public partial class BookingManagement
   {
     try
     {
-      Logger.LogInformation("START BOOKING: New Booking button clicked. Current state - showBookingForm: {ShowForm}, selectedPetWalker: {Selected}", 
+      Logger.LogInformation("START BOOKING: New Booking button clicked. Current state - showBookingForm: {ShowForm}, selectedPetWalker: {Selected}",
         showBookingForm, selectedPetWalker?.FullName ?? "null");
-      
+
       showBookingForm = false;  // This will show pet walker selection (not form)
       selectedPetWalker = null;
       ClientId = null;
+
+      Logger.LogInformation("START BOOKING: Forcing state update before navigation");
+      StateHasChanged();
+
       Logger.LogInformation("START BOOKING: Navigating to /bookings/new. showBookingForm will be: {ShowForm}", showBookingForm);
       Navigation.NavigateTo("/bookings/new");
     }
@@ -262,7 +266,7 @@ public partial class BookingManagement
   {
     try
     {
-      Logger.LogInformation("PROCEED TO BOOKING: Book Now button clicked. selectedPetWalker: {PetWalkerId} - {PetWalkerName}", 
+      Logger.LogInformation("PROCEED TO BOOKING: Book Now button clicked. selectedPetWalker: {PetWalkerId} - {PetWalkerName}",
         selectedPetWalker?.Id, selectedPetWalker?.FullName ?? "null");
 
       if (selectedPetWalker == null)
@@ -289,6 +293,7 @@ public partial class BookingManagement
     Logger.LogInformation("User requested to change pet walker");
     showBookingForm = false;
     selectedPetWalker = null;
+    StateHasChanged();
     Navigation.NavigateTo("/bookings/new");
   }
 

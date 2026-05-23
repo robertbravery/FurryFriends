@@ -1,35 +1,140 @@
 ﻿.client-list-container {
-    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .client-list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--space-6);
+}
+
+.client-list-header h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--neutral-900);
+    margin-bottom: var(--space-1);
+}
+
+.client-list-header p {
+    color: var(--neutral-400);
+    font-size: var(--font-size-md);
+    margin: 0;
 }
 
 .add-client-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Table overrides */
+.data-table tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+.data-table td {
+    font-size: var(--font-size-sm);
+    color: var(--neutral-700);
+}
+
+.client-name {
+    font-weight: 500;
+    color: var(--neutral-800);
+}
+
+.client-email {
+    color: var(--neutral-500);
+    font-size: var(--font-size-xs);
+}
+
+/* Actions cell */
+.actions-cell {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 8px 16px;
-    font-weight: 500;
+    justify-content: flex-end;
+    gap: var(--space-1);
 }
 
-.add-icon {
+/* Empty state */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border-color);
+    min-height: 300px;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: var(--neutral-300);
+    margin-bottom: var(--space-4);
+}
+
+.empty-state h3 {
+    font-size: var(--font-size-xl);
+    color: var(--neutral-700);
+    margin-bottom: var(--space-2);
+}
+
+.empty-state p {
+    color: var(--neutral-400);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-6);
+    max-width: 400px;
+}
+
+/* Alert styling */
+.alert {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+}
+
+.alert-danger {
+    background-color: var(--danger-50);
+    border: 1px solid var(--danger-100);
+    color: var(--danger-700);
+}
+
+.alert-danger i {
+    margin-bottom: var(--space-2);
     font-size: 1.2rem;
-    font-weight: bold;
 }
 
-::deep body {
-    background-image: url("../images/catongrass.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
-}
+/* Responsive */
+@media (max-width: 768px) {
+    .client-list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-4);
+    }
 
-/* Pagination styles moved to Pagination.razor.css */
+    .add-client-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .data-table th:nth-child(3),
+    .data-table td:nth-child(3),
+    .data-table th:nth-child(4),
+    .data-table td:nth-child(4) {
+        display: none;
+    }
+}

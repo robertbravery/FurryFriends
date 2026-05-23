@@ -1,0 +1,66 @@
+@* SkeletonLoader - Pulsing placeholder that mimics the layout of loading content *@
+
+@if (Type == SkeletonType.Table)
+{
+    <div class="skeleton-table">
+        @* Header row *@
+        <div class="skeleton-row skeleton-header-row">
+            @for (int col = 0; col < Columns; col++)
+            {
+                <div class="skeleton-cell skeleton-pulse" style="width: @GetHeaderWidth(col)"></div>
+            }
+        </div>
+        @* Data rows *@
+        @for (int row = 0; row < Rows; row++)
+        {
+            <div class="skeleton-row">
+                @for (int colData = 0; colData < Columns; colData++)
+                {
+                    <div class="skeleton-cell skeleton-pulse" style="width: @GetColumnWidth(colData, row)"></div>
+                }
+            </div>
+        }
+    </div>
+}
+else if (Type == SkeletonType.Card)
+{
+    <div class="skeleton-card-grid">
+        @for (int i = 0; i < Count; i++)
+        {
+            <div class="skeleton-card">
+                <div class="skeleton-card-image skeleton-pulse"></div>
+                <div class="skeleton-card-body">
+                    <div class="skeleton-card-title skeleton-pulse"></div>
+                    <div class="skeleton-card-text skeleton-pulse"></div>
+                    <div class="skeleton-card-text skeleton-pulse" style="width: 60%"></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public SkeletonType Type { get; set; } = SkeletonType.Table;
+
+    [Parameter]
+    public int Rows { get; set; } = 5;
+
+    [Parameter]
+    public int Columns { get; set; } = 4;
+
+    [Parameter]
+    public int Count { get; set; } = 3;
+
+    private string GetHeaderWidth(int colIndex)
+    {
+        return colIndex == Columns - 1 ? "80%" : "95%";
+    }
+
+    private string GetColumnWidth(int colIndex, int rowIndex)
+    {
+        var widths = new[] { "85%", "90%", "70%", "75%", "60%", "80%", "65%", "55%" };
+        var idx = (rowIndex * Columns + colIndex) % widths.Length;
+        return widths[idx];
+    }
+}
