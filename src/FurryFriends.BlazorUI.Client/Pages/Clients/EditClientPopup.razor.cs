@@ -145,7 +145,8 @@ public partial class EditClientPopup
   private async Task HandleAddPet(string clientEmail)
   {
     // If the client has an ID, we can use it to add a pet
-    if (clientModel != null && !string.IsNullOrEmpty(clientEmail) && clientId != Guid.Empty)
+    var effectiveClientId = clientModel?.Id ?? Guid.Empty;
+    if (clientModel != null && !string.IsNullOrEmpty(clientEmail) && effectiveClientId != Guid.Empty)
     {
       // Use Task.Run to ensure the UI thread is not blocked
       await Task.Run(async () =>
@@ -155,11 +156,12 @@ public partial class EditClientPopup
 
         // Update the state on the UI thread
         await InvokeAsync(() =>
-                  {
-                    // Show the add pet popup
-                    showAddPetPopup = true;
-                    StateHasChanged();
-                  });
+          {
+            // Show the add pet popup
+            clientId = effectiveClientId;
+            showAddPetPopup = true;
+            StateHasChanged();
+          });
       });
     }
   }

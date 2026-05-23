@@ -1,0 +1,119 @@
+/* ==============================================
+   IconButton — Vector action button
+   ============================================== */
+
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    color: var(--neutral-400);
+    position: relative;
+    overflow: hidden;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.icon-button:hover:not(:disabled) {
+    background-color: var(--neutral-100);
+    color: var(--neutral-700);
+    transform: scale(1.1);
+}
+
+.icon-button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.icon-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Focus ring for accessibility */
+.icon-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* ==============================================
+   Sizes
+   ============================================== */
+
+.icon-button.small {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+}
+
+.icon-button.medium {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+}
+
+.icon-button.large {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+}
+
+/* ==============================================
+   Color Variants
+   ============================================== */
+
+.icon-button.primary {
+    color: var(--primary-color);
+}
+
+.icon-button.primary:hover:not(:disabled) {
+    background-color: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.icon-button.success {
+    color: var(--success-color);
+}
+
+.icon-button.success:hover:not(:disabled) {
+    background-color: var(--success-50);
+    color: var(--success-700);
+}
+
+.icon-button.danger {
+    color: var(--danger-color);
+}
+
+.icon-button.danger:hover:not(:disabled) {
+    background-color: var(--danger-50);
+    color: var(--danger-700);
+}
+
+.icon-button.warning {
+    color: var(--warning-color);
+}
+
+.icon-button.warning:hover:not(:disabled) {
+    background-color: var(--warning-50);
+    color: var(--warning-700);
+}
+
+.icon-button.info {
+    color: var(--info-color);
+}
+
+.icon-button.info:hover:not(:disabled) {
+    background-color: var(--info-50);
+}
+
+/* Custom color via inline style (fallback) */
+.icon-button.custom-color:hover:not(:disabled) {
+    background-color: var(--neutral-100);
+}

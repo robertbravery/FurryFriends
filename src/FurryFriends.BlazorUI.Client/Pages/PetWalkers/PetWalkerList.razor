@@ -21,71 +21,82 @@
 			<p>View and manage all the Petwalkers.</p>
 		</div>
 		<button class="btn btn-primary add-petwalker-btn">
-			<span class="add-icon">+</span> Add New Petwalker
+			<i class="fa-solid fa-plus"></i> Add New Petwalker
 		</button>
 	</div>
 
 	@if (isLoading)
 	{
-		<div class="loading-indicator">
-			<p><em>Loading pet walker list...</em></p>
-		</div>
+		<SkeletonLoader Type="SkeletonType.Table" Rows="5" Columns="6" />
 	}
 	else if (errorMessage != null)
 	{
 		<div class="alert alert-danger">
-			<p>@errorMessage</p>
-			<button class="btn btn-primary mt-2" @onclick="LoadPetWalkers">Retry</button>
+			<i class="fa-solid fa-circle-exclamation"></i>
+			<span>@errorMessage</span>
+			<button class="btn btn-sm btn-primary mt-2" @onclick="LoadPetWalkers">Retry</button>
 		</div>
 	}
 	else if (petWalkers == null || petWalkers.Count == 0)
 	{
-		<div class="alert alert-info">
-			<p>No pet walkers found.</p>
+		<div class="empty-state">
+			<div class="empty-state-icon">
+				<i class="fa-solid fa-person-walking"></i>
+			</div>
+			<h3>No Pet Walkers Found</h3>
+			<p>There are no pet walkers registered yet.</p>
 		</div>
 	}
 	else
 	{
-		<table class="table">
-			<thead>
-				<tr>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Name</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Email</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">City</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Service Areas</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Phone Number</th>
-					<th style="background-color:#e9ecef; text-transform:uppercase;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var petWalker in petWalkers)
-				{
-					<tr key="@petWalker.Id"> @* Add key for better Blazor diffing *@
-						<td>@petWalker.Name</td>
-						<td>@petWalker.EmailAddress</td>
-						<td>@petWalker.City</td>
-						<td>@petWalker.Location</td>
-						<td>@FormatPhoneNumber(petWalker.PhoneNumber)</td>
-						<td style="display: flex; gap: 10px;">
-							<button class="btn btn-link p-0" style="color:brown;" @onclick="() => OpenViewPopup(petWalker.EmailAddress)" title="View Pet Walker">👁️</button>
-							<button class="btn btn-link p-0" style="color:lightcoral;" @onclick="() => OpenEditPopup(petWalker.EmailAddress)" title="Edit Pet Walker">✏️</button>
-							<button class="btn btn-link p-0" style="color:dodgerblue;" @onclick="() => OpenManagePhotosPopup(petWalker.Id)" title="Manage Photos">🖼️</button>
-						</td>
+		<div class="data-table-container">
+			<table class="data-table">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Email</th>
+						<th>City</th>
+						<th>Service Areas</th>
+						<th>Phone Number</th>
+						<th class="actions">Actions</th>
 					</tr>
-				}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					@foreach (var petWalker in petWalkers)
+					{
+						<tr key="@petWalker.Id">
+							<td>
+								<span class="walker-name">@petWalker.Name</span>
+							</td>
+							<td>
+								<span class="walker-email">@petWalker.EmailAddress</span>
+							</td>
+							<td>@petWalker.City</td>
+							<td>
+								<span class="walker-location">@petWalker.Location</span>
+							</td>
+							<td>
+								<span class="walker-phone">@FormatPhoneNumber(petWalker.PhoneNumber)</span>
+							</td>
+							<td class="actions-cell">
+								<IconButton IconClass="fa-solid fa-eye" Title="View Pet Walker" Color="IconButtonColor.Primary"
+											Size="IconButtonSize.Small" OnClick="() => OpenViewPopup(petWalker.EmailAddress)" />
+								<IconButton IconClass="fa-solid fa-pen-to-square" Title="Edit Pet Walker"
+											Color="IconButtonColor.Warning" Size="IconButtonSize.Small"
+											OnClick="() => OpenEditPopup(petWalker.EmailAddress)" />
+								<IconButton IconClass="fa-solid fa-image" Title="Manage Photos" Color="IconButtonColor.Info"
+											Size="IconButtonSize.Small" OnClick="() => OpenManagePhotosPopup(petWalker.Id)" />
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
 
 		<!-- Pagination Controls -->
-		<Pagination
-			CurrentPage="@currentPage"
-			PageSize="@pageSize"
-			TotalCount="@totalCount"
-			TotalPages="@totalPages"
-			HasPreviousPage="@hasPreviousPage"
-			HasNextPage="@hasNextPage"
-			OnPageChanged="@HandlePageChanged"
-			OnPageSizeChanged="@HandlePageSizeChanged" />
+		<Pagination CurrentPage="@currentPage" PageSize="@pageSize" TotalCount="@totalCount" TotalPages="@totalPages"
+					HasPreviousPage="@hasPreviousPage" HasNextPage="@hasNextPage" OnPageChanged="@HandlePageChanged"
+					OnPageSizeChanged="@HandlePageSizeChanged" />
 	}
 </div>
 
@@ -180,21 +191,21 @@
 			: phoneNumber;
 	}
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        PopupService.OnCloseEditPetWalkerPopup += HandleEditPopupClosed;
-    }
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		PopupService.OnCloseEditPetWalkerPopup += HandleEditPopupClosed;
+	}
 
-    public void Dispose()
-    {
-        PopupService.OnCloseEditPetWalkerPopup -= HandleEditPopupClosed;
-    }
+	public void Dispose()
+	{
+		PopupService.OnCloseEditPetWalkerPopup -= HandleEditPopupClosed;
+	}
 
-    private void OpenEditPopup(string petWalkerEmail)
-    {
-        PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
-    }
+	private void OpenEditPopup(string petWalkerEmail)
+	{
+		PopupService.ShowEditPetWalkerPopup(petWalkerEmail);
+	}
 
 	private void OpenManagePhotosPopup(Guid petWalkerId)
 	{
@@ -203,15 +214,15 @@
 		Logger.LogDebug("ShowManagePetWalkerPhotosPopup service method called successfully");
 	}
 
-    private async void HandleEditPopupClosed()
-    {
-        await RefreshGrid();
-        StateHasChanged();
-    }
+	private async void HandleEditPopupClosed()
+	{
+		await RefreshGrid();
+		StateHasChanged();
+	}
 
-    private async Task RefreshGrid()
-    {
-        await LoadPetWalkers();
-        StateHasChanged();
-    }
+	private async Task RefreshGrid()
+	{
+		await LoadPetWalkers();
+		StateHasChanged();
+	}
 }
