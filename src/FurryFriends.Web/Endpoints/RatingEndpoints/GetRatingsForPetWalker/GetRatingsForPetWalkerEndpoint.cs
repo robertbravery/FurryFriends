@@ -1,15 +1,14 @@
-using Ardalis.Result;
-using FurryFriends.UseCases.Rating.GetRatingsForPetWalker;
+using FurryFriends.UseCases.Domain.Ratings.GetRatingsForPetWalker;
 using FurryFriends.Web.Endpoints.Base;
-using FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 
-public class GetRatingsForPetWalkerEndpoint(IMediator mediator, ILogger<GetRatingsForPetWalkerEndpoint> logger)
-    : Endpoint<GetRatingsForPetWalkerRequest, Result<List<GetRatingsForPetWalkerResponse>>>
+public class GetRatingsForPetWalkerEndpoint : BaseEndpoint<GetRatingsForPetWalkerRequest, List<GetRatingsForPetWalkerResponse>>
 {
-    private readonly IMediator _mediator = mediator;
-    private readonly ILogger<GetRatingsForPetWalkerEndpoint> _logger = logger;
+    public GetRatingsForPetWalkerEndpoint(IMediator mediator, ILogger<GetRatingsForPetWalkerEndpoint> logger)
+        : base(mediator, logger) { }
+
+    protected override string OperationName => "GetRatingsForPetWalker";
 
     public override void Configure()
     {
@@ -38,37 +37,22 @@ public class GetRatingsForPetWalkerEndpoint(IMediator mediator, ILogger<GetRatin
             request.Page,
             request.PageSize);
 
-        var result = await _mediator.Send(query, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            foreach (var error in result.Errors)
+        await HandleResultAsync(
+            ct => _mediator.Send(query, ct),
+            (List<RatingDto> ratings, CancellationToken ct) =>
             {
-                AddError(error);
-            }
+                var response = ratings.Select(r => new GetRatingsForPetWalkerResponse(
+                r.Id,
+                r.PetWalkerId,
+                r.ClientId,
+                r.RatingValue,
+                r.Comment,
+                r.CreatedAt,
+                r.UpdatedAt,
+                r.ClientName)).ToList();
 
-            if (result.Status == ResultStatus.NotFound)
-            {
-                await SendNotFoundAsync(cancellationToken);
-                return;
-            }
-
-            Response = Result.Error();
-            await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
-            return;
-        }
-
-        var ratings = result.Value.Select(r => new GetRatingsForPetWalkerResponse(
-            r.Id,
-            r.PetWalkerId,
-            r.ClientId,
-            r.BookingId,
-            r.RatingValue,
-            r.Comment,
-            r.CreatedDate,
-            r.ModifiedDate,
-            r.ClientName)).ToList();
-
-        Response = Result.Success(ratings);
+                return Task.FromResult(response);
+            },
+            cancellationToken);
     }
 }

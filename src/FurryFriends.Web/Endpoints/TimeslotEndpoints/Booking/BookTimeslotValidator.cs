@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace FurryFriends.Web.Endpoints.TimeslotEndpoints.Booking;
 
-public class BookTimeslotValidator : AbstractValidator<BookTimeslotRequest>
+public class BookTimeslotValidator : Validator<BookTimeslotRequest>
 {
     public BookTimeslotValidator()
     {

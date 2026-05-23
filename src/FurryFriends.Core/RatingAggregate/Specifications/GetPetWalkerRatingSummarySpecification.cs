@@ -1,6 +1,3 @@
-using Ardalis.Specification;
-using FurryFriends.Core.RatingAggregate;
-
 namespace FurryFriends.Core.RatingAggregate.Specifications;
 
 public class GetPetWalkerRatingSummarySpecification : Specification<Rating>
@@ -8,7 +5,7 @@ public class GetPetWalkerRatingSummarySpecification : Specification<Rating>
     public GetPetWalkerRatingSummarySpecification(Guid petWalkerId)
     {
         Query.Where(r => r.PetWalkerId == petWalkerId)
-            .OrderByDescending(r => r.CreatedDate)
+            .OrderByDescending(r => r.CreatedAt)
             .Take(10);
     }
 }

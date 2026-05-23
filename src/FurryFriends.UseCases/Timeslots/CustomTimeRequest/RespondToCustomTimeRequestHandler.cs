@@ -1,4 +1,3 @@
-using Ardalis.Result;
 using FurryFriends.Core.BookingAggregate.Enums;
 using FurryFriends.Core.TimeslotAggregate.Specifications;
 using Microsoft.Extensions.Logging;

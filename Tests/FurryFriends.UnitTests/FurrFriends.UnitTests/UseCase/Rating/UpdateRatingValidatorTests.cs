@@ -1,6 +1,6 @@
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using FurryFriends.UseCases.Rating.UpdateRating;
+using FurryFriends.UseCases.Domain.Ratings.UpdateRating;
 
 namespace FurrFriends.UnitTests.UseCase.Rating;
 

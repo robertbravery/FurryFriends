@@ -1,7 +1,5 @@
-﻿using Ardalis.SharedKernel;
-using FurryFriends.UseCases.Domain.PetWalkers.Dto;
+﻿using FurryFriends.UseCases.Domain.PetWalkers.Dto;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 

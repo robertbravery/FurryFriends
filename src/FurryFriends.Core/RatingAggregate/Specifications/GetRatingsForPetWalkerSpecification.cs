@@ -1,6 +1,3 @@
-using Ardalis.Specification;
-using FurryFriends.Core.RatingAggregate;
-
 namespace FurryFriends.Core.RatingAggregate.Specifications;
 
 public class GetRatingsForPetWalkerSpecification : Specification<Rating>, ISingleResultSpecification<Rating>
@@ -8,7 +5,7 @@ public class GetRatingsForPetWalkerSpecification : Specification<Rating>, ISingl
     public GetRatingsForPetWalkerSpecification(Guid petWalkerId)
     {
         Query.Where(r => r.PetWalkerId == petWalkerId)
-            .OrderByDescending(r => r.CreatedDate);
+            .OrderByDescending(r => r.CreatedAt);
     }
 }
 
@@ -17,7 +14,7 @@ public class GetRatingsForPetWalkerWithPaginationSpecification : Specification<R
     public GetRatingsForPetWalkerWithPaginationSpecification(Guid petWalkerId, int page, int pageSize)
     {
         Query.Where(r => r.PetWalkerId == petWalkerId)
-            .OrderByDescending(r => r.CreatedDate)
+            .OrderByDescending(r => r.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
     }
@@ -25,6 +22,6 @@ public class GetRatingsForPetWalkerWithPaginationSpecification : Specification<R
     public GetRatingsForPetWalkerWithPaginationSpecification(Guid petWalkerId)
     {
         Query.Where(r => r.PetWalkerId == petWalkerId)
-            .OrderByDescending(r => r.CreatedDate);
+            .OrderByDescending(r => r.CreatedAt);
     }
 }

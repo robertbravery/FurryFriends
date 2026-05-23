@@ -1,6 +1,6 @@
 ﻿namespace FurryFriends.Web.Endpoints.ClientEndpoints.Delete;
 
-public class DeleteClientRequestValidator : AbstractValidator<DeleteClientRequest>
+public class DeleteClientRequestValidator : Validator<DeleteClientRequest>
 {
   public DeleteClientRequestValidator()
   {

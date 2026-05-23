@@ -1,5 +1,4 @@
 ﻿﻿using FluentValidation;
-using Microsoft.AspNetCore.Http;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePhoto;
 
@@ -36,8 +35,8 @@ public class UpdatePhotoValidator : AbstractValidator<UpdatePhotoCommand>
 
   private bool BeValidImageType(string contentType)
   {
-    return contentType == "image/jpeg" || 
-           contentType == "image/png" || 
+    return contentType == "image/jpeg" ||
+           contentType == "image/png" ||
            contentType == "image/gif";
   }
 }

@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.Update;
 
 public class UpdateRatingValidator : Validator<UpdateRatingRequest>

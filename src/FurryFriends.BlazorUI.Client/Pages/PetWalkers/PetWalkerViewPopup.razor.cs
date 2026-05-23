@@ -22,6 +22,12 @@ public partial class PetWalkerViewPopup
     public IScheduleService ScheduleService { get; set; } = default!;
 
     [Inject]
+    public IRatingService RatingService { get; set; } = default!;
+
+    [Inject]
+    public IClientContextService ClientContextService { get; set; } = default!;
+
+    [Inject]
     public IJSRuntime JS { get; set; } = default!;
 
     [Inject]
@@ -30,6 +36,37 @@ public partial class PetWalkerViewPopup
     private PetWalkerDetailDto petWalkerModel = new();
     private bool isLoading = true;
     private string? loadError = null;
+    private RatingSummaryDto? ratingSummary;
+
+    // Client ID resolved from logged-in user context
+    private Guid _clientId;
+
+    // Rating summary display
+    public double AverageRating => ratingSummary?.AverageRating ?? 0;
+    public int TotalRatings => ratingSummary?.TotalRatings ?? 0;
+
+    // Ratings list state
+    private List<RatingDto> _ratings = new();
+    private int _ratingsCurrentPage = 1;
+    private const int RatingsPageSize = 10;
+    private int _ratingsTotalCount;
+    private int _ratingsTotalPages;
+    private bool _hasPreviousPage;
+    private bool _hasNextPage;
+    private bool _isLoadingRatings;
+    private string? _ratingsError;
+
+    // Tab state
+    private string ActiveTab { get; set; } = "about";
+    private bool ShowRatingForm { get; set; } = false;
+
+    private void SwitchTab(string tabName) => ActiveTab = tabName;
+    
+    private void ToggleRatingForm() 
+    {
+        ActiveTab = "reviews";
+        ShowRatingForm = !ShowRatingForm;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,8 +89,18 @@ public partial class PetWalkerViewPopup
                 petWalkerModel = response.Data;
                 loadError = null;
 
+                // Resolve client ID from logged-in user context
+                _clientId = await ClientContextService.GetCurrentClientIdAsync();
+                Logger.LogInformation("Resolved client ID: {ClientId} for PetWalker view", _clientId);
+
                 // Load schedule data
                 await LoadScheduleData(petWalkerModel.Id);
+
+                // Load rating summary
+                await LoadRatingSummary();
+
+                // Load paginated ratings list
+                await LoadRatingsAsync();
             }
             else
             {
@@ -106,6 +153,86 @@ public partial class PetWalkerViewPopup
             Logger.LogError(ex, "Error loading schedule data for PetWalker: {PetWalkerId}", petWalkerId);
             petWalkerModel.Schedules = new List<ScheduleItemDto>();
         }
+    }
+
+    private async Task LoadRatingSummary()
+    {
+        try
+        {
+            Logger.LogInformation("Loading rating summary for PetWalker: {PetWalkerId}", petWalkerModel.Id);
+            ratingSummary = await RatingService.GetRatingSummaryAsync(petWalkerModel.Id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading rating summary for PetWalker: {PetWalkerId}", petWalkerModel.Id);
+            ratingSummary = null;
+        }
+    }
+
+    public async Task HandleRatingSubmitted()
+    {
+        Logger.LogInformation("Rating submitted for PetWalker: {PetWalkerId}, refreshing summary and list", petWalkerModel.Id);
+        await LoadRatingSummary();
+        _ratingsCurrentPage = 1;
+        await LoadRatingsAsync();
+        ShowRatingForm = false; // Hide form after successful submission
+        StateHasChanged();
+    }
+
+    // --- Ratings list loading & pagination ---
+
+    public async Task LoadRatingsAsync()
+    {
+        if (petWalkerModel.Id == Guid.Empty) return;
+
+        try
+        {
+            _isLoadingRatings = true;
+            _ratingsError = null;
+            StateHasChanged();
+
+            Logger.LogInformation(
+                "Loading ratings list for PetWalker: {PetWalkerId}, Page: {Page}",
+                petWalkerModel.Id, _ratingsCurrentPage);
+
+            var result = await RatingService.GetRatingsAsync(petWalkerModel.Id, _ratingsCurrentPage, RatingsPageSize);
+
+            _ratings = result.Items;
+            _ratingsCurrentPage = result.PageNumber;
+            _ratingsTotalCount = result.TotalCount;
+            _ratingsTotalPages = result.TotalPages;
+            _hasPreviousPage = result.HasPreviousPage;
+            _hasNextPage = result.HasNextPage;
+
+            Logger.LogInformation(
+                "Loaded {Count} ratings for PetWalker: {PetWalkerId} (Page {Page}/{TotalPages})",
+                _ratings.Count, petWalkerModel.Id, _ratingsCurrentPage, _ratingsTotalPages);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading ratings for PetWalker: {PetWalkerId}", petWalkerModel.Id);
+            _ratingsError = "Failed to load ratings. Please try again later.";
+            _ratings = new List<RatingDto>();
+        }
+        finally
+        {
+            _isLoadingRatings = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task GoToPreviousPage()
+    {
+        if (!_hasPreviousPage) return;
+        _ratingsCurrentPage--;
+        await LoadRatingsAsync();
+    }
+
+    public async Task GoToNextPage()
+    {
+        if (!_hasNextPage) return;
+        _ratingsCurrentPage++;
+        await LoadRatingsAsync();
     }
 
     private string FormatPhoneNumber(string phoneNumber)

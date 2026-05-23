@@ -1,7 +1,5 @@
-﻿﻿using Ardalis.SharedKernel;
-using FurryFriends.UseCases.Services.PictureService;
+﻿﻿using FurryFriends.UseCases.Services.PictureService;
 using Microsoft.AspNetCore.Http;
-using System;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePhoto;
 

@@ -1,14 +1,14 @@
-using Ardalis.Result;
-using FurryFriends.UseCases.Rating.UpdateRating;
-using FurryFriends.Web.Endpoints.RatingEndpoints.Update;
+using FurryFriends.UseCases.Domain.Ratings.UpdateRating;
+using FurryFriends.Web.Endpoints.Base;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.Update;
 
-public class UpdateRatingEndpoint(IMediator mediator, ILogger<UpdateRatingEndpoint> logger)
-    : Endpoint<UpdateRatingRequest, Result<UpdateRatingResponse>>
+public class UpdateRatingEndpoint : BaseEndpoint<UpdateRatingRequest, UpdateRatingResponse>
 {
-    private readonly IMediator _mediator = mediator;
-    private readonly ILogger<UpdateRatingEndpoint> _logger = logger;
+    public UpdateRatingEndpoint(IMediator mediator, ILogger<UpdateRatingEndpoint> logger)
+        : base(mediator, logger) { }
+
+    protected override string OperationName => "UpdateRating";
 
     public override void Configure()
     {
@@ -29,36 +29,13 @@ public class UpdateRatingEndpoint(IMediator mediator, ILogger<UpdateRatingEndpoi
             request.RatingValue,
             request.Comment);
 
-        var result = await _mediator.Send(command, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            foreach (var error in result.Errors)
-            {
-                AddError(error);
-            }
-
-            if (result.Status == ResultStatus.NotFound)
-            {
-                await SendNotFoundAsync(cancellationToken);
-                return;
-            }
-
-            if (result.Status == ResultStatus.Invalid)
-            {
-                await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
-                return;
-            }
-
-            Response = Result.Error();
-            await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
-            return;
-        }
-
-        var ratingId = result.Value;
-        Response = Result.Success(new UpdateRatingResponse(
-            ratingId,
-            request.RatingValue,
-            request.Comment));
+        await HandleResultAsync(
+            ct => _mediator.Send(command, ct),
+            (Guid ratingId, CancellationToken ct) =>
+                Task.FromResult(new UpdateRatingResponse(
+                    ratingId,
+                    request.RatingValue,
+                    request.Comment)),
+            cancellationToken);
     }
 }

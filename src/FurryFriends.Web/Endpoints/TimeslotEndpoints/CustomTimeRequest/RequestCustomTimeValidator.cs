@@ -1,8 +1,6 @@
-using FluentValidation;
-
 namespace FurryFriends.Web.Endpoints.TimeslotEndpoints.CustomTimeRequest;
 
-public class RequestCustomTimeValidator : AbstractValidator<RequestCustomTimeRequest>
+public class RequestCustomTimeValidator : Validator<RequestCustomTimeRequest>
 {
     public RequestCustomTimeValidator()
     {

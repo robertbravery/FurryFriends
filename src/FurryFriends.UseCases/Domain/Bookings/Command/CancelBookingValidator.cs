@@ -1,5 +1,4 @@
 using FluentValidation;
-using FurryFriends.Core.BookingAggregate.Enums;
 
 namespace FurryFriends.UseCases.Domain.Bookings.Command;
 

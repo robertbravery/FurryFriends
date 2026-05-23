@@ -1,15 +1,15 @@
-using Ardalis.Result;
-using FurryFriends.UseCases.Rating.GetPetWalkerRatingSummary;
-using FurryFriends.Web.Endpoints.RatingEndpoints.GetPetWalkerRatingSummary;
+using FurryFriends.UseCases.Domain.Ratings.GetPetWalkerRatingSummary;
+using FurryFriends.Web.Endpoints.Base;
 using FurryFriends.Web.Endpoints.RatingEndpoints.GetRatingsForPetWalker;
 
 namespace FurryFriends.Web.Endpoints.RatingEndpoints.GetPetWalkerRatingSummary;
 
-public class GetPetWalkerRatingSummaryEndpoint(IMediator mediator, ILogger<GetPetWalkerRatingSummaryEndpoint> logger)
-    : Endpoint<GetPetWalkerRatingSummaryRequest, Result<GetPetWalkerRatingSummaryResponse>>
+public class GetPetWalkerRatingSummaryEndpoint : BaseEndpoint<GetPetWalkerRatingSummaryRequest, GetPetWalkerRatingSummaryResponse>
 {
-    private readonly IMediator _mediator = mediator;
-    private readonly ILogger<GetPetWalkerRatingSummaryEndpoint> _logger = logger;
+    public GetPetWalkerRatingSummaryEndpoint(IMediator mediator, ILogger<GetPetWalkerRatingSummaryEndpoint> logger)
+        : base(mediator, logger) { }
+
+    protected override string OperationName => "GetPetWalkerRatingSummary";
 
     public override void Configure()
     {
@@ -33,42 +33,26 @@ public class GetPetWalkerRatingSummaryEndpoint(IMediator mediator, ILogger<GetPe
 
         var query = new GetPetWalkerRatingSummaryQuery(request.PetWalkerId);
 
-        var result = await _mediator.Send(query, cancellationToken);
-
-        if (!result.IsSuccess)
-        {
-            foreach (var error in result.Errors)
+        await HandleResultAsync(
+            ct => _mediator.Send(query, ct),
+            (PetWalkerRatingSummaryDto summary, CancellationToken ct) =>
             {
-                AddError(error);
-            }
+                var recentRatings = summary.RecentRatings.Select(r => new GetRatingsForPetWalkerResponse(
+                r.Id,
+                r.PetWalkerId,
+                r.ClientId,
+                r.RatingValue,
+                r.Comment,
+                r.CreatedAt,
+                r.UpdatedAt,
+                r.ClientName)).ToList();
 
-            if (result.Status == ResultStatus.NotFound)
-            {
-                await SendNotFoundAsync(cancellationToken);
-                return;
-            }
-
-            Response = Result.Error();
-            await SendErrorsAsync(StatusCodes.Status400BadRequest, cancellationToken);
-            return;
-        }
-
-        var summary = result.Value;
-        var recentRatings = summary.RecentRatings.Select(r => new GetRatingsForPetWalkerResponse(
-            r.Id,
-            r.PetWalkerId,
-            r.ClientId,
-            r.BookingId,
-            r.RatingValue,
-            r.Comment,
-            r.CreatedDate,
-            r.ModifiedDate,
-            r.ClientName)).ToList();
-
-        Response = Result.Success(new GetPetWalkerRatingSummaryResponse(
-            summary.PetWalkerId,
-            summary.AverageRating,
-            summary.TotalRatings,
-            recentRatings));
+                return Task.FromResult(new GetPetWalkerRatingSummaryResponse(
+                summary.PetWalkerId,
+                summary.AverageRating,
+                summary.TotalRatings,
+                recentRatings));
+            },
+            cancellationToken);
     }
 }

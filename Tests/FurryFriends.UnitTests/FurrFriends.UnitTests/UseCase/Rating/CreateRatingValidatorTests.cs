@@ -1,6 +1,6 @@
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using FurryFriends.UseCases.Rating.CreateRating;
+using FurryFriends.UseCases.Domain.Ratings.CreateRating;
 
 namespace FurrFriends.UnitTests.UseCase.Rating;
 
@@ -19,6 +19,7 @@ public class CreateRatingValidatorTests
         // Arrange
         var request = new CreateRatingCommand(
             Guid.NewGuid(),
+            Guid.NewGuid(),
             5,
             "Great service!"
         );
@@ -27,7 +28,8 @@ public class CreateRatingValidatorTests
         var result = _validator.TestValidate(request);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(x => x.BookingId);
+        result.ShouldNotHaveValidationErrorFor(x => x.PetWalkerId);
+        result.ShouldNotHaveValidationErrorFor(x => x.ClientId);
         result.ShouldNotHaveValidationErrorFor(x => x.RatingValue);
     }
 
@@ -41,6 +43,7 @@ public class CreateRatingValidatorTests
     {
         // Arrange
         var request = new CreateRatingCommand(
+            Guid.NewGuid(),
             Guid.NewGuid(),
             ratingValue,
             "Test"
@@ -63,6 +66,7 @@ public class CreateRatingValidatorTests
         // Arrange
         var request = new CreateRatingCommand(
             Guid.NewGuid(),
+            Guid.NewGuid(),
             invalidRatingValue,
             "Test"
         );
@@ -75,10 +79,29 @@ public class CreateRatingValidatorTests
     }
 
     [Fact]
-    public void Should_HaveError_WhenBookingIdIsEmpty()
+    public void Should_HaveError_WhenPetWalkerIdIsEmpty()
     {
         // Arrange
         var request = new CreateRatingCommand(
+            Guid.Empty,
+            Guid.NewGuid(),
+            5,
+            "Test"
+        );
+
+        // Act
+        var result = _validator.TestValidate(request);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.PetWalkerId);
+    }
+
+    [Fact]
+    public void Should_HaveError_WhenClientIdIsEmpty()
+    {
+        // Arrange
+        var request = new CreateRatingCommand(
+            Guid.NewGuid(),
             Guid.Empty,
             5,
             "Test"
@@ -88,7 +111,7 @@ public class CreateRatingValidatorTests
         var result = _validator.TestValidate(request);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.BookingId);
+        result.ShouldHaveValidationErrorFor(x => x.ClientId);
     }
 
     [Fact]
@@ -96,6 +119,7 @@ public class CreateRatingValidatorTests
     {
         // Arrange
         var request = new CreateRatingCommand(
+            Guid.NewGuid(),
             Guid.NewGuid(),
             5,
             null
@@ -113,6 +137,7 @@ public class CreateRatingValidatorTests
     {
         // Arrange
         var request = new CreateRatingCommand(
+            Guid.NewGuid(),
             Guid.NewGuid(),
             5,
             string.Empty
@@ -132,6 +157,7 @@ public class CreateRatingValidatorTests
         var longComment = new string('a', 1000);
         var request = new CreateRatingCommand(
             Guid.NewGuid(),
+            Guid.NewGuid(),
             5,
             longComment
         );
@@ -149,6 +175,7 @@ public class CreateRatingValidatorTests
         // Arrange
         var tooLongComment = new string('a', 1001);
         var request = new CreateRatingCommand(
+            Guid.NewGuid(),
             Guid.NewGuid(),
             5,
             tooLongComment

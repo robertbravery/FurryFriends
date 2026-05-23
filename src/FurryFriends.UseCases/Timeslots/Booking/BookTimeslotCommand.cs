@@ -1,6 +1,3 @@
-using Ardalis.Result;
-using FurryFriends.UseCases.Timeslots.Booking;
-
 namespace FurryFriends.UseCases.Timeslots.Booking;
 
 /// <summary>

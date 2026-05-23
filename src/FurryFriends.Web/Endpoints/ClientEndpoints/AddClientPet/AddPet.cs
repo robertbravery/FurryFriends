@@ -2,13 +2,11 @@
 using FurryFriends.UseCases.Domain.Clients.Command.AddPet;
 using FurryFriends.Web.Endpoints.Base;
 
-
 namespace FurryFriends.Web.Endpoints.ClientEndpoints.AddClientPet;
 
-public class AddPet(IMediator mediator, ILogger<AddPet> logger) : BaseEndpoint<AddPetRequest, Result<AddPetResponse>>
+public class AddPet(IMediator mediator, ILogger<AddPet> logger) : BaseEndpoint<AddPetRequest, AddPetResponse>(mediator, logger)
 {
-  private readonly IMediator _mediator = mediator;
-  private readonly ILogger<AddPet> _logger = logger;
+  protected override string OperationName => "AddPet";
 
   public override void Configure()
   {
@@ -35,7 +33,7 @@ public class AddPet(IMediator mediator, ILogger<AddPet> logger) : BaseEndpoint<A
 
       if (result.IsSuccess)
       {
-        Response = new AddPetResponse(result.Value);
+        Response = Result<AddPetResponse>.Success(new AddPetResponse(result.Value));
         await SendOkAsync(Response, cancellationToken);
       }
       else if (result.Status == ResultStatus.NotFound)
@@ -104,5 +102,4 @@ public class AddPet(IMediator mediator, ILogger<AddPet> logger) : BaseEndpoint<A
             StatusCodes.Status400BadRequest,
         cancellationToken);
   }
-
 }

@@ -1,8 +1,9 @@
 ﻿# FurryFriends Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-14
+Auto-generated from all feature plans. Last updated: 2026-04-12
 
 ## Active Technologies
+- SQL Server with EF Core (008-petwalker-ratings)
 
 - .NET 9 (FurryFriends standard) (003-petwalker-timeslots)
 
@@ -23,6 +24,7 @@ tests/
 .NET 9 (FurryFriends standard): Follow standard conventions
 
 ## Recent Changes
+- 008-petwalker-ratings: Added .NET 9 (FurryFriends standard)
 
 - 003-petwalker-timeslots: Added .NET 9 (FurryFriends standard)
 

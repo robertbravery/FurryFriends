@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" />
+    <PackageReference Include="bunit" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -23,6 +24,7 @@
     <ProjectReference Include="..\..\..\src\FurryFriends.Infrastructure\FurryFriends.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\src\FurryFriends.UseCases\FurryFriends.UseCases.csproj" />
     <ProjectReference Include="..\..\..\src\FurryFriends.Web\FurryFriends.Web.csproj" />
+    <ProjectReference Include="..\..\..\src\FurryFriends.BlazorUI\FurryFriends.BlazorUI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

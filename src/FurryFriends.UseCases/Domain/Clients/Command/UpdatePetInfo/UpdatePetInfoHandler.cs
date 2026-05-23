@@ -1,5 +1,4 @@
 ﻿﻿using FurryFriends.Core.ClientAggregate;
-using FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
 
 namespace FurryFriends.UseCases.Domain.Clients.Command.UpdatePetInfo;
 

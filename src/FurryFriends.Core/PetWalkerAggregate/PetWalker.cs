@@ -18,6 +18,8 @@ public class PetWalker : UserEntityBase
   public bool HasInsurance { get; private set; }
   public bool HasFirstAidCertificatation { get; private set; }
   public int DailyPetWalkLimit { get; private set; }
+  public double? AverageRating { get; private set; }
+  public int TotalRatingsCount { get; private set; }
   public IReadOnlyCollection<Schedule> Schedules => _schedules.AsReadOnly();
 
   public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
@@ -40,6 +42,12 @@ public class PetWalker : UserEntityBase
     Guard.Against.Null(email, nameof(email));
     Guard.Against.Null(address, nameof(address));
     return new PetWalker(name, email, phoneNumber, address);
+  }
+
+  public void UpdateRatingAggregate(double? averageRating, int totalRatingsCount)
+  {
+    AverageRating = averageRating;
+    TotalRatingsCount = totalRatingsCount;
   }
 
   public void Deactivate()
@@ -183,4 +191,3 @@ public class PetWalker : UserEntityBase
   public void ClearSchedules() => _schedules.Clear();
 
 }
-

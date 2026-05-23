@@ -1,5 +1,5 @@
 {
     "terminal.integrated.allowInUntrustedWorkspace": true,
     "dotnetAcquisitionExtension.allowInvalidPaths": true,
-    "chat.agent.sandbox": false
+    "chat.agent.sandbox.enabled": "off"
 }

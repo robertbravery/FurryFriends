@@ -1,8 +1,6 @@
-using Ardalis.Result;
 using Ardalis.Specification;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
-using FurryFriends.Core.TimeslotAggregate;
 using FurryFriends.Core.TimeslotAggregate.Specifications;
 using Microsoft.Extensions.Logging;
 using TimeslotEntity = FurryFriends.Core.TimeslotAggregate.Timeslot;

@@ -43,8 +43,8 @@ FurryFriends leverages modern best practices and a rich technology stack:
   - **Fast Endpoints:** For defining and handling HTTP endpoints.
   - **Fluent Validation:** For validating incoming requests.
 - **Domain Layer:**
-  - **Specifications:** Organized per Aggregate Root using *Ardalis.Specifications* to encapsulate query logic.
-  - **Guard Clauses:** Enforced via *Ardalis Guard Clauses* to maintain domain invariants.
+  - **Specifications:** Organized per Aggregate Root using _Ardalis.Specifications_ to encapsulate query logic.
+  - **Guard Clauses:** Enforced via _Ardalis Guard Clauses_ to maintain domain invariants.
 - **Application Layer:**
   - **MediatR:** Dispatching commands, queries, and events to the respective Use Cases.
 - **Persistence & Infrastructure:**
@@ -61,6 +61,38 @@ FurryFriends leverages modern best practices and a rich technology stack:
   - **Fluent Assertions & Moq:** For expressive and robust tests.
 
 ---
+
+## Project Structure
+
+The solution follows Clean Architecture principles with a clear separation of concerns:
+
+```
+FurryFriends/
+├── src/
+│   ├── FurryFriends.AspireHost/       # Aspire orchestration host
+│   ├── FurryFriends.BlazorUI/         # Blazor server host
+│   ├── FurryFriends.BlazorUI.Client/  # Blazor WASM client components
+│   ├── FurryFriends.Core/             # Domain entities, aggregates, value objects
+│   ├── FurryFriends.Infrastructure/   # Persistence, EF Core, external services
+│   ├── FurryFriends.UseCases/         # Application use cases (CQRS)
+│   │   ├── Domain/                    # Domain-related commands, queries, handlers
+│   │   │   ├── Bookings/             # Booking commands, handlers, DTOs
+│   │   │   ├── Clients/              # Client commands, queries, handlers, DTOs
+│   │   │   ├── PetWalkers/           # PetWalker commands, queries, handlers, DTOs
+│   │   │   └── Ratings/              # Rating commands, queries, handlers, DTOs
+│   │   ├── Services/                  # Application services
+│   │   └── Timeslots/                 # Timeslot management use cases
+│   └── FurryFriends.Web/              # FastEndpoints API host
+├── tests/
+│   ├── FurryFriends.FunctionalTests/  # End-to-end API tests
+│   └── FurryFriends.UnitTests/        # Unit and integration tests
+└── docs/
+    ├── architecture-decisions/        # Architecture Decision Records (ADRs)
+    ├── technical/                     # Technical documentation
+    └── features/                      # Feature documentation
+```
+
+All domain-related use case code resides under `src/FurryFriends.UseCases/Domain/` following the convention described in [ADR-002](docs/architecture-decisions/adr-002-domain-folder-structure.md).
 
 ## Getting Started
 
@@ -145,15 +177,15 @@ dotnet test
 We welcome contributions that help improve FurryFriends. To contribute:
 
 1. **Fork** the repository.
-2. **Create a feature branch:**  
+2. **Create a feature branch:**
    ```bash
    git checkout -b feature/YourFeature
    ```
-3. **Commit your changes:**  
+3. **Commit your changes:**
    ```bash
    git commit -am 'Add new feature'
    ```
-4. **Push to your branch:**  
+4. **Push to your branch:**
    ```bash
    git push origin feature/YourFeature
    ```
@@ -178,6 +210,8 @@ For questions or further information, please contact:
 
 ---
 
-*FurryFriends* is continuously evolving. Stay tuned for updates and know that contributions are always welcome to enhance pet walking and pet care experiences!
+_FurryFriends_ is continuously evolving. Stay tuned for updates and know that contributions are always welcome to enhance pet walking and pet care experiences!
+
 ```
 
+```

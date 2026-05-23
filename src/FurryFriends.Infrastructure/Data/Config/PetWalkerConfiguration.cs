@@ -41,6 +41,14 @@ public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
     builder.Property(u => u.DailyPetWalkLimit)
       .IsRequired();
 
+    builder.Property(u => u.AverageRating)
+      .HasColumnType("float")
+      .IsRequired(false);
+
+    builder.Property(u => u.TotalRatingsCount)
+      .IsRequired()
+      .HasDefaultValue(0);
+
     builder.OwnsOne(p => p.Email, e =>
         {
           e.Property(p => p.EmailAddress)

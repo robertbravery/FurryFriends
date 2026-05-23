@@ -129,7 +129,7 @@ public class PetWalkerService : IPetWalkerService
   public async Task<Result<PetWalkerListDto>> ListPetWalkersAsync(ListPetWalkerQuery query)
   {
     var spec = new ListPetWalkerSpecification(query.SearchString, query.PageNumber, query.PageSize);
-    var users = await _repository.ListAsync(spec);
+    var users = await _repository.ListAsync(spec, CancellationToken.None);
     var totalCount = await _repository.CountAsync(spec);
     return new PetWalkerListDto(users, totalCount);
   }

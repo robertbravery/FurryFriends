@@ -1,6 +1,3 @@
-using Ardalis.Result;
-using Ardalis.Specification;
-using FurryFriends.Core.TimeslotAggregate;
 using FurryFriends.Core.TimeslotAggregate.Specifications;
 using FurryFriends.UseCases.Timeslots.WorkingHours.Dto;
 using Microsoft.Extensions.Logging;

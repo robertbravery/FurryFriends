@@ -12,6 +12,7 @@
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
     <PackageVersion Include="Azure.Identity" Version="1.13.1" />
     <PackageVersion Include="Bogus" Version="35.6.1" />
+    <PackageVersion Include="bunit" Version="1.38.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="FastEndpoints" Version="5.35.0" />
     <PackageVersion Include="FastEndpoints.ApiExplorer" Version="2.2.0" />
@@ -26,7 +27,7 @@
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-    <PackageVersion Include="MailKit" Version="4.9.0" />
+    <PackageVersion Include="MailKit" Version="4.16.0" />
     <PackageVersion Include="MediatR" Version="12.4.1" />
     <PackageVersion Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="9.0.4" />
