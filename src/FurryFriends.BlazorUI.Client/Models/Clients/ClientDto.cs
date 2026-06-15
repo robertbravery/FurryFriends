@@ -8,6 +8,7 @@ public class ClientDto
   public string? City { get; set; }
   public string PhoneNumber { get; set; } = null!;
   public int TotalPets { get; set; }
+  public string Status { get; set; } = "Active";
   public Dictionary<string, int>? PetsBySpecies { get; set; }
 
 }

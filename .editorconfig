@@ -151,3 +151,16 @@ csharp_prefer_system_threading_lock = true:suggestion
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion
+
+###############################
+# Razor and CSS Conventions   #
+###############################
+[*.{razor,razor.css,css}]
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
+end_of_line = crlf
+
+[*.{css,razor.css}]
+indent_style = space
+indent_size = 4

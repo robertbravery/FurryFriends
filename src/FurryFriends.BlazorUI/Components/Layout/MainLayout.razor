@@ -6,10 +6,13 @@
 
 <div class="app-layout">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar @(_sidebarCollapsed ? "collapsed" : "")">
+        <button class="sidebar-toggle" type="button" @onclick="ToggleSidebar" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
         <div class="sidebar-header">
             <a href="" @onclick="NavigateToHome" class="no-underline">
-                <span class="logo-icon">🐾</span> Furry Friends
+                <i class="fa-solid fa-paw"></i> Furry Friends
             </a>
         </div>
         <NavMenu />
@@ -82,6 +85,12 @@
 
 @code {
     private bool _profileDropdownOpen = false;
+    private bool _sidebarCollapsed = false;
+
+    private void ToggleSidebar()
+    {
+        _sidebarCollapsed = !_sidebarCollapsed;
+    }
 
     private void NavigateToHome()
     {

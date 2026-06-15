@@ -1,0 +1,11 @@
+/* UI Modernization color palette */
+:root {
+  --primary-dark: hsl(200,100%,50%);
+  --primary-light: hsl(340,100%,90%);
+}
+[data-theme="dark"] {
+  --primary: var(--primary-dark);
+}
+[data-theme="light"] {
+  --primary: var(--primary-light);
+}

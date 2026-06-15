@@ -39,13 +39,7 @@
 	}
 	else if (petWalkers == null || petWalkers.Count == 0)
 	{
-		<div class="empty-state">
-			<div class="empty-state-icon">
-				<i class="fa-solid fa-person-walking"></i>
-			</div>
-			<h3>No Pet Walkers Found</h3>
-			<p>There are no pet walkers registered yet.</p>
-		</div>
+<EmptyState IconClass="fa-solid fa-person-walking" Title="No Pet Walkers Found" Description="There are no pet walkers registered yet." />
 	}
 	else
 	{
@@ -57,6 +51,7 @@
 						<th>Email</th>
 						<th>City</th>
 						<th>Service Areas</th>
+						<th>Status</th>
 						<th>Phone Number</th>
 						<th class="actions">Actions</th>
 					</tr>
@@ -74,6 +69,9 @@
 							<td>@petWalker.City</td>
 							<td>
 								<span class="walker-location">@petWalker.Location</span>
+							</td>
+							<td>
+								<StatusPill Status="@petWalker.Status" Label="@petWalker.Status" />
 							</td>
 							<td>
 								<span class="walker-phone">@FormatPhoneNumber(petWalker.PhoneNumber)</span>

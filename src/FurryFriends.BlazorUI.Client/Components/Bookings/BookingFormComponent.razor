@@ -29,7 +29,7 @@
 
         <div class="booking-form-content">
             <!-- Connected Timeline Step Indicator -->
-            <div class="step-indicator">
+            <div class="step-indicator" style="--timeline-progress: @GetTimelineProgress();">
                 <div class="step @(currentStep >= 1 ? "active" : "") @(currentStep > 1 ? "completed" : "")">
                     <div class="step-circle">
                         @if (currentStep > 1)

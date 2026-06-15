@@ -1,0 +1,26 @@
+@using Microsoft.AspNetCore.Components
+@using System.Threading.Tasks
+
+<span class="status-pill status-pill-@NormalizedStatus">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <span class="status-pill__label">@Label</span>
+    }
+    else
+    {
+        <span class="status-pill__label">@Status</span>
+    }
+</span>
+
+@code {
+    [Parameter]
+    public string? Status { get; set; }
+
+    [Parameter]
+    public string? Label { get; set; }
+
+    private string NormalizedStatus =>
+        string.IsNullOrWhiteSpace(Status)
+            ? "default"
+            : Status.ToLowerInvariant().Replace(" ", "-");
+}
