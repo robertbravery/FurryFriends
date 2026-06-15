@@ -1,0 +1,9 @@
+{
+  "workflow": "speckit",
+  "specName": "002-add-booking-cancellation",
+  "branch": "002-add-booking-cancellation",
+  "selectedAt": "2026-06-15T17:55:54.785Z",
+  "currentStep": "specify",
+  "status": "draft",
+  "history": []
+}

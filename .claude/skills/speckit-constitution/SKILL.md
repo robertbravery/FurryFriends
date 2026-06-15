@@ -1,15 +1,13 @@
 ---
+name: speckit-constitution
 description: Create or update the project constitution from interactive or provided
   principle inputs, ensuring all dependent templates stay in sync.
-handoffs:
-- label: Build Specification
-  agent: speckit.specify
-  prompt: Implement the feature specification based on the updated constitution. I
-    want to build...
+compatibility: Requires spec-kit project structure with .specify/ directory
+metadata:
+  author: github-spec-kit
+  source: companion-standard:commands/speckit.constitution.md
 ---
 
-
-<!-- Source: companion-standard -->
 ## User Input
 
 ```text

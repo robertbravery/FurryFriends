@@ -1,0 +1,17 @@
+{
+  "workflow": "speckit",
+  "specName": "Petwalker Rating",
+  "branch": "",
+  "currentStep": "specify",
+  "status": "completed",
+  "history": [
+    {
+      "step": "specify",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-15T17:54:56.616Z"
+    }
+  ],
+  "profile": "standard"
+}
