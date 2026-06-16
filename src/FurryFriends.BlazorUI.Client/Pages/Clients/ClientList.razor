@@ -31,16 +31,7 @@
     }
     else if (clients == null || clients.Count == 0)
     {
-        <div class="empty-state">
-            <div class="empty-state-icon">
-                <i class="fa-solid fa-users-slash"></i>
-            </div>
-            <h3>No Clients Found</h3>
-            <p>Get started by adding your first client.</p>
-            <button class="btn btn-primary" @onclick="OpenCreatePopup">
-                <i class="fa-solid fa-plus"></i> Add New Client
-            </button>
-        </div>
+        <EmptyState IconClass="fa-solid fa-users-slash" Title="No Clients Found" Description="Get started by adding your first client." ActionText="Add New Client" OnAction="OpenCreatePopup" />
     }
     else
     {
@@ -67,7 +58,7 @@
                             </td>
                             <td>@client.City</td>
                             <td>
-                                <span class="status-chip info">@client.TotalPets</span>
+                                <StatusPill Status="@client.Status" Label="Active" />
                             </td>
                             <td class="actions-cell">
                                 <IconButton IconClass="fa-solid fa-eye" Title="View Client" Color="IconButtonColor.Primary"

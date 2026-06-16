@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "Have a look and give me suggestions about the actual UI. Make suggestions on improvements to bring it up to a modern Enterprise type User Interface."
 
+## Clarifications
+
+### Session 2026-06-14
+- Q: Which HSL color palette strategy should the modernized UI use? → A: Standardize on a dark-mode primary base of HSL(200, 100%, 50%) with a light-mode primary base of HSL(340, 100%, 90%).
+- Q: Which icon set should be used for vector icons? → A: FontAwesome 6 + SVG spritesheet.
+- Q: How should the Pet Walker profile details be structured? → A: Tabbed interface with three primary tabs (About, Schedule & Areas, Reviews).
+
+### Session 2026-06-14
+- Q: Which HSL color palette strategy should the modernized UI use? → A: Standardize on a dark-mode primary base of HSL(200, 100%, 50%) with a light-mode primary base of HSL(340, 100%, 90%).
+
 ---
 
 ## 1. Goal Description
@@ -37,7 +47,7 @@ Modernize the FurryFriends user interface (UI) to match contemporary enterprise-
 
 ### Functional Requirements
 
-* **FR-010-001**: The system MUST implement an HSL-based color palette supporting light/dark theme variables.
+* **FR-010-001**: The system MUST implement an HSL-based color palette using a dark-mode primary base of HSL(200, 100%, 50%) and a light-mode primary base of HSL(340, 100%, 90%), exposed through light/dark theme variables.
 * **FR-010-002**: The application header MUST feature a search bar placeholder and a styled profile menu dropdown with rounded boundaries.
 * **FR-010-003**: The sidebar navigation MUST use vector icons (from FontAwesome or SVG) instead of emoji characters.
 * **FR-010-004**: All page tables (Client List, Pet Walker List) MUST use rounded borders, clean padding, and hover transitions.

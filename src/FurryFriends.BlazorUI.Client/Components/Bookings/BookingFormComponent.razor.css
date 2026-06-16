@@ -112,12 +112,7 @@
     z-index: 2;
     border-radius: 2px;
     transition: width var(--transition-slow);
-    width: 0%;
-}
-
-/* Calculate progress based on current step */
-.step.active .step-circle ~ .step-indicator::after {
-    /* This won't work in pure CSS; we handle width via inline style or JS */
+    width: var(--timeline-progress, 0%);
 }
 
 .step {

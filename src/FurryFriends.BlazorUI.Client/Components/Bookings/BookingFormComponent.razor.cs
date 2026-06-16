@@ -241,6 +241,15 @@ public partial class BookingFormComponent
     return $"{(int)duration.TotalMinutes} minutes";
   }
 
+  private string GetTimelineProgress() =>
+    currentStep switch
+    {
+      1 => "0%",
+      2 => "33.333%",
+      3 => "66.666%",
+      _ => "100%"
+    };
+
   private PetDto? GetSelectedPet()
   {
     return availablePets?.FirstOrDefault(p => p.Id == bookingRequest.PetId);

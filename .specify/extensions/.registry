@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "extensions": {
+    "companion": {
+      "version": "0.4.1",
+      "source": "local",
+      "manifest_hash": "sha256:8e687300e85782562080361d1a8061ec1a757c8cc5c90f59759e32740debcb34",
+      "enabled": true,
+      "priority": 10,
+      "registered_commands": {
+        "claude": [
+          "speckit.companion.capture",
+          "speckit.companion.capture-plan",
+          "speckit.companion.capture-tasks",
+          "speckit.companion.capture-implement",
+          "speckit.companion.status",
+          "speckit.companion.resume",
+          "speckit.companion.specify",
+          "speckit.companion.plan",
+          "speckit.companion.tasks",
+          "speckit.companion.implement"
+        ],
+        "kilocode": [
+          "speckit.companion.capture",
+          "speckit.companion.capture-plan",
+          "speckit.companion.capture-tasks",
+          "speckit.companion.capture-implement",
+          "speckit.companion.status",
+          "speckit.companion.resume",
+          "speckit.companion.specify",
+          "speckit.companion.plan",
+          "speckit.companion.tasks",
+          "speckit.companion.implement"
+        ],
+        "roo": [
+          "speckit.companion.capture",
+          "speckit.companion.capture-plan",
+          "speckit.companion.capture-tasks",
+          "speckit.companion.capture-implement",
+          "speckit.companion.status",
+          "speckit.companion.resume",
+          "speckit.companion.specify",
+          "speckit.companion.plan",
+          "speckit.companion.tasks",
+          "speckit.companion.implement"
+        ]
+      },
+      "registered_skills": [],
+      "installed_at": "2026-06-15T17:43:43.258230+00:00"
+    }
+  }
+}
