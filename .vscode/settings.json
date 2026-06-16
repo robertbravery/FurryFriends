@@ -1,5 +1,6 @@
 {
     "terminal.integrated.allowInUntrustedWorkspace": true,
     "dotnetAcquisitionExtension.allowInvalidPaths": true,
-    "chat.agent.sandbox.enabled": "off"
+    "chat.agent.sandbox.enabled": "off",
+    "kilo-code.new.autocomplete.provider": "kilo"
 }

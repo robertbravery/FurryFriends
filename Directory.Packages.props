@@ -80,3 +80,4 @@
     <PackageVersion Include="xunit" Version="2.9.3" />
   </ItemGroup>
 </Project>
+<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />

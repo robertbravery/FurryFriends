@@ -4,6 +4,15 @@
   "branch": "010-ui-modernization",
   "selectedAt": "2026-06-15T17:35:33.619Z",
   "currentStep": "specify",
-  "status": "draft",
-  "history": []
+  "status": "completed",
+  "history": [
+    {
+      "step": "specify",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T08:09:00.031Z"
+    }
+  ],
+  "profile": "standard"
 }

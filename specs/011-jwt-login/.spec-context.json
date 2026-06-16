@@ -1,0 +1,143 @@
+{
+  "workflow": "speckit",
+  "profile": "turbo",
+  "specName": "Jwt Authentication with Anonymous Access",
+  "branch": "011-jwt-login",
+  "selectedAt": "2026-06-16T09:55:24.419Z",
+  "currentStep": "analyze",
+  "status": "implementing",
+  "history": [
+    {
+      "step": "specify",
+      "substep": null,
+      "kind": "start",
+      "by": "extension",
+      "at": "2026-06-16T09:55:24.419Z"
+    },
+    {
+      "step": "specify",
+      "substep": null,
+      "kind": "start",
+      "by": "extension",
+      "at": "2026-06-16T10:34:58.617Z"
+    },
+    {
+      "step": "specify",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T11:25:03.775Z"
+    },
+    {
+      "step": "plan",
+      "substep": null,
+      "kind": "start",
+      "by": "extension",
+      "at": "2026-06-16T11:25:03.784Z"
+    },
+    {
+      "step": "tasks",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T11:25:09.695Z"
+    },
+    {
+      "step": "analyze",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T11:46:01.127Z"
+    },
+    {
+      "step": "analyze",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T11:50:18.727Z"
+    },
+    {
+      "step": "analyze",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T13:34:43.878Z"
+    },
+    {
+      "step": "analyze",
+      "substep": null,
+      "kind": "start",
+      "by": "extension",
+      "at": "2026-06-16T16:08:26.804Z"
+    },
+    {
+      "step": "analyze",
+      "substep": null,
+      "kind": "complete",
+      "by": "extension",
+      "at": "2026-06-16T16:12:56.804Z"
+    }
+  ],
+  "reviewComments": [
+    {
+      "id": "ref-1781604131559-2d0ct",
+      "doc": "spec",
+      "anchor": {
+        "heading": "Acceptance Scenarios",
+        "blockText": "",
+        "line": 20
+      },
+      "comment": "The user is either logged out, or redirected to the login screen or notified that the login is invalida and to try again",
+      "status": "applied",
+      "createdAt": "2026-06-16T10:02:11.560Z"
+    },
+    {
+      "id": "ref-1781604160689-jc1vd",
+      "doc": "spec",
+      "anchor": {
+        "heading": "Acceptance Scenarios",
+        "blockText": "### Edge Cases",
+        "line": 21
+      },
+      "comment": "No rate limiting at the moment, we might review this later on",
+      "status": "applied",
+      "createdAt": "2026-06-16T10:02:40.691Z"
+    },
+    {
+      "id": "ref-1781604194875-zib5t",
+      "doc": "spec",
+      "anchor": {
+        "heading": "Edge Cases",
+        "blockText": "- What happens when the JWT token is expired or invalid?",
+        "line": 22
+      },
+      "comment": "Get a message similar to 401, not audthorised.",
+      "status": "applied",
+      "createdAt": "2026-06-16T10:03:14.875Z"
+    },
+    {
+      "id": "ref-1781604270124-0q3d8",
+      "doc": "spec",
+      "anchor": {
+        "heading": "Review & Acceptance Checklist",
+        "blockText": "",
+        "line": 43
+      },
+      "comment": "use the constitution.md file. All should be found therin",
+      "status": "applied",
+      "createdAt": "2026-06-16T10:04:30.126Z"
+    },
+    {
+      "id": "ref-1781608476310-fobus",
+      "doc": "plan",
+      "anchor": {
+        "heading": "Out of Scope",
+        "blockText": "- User registration (assumes users pre-exist in system)",
+        "line": 86
+      },
+      "comment": "Allow the requirement for new users to register. They should be able to select whether they are a client/pet owner or a Petwalker. Then when they login they can then update their details",
+      "status": "applied",
+      "createdAt": "2026-06-16T11:14:36.312Z"
+    }
+  ]
+}
