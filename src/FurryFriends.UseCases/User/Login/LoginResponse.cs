@@ -1,16 +1,9 @@
-using Ardalis.GuardClauses;
-using Ardalis.Result;
-using FurryFriends.Core.UserAggregate;
-using FurryFriends.UseCases.User.Registration;
-using MediatR;
-using System;
-
-namespace FurryFriends.UseCases.User.Login;
+﻿namespace FurryFriends.UseCases.Userauthentication.Login;
 
 public class LoginResponse
 {
-    public string Token { get; set; } = null!
-    public string Role { get; set; } = null!
+  public string Token { get; set; } = null!;
+  public string Role { get; set; } = null!;
     public Guid? UserId { get; set; }
     public bool IsValid { get; set; }
 

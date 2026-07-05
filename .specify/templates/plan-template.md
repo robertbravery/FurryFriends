@@ -1,35 +1,10 @@
 # Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
-## Execution Flow (/plan command scope)
-
-```
-1. Load feature spec from Input path
-   → If not found: ERROR "No feature spec at {path}"
-2. Fill Technical Context (scan for NEEDS CLARIFICATION)
-   → Detect Project Type from file system structure or context (web=frontend+backend, mobile=app+api)
-   → Set Structure Decision based on project type
-3. Fill the Constitution Check section based on the content of the constitution document.
-4. Evaluate Constitution Check section below
-   → If violations exist: Document in Complexity Tracking
-   → If no justification possible: ERROR "Simplify approach first"
-   → Update Progress Tracking: Initial Constitution Check
-5. Execute Phase 0 → research.md
-   → If NEEDS CLARIFICATION remain: ERROR "Resolve unknowns"
-6. Execute Phase 1 → contracts, data-model.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, `GEMINI.md` for Gemini CLI, `QWEN.md` for Qwen Code, or `AGENTS.md` for all other agents).
-7. Re-evaluate Constitution Check section
-   → If new violations: Refactor design, return to Phase 1
-   → Update Progress Tracking: Post-Design Constitution Check
-8. Plan Phase 2 → Describe task generation approach (DO NOT create tasks.md)
-9. STOP - Ready for /tasks command
-```
-
-**IMPORTANT**: The /plan command STOPS at step 7. Phases 2-4 are executed by other commands:
-
-- Phase 2: /tasks command creates tasks.md
-- Phase 3-4: Implementation execution (manual or via tools)
+**Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
@@ -37,291 +12,102 @@
 
 ## Technical Context
 
-**Language/Version**: .NET 9 (FurryFriends standard)
-**Primary Dependencies**:
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
 
-- FastEndpoints (API endpoints)
-- MediatR (CQRS)
-- FluentValidation (validation)
-- Ardalis.Specification (queries)
-- Ardalis.Result (operation outcomes)
-- Ardalis.GuardClauses (preconditions)
-- Serilog (logging)
-- Entity Framework Core (data access)
-- Blazor Server + WebAssembly (UI)
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
 
-**Storage**: SQL Server with EF Core
-**Testing**: xUnit (unit/integration), bUnit (Blazor components)
-**Target Platform**: Web application (Blazor Hybrid)
-**Project Type**: Web (backend API + Blazor UI)
-**Performance Goals**: [e.g., <200ms API response time, 60fps UI or NEEDS CLARIFICATION]
-**Constraints**: [e.g., must work with existing Client/PetWalker aggregates or NEEDS CLARIFICATION]
-**Scale/Scope**: [e.g., affects 3 aggregates, 5 endpoints, 2 Blazor pages or NEEDS CLARIFICATION]
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
+
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
+
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
+
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
-_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Architecture Compliance** (Constitution v2.1.0):
-
-- [ ] Follows Clean Architecture layers (Core → UseCases → Infrastructure/Web/BlazorUI)
-- [ ] API endpoints use FastEndpoints pattern (Request/Response/Endpoint separation)
-- [ ] Blazor components follow server-side HTTP pattern (no direct HttpClient in client)
-- [ ] Uses CQRS with MediatR (Commands for writes, Queries for reads)
-- [ ] Data access uses Repository + Specification pattern
-
-**Required Patterns**:
-
-- [ ] All handlers return `Result<T>` or `Result` (Ardalis.Result)
-- [ ] All commands/queries have FluentValidation validators
-- [ ] All database queries use Specifications (Ardalis.Specification)
-- [ ] All method parameters validated with Guard Clauses (Ardalis.GuardClauses)
-- [ ] All logging uses Serilog structured logging with OpenTelemetry
-
-**Testing Requirements**:
-
-- [ ] Test-First approach (tests written before implementation)
-- [ ] Unit tests for handlers, validators, specifications
-- [ ] Integration tests for API endpoints (functional tests)
-- [ ] Blazor component tests with bUnit (Principle XX)
-- [ ] Contract tests for API contract changes (specs/[###-feature]/contracts/)
-
-**CI/CD & Automation** (Principle XVII):
-
-- [ ] Build passes all projects
-- [ ] Unit and functional tests pass
-- [ ] Code coverage meets 80% minimum
-- [ ] No known vulnerable dependencies
-
-**Dependency Management** (Principle XVIII):
-
-- [ ] Package versions in Directory.Packages.props only (not .csproj files)
-- [ ] No packages with known critical vulnerabilities
-- [ ] No unnecessary dependencies added
-
-**Error Handling** (Principle XIX):
-
-- [ ] Idempotency considered for mutation endpoints
-- [ ] Distributed transaction patterns evaluated (Outbox/Saga)
-- [ ] Graceful degradation for external dependencies
-
-**Prohibited Practices**:
-
-- [ ] No direct SQL queries (use EF Core + Specifications)
-- [ ] No `Console.WriteLine` (use Serilog)
-- [ ] No throwing exceptions for expected failures (use Result pattern)
-- [ ] No manual null checks (use Guard Clauses)
-- [ ] No LINQ queries in handlers (use Specifications)
-- [ ] No package versions in .csproj files (use Directory.Packages.props)
-- [ ] No skipping bUnit component tests for interactive components
-
-**Violations Requiring Justification**:
-[List any violations with justification in Complexity Tracking section]
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
-```
+```text
 specs/[###-feature]/
-├── plan.md              # This file (/plan command output)
-├── research.md          # Phase 0 output (/plan command)
-├── data-model.md        # Phase 1 output (/plan command)
-├── quickstart.md        # Phase 1 output (/plan command)
-├── contracts/           # Phase 1 output (/plan command)
-└── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+├── plan.md              # This file (/speckit-plan command output)
+├── research.md          # Phase 0 output (/speckit-plan command)
+├── data-model.md        # Phase 1 output (/speckit-plan command)
+├── quickstart.md        # Phase 1 output (/speckit-plan command)
+├── contracts/           # Phase 1 output (/speckit-plan command)
+└── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
-### Source Code (FurryFriends Clean Architecture)
+### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
-```
-src/FurryFriends.Core/
-├── [Aggregate]Aggregate/
-│   ├── [Entity].cs
-│   ├── Specifications/
-│   │   └── [Entity]Specification.cs
-│   └── Events/
+```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
 
-src/FurryFriends.UseCases/
-├── [Aggregate]/
-│   ├── Create[Entity]/
-│   │   ├── Create[Entity]Command.cs
-│   │   ├── Create[Entity]Handler.cs
-│   │   └── Create[Entity]Validator.cs
-│   ├── Get[Entity]/
-│   │   ├── Get[Entity]Query.cs
-│   │   ├── Get[Entity]Handler.cs
-│   │   └── [Entity]Dto.cs
-│   └── Update[Entity]/
+tests/
+├── contract/
+├── integration/
+└── unit/
 
-src/FurryFriends.Infrastructure/
-├── Data/
-│   ├── AppDbContext.cs
-│   └── Config/
-│       └── [Entity]Configuration.cs
-└── Repositories/
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
 
-src/FurryFriends.Web/
-├── Endpoints/
-│   └── [Aggregate]Endpoints/
-│       └── [Operation]/
-│           ├── [Operation]Request.cs
-│           ├── [Operation]Response.cs
-│           ├── [Operation]Validator.cs
-│           └── [Operation].cs (endpoint)
-└── Program.cs
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
 
-src/FurryFriends.BlazorUI/
-├── Components/
-│   ├── Pages/
-│   │   └── [Feature]/
-│   │       ├── [Page].razor
-│   │       ├── [Page].razor.cs
-│   │       └── [Page].razor.css
-│   └── Common/
-│       └── [SharedComponent].razor
-└── Services/
-    └── Implementation/
-        └── [Entity]Service.cs
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
 
-src/FurryFriends.BlazorUI.Client/
-├── Pages/
-│   └── [Feature]/
-└── Services/
-    └── I[Entity]Service.cs
-
-tests/FurryFriends.UnitTests/
-├── Core/
-│   └── [Aggregate]/
-│       └── Specifications/
-└── UseCases/
-    └── [Aggregate]/
-
-tests/FurryFriends.IntegrationTests/
-└── [Aggregate]Endpoints/
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: FurryFriends uses Clean Architecture with strict layer separation.
-This feature will add files to the appropriate layers based on the aggregate being modified.
-
-## Phase 0: Outline & Research
-
-1. **Extract unknowns from Technical Context** above:
-   - For each NEEDS CLARIFICATION → research task
-   - For each dependency → best practices task
-   - For each integration → patterns task
-
-2. **Generate and dispatch research agents**:
-
-   ```
-   For each unknown in Technical Context:
-     Task: "Research {unknown} for {feature context}"
-   For each technology choice:
-     Task: "Find best practices for {tech} in {domain}"
-   ```
-
-3. **Consolidate findings** in `research.md` using format:
-   - Decision: [what was chosen]
-   - Rationale: [why chosen]
-   - Alternatives considered: [what else evaluated]
-
-**Output**: research.md with all NEEDS CLARIFICATION resolved
-
-## Phase 1: Design & Contracts
-
-_Prerequisites: research.md complete_
-
-1. **Extract entities from feature spec** → `data-model.md`:
-   - Entity name, fields, relationships
-   - Validation rules from requirements
-   - State transitions if applicable
-
-2. **Generate API contracts** from functional requirements:
-   - For each user action → endpoint
-   - Use standard REST/GraphQL patterns
-   - Output OpenAPI/GraphQL schema to `/contracts/`
-
-3. **Generate contract tests** from contracts:
-   - One test file per endpoint
-   - Assert request/response schemas
-   - Tests must fail (no implementation yet)
-
-4. **Extract test scenarios** from user stories:
-   - Each story → integration test scenario
-   - Quickstart test = story validation steps
-
-5. **Update agent file incrementally** (O(1) operation):
-   - Run `.specify/scripts/powershell/update-agent-context.ps1 -AgentType roo`
-     **IMPORTANT**: Execute it exactly as specified above. Do not add or remove any arguments.
-   - If exists: Add only NEW tech from current plan
-   - Preserve manual additions between markers
-   - Update recent changes (keep last 3)
-   - Keep under 150 lines for token efficiency
-   - Output to repository root
-
-**Output**: data-model.md, /contracts/\*, failing tests, quickstart.md, agent-specific file
-
-## Phase 2: Task Planning Approach
-
-_This section describes what the /tasks command will do - DO NOT execute during /plan_
-
-**Task Generation Strategy**:
-
-- Load `.specify/templates/tasks-template.md` as base
-- Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
-- Each contract → contract test task [P]
-- Each entity → model creation task [P]
-- Each user story → integration test task
-- Implementation tasks to make tests pass
-
-**Ordering Strategy**:
-
-- TDD order: Tests before implementation
-- Dependency order: Models before services before UI
-- Mark [P] for parallel execution (independent files)
-
-**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
-
-**IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
-
-## Phase 3+: Future Implementation
-
-_These phases are beyond the scope of the /plan command_
-
-**Phase 3**: Task execution (/tasks command creates tasks.md)  
-**Phase 4**: Implementation (execute tasks.md following constitutional principles)  
-**Phase 5**: Validation (run tests, execute quickstart.md, performance validation)
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 
-_Fill ONLY if Constitution Check has violations that must be justified_
+> **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
-| -------------------------- | ------------------ | ------------------------------------ |
-| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |
-
-## Progress Tracking
-
-_This checklist is updated during execution flow_
-
-**Phase Status**:
-
-- [ ] Phase 0: Research complete (/plan command)
-- [ ] Phase 1: Design complete (/plan command)
-- [ ] Phase 2: Task planning complete (/plan command - describe approach only)
-- [ ] Phase 3: Tasks generated (/tasks command)
-- [ ] Phase 4: Implementation complete
-- [ ] Phase 5: Validation passed
-
-**Gate Status**:
-
-- [ ] Initial Constitution Check: PASS
-- [ ] Post-Design Constitution Check: PASS
-- [ ] All NEEDS CLARIFICATION resolved
-- [ ] Complexity deviations documented
-
----
-
-_Based on Constitution v2.1.0 - See `.specify/memory/constitution.md`_
-_For implementation guidance, see `docs/FurryFriends_Technical_Guide.md`_
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

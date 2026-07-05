@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using Ardalis.GuardClauses;
 
 namespace FurryFriends.Core.UserAggregate;
 
-public class User : BaseEntity<Guid>
+public class User : BaseEntity<Guid>, IAggregateRoot
 {
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
@@ -15,6 +15,7 @@ public class User : BaseEntity<Guid>
 
     public User(string email, string passwordHash, string role)
     {
+        Id = Guid.NewGuid();
         Email = Guard.Against.NullOrWhiteSpace(email, nameof(email));
         PasswordHash = Guard.Against.NullOrWhiteSpace(passwordHash, nameof(passwordHash));
         Role = Guard.Against.NullOrWhiteSpace(role, nameof(role));

@@ -7,54 +7,55 @@
 
 ---
 
-## User Scenarios & Testing *(mandatory)*
+## Overview
 
-### Primary User Story
-Users access the system and authenticate via JWT tokens. Authenticated users get full API access, while anonymous users can only access endpoints marked as public with the `[Anonymous]` attribute.
+The system provides JWT-based authentication allowing users to sign in with email and password to receive a time-limited bearer token. All API endpoints are protected by default; only endpoints explicitly marked with an `[Anonymous]` attribute permit unauthenticated access. Role-based access control restricts data visibility per role: Admin (full access), Petwalker (own clients and scoped data), Client (own profile and petwalker listings).
 
-### Acceptance Scenarios
-1. **Given** a user submits valid credentials, **When** they log in, **Then** they receive a JWT token and are authenticated for subsequent protected requests.
-2. **Given** a user holds a valid JWT token, **When** they access a protected endpoint with the `[Anonymous]` attribute, **Then** they can access it regardless of authentication status.
-3. **Given** a user requests a protected endpoint without authentication, **When** the endpoint has no `[Anonymous]` flag, **Then** they receive a 401 Unauthorized response.
+---
 
-### Edge Cases
-- When an `[Anonymous]`-marked endpoint is accessed without authentication, the system must allow access if the attribute is correctly applied.
-- If an endpoint claims `[Anonymous]` but lacks the attribute, the system treats it as protected.
-- When a JWT token expires (after 8 hours), the user must re-authenticate to obtain a new valid token.
-- If a JWT token is used after expiration, the system returns a 401 Unauthorized response.
+## Functional Requirements
 
-## Requirements *(mandatory)*
+- **FR-001**: The system MUST allow users to sign in using an email and password.
+- **FR-002**: The system MUST validate email addresses for correct syntax before authentication.
+- **FR-003**: The system MUST enforce password complexity: more than 8 characters, with uppercase, lowercase, numeric, and special characters. Mandatory complexity requirements: minimum 256-bit entropy enforced via _PasswordComplexityValidator._
+- **FR-004**: The system MUST issue internally generated JWT tokens that expire after 8 hours. Tokens must be cryptographically signed and validated on each request.
+- **FR-005**: The system MUST protect API endpoints by default and only allow anonymous access on explicitly marked public endpoints via the `[Anonymous]` attribute.
+- **FR-006**: The system MUST assign the authenticated user one of the role groups: Admin, Petwalker, or Client based on token claims.
+- **FR-007**: The system MUST restrict Petwalker users to viewing only their own clients and petwalker-scoped data.
+- **FR-008**: The system MUST restrict Client users to viewing only their own profile details while allowing them to browse petwalker listings.
+- **FR-009**: The system MUST allow Admin users full access to all features and all data.
+- **FR-010**: In development mode the system MUST allow login only for Admin users.
+- **FR-011**: The system MUST link authenticated users to their corresponding Client or Petwalker profile and provide a path to create a missing profile.
+- **FR-012**: The system MUST return a clear invalid-login or unauthorized response on authentication failure.
+- **FR-013**: The system MUST use an in-process JWT provider configurable via application settings. Configuration MUST include: `Jwt:SigningKey`, `Jwt:Issuer`, `Jwt:Audience`, and `Jwt:ExpiryHours`, with fallback to environment variables for production security.
+- **FR-014**: The system MUST reject expired or invalid tokens with a 401 Unauthorized response. Token validation MUST check: (1) 8-hour expiry window with ±5min tolerance, (2) cryptographic signature verification, (3) issuer/audience validation, (4) proper token structure using JWT standards.
+- **FR-015**: The system MUST support user registration with role selection (Client or Petwalker) and profile creation.
 
-### Functional Requirements
-- **FR-011-001**: The system MUST allow users to sign in using an email and password.
-- **FR-011-002**: The system MUST validate email addresses for correct syntax before authentication.
-- **FR-011-003**: The system MUST enforce password complexity: more than 8 characters, with uppercase, lowercase, numeric, and special characters.
-- **FR-011-004**: The system MUST issue internally generated JWT tokens that expire after 8 hours. Tokens must be signed with a strong secret and validated on each request.
+---
 
-- **FR-011-005**: The system MUST protect API endpoints by default and only allow anonymous access on explicitly marked public endpoints via the `[Anonymous]` attribute.
-- **FR-011-006**: The system MUST interpret JWT claims to assign the authenticated user one of the role groups: Admin, Petwalker, or Client.
-- **FR-011-007**: The system MUST restrict Petwalker users to viewing only their own clients and petwalker-scoped data.
-- **FR-011-008**: The system MUST restrict Client users to viewing only their own profile details while allowing them to browse petwalker listings.
-- **FR-011-009**: The system MUST allow Admin users full access to all features and all data.
-- **FR-011-010**: In development mode the system MUST allow login only for Admin users. Implementation must use GuardClauses (e.g., Guard.Against.Null) rather than explicit null checks.
-- **FR-011-011**: The system MUST link authenticated users to their corresponding Client or Petwalker profile and provide a path to create a missing profile.
-- **FR-011-012**: The system MUST return a clear invalid-login or unauthorized response on authentication failure.
-- **FR-011-013**: The system MUST use an in-process JWT provider (JwtSecurityTokenHandler) encapsulated in JwtTokenService.cs. The implementation must be configurable via appsettings.json and used for both token generation and validation.
+## Success Criteria
 
-### Key Entities
-- **User**: A login identity with email, password hash, and role claims.
-- **JWT Token**: A self-issued bearer token containing authenticated user identity and role claims, valid for 8 hours.
-- **Role**: The permission group assigned to a user: Admin, Petwalker, or Client.
-- **Protected Endpoint**: An API route that requires authentication unless explicitly marked with the `[Anonymous]` attribute.
-- **Anonymous Endpoint**: A protected endpoint with the `[Anonymous]` attribute applied to its controller/action.
+- **SC-001**: Valid credentials produce a JWT token within 500ms under normal load.
+- **SC-002**: Expired or invalid tokens are rejected with 401 Unauthorized on 100% of protected endpoint requests.
+- **SC-003**: Endpoints marked with `[Anonymous]` return 200 OK without authentication on 100% of requests.
+- **SC-004**: Role-based data restrictions are enforced: Petwalker sees only own data, Client sees only own profile + listings, Admin sees all.
+- **SC-005**: Development-mode Admin-only login restriction is active when environment is Development.
+- **SC-006**: Password complexity requirements reject non-compliant passwords on 100% of registration attempts.
+- **SC-007**: Email syntax validation rejects malformed addresses on 100% of registration/login attempts.
+- **SC-008**: User-profile linkage succeeds for 100% of authenticated users with existing profiles.
+- **SC-009**: Token expiry occurs at 8 hours ± 5 minutes from issuance.
 
 ---
 
 ## Assumptions
+
 - A user store exists for email, password hash, and role claims.
-- JWT tokens are issued and validated internally without relying on an external provider.
-- Development mode is configured for Admin-only login behavior.
+- JWT tokens are issued and validated internally without relying on an external identity provider.
+- Development mode is detected via standard ASP.NET Core environment configuration.
 - The domain model supports linking a user to a Client or Petwalker profile record.
 - Client and Petwalker users have role-specific views and permissions.
 - Endpoints marked with `[Anonymous]` override default protection rules.
 - No refresh token mechanism is implemented in this version (short-lived tokens only).
+- Password hashing uses ASP.NET Core Identity's default PBKDF2 implementation.
+- The `[Anonymous]` attribute maps to FastEndpoints' `AllowAnonymous()` method.
+- Application settings for JWT (issuer, audience, signing key) are provided via standard configuration.

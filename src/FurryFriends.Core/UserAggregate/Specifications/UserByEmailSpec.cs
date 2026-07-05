@@ -1,7 +1,4 @@
-using Ardalis.Specification;
-using FurryFriends.Core.UserAggregate;
-
-namespace FurryFriends.Core.UserAggregate.Specifications;
+﻿namespace FurryFriends.Core.UserAggregate.Specifications;
 
 public sealed class UserByEmailSpec : Specification<User>
 {

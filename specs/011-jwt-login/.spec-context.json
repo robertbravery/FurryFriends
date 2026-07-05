@@ -138,6 +138,42 @@
       "comment": "Allow the requirement for new users to register. They should be able to select whether they are a client/pet owner or a Petwalker. Then when they login they can then update their details",
       "status": "applied",
       "createdAt": "2026-06-16T11:14:36.312Z"
+    },
+    {
+      "id": "ref-1783250516687-ha267",
+      "doc": "plan",
+      "anchor": {
+        "heading": "Files to Create/Modify (dependency order)",
+        "blockText": "- `src/FurryFriends.UseCases/User/Registration/RegisterCommandHandler.cs` — Creates User, hashes password, assigns role, links profile",
+        "line": 40
+      },
+      "comment": "Infrastructure does not depend on UseCases. This is the otherway round. Follow strict Clean Architedture rules here.",
+      "status": "applied",
+      "createdAt": "2026-07-05T11:21:56.689Z"
+    },
+    {
+      "id": "ref-1783253989919-yhle8",
+      "doc": "tasks",
+      "anchor": {
+        "heading": null,
+        "blockText": "- [ ] T056 Add Dependency Check to Maven repository for logging.\r",
+        "line": 119
+      },
+      "comment": "This is a dotnet core project no need fo Maven. Maven is a Java based tool",
+      "status": "applied",
+      "createdAt": "2026-07-05T12:19:49.921Z"
+    },
+    {
+      "id": "ref-1783254098898-v2trj",
+      "doc": "tasks",
+      "anchor": {
+        "heading": null,
+        "blockText": "- [ ] T056 Add Dependency Check to Maven repository for logging.\r",
+        "line": 119
+      },
+      "comment": "For Logging we are using Serilog in this project and dotnet app",
+      "status": "applied",
+      "createdAt": "2026-07-05T12:21:38.900Z"
     }
   ]
 }

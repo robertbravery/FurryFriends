@@ -1,4 +1,4 @@
-namespace FurryFriends.UseCases.User.Registration;
+﻿namespace FurryFriends.UseCases.Userauthentication.Registration;
 
 public class ExtendedUserMetadata
 {

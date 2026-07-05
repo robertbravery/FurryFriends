@@ -1,12 +1,12 @@
-using Ardalis.Result;
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using FluentValidation;
 using MediatR;
+using FurryFriends.Core;
 using FurryFriends.Core.UserAggregate;
 using FurryFriends.Core.UserAggregate.Specifications;
 using FurryFriends.Infrastructure.Services;
 
-namespace FurryFriends.UseCases.User.Login;
+namespace FurryFriends.UseCases.Userauthentication.Login;
 
 public class LoginQuery : IRequest<Result<LoginResponse>>
 {

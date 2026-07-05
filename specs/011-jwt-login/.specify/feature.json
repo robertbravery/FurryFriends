@@ -1,5 +1,0 @@
-{
-  "featureName": "JWT Authentication with Anonymous Access",
-  "featureDir": "specs/011-jwt-login",
-  "branch": "011-jwt-login"
-}

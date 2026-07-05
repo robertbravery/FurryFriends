@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FurryFriends.Core\FurryFriends.Core.csproj" />
+    <ProjectReference Include="..\FurryFriends.Infrastructure\FurryFriends.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

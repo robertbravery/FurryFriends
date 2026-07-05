@@ -1,0 +1,20 @@
+{
+  "version": "0.10.2",
+  "integration_state_schema": 1,
+  "installed_integrations": [
+    "cline",
+    "kilocode"
+  ],
+  "integration_settings": {
+    "cline": {
+      "script": "ps",
+      "invoke_separator": "-"
+    },
+    "kilocode": {
+      "script": "ps",
+      "invoke_separator": "."
+    }
+  },
+  "integration": "cline",
+  "default_integration": "cline"
+}

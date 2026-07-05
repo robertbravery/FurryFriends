@@ -1,10 +1,10 @@
-using Ardalis.Result;
+﻿using Ardalis.Result;
 using Ardalis.GuardClauses;
 using FluentValidation;
 using MediatR;
 using FurryFriends.Core.Interfaces;
 
-namespace FurryFriends.UseCases.User.Registration;
+namespace FurryFriends.UseCases.Userauthentication.Registration;
 
 public class RegisterCommand : IRequest<Result<Guid>>
 {

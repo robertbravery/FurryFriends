@@ -8,6 +8,11 @@ public class MimeKitEmailSender(ILogger<MimeKitEmailSender> logger,
   private readonly ILogger<MimeKitEmailSender> _logger = logger;
   private readonly MailserverConfiguration _mailserverConfiguration = mailserverOptions.Value!;
 
+  public Task SendConfirmationEmail(string email)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task SendEmailAsync(string to, string from, string subject, string body)
   {
     _logger.LogWarning("Sending email to {to} from {from} with subject {subject} using {type}.", to, from, subject, this.ToString());

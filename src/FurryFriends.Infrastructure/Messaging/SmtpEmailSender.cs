@@ -12,6 +12,11 @@ public class SmtpEmailSender(ILogger<SmtpEmailSender> logger,
   private readonly ILogger<SmtpEmailSender> _logger = logger;
   private readonly MailserverConfiguration _mailserverConfiguration = mailserverOptions.Value!;
 
+  public Task SendConfirmationEmail(string email)
+  {
+    throw new NotImplementedException();
+  }
+
   public async Task SendEmailAsync(string to, string from, string subject, string body)
   {
     var emailClient = new System.Net.Mail.SmtpClient(_mailserverConfiguration.Hostname, _mailserverConfiguration.Port);

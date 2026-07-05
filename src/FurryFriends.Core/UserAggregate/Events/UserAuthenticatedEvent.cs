@@ -1,11 +1,12 @@
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using FurryFriends.Core;
 
 namespace FurryFriends.Core.UserAggregate.Events;
 
 public sealed class UserAuthenticatedEvent : DomainEventBase
 {
-    public Guid UserId { get; }
+  public Guid Id { get; }
+  public Guid UserId { get; }
     public string Email { get; }
     public string Role { get; }
 
