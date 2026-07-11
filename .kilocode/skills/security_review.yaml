@@ -1,0 +1,71 @@
+name: security_review
+description: >
+  Security review for FurryFriends backend/API. No changes, only suggestions.
+
+inputs:
+  code:
+    type: file
+    multiple: true
+    required: false
+  changed_files:
+    type: file
+    multiple: true
+    required: false
+  feature_dir:
+    type: text
+    required: false
+  feature_json:
+    type: file
+    default: .specify/feature.json
+  domain_checklist:
+    type: file
+    default: .kilocode/docs/domain-modeling-checklist.md
+
+execution:
+  prompt: |
+    You are reviewing security for the FurryFriends system.
+
+    ## File Selection Logic
+    If {{ code }} is provided, use it.
+    Otherwise use changed files: {{ changed_files }}.
+
+    ## Feature Folder Resolution
+    If {{ feature_dir }} is provided, use it.
+    Otherwise parse .specify/feature.json:
+    {{ feature_json }}
+
+    Extract "path" from feature.json and use that as the feature folder.
+
+    ## Resolved Paths
+    - Spec: <feature_dir>/spec.md
+    - Plan: <feature_dir>/plan.md
+
+    ## Domain Modeling Checklist
+    Use this checklist to evaluate domain correctness and security boundaries:
+    {{ domain_checklist }}
+
+    ## FurryFriends Security Context
+    - API endpoints must validate all inputs.
+    - EF Core queries must avoid injection.
+    - Authentication/authorization must follow FurryFriends rules.
+    - Sensitive data (pet owner info, addresses) must be protected.
+    - Logging must not expose PII.
+
+    ## Review Rules
+    - No changes.
+    - Snippets allowed as suggestions.
+
+    ## Criteria
+    - Input validation
+    - Authentication/authorization
+    - Sensitive data handling
+    - Error handling
+    - Logging safety
+    - Injection risks
+
+    ## Severity Scale (0–10)
+
+    ## Output Format
+    ### Summary
+    ### Findings by File
+    ### Recommendations

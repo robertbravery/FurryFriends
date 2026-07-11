@@ -1,0 +1,70 @@
+name: constitution_review
+description: >
+  Constitution compliance review for FurryFriends architecture.
+
+inputs:
+  code:
+    type: file
+    multiple: true
+    required: false
+  changed_files:
+    type: file
+    multiple: true
+    required: false
+  feature_dir:
+    type: text
+    required: false
+  feature_json:
+    type: file
+    default: .specify/feature.json
+  constitution:
+    type: file
+    default: constitution.md
+  domain_checklist:
+    type: file
+    default: .kilocode/docs/domain-modeling-checklist.md
+
+execution:
+  prompt: |
+    You are reviewing code for compliance with the FurryFriends Constitution.
+
+    ## File Selection Logic
+    If {{ code }} is provided, use it.
+    Otherwise use changed files: {{ changed_files }}.
+
+    ## Feature Folder Resolution
+    If {{ feature_dir }} is provided, use it.
+    Otherwise parse .specify/feature.json:
+    {{ feature_json }}
+
+    Extract "path" from feature.json and use that as the feature folder.
+
+    ## Resolved Paths
+    - Spec: <feature_dir>/spec.md
+    - Plan: <feature_dir>/plan.md
+
+    ## Domain Modeling Checklist
+    Use this checklist to evaluate constitution compliance:
+    {{ domain_checklist }}
+
+    ## Constitution Rules (FurryFriends)
+    - Domain entities must be immutable except via methods.
+    - Aggregates enforce invariants.
+    - Commands must not return domain entities.
+    - Queries must not mutate state.
+    - Handlers must be thin.
+    - No business logic in controllers.
+    - DTOs must not contain domain types.
+    - No EF Core in domain/application layers.
+    - No static service locators.
+
+    ## Review Rules
+    - No changes.
+    - Snippets allowed as suggestions.
+
+    ## Severity Scale (0–10)
+
+    ## Output Format
+    ### Summary
+    ### Findings by File
+    ### Recommendations

@@ -1,0 +1,57 @@
+name: aggregate_review
+description: >
+  Aggregate correctness, security, and constitution reviews for FurryFriends.
+
+inputs:
+  code:
+    type: file
+    multiple: true
+    required: false
+  changed_files:
+    type: file
+    multiple: true
+    required: false
+  feature_dir:
+    type: text
+    required: false
+  feature_json:
+    type: file
+    default: .specify/feature.json
+  constitution:
+    type: file
+    default: constitution.md
+  domain_checklist:
+    type: file
+    default: .kilocode/docs/domain-modeling-checklist.md
+  correctness_report:
+    type: text
+  security_report:
+    type: text
+  constitution_report:
+    type: text
+
+execution:
+  prompt: |
+    Aggregate the following reports into a unified FurryFriends review.
+
+    ## Inputs
+    - Code: {{ code }}
+    - Changed files: {{ changed_files }}
+    - Feature override: {{ feature_dir }}
+    - Feature JSON: {{ feature_json }}
+    - Constitution: {{ constitution }}
+    - Domain Checklist: {{ domain_checklist }}
+
+    ## Sub-Reports
+    - Correctness:
+      {{ correctness_report }}
+    - Security:
+      {{ security_report }}
+    - Constitution:
+      {{ constitution_report }}
+
+    ## Output Format
+    ### Global Summary
+    ### Issues by Category
+    ### Cross-Cutting Recommendations
+    ### Suggested Code Snippets (non-applied)

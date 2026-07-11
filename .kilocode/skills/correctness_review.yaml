@@ -1,0 +1,72 @@
+name: correctness_review
+description: >
+  Review code correctness for FurryFriends architecture. No changes, only suggestions.
+
+inputs:
+  code:
+    type: file
+    multiple: true
+    required: false
+  changed_files:
+    type: file
+    multiple: true
+    required: false
+  feature_dir:
+    type: text
+    required: false
+  feature_json:
+    type: file
+    default: .specify/feature.json
+  domain_checklist:
+    type: file
+    default: .kilocode/docs/domain-modeling-checklist.md
+
+execution:
+  prompt: |
+    You are reviewing code correctness for the FurryFriends architecture.
+
+    ## File Selection Logic
+    If {{ code }} is provided, use it.
+    Otherwise use changed files: {{ changed_files }}.
+
+    ## Feature Folder Resolution
+    If {{ feature_dir }} is provided, use it.
+    Otherwise parse .specify/feature.json:
+    {{ feature_json }}
+
+    Extract "path" from feature.json and use that as the feature folder.
+
+    ## Resolved Paths
+    - Spec: <feature_dir>/spec.md
+    - Plan: <feature_dir>/plan.md
+    - Tasks: <feature_dir>/tasks.md
+
+    ## Domain Modeling Checklist
+    Use this checklist to evaluate domain correctness:
+    {{ domain_checklist }}
+
+    ## FurryFriends Architecture Rules
+    - Domain layer: pure logic, no EF Core, no HTTP, no infrastructure.
+    - Application layer: handlers orchestrate domain operations; no business logic.
+    - Infrastructure: EF Core, external services, persistence.
+    - API: DTOs, mapping, request validation.
+    - UI: Blazor components, no domain logic.
+
+    ## Review Rules
+    - Do NOT modify files.
+    - You MAY show corrected code snippets as suggestions only.
+
+    ## Criteria
+    - Correctness of domain logic
+    - Handler correctness (CQRS)
+    - DTO correctness (no domain leakage)
+    - Mapping correctness
+    - Validation correctness
+    - Aggregate boundary correctness
+
+    ## Severity Scale (0–10)
+
+    ## Output Format
+    ### Summary
+    ### Findings by File
+    ### Recommendations

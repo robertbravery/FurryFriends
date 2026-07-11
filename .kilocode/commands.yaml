@@ -1,0 +1,67 @@
+commands:
+  - name: /review
+    skill: aggregate_review
+    description: Full multi-agent review for FurryFriends architecture.
+    inputs:
+      code:
+        prompt: "Optional: specify file(s) to review. Leave empty to review changed files."
+      changed_files:
+        prompt: "Changed files detected. You may override by specifying code files."
+      feature_dir:
+        prompt: "Optional: specify a feature folder manually (otherwise auto-detected)."
+      feature_json:
+        prompt: "Auto-loaded: .specify/feature.json"
+        default: .specify/feature.json
+      constitution:
+        prompt: "Optional: override constitution.md"
+        default: constitution.md
+      domain_checklist:
+        prompt: "Optional: override domain-modeling-checklist.md"
+        default: .kilocode/docs/domain-modeling-checklist.md
+
+  - name: /review-correctness
+    skill: correctness_review
+    description: Review correctness against FurryFriends spec & plan.
+    inputs:
+      code:
+        prompt: "Optional: specify file(s) to review."
+      changed_files:
+        prompt: "Changed files detected."
+      feature_dir:
+        prompt: "Optional: specify a feature folder manually."
+      feature_json:
+        default: .specify/feature.json
+      domain_checklist:
+        default: .kilocode/docs/domain-modeling-checklist.md
+
+  - name: /review-security
+    skill: security_review
+    description: Security review for FurryFriends backend/API layers.
+    inputs:
+      code:
+        prompt: "Optional: specify file(s) to review."
+      changed_files:
+        prompt: "Changed files detected."
+      feature_dir:
+        prompt: "Optional: specify a feature folder manually."
+      feature_json:
+        default: .specify/feature.json
+      domain_checklist:
+        default: .kilocode/docs/domain-modeling-checklist.md
+
+  - name: /review-constitution
+    skill: constitution_review
+    description: Constitution compliance review for FurryFriends architecture.
+    inputs:
+      code:
+        prompt: "Optional: specify file(s) to review."
+      changed_files:
+        prompt: "Changed files detected."
+      feature_dir:
+        prompt: "Optional: specify a feature folder manually."
+      feature_json:
+        default: .specify/feature.json
+      constitution:
+        default: constitution.md
+      domain_checklist:
+        default: .kilocode/docs/domain-modeling-checklist.md
