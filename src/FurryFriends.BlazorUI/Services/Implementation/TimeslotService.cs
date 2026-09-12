@@ -343,7 +343,7 @@ public class TimeslotService : ITimeslotService
         {
             _logger.LogInformation("Getting timeslots for PetWalker: {PetWalkerId}", request.PetWalkerId);
 
-            var url = $"/timeslots";
+            var url = $"/api/timeslots";
             var queryParams = new List<string>();
 
             if (request.PetWalkerId.HasValue)
@@ -418,7 +418,7 @@ public class TimeslotService : ITimeslotService
             _logger.LogInformation("Getting available timeslots for PetWalker: {PetWalkerId}, Date: {Date}",
                 petWalkerId, date);
 
-            var url = $"/timeslots/available?petWalkerId={petWalkerId}&date={date:yyyy-MM-dd}";
+            var url = $"/api/timeslots/available?petWalkerId={petWalkerId}&date={date:yyyy-MM-dd}";
 
             var response = await _httpClient.GetAsync(url);
 
@@ -853,13 +853,15 @@ public class TimeslotService : ITimeslotService
     {
         try
         {
-            _logger.LogInformation("Responding to custom time request: {RequestId}, Action: {Action}",
-                request.RequestId, request.Action);
+            _logger.LogInformation("Responding to custom time request: {RequestId}, Response: {Response}",
+                request.RequestId, request.Response);
 
             var json = JsonSerializer.Serialize(request, _jsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync($"/api/timeslots/custom-time-requests/{request.RequestId}/respond", content);
+            // Route and verb must match RespondToCustomTimeRequestRequest on the API:
+            // PUT /timeslots/respond-custom-time/{RequestId}
+            var response = await _httpClient.PutAsync($"/api/timeslots/respond-custom-time/{request.RequestId}", content);
 
             if (response.IsSuccessStatusCode)
             {

@@ -1,6 +1,7 @@
-﻿using FurryFriends.Core.Interfaces;
+using FurryFriends.Core.Interfaces;
 using FurryFriends.Infrastructure.Data;
 using FurryFriends.Infrastructure.Messaging;
+using FurryFriends.Infrastructure.Services;
 using ILogger = Serilog.ILogger;
 
 namespace FurryFriends.Infrastructure;
@@ -27,6 +28,7 @@ public static class InfrastructureServiceExtensions
 
     RegisterDefaultDependencies(services, logger);
     RegisterEFRepositories(services);
+    RegisterAuthenticationServices(services, config);
 
     logger.Information("{Project} services registered", "Infrastructure");
 
@@ -44,6 +46,30 @@ public static class InfrastructureServiceExtensions
   {
     services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
            .AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+  }
+
+  /// <summary>
+  /// Registers the JWT token service used by the login flow.
+  /// The settings are bound from the "Jwt" configuration section, falling back to
+  /// safe defaults so the container can always resolve <see cref="JwtTokenService"/>.
+  /// </summary>
+  private static void RegisterAuthenticationServices(IServiceCollection services, ConfigurationManager config)
+  {
+    var jwtSection = config.GetSection("Jwt");
+    var secretKey = jwtSection["SecretKey"];
+    var expirationHours = int.TryParse(jwtSection["ExpirationHours"], out var parsedExpirationHours)
+      ? parsedExpirationHours
+      : 8;
+
+    services.Configure<JwtSettings>(settings =>
+    {
+      settings.SecretKey = string.IsNullOrWhiteSpace(secretKey)
+        ? "development-only-signing-key-change-me"
+        : secretKey;
+      settings.ExpirationHours = expirationHours;
+    });
+
+    services.AddSingleton<JwtTokenService>();
   }
 
   private static void RegisterProductionOnlyDependencies(IServiceCollection services, ConfigurationManager config)

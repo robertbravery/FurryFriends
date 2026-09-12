@@ -7,6 +7,13 @@ public class GetAvailableSlotsResponse
 {
     public Guid PetWalkerId { get; set; }
     public DateTime Date { get; set; }
+
+    /// <summary>
+    /// True when the PetWalker has published any weekly availability at all.
+    /// When false, the walker has not configured a schedule and no date will have slots.
+    /// </summary>
+    public bool HasSchedule { get; set; }
+
     public List<AvailableSlotResponse> AvailableSlots { get; set; } = new();
 }
 

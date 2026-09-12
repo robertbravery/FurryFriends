@@ -102,6 +102,68 @@ public class PetWalkerViewPopupTests : TestContext
         });
         public Task<ApiResponse<bool>> SetScheduleAsync(Guid petWalkerId, List<ScheduleItemDto> schedules) => Task.FromResult(new ApiResponse<bool> { Success = true, Data = true });
         public Task<ApiResponse<bool>> ClearScheduleAsync(Guid petWalkerId) => Task.FromResult(new ApiResponse<bool> { Success = true, Data = true });
+
+        public Task<ApiResponse<List<PetWalkerDateExceptionDto>>> GetDateExceptionsAsync(Guid petWalkerId) =>
+            Task.FromResult(new ApiResponse<List<PetWalkerDateExceptionDto>>
+            {
+                Success = true,
+                Data = new List<PetWalkerDateExceptionDto>()
+            });
+
+        public Task<ApiResponse<PetWalkerDateExceptionDto>> SetDateExceptionAsync(
+            Guid petWalkerId,
+            DateTime date,
+            bool isUnavailable,
+            TimeOnly? startTime,
+            TimeOnly? endTime,
+            string? reason) =>
+            Task.FromResult(new ApiResponse<PetWalkerDateExceptionDto>
+            {
+                Success = true,
+                Data = new PetWalkerDateExceptionDto
+                {
+                    Id = Guid.NewGuid(),
+                    PetWalkerId = petWalkerId,
+                    Date = DateOnly.FromDateTime(date),
+                    IsUnavailable = isUnavailable,
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    Reason = reason
+                }
+            });
+
+        public Task<ApiResponse<bool>> DeleteDateExceptionAsync(Guid petWalkerId, DateTime date) =>
+            Task.FromResult(new ApiResponse<bool> { Success = true, Data = true });
+
+        public Task<ApiResponse<AvailabilitySettingsDto>> GetAvailabilitySettingsAsync(Guid petWalkerId) =>
+            Task.FromResult(new ApiResponse<AvailabilitySettingsDto>
+            {
+                Success = true,
+                Data = new AvailabilitySettingsDto
+                {
+                    PetWalkerId = petWalkerId,
+                    SlotDurationMinutes = 60,
+                    InterBookingGapMinutes = 0,
+                    DailyPetWalkLimit = 8
+                }
+            });
+
+        public Task<ApiResponse<AvailabilitySettingsDto>> UpdateAvailabilitySettingsAsync(
+            Guid petWalkerId,
+            int slotDurationMinutes,
+            int interBookingGapMinutes,
+            int dailyPetWalkLimit) =>
+            Task.FromResult(new ApiResponse<AvailabilitySettingsDto>
+            {
+                Success = true,
+                Data = new AvailabilitySettingsDto
+                {
+                    PetWalkerId = petWalkerId,
+                    SlotDurationMinutes = slotDurationMinutes,
+                    InterBookingGapMinutes = interBookingGapMinutes,
+                    DailyPetWalkLimit = dailyPetWalkLimit
+                }
+            });
     }
 
     private sealed class FakeRatingService : IRatingService

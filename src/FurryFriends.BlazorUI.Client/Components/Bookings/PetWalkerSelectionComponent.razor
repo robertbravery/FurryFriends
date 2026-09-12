@@ -11,6 +11,30 @@
         }
     </div>
 
+    <!-- Date context: availability is far more useful when tied to a day -->
+    <div class="date-context">
+        <label class="date-context-label" for="availability-date">
+            <i class="fas fa-calendar-day"></i>
+            Choose a date to see who is free
+        </label>
+        <input id="availability-date" type="date" class="form-control date-context-input"
+               value="@(SelectedDate?.ToString("yyyy-MM-dd"))"
+               min="@DateTime.Today.ToString("yyyy-MM-dd")"
+               max="@DateTime.Today.AddMonths(3).ToString("yyyy-MM-dd")"
+               @onchange="OnDateChangedAsync" />
+        @if (isLoadingAvailability)
+        {
+            <span class="date-context-status">
+                <span class="mini-spinner"></span>
+                Checking availability...
+            </span>
+        }
+        else if (!SelectedDate.HasValue)
+        {
+            <span class="date-context-status muted">Optional &mdash; you can also pick a date on the next step</span>
+        }
+    </div>
+
     @if (isLoading)
     {
         <div class="loading-container">
@@ -37,7 +61,10 @@
         <div class="petwalkers-grid">
             @foreach (var petWalker in availablePetWalkers)
             {
-                <div class="petwalker-card @(SelectedPetWalkerId == petWalker.Id ? "selected" : "")" 
+                var availability = AvailabilityFor(petWalker.Id);
+                var selectable = CanBeSelected(availability);
+
+                <div class="petwalker-card @(SelectedPetWalkerId == petWalker.Id ? "selected" : "") @(selectable ? "" : "no-availability")" 
                      @onclick="() => SelectPetWalker(petWalker)">
                     
                     <div class="petwalker-header">
@@ -109,6 +136,53 @@
                             </div>
                         }
                     </div>
+
+                    <!-- Availability for the selected date -->
+                    @if (isLoadingAvailability && SelectedDate.HasValue)
+                    {
+                        <div class="availability-row checking">
+                            <span class="mini-spinner"></span>
+                            <span>Checking availability...</span>
+                        </div>
+                    }
+                    else if (SelectedDate.HasValue && availability.IsAvailable && availability.SlotCount > 0)
+                    {
+                        <div class="availability-row available">
+                            <i class="fas fa-circle-check"></i>
+                            <span>
+                                @availability.SlotCount
+                                slot@(availability.SlotCount == 1 ? "" : "s") on @SelectedDate.Value.ToString("ddd, dd MMM")
+                            </span>
+                        </div>
+                    }
+                    else if (SelectedDate.HasValue && availability.IsAvailable && availability.HasSchedule)
+                    {
+                        <div class="availability-row booked-out">
+                            <i class="fas fa-calendar-times"></i>
+                            <span>No slots on @SelectedDate.Value.ToString("ddd, dd MMM")</span>
+                        </div>
+                    }
+                    else if (SelectedDate.HasValue && availability.IsAvailable)
+                    {
+                        <div class="availability-row unset">
+                            <i class="fas fa-user-clock"></i>
+                            <span>Has not set their availability yet</span>
+                        </div>
+                    }
+                    else if (SelectedDate.HasValue)
+                    {
+                        <div class="availability-row unset">
+                            <i class="fas fa-circle-question"></i>
+                            <span>Availability unavailable</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="availability-row hint">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>Choose a date above to see free slots</span>
+                        </div>
+                    }
 
                     @if (SelectedPetWalkerId == petWalker.Id)
                     {

@@ -92,7 +92,8 @@
                     <div class="step-section">
                         <PetWalkerSelectionComponent ServiceArea="@ServiceArea"
                                                      SelectedPetWalkerId="@bookingRequest.PetWalkerId" OnPetWalkerSelected="OnPetWalkerSelected"
-                                                     SelectedPetWalkerIdChanged="OnPetWalkerIdChanged" />
+                                                     SelectedPetWalkerIdChanged="OnPetWalkerIdChanged"
+                                                     SelectedDate="@selectedDate" SelectedDateChanged="OnDateChanged" />
 
                         <div class="step-actions">
                             <button class="btn btn-primary" disabled="@( bookingRequest.PetWalkerId == Guid.Empty)"
@@ -133,8 +134,30 @@
                             <div class="form-group">
                                 <label for="pet-select" class="form-label">Select Pet *</label>
                                 <select id="pet-select" class="form-control @(HasPetError ? "is-invalid" : "")"
+                                        disabled="@(!HasPetOwner)"
                                         @bind="bookingRequest.PetId">
-                                    <option value="">-- Select a pet --</option>
+                                    <option value="">
+                                        @if (!HasPetOwner)
+                                        {
+                                            <text>-- No client context --</text>
+                                        }
+                                        else if (_petLoadError != null)
+                                        {
+                                            <text>-- Could not load pets --</text>
+                                        }
+                                        else if (availablePets == null)
+                                        {
+                                            <text>-- Loading pets --</text>
+                                        }
+                                        else if (availablePets.Length == 0)
+                                        {
+                                            <text>-- No pets on record --</text>
+                                        }
+                                        else
+                                        {
+                                            <text>-- Select a pet --</text>
+                                        }
+                                    </option>
                                     @if (availablePets != null)
                                     {
                                         @foreach (var pet in availablePets)
@@ -143,9 +166,39 @@
                                         }
                                     }
                                 </select>
+
+                                @if (_petLoadError != null)
+                                {
+                                    <div class="alert alert-danger pet-load-error" role="alert">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>@_petLoadError</span>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                @onclick="RetryLoadPetsAsync">
+                                            <i class="fas fa-redo"></i> Retry
+                                        </button>
+                                    </div>
+                                }
+
                                 @if (HasPetError)
                                 {
-                                    <div class="invalid-feedback">Please select a pet for the walk</div>
+                                    <div class="invalid-feedback">
+                                        @if (!HasPetOwner)
+                                        {
+                                            <text>No client is signed in, so a booking cannot be made</text>
+                                        }
+                                        else if (_petLoadError != null)
+                                        {
+                                            <text>Pets could not be loaded &mdash; retry above</text>
+                                        }
+                                        else if (availablePets != null && availablePets.Length == 0)
+                                        {
+                                            <text>You have no pets registered, so a booking cannot be made</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Please select a pet for the walk</text>
+                                        }
+                                    </div>
                                 }
                             </div>
 

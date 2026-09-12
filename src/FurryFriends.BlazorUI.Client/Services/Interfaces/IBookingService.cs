@@ -39,7 +39,7 @@ public interface IBookingService
     /// <param name="startDate">Start date range</param>
     /// <param name="endDate">End date range</param>
     /// <returns>API response with client bookings</returns>
-    Task<ApiResponse<List<BookingDto>>> GetClientBookingsAsync(Guid clientId, DateTime startDate, DateTime endDate);
+    Task<ApiResponse<List<BookingListItemDto>>> GetClientBookingsAsync(Guid clientId, DateTime startDate, DateTime endDate);
 
     /// <summary>
     /// Get bookings for a specific PetWalker
@@ -48,7 +48,7 @@ public interface IBookingService
     /// <param name="startDate">Start date range</param>
     /// <param name="endDate">End date range</param>
     /// <returns>API response with PetWalker bookings</returns>
-    Task<ApiResponse<List<BookingDto>>> GetPetWalkerBookingsAsync(Guid petWalkerId, DateTime startDate, DateTime endDate);
+    Task<ApiResponse<List<BookingListItemDto>>> GetPetWalkerBookingsAsync(Guid petWalkerId, DateTime startDate, DateTime endDate);
 
     /// <summary>
     /// Get available PetWalkers for booking selection (legacy method for backward compatibility)
@@ -71,4 +71,32 @@ public interface IBookingService
     /// <param name="request">Cancellation request details including reason, cancelled by, and optional notes</param>
     /// <returns>API response with cancellation result</returns>
     Task<ApiResponse<CancelBookingResponseDto>> CancelBookingAsync(Guid bookingId, CancelBookingRequestDto request);
+
+    /// <summary>
+    /// Confirm a pending booking
+    /// </summary>
+    /// <param name="bookingId">ID of the booking to confirm</param>
+    /// <returns>API response with the booking's new status</returns>
+    Task<ApiResponse<BookingStatusResponseDto>> ConfirmBookingAsync(Guid bookingId);
+
+    /// <summary>
+    /// Start a confirmed booking, moving it to InProgress
+    /// </summary>
+    /// <param name="bookingId">ID of the booking to start</param>
+    /// <returns>API response with the booking's new status</returns>
+    Task<ApiResponse<BookingStatusResponseDto>> StartBookingAsync(Guid bookingId);
+
+    /// <summary>
+    /// Complete an in-progress booking
+    /// </summary>
+    /// <param name="bookingId">ID of the booking to complete</param>
+    /// <returns>API response with the booking's new status</returns>
+    Task<ApiResponse<BookingStatusResponseDto>> CompleteBookingAsync(Guid bookingId);
+
+    /// <summary>
+    /// Mark a confirmed booking as a no-show
+    /// </summary>
+    /// <param name="bookingId">ID of the booking to mark as no-show</param>
+    /// <returns>API response with the booking's new status</returns>
+    Task<ApiResponse<BookingStatusResponseDto>> MarkBookingNoShowAsync(Guid bookingId);
 }

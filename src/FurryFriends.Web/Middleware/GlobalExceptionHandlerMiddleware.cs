@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using FluentValidation.Results;
 using FurryFriends.Web.Endpoints.Base;
 
@@ -57,7 +57,34 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
     context.Response.StatusCode = statusCode;
 
     var response = ResponseBase<object>.FromException(ex);
+
+    // Surface the inner exception chain. Without this, wrapper exceptions such as
+    // TypeInitializationException report only "The type initializer for X threw an
+    // exception" and the actual cause is invisible to the caller.
+    response.Errors = FlattenMessages(ex);
+
     return context.Response.WriteAsJsonAsync(response);
+  }
+
+  /// <summary>
+  /// Walks the InnerException chain and returns every distinct message, so the root
+  /// cause is visible. The full detail is always in the log via ILogger.
+  /// </summary>
+  private static List<string> FlattenMessages(Exception ex)
+  {
+    var messages = new List<string>();
+
+    for (var current = ex; current != null; current = current.InnerException)
+    {
+      var message = current.Message;
+
+      if (!string.IsNullOrWhiteSpace(message) && !messages.Contains(message))
+      {
+        messages.Add($"{current.GetType().Name}: {message}");
+      }
+    }
+
+    return messages;
   }
 }
 

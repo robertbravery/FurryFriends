@@ -1,4 +1,4 @@
-﻿namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Update;
+namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Update;
 
 public record UpdatePetWalkerRequest
 {
@@ -23,7 +23,12 @@ public record UpdatePetWalkerRequest
   public int YearsOfExperience { get; set; }
   public bool HasInsurance { get; set; }
   public bool HasFirstAidCertification { get; set; }
-  public int DailyPetWalkLimit { get; set; }
+  /// <summary>
+  /// Daily walk cap. Null means "leave the existing value alone", so a partial edit
+  /// cannot silently reset the walker's capacity. An explicit value, including 0,
+  /// is applied as-is.
+  /// </summary>
+  public int? DailyPetWalkLimit { get; set; }
   public required string ServiceLocation { get; set; }
 
 }

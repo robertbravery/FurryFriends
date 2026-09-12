@@ -28,7 +28,10 @@ public class GetAvailableSlots(IMediator mediator) : Endpoint<GetAvailableSlotsR
         Guard.Against.Default(request.Date, nameof(request.Date));
 
         var query = new GetAvailabilityQuery(request.PetWalkerId, request.Date);
-        var availableSlots = await _mediator.Send(query, ct);
+        var result = await _mediator.Send(query, ct);
+
+        var availableSlots = result?.AvailableSlots;
+        var hasSchedule = result?.HasSchedule ?? false;
 
         if (availableSlots == null || !availableSlots.Any())
         {
@@ -36,6 +39,7 @@ public class GetAvailableSlots(IMediator mediator) : Endpoint<GetAvailableSlotsR
             {
                 PetWalkerId = request.PetWalkerId,
                 Date = request.Date,
+                HasSchedule = hasSchedule,
                 AvailableSlots = new List<AvailableSlotResponse>()
             };
             await SendOkAsync(emptyResponse, ct);
@@ -46,6 +50,7 @@ public class GetAvailableSlots(IMediator mediator) : Endpoint<GetAvailableSlotsR
         {
             PetWalkerId = request.PetWalkerId,
             Date = request.Date,
+            HasSchedule = hasSchedule,
             AvailableSlots = availableSlots.Select(slot => new AvailableSlotResponse
             {
                 StartTime = slot.Start,

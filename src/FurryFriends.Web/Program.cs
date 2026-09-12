@@ -60,13 +60,13 @@ var logger = Log.Logger;
 builder.Services.AddHttpContextAccessor();
 
 // Register services
+builder.Services.AddServiceConfigs(logger, builder);
+
 builder.Services
     .AddOptionConfigs(builder.Configuration, logger, builder)
     .AddValidatorConfigs()
     .AddUseCaseValidators()
-.AddMediatrConfigs();
-
-builder.Services.AddServiceConfigs(logger, builder);
+    .AddMediatrConfigs();
 
 // Add FastEndpoints
 builder.Services.AddFastEndpoints()

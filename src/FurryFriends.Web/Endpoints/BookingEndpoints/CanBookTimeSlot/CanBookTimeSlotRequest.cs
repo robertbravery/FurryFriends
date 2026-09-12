@@ -1,4 +1,4 @@
-﻿
+
 
 namespace FurryFriends.Web.Endpoints.BookingEndpoints.CanBookTimeSlot;
 
@@ -9,9 +9,9 @@ public class CanBookTimeSlotRequest
   [Microsoft.AspNetCore.Mvc.FromRoute]
   public Guid PetWalkerId { get; set; }
 
-  [FromQuery]
+  // Bound from the query string by convention; see GetClientBookingsRequest for why
+  // [FromQuery] is intentionally omitted on scalar values.
   public DateTime StartTime { get; set; }
 
-  [FromQuery]
   public DateTime EndTime { get; set; }
 }

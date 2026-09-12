@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Services.PetWalkerService;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
@@ -45,6 +45,7 @@ public class CreatePetWalkeCommandrHandler(IPetWalkerService petWalkerService) :
        command.YearsOfExperience,
        command.HasInsurance,
        command.HasFirstAidCertification,
+       // Nullable on purpose: null means "not supplied" and the walker default applies.
        command.DailyPetWalkLimit,
        compensationCreationResult.Value);
 

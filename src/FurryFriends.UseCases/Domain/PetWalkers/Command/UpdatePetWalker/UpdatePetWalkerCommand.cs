@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.UpdatePetWalker;
 
@@ -24,6 +24,10 @@ public class UpdatePetWalkerCommand : IRequest
   public int YearsOfExperience { get; set; }
   public bool HasInsurance { get; set; }
   public bool HasFirstAidCertification { get; set; }
-  public int DailyPetWalkLimit { get; set; }
+  /// <summary>
+  /// Daily walk cap. Null means "leave the existing value alone"; an explicit value,
+  /// including 0, is applied as-is.
+  /// </summary>
+  public int? DailyPetWalkLimit { get; set; }
   public required string ServiceLocation { get; set; }
 }

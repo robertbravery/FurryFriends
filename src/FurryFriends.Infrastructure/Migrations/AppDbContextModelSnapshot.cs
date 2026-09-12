@@ -375,7 +375,9 @@ namespace FurryFriends.Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DailyPetWalkLimit")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(8);
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -386,11 +388,21 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.Property<bool>("HasInsurance")
                         .HasColumnType("bit");
 
+                    b.Property<int>("InterBookingGapMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
+
+                    b.Property<int>("SlotDurationMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(60);
 
                     b.Property<int>("TotalRatingsCount")
                         .ValueGeneratedOnAdd()
@@ -406,6 +418,45 @@ namespace FurryFriends.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PetWalkers", (string)null);
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.PetWalkerAggregate.PetWalkerDateException", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly?>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsUnavailable")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PetWalkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<TimeOnly?>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetWalkerId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("PetWalkerDateExceptions", (string)null);
                 });
 
             modelBuilder.Entity("FurryFriends.Core.PetWalkerAggregate.Photo", b =>
@@ -1128,6 +1179,15 @@ namespace FurryFriends.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Schedules");
+                });
+
+            modelBuilder.Entity("FurryFriends.Core.PetWalkerAggregate.PetWalkerDateException", b =>
+                {
+                    b.HasOne("FurryFriends.Core.PetWalkerAggregate.PetWalker", null)
+                        .WithMany()
+                        .HasForeignKey("PetWalkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FurryFriends.Core.PetWalkerAggregate.Photo", b =>

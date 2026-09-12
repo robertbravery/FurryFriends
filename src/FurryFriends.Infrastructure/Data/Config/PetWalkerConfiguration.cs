@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -39,7 +39,18 @@ public class PetWalkerConfiguration : IEntityTypeConfiguration<PetWalker>
       .IsRequired();
 
     builder.Property(u => u.DailyPetWalkLimit)
-      .IsRequired();
+      .IsRequired()
+      .HasDefaultValue(PetWalker.DefaultDailyPetWalkLimit);
+
+    // Derived availability settings. Defaults are applied at the database level so
+    // pre-existing walker rows get a usable value rather than 0.
+    builder.Property(u => u.SlotDurationMinutes)
+      .IsRequired()
+      .HasDefaultValue(PetWalker.DefaultSlotDurationMinutes);
+
+    builder.Property(u => u.InterBookingGapMinutes)
+      .IsRequired()
+      .HasDefaultValue(PetWalker.DefaultInterBookingGapMinutes);
 
     builder.Property(u => u.AverageRating)
       .HasColumnType("float")

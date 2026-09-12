@@ -76,10 +76,15 @@ public class RequestCustomTimeResponse
 public class RespondToCustomTimeRequestRequest
 {
     public Guid RequestId { get; set; }
-    public string Action { get; set; } = string.Empty; // "Accept", "Decline", "CounterOffer"
+
+    /// <summary>One of "Accept", "Decline", "CounterOffer" - matches the API contract.</summary>
+    public string Response { get; set; } = string.Empty;
+
     public DateOnly? CounterOfferedDate { get; set; }
-    public TimeOnly? CounterOfferedStartTime { get; set; }
-    public int? CounterOfferedDurationMinutes { get; set; }
+
+    public TimeOnly? CounterOfferedTime { get; set; }
+
+    public string? Reason { get; set; }
 }
 
 /// <summary>

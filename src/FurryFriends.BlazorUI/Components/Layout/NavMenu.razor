@@ -16,21 +16,32 @@
                 <span>Pet Walkers</span>
             </NavLink>
         </li>
+        @* Weekly hours, date exceptions and slot settings. Slots are derived from these. *@
+        <li>
+            <NavLink class="nav-link" href="petwalker/availability">
+                <svg class="icon" style="fill: #e0e0e0; width: 16px; height: 16px;"><use href="/icons/sprites.svg#icon-calendar"/></svg>
+                <span>Availability</span>
+            </NavLink>
+        </li>
     </ul>
     <ul>
         <li class="nav-section-title">Bookings</li>
+        @* Client-facing: pick a pet walker and create a booking. *@
         <li>
             <NavLink class="nav-link" href="bookings" Match="NavLinkMatch.All">
+                <svg class="icon" style="fill: #e0e0e0; width: 16px; height: 16px;"><use href="/icons/sprites.svg#icon-calendar"/></svg>
+                <span>Book a Walk</span>
+            </NavLink>
+        </li>
+        @* Back-office: review and progress bookings for any client or pet walker. *@
+        <li>
+            <NavLink class="nav-link" href="bookings/manage">
                 <svg class="icon" style="fill: #e0e0e0; width: 16px; height: 16px;"><use href="/icons/sprites.svg#icon-calendar"/></svg>
                 <span>Booking Management</span>
             </NavLink>
         </li>
-        <li>
-            <NavLink class="nav-link" href="booking-test" Match="NavLinkMatch.All">
-                <svg class="icon" style="fill: #e0e0e0; width: 16px; height: 16px;"><use href="/icons/sprites.svg#icon-flask"/></svg>
-                <span>Booking Test</span>
-            </NavLink>
-        </li>
+        @* The developer component harness at /booking-test is intentionally not
+           linked here. Navigate to it directly when testing booking components. *@
     </ul>
     <ul>
         <li class="nav-section-title">Other</li>

@@ -1,4 +1,4 @@
-﻿
+
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -233,5 +233,222 @@ public class ScheduleService : IScheduleService
       };
     }
   }
+
+  /// <summary>
+  /// Get the date-specific availability overrides for a PetWalker
+  /// </summary>
+  public async Task<ApiResponse<List<PetWalkerDateExceptionDto>>> GetDateExceptionsAsync(Guid petWalkerId)
+  {
+    try
+    {
+      _logger.LogInformation("Getting date exceptions for PetWalker: {PetWalkerId}", petWalkerId);
+
+      var response = await _httpClient.GetAsync($"{_apiBaseUrl}/petwalker/{petWalkerId}/date-exceptions");
+
+      if (response.IsSuccessStatusCode)
+      {
+        var content = await response.Content.ReadAsStringAsync();
+        var apiResult = JsonSerializer.Deserialize<ApiResult<List<PetWalkerDateExceptionDto>>>(content, _jsonOptions);
+
+        return new ApiResponse<List<PetWalkerDateExceptionDto>>
+        {
+          Success = true,
+          Message = "Date exceptions retrieved successfully",
+          Data = apiResult?.Value ?? new List<PetWalkerDateExceptionDto>(),
+          Timestamp = DateTime.Now
+        };
+      }
+
+      return Failure<List<PetWalkerDateExceptionDto>>("Failed to retrieve date exceptions", response);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error getting date exceptions for PetWalker: {PetWalkerId}", petWalkerId);
+      return ExceptionResponse<List<PetWalkerDateExceptionDto>>("An error occurred while retrieving date exceptions", ex);
+    }
+  }
+
+  /// <summary>
+  /// Block a whole day, or replace the hours for that day
+  /// </summary>
+  public async Task<ApiResponse<PetWalkerDateExceptionDto>> SetDateExceptionAsync(
+      Guid petWalkerId,
+      DateTime date,
+      bool isUnavailable,
+      TimeOnly? startTime,
+      TimeOnly? endTime,
+      string? reason)
+  {
+    try
+    {
+      _logger.LogInformation(
+          "Setting date exception for PetWalker: {PetWalkerId} on {Date:yyyy-MM-dd} (unavailable: {IsUnavailable})",
+          petWalkerId, date, isUnavailable);
+
+      var body = new
+      {
+        Date = date.Date,
+        IsUnavailable = isUnavailable,
+        StartTime = startTime,
+        EndTime = endTime,
+        Reason = reason
+      };
+
+      var content = new StringContent(JsonSerializer.Serialize(body, _jsonOptions), Encoding.UTF8, "application/json");
+      var response = await _httpClient.PostAsync($"{_apiBaseUrl}/petwalker/{petWalkerId}/date-exceptions", content);
+
+      if (response.IsSuccessStatusCode)
+      {
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var apiResult = JsonSerializer.Deserialize<ApiResult<PetWalkerDateExceptionDto>>(responseContent, _jsonOptions);
+
+        return new ApiResponse<PetWalkerDateExceptionDto>
+        {
+          Success = true,
+          Message = "Date exception saved",
+          Data = apiResult?.Value,
+          Timestamp = DateTime.Now
+        };
+      }
+
+      return Failure<PetWalkerDateExceptionDto>("Failed to save the date exception", response);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error setting date exception for PetWalker: {PetWalkerId}", petWalkerId);
+      return ExceptionResponse<PetWalkerDateExceptionDto>("An error occurred while saving the date exception", ex);
+    }
+  }
+
+  /// <summary>
+  /// Remove the override for a date, reverting to the weekly pattern
+  /// </summary>
+  public async Task<ApiResponse<bool>> DeleteDateExceptionAsync(Guid petWalkerId, DateTime date)
+  {
+    try
+    {
+      _logger.LogInformation("Deleting date exception for PetWalker: {PetWalkerId} on {Date:yyyy-MM-dd}",
+          petWalkerId, date);
+
+      var url = $"{_apiBaseUrl}/petwalker/{petWalkerId}/date-exceptions/{date:yyyy-MM-dd}";
+      var response = await _httpClient.DeleteAsync(url);
+
+      if (response.IsSuccessStatusCode)
+      {
+        return new ApiResponse<bool>
+        {
+          Success = true,
+          Message = "Date exception removed",
+          Data = true,
+          Timestamp = DateTime.Now
+        };
+      }
+
+      return Failure<bool>("Failed to remove the date exception", response);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error deleting date exception for PetWalker: {PetWalkerId}", petWalkerId);
+      return ExceptionResponse<bool>("An error occurred while removing the date exception", ex);
+    }
+  }
+
+  /// <summary>
+  /// Get the settings used to derive bookable slots
+  /// </summary>
+  public async Task<ApiResponse<AvailabilitySettingsDto>> GetAvailabilitySettingsAsync(Guid petWalkerId)
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync($"{_apiBaseUrl}/petwalker/{petWalkerId}/availability-settings");
+
+      if (response.IsSuccessStatusCode)
+      {
+        var content = await response.Content.ReadAsStringAsync();
+        var apiResult = JsonSerializer.Deserialize<ApiResult<AvailabilitySettingsDto>>(content, _jsonOptions);
+
+        return new ApiResponse<AvailabilitySettingsDto>
+        {
+          Success = true,
+          Message = "Availability settings retrieved successfully",
+          Data = apiResult?.Value,
+          Timestamp = DateTime.Now
+        };
+      }
+
+      return Failure<AvailabilitySettingsDto>("Failed to retrieve availability settings", response);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error getting availability settings for PetWalker: {PetWalkerId}", petWalkerId);
+      return ExceptionResponse<AvailabilitySettingsDto>("An error occurred while retrieving availability settings", ex);
+    }
+  }
+
+  /// <summary>
+  /// Update slot length, inter-booking gap, and the daily walk cap
+  /// </summary>
+  public async Task<ApiResponse<AvailabilitySettingsDto>> UpdateAvailabilitySettingsAsync(
+      Guid petWalkerId,
+      int slotDurationMinutes,
+      int interBookingGapMinutes,
+      int dailyPetWalkLimit)
+  {
+    try
+    {
+      _logger.LogInformation("Updating availability settings for PetWalker: {PetWalkerId}", petWalkerId);
+
+      var body = new
+      {
+        SlotDurationMinutes = slotDurationMinutes,
+        InterBookingGapMinutes = interBookingGapMinutes,
+        DailyPetWalkLimit = dailyPetWalkLimit
+      };
+
+      var content = new StringContent(JsonSerializer.Serialize(body, _jsonOptions), Encoding.UTF8, "application/json");
+      var response = await _httpClient.PutAsync($"{_apiBaseUrl}/petwalker/{petWalkerId}/availability-settings", content);
+
+      if (response.IsSuccessStatusCode)
+      {
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var apiResult = JsonSerializer.Deserialize<ApiResult<AvailabilitySettingsDto>>(responseContent, _jsonOptions);
+
+        return new ApiResponse<AvailabilitySettingsDto>
+        {
+          Success = true,
+          Message = "Availability settings updated",
+          Data = apiResult?.Value,
+          Timestamp = DateTime.Now
+        };
+      }
+
+      return Failure<AvailabilitySettingsDto>("Failed to update availability settings", response);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error updating availability settings for PetWalker: {PetWalkerId}", petWalkerId);
+      return ExceptionResponse<AvailabilitySettingsDto>("An error occurred while updating availability settings", ex);
+    }
+  }
+
+  private static ApiResponse<T> Failure<T>(string message, HttpResponseMessage response) =>
+      new()
+      {
+        Success = false,
+        Message = $"{message}. Status: {response.StatusCode}",
+        Errors = new List<string> { response.ReasonPhrase ?? "Unknown error" },
+        Data = default,
+        Timestamp = DateTime.Now
+      };
+
+  private static ApiResponse<T> ExceptionResponse<T>(string message, Exception ex) =>
+      new()
+      {
+        Success = false,
+        Message = message,
+        Errors = new List<string> { ex.Message },
+        Data = default,
+        Timestamp = DateTime.Now
+      };
 }
 

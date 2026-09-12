@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
 
@@ -16,6 +16,9 @@ public record CreatePetWalkerDto(
     int YearsOfExperience,
     bool HasInsurance,
     bool HasFirstAidCertification,
-    int DailyPetWalkLimit,
+    /// <summary>
+    /// Daily walk cap. Null leaves the walker's creation default in place.
+    /// </summary>
+    int? DailyPetWalkLimit,
     Compensation Compensation);
 

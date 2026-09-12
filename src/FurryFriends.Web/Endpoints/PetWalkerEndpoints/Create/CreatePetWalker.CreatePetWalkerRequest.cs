@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.ValueObjects;
+using FurryFriends.Core.ValueObjects;
 
 namespace FurryFriends.Web.Endpoints.PetWalkerEndpoints.Create;
 
@@ -46,5 +46,9 @@ public class CreatePetWalkerRequest
 
   public bool HasFirstAidCertification { get; set; }
 
-  public int DailyPetWalkLimit { get; set; }
+  /// <summary>
+  /// Daily walk cap. Null means "not supplied" and the walker default is applied;
+  /// an explicit value - including 0, meaning the walker is not taking bookings - is honoured.
+  /// </summary>
+  public int? DailyPetWalkLimit { get; set; }
 }

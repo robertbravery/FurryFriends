@@ -43,12 +43,50 @@ public class ClientService : IClientService
 
   public async Task<ClientResponseBase> GetClientAsync(Guid value)
   {
-    var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>($"{_apiBaseUrl}/Clients/id/{value}");
-    if (response is null)
+    var url = $"{_apiBaseUrl}/Clients/id/{value}";
+    _httpClient.DefaultRequestHeaders.ConnectionClose = false;
+
+    const int maxAttempts = 2;
+
+    for (var attempt = 1; attempt <= maxAttempts; attempt++)
     {
-      return new ClientResponseBase();
+      try
+      {
+        var response = await _httpClient.GetFromJsonAsync<ClientResponseBase>(url);
+        _httpClient.DefaultRequestHeaders.ConnectionClose = false;
+        return response ?? new ClientResponseBase();
+      }
+      catch (Exception ex) when (attempt < maxAttempts && IsTransientTransportFailure(ex))
+      {
+        _logger.LogWarning(ex,
+          "Transient transport failure fetching client {ClientId}; retrying on a fresh connection (attempt {Attempt})",
+          value, attempt);
+
+        RequestFreshConnection();
+        await Task.Delay(150);
+      }
     }
-    return response;
+
+    // Unreachable: the loop either returns or rethrows on the final attempt.
+    throw new InvalidOperationException($"Failed to load client {value}.");
+  }
+
+  /// <summary>
+  /// True for connection-level failures that are worth one retry, as opposed to a
+  /// genuine HTTP error response which should be surfaced as-is.
+  /// </summary>
+  private static bool IsTransientTransportFailure(Exception ex) =>
+      ex is IOException
+      || ex is HttpRequestException
+      || ex.InnerException is IOException;
+
+  /// <summary>
+  /// Asks the handler for a new TCP connection instead of a pooled one, so the retry
+  /// does not land on the same dead socket.
+  /// </summary>
+  private void RequestFreshConnection()
+  {
+    _httpClient.DefaultRequestHeaders.ConnectionClose = true;
   }
 
   public async Task<ListResponse<ClientDto>> GetClientsAsync(int page, int pageSize, string? searchTerm = null)

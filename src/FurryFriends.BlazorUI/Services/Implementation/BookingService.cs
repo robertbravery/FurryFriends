@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 using FurryFriends.BlazorUI.Client.Models.Bookings;
 using FurryFriends.BlazorUI.Client.Models.Common;
@@ -54,7 +54,9 @@ public class BookingService : IBookingService
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<BookingResponseDto>(responseContent, _jsonOptions);
+                // The create endpoint derives from BaseEndpoint, so the payload arrives inside a
+                // Result<T> envelope rather than as a bare BookingResponseDto.
+                var result = ApiResultPayload.Deserialize<BookingResponseDto>(responseContent, _jsonOptions);
 
                 _logger.LogInformation("Successfully created booking: {BookingId}", result?.BookingId);
 
@@ -218,7 +220,7 @@ public class BookingService : IBookingService
     /// <summary>
     /// Get bookings for a specific client
     /// </summary>
-    public async Task<ApiResponse<List<BookingDto>>> GetClientBookingsAsync(Guid clientId, DateTime startDate, DateTime endDate)
+    public async Task<ApiResponse<List<BookingListItemDto>>> GetClientBookingsAsync(Guid clientId, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -230,12 +232,12 @@ public class BookingService : IBookingService
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<List<BookingDto>>(content, _jsonOptions) ?? new List<BookingDto>();
+                var result = JsonSerializer.Deserialize<List<BookingListItemDto>>(content, _jsonOptions) ?? new List<BookingListItemDto>();
 
                 _logger.LogInformation("Successfully retrieved {Count} bookings for Client: {ClientId}",
                     result.Count, clientId);
 
-                return new ApiResponse<List<BookingDto>>
+                return new ApiResponse<List<BookingListItemDto>>
                 {
                     Success = true,
                     Message = "Client bookings retrieved successfully",
@@ -249,12 +251,12 @@ public class BookingService : IBookingService
                 _logger.LogWarning("Failed to get bookings for Client: {ClientId}. Status: {StatusCode}, Error: {Error}",
                     clientId, response.StatusCode, errorContent);
 
-                return new ApiResponse<List<BookingDto>>
+                return new ApiResponse<List<BookingListItemDto>>
                 {
                     Success = false,
                     Message = $"Failed to get client bookings. Status: {response.StatusCode}",
                     Errors = new List<string> { errorContent },
-                    Data = new List<BookingDto>(),
+                    Data = new List<BookingListItemDto>(),
                     Timestamp = DateTime.Now
                 };
             }
@@ -263,12 +265,12 @@ public class BookingService : IBookingService
         {
             _logger.LogError(ex, "Error getting bookings for Client: {ClientId}", clientId);
 
-            return new ApiResponse<List<BookingDto>>
+            return new ApiResponse<List<BookingListItemDto>>
             {
                 Success = false,
                 Message = "An error occurred while getting client bookings",
                 Errors = new List<string> { ex.Message },
-                Data = new List<BookingDto>(),
+                Data = new List<BookingListItemDto>(),
                 Timestamp = DateTime.Now
             };
         }
@@ -277,7 +279,7 @@ public class BookingService : IBookingService
     /// <summary>
     /// Get bookings for a specific PetWalker
     /// </summary>
-    public async Task<ApiResponse<List<BookingDto>>> GetPetWalkerBookingsAsync(Guid petWalkerId, DateTime startDate, DateTime endDate)
+    public async Task<ApiResponse<List<BookingListItemDto>>> GetPetWalkerBookingsAsync(Guid petWalkerId, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -289,12 +291,12 @@ public class BookingService : IBookingService
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<List<BookingDto>>(content, _jsonOptions) ?? new List<BookingDto>();
+                var result = JsonSerializer.Deserialize<List<BookingListItemDto>>(content, _jsonOptions) ?? new List<BookingListItemDto>();
 
                 _logger.LogInformation("Successfully retrieved {Count} bookings for PetWalker: {PetWalkerId}",
                     result.Count, petWalkerId);
 
-                return new ApiResponse<List<BookingDto>>
+                return new ApiResponse<List<BookingListItemDto>>
                 {
                     Success = true,
                     Message = "PetWalker bookings retrieved successfully",
@@ -308,12 +310,12 @@ public class BookingService : IBookingService
                 _logger.LogWarning("Failed to get bookings for PetWalker: {PetWalkerId}. Status: {StatusCode}, Error: {Error}",
                     petWalkerId, response.StatusCode, errorContent);
 
-                return new ApiResponse<List<BookingDto>>
+                return new ApiResponse<List<BookingListItemDto>>
                 {
                     Success = false,
                     Message = $"Failed to get PetWalker bookings. Status: {response.StatusCode}",
                     Errors = new List<string> { errorContent },
-                    Data = new List<BookingDto>(),
+                    Data = new List<BookingListItemDto>(),
                     Timestamp = DateTime.Now
                 };
             }
@@ -322,12 +324,12 @@ public class BookingService : IBookingService
         {
             _logger.LogError(ex, "Error getting bookings for PetWalker: {PetWalkerId}", petWalkerId);
 
-            return new ApiResponse<List<BookingDto>>
+            return new ApiResponse<List<BookingListItemDto>>
             {
                 Success = false,
                 Message = "An error occurred while getting PetWalker bookings",
                 Errors = new List<string> { ex.Message },
-                Data = new List<BookingDto>(),
+                Data = new List<BookingListItemDto>(),
                 Timestamp = DateTime.Now
             };
         }
@@ -472,12 +474,12 @@ public class BookingService : IBookingService
             var json = JsonSerializer.Serialize(request, _jsonOptions);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/api/bookings/{bookingId}/cancel", content);
+            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/bookings/{bookingId}/cancel", content);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<CancelBookingResponseDto>(responseContent, _jsonOptions);
+                var result = ApiResultPayload.Deserialize<CancelBookingResponseDto>(responseContent, _jsonOptions);
 
                 _logger.LogInformation("Successfully cancelled booking: {BookingId}", bookingId);
 
@@ -518,6 +520,151 @@ public class BookingService : IBookingService
                 Timestamp = DateTime.Now
             };
         }
+    }
+
+    /// <summary>
+    /// Confirm a pending booking
+    /// </summary>
+    public Task<ApiResponse<BookingStatusResponseDto>> ConfirmBookingAsync(Guid bookingId)
+        => PostBookingActionAsync(bookingId, "confirm", "Booking confirmed successfully", "Failed to confirm booking");
+
+    /// <summary>
+    /// Start a confirmed booking, moving it to InProgress
+    /// </summary>
+    public Task<ApiResponse<BookingStatusResponseDto>> StartBookingAsync(Guid bookingId)
+        => PostBookingActionAsync(bookingId, "start", "Booking started successfully", "Failed to start booking");
+
+    /// <summary>
+    /// Complete an in-progress booking
+    /// </summary>
+    public Task<ApiResponse<BookingStatusResponseDto>> CompleteBookingAsync(Guid bookingId)
+        => PostBookingActionAsync(bookingId, "complete", "Booking completed successfully", "Failed to complete booking");
+
+    /// <summary>
+    /// Mark a confirmed booking as a no-show
+    /// </summary>
+    public Task<ApiResponse<BookingStatusResponseDto>> MarkBookingNoShowAsync(Guid bookingId)
+        => PostBookingActionAsync(bookingId, "no-show", "Booking marked as no-show successfully", "Failed to mark booking as no-show");
+
+    /// <summary>
+    /// Shared helper for the booking lifecycle endpoints (confirm, start, complete, no-show).
+    /// These actions are POSTs with no request body; the route carries the booking id.
+    /// </summary>
+    private async Task<ApiResponse<BookingStatusResponseDto>> PostBookingActionAsync(
+        Guid bookingId,
+        string action,
+        string successMessage,
+        string failureMessage)
+    {
+        try
+        {
+            _logger.LogInformation("Performing booking action '{Action}' for booking: {BookingId}", action, bookingId);
+
+            // Note: _apiBaseUrl already includes the API route prefix (e.g. ".../api")
+            // The lifecycle endpoints bind a request DTO, so FastEndpoints requires a JSON body
+            // even though the only input is the booking id in the route. Posting with no content
+            // sends no Content-Type and the API rejects it with 415 Unsupported Media Type.
+            var requestBody = new StringContent("{}", Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/bookings/{bookingId}/{action}", requestBody);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var result = ApiResultPayload.Deserialize<BookingStatusResponseDto>(content, _jsonOptions);
+
+                _logger.LogInformation("Booking action '{Action}' succeeded for booking: {BookingId}. Status: {Status}",
+                    action, bookingId, result?.Status);
+
+                return new ApiResponse<BookingStatusResponseDto>
+                {
+                    Success = true,
+                    Message = result?.Message ?? successMessage,
+                    Data = result,
+                    Timestamp = DateTime.Now
+                };
+            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning("Booking action '{Action}' failed for booking: {BookingId}. Status: {StatusCode}, Error: {Error}",
+                action, bookingId, response.StatusCode, errorContent);
+
+            // A failure with an empty body (415, 404, 401...) would otherwise surface as the
+            // unhelpful "The request failed." with the status code discarded, which makes it
+            // impossible to diagnose from the UI.
+            var detail = string.IsNullOrWhiteSpace(errorContent)
+                ? $"HTTP {(int)response.StatusCode} {response.ReasonPhrase}"
+                : ExtractErrorMessage(errorContent);
+
+            return new ApiResponse<BookingStatusResponseDto>
+            {
+                Success = false,
+                Message = $"{failureMessage}. Status: {response.StatusCode}",
+                Errors = new List<string> { detail },
+                Data = null,
+                Timestamp = DateTime.Now
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error performing booking action '{Action}' for booking: {BookingId}", action, bookingId);
+
+            return new ApiResponse<BookingStatusResponseDto>
+            {
+                Success = false,
+                Message = failureMessage,
+                Errors = new List<string> { ex.Message },
+                Data = null,
+                Timestamp = DateTime.Now
+            };
+        }
+    }
+
+    /// <summary>
+    /// Pulls a readable message out of a FastEndpoints problem-details error payload,
+    /// falling back to the raw content when the shape is not recognised.
+    /// </summary>
+    private static string ExtractErrorMessage(string errorContent)
+    {
+        if (string.IsNullOrWhiteSpace(errorContent))
+        {
+            return "The request failed.";
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(errorContent);
+            var root = document.RootElement;
+
+            // FastEndpoints problem details expose a per-field "errors" object
+            if (root.TryGetProperty("errors", out var errors) && errors.ValueKind == JsonValueKind.Object)
+            {
+                var messages = new List<string>();
+                foreach (var field in errors.EnumerateObject())
+                {
+                    if (field.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        messages.AddRange(field.Value.EnumerateArray()
+                            .Where(v => v.ValueKind == JsonValueKind.String)
+                            .Select(v => v.GetString()!));
+                    }
+                    else if (field.Value.ValueKind == JsonValueKind.String)
+                    {
+                        messages.Add(field.Value.GetString()!);
+                    }
+                }
+
+                if (messages.Count > 0)
+                {
+                    return string.Join(" ", messages.Where(m => !string.IsNullOrWhiteSpace(m)));
+                }
+            }
+        }
+        catch (JsonException)
+        {
+            // Fall through to the raw content
+        }
+
+        return errorContent;
     }
 
     private static PetWalkerSummaryDto MapApiResponseToClientModel(PetWalkerSummaryApiResponse apiModel)

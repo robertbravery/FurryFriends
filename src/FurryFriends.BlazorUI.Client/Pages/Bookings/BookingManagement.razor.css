@@ -1,4 +1,4 @@
-﻿/* Pet Walker Header Styles */
+/* Pet Walker Header Styles */
 .petwalkers-header {
   margin-bottom: 2rem;
 }
@@ -729,6 +729,21 @@
 
 .header-content h1 i {
   color: var(--primary-500);
+}
+
+/* Header action buttons */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.header-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .page-description {

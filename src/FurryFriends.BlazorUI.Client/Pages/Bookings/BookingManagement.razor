@@ -1,4 +1,4 @@
-﻿@page "/bookings"
+@page "/bookings"
 @page "/bookings/new"
 @rendermode InteractiveAuto
 @using FurryFriends.BlazorUI.Client.Components.Bookings
@@ -12,7 +12,7 @@
 @inject NavigationManager _navigation
 @inject IPopupService _popupService
 
-<PageTitle>Booking Management - FurryFriends</PageTitle>
+<PageTitle>Book a Walk - FurryFriends</PageTitle>
 
 <div class="booking-management-container">
     <div class="page-header">
@@ -21,11 +21,11 @@
                 <i class="fas fa-calendar-plus"></i>
                 @if (showBookingForm)
                 {
-                    <span>Create New Booking</span>
+                    <span>Book a Walk</span>
                 }
                 else
                 {
-                    <span>Booking Management</span>
+                    <span>Choose a Pet Walker</span>
                 }
             </h1>
             <p class="page-description">
@@ -35,7 +35,7 @@
                 }
                 else
                 {
-                    <span>Manage your pet walking bookings and schedule new appointments</span>
+                    <span>Find and select a pet walker to book a walk for your pet</span>
                 }
             </p>
         </div>
@@ -43,6 +43,10 @@
         @if (!showBookingForm)
         {
             <div class="header-actions">
+                <button class="btn btn-outline-primary" @onclick="NavigateToManageBookings">
+                    <i class="fas fa-list-check"></i>
+                    Booking Management
+                </button>
                 <button class="btn btn-primary" @onclick="StartNewBooking">
                     <i class="fas fa-plus"></i>
                     New Booking
@@ -75,6 +79,7 @@
             }
 
             <BookingFormComponent
+                @key="_formKey"
                 ClientId="@ClientId"
                 SelectedPetWalker="@selectedPetWalker"
                 OnBookingCompleted="OnBookingCompleted"
@@ -440,8 +445,8 @@
                         Create Another Booking
                     </button>
                     <button class="btn btn-secondary" @onclick="CloseSuccessModal">
-                        <i class="fas fa-times"></i>
-                        Close
+                        <i class="fas fa-list"></i>
+                        View My Bookings
                     </button>
                 </div>
             </div>

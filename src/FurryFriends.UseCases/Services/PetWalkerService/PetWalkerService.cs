@@ -1,4 +1,4 @@
-﻿using FurryFriends.Core.PetWalkerAggregate;
+using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.Core.PetWalkerAggregate.Specifications;
 using FurryFriends.Core.ValueObjects;
 using FurryFriends.UseCases.Domain.PetWalkers.Command.CreatePetWalker;
@@ -52,7 +52,15 @@ public class PetWalkerService : IPetWalkerService
     petWalker.UpdateYearsOfExperience(dto.YearsOfExperience);
     petWalker.UpdateHasInsurance(dto.HasInsurance);
     petWalker.UpdateHasFirstAidCertification(dto.HasFirstAidCertification);
-    petWalker.UpdateDailyPetWalkLimit(dto.DailyPetWalkLimit);
+
+    // Null means the caller did not supply a limit, so the walker keeps the default
+    // applied at creation. An explicit value - including 0, meaning "not taking
+    // bookings" - is applied as-is and validated by the aggregate's guard.
+    if (dto.DailyPetWalkLimit is { } createWalkLimit)
+    {
+      petWalker.UpdateDailyPetWalkLimit(createWalkLimit);
+    }
+
     petWalker.UpdateCompensation(dto.Compensation);
 
     // 4. Persistence
@@ -83,7 +91,13 @@ public class PetWalkerService : IPetWalkerService
     petWalker.UpdateYearsOfExperience(dto.YearsOfExperience);
     petWalker.UpdateHasInsurance(dto.HasInsurance);
     petWalker.UpdateHasFirstAidCertification(dto.HasFirstAidCertification);
-    petWalker.UpdateDailyPetWalkLimit(dto.DailyPetWalkLimit);
+    // Null means "leave alone", so a partial edit cannot silently reset the walker's
+    // capacity to zero and make them unbookable.
+    if (dto.DailyPetWalkLimit is { } updateWalkLimit)
+    {
+      petWalker.UpdateDailyPetWalkLimit(updateWalkLimit);
+    }
+
     petWalker.UpdateCompensation(dto.Compensation);
     petWalker.UpdatedAt = DateTime.UtcNow;
     // 4. Persistence

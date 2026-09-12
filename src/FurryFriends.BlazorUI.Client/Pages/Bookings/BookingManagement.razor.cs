@@ -1,4 +1,4 @@
-﻿using FurryFriends.BlazorUI.Client.Models.Bookings;
+using FurryFriends.BlazorUI.Client.Models.Bookings;
 using FurryFriends.BlazorUI.Client.Models.Clients;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +12,7 @@ public partial class BookingManagement
   [Inject] public IClientService ClientService { get; set; } = default!;
   [Inject] public NavigationManager Navigation { get; set; } = default!;
   [Inject] public IPopupService PopupService { get; set; } = default!;
+  [Inject] public IClientContextService ClientContextService { get; set; } = default!;
 
   [Parameter] public Guid? ClientId { get; set; }
 
@@ -28,6 +29,12 @@ public partial class BookingManagement
   // Success modal state
   private bool showSuccessModal = false;
   private BookingResponseDto? completedBooking;
+
+  /// <summary>
+  /// Changing this key makes Blazor throw away and rebuild the booking form, so a new booking
+  /// cannot inherit the previous one's pet, date or time selection.
+  /// </summary>
+  private int _formKey;
 
   // Pagination and filtering state
   private PaginatedPetWalkersResponse? _paginatedResponse;
@@ -342,28 +349,58 @@ public partial class BookingManagement
     }
   }
 
-  private void CloseSuccessModal()
+  /// <summary>
+  /// Dismisses the confirmation and moves on to the bookings list, which is where a booking
+  /// that was just created is actually useful - the status it now sits at, and the actions
+  /// available on it. Returning to the form instead would only show a half-filled booking
+  /// that has already been submitted.
+  /// </summary>
+  private async Task CloseSuccessModal()
+  {
+    HideSuccessModal();
+
+    var clientId = ClientId ?? await ResolveClientIdAsync();
+
+    Navigation.NavigateTo(clientId != Guid.Empty
+      ? $"/bookings/manage/{clientId}"
+      : "/bookings/manage");
+  }
+
+  /// <summary>Hides the confirmation without leaving this page.</summary>
+  private void HideSuccessModal()
   {
     showSuccessModal = false;
     completedBooking = null;
-    StateHasChanged();
+  }
+
+  /// <summary>
+  /// The client whose bookings should be listed. The page only knows it from the route, so
+  /// fall back to the same client context the booking form uses to attribute the booking.
+  /// </summary>
+  private async Task<Guid> ResolveClientIdAsync()
+  {
+    try
+    {
+      return await ClientContextService.GetCurrentClientIdAsync();
+    }
+    catch (Exception ex)
+    {
+      Logger.LogWarning(ex, "Could not resolve the current client for the bookings list");
+      return Guid.Empty;
+    }
   }
 
   private void CreateAnotherBooking()
   {
     Logger.LogInformation("User requested to create another booking");
 
-    CloseSuccessModal();
+    HideSuccessModal();
+
+    // Rebuild the form so the completed booking's pet, date and time selection do not carry over.
+    _formKey++;
 
     // Keep the same pet walker if one was selected
-    if (selectedPetWalker != null)
-    {
-      showBookingForm = true;
-    }
-    else
-    {
-      showBookingForm = false;
-    }
+    showBookingForm = selectedPetWalker != null;
 
     StateHasChanged();
   }
@@ -372,6 +409,12 @@ public partial class BookingManagement
   {
     Logger.LogInformation("Navigating to pet walkers management");
     Navigation.NavigateTo("/petwalkers");
+  }
+
+  private void NavigateToManageBookings()
+  {
+    Logger.LogInformation("Navigating to booking management list");
+    Navigation.NavigateTo("/bookings/manage");
   }
 
   private static string TruncateText(string text, int maxLength)

@@ -1,4 +1,4 @@
-﻿// Application/Scheduling/Commands/CreateBookingCommand.cs
+// Application/Scheduling/Commands/CreateBookingCommand.cs
 using FurryFriends.Core.BookingAggregate;
 using FurryFriends.Core.PetWalkerAggregate;
 using FurryFriends.UseCases.Domain.Bookings.Dto;
@@ -41,7 +41,7 @@ public class CreateBookingHandler : ICommandHandler<CreateBookingCommand, Result
     //};
     //var bookingResult = await _bookingRepo.AddAsync(booking, cancellationToken);
 
-    var booking = await _bookingService.CreateBookingAsync(request.PetWalkerId, request.PetOwnerId, request.Start, request.End, 0.0m);
+    var booking = await _bookingService.CreateBookingAsync(request.PetWalkerId, request.PetOwnerId, request.Start, request.End);
 
     return booking == null
       ? Result<BookingDto>.Error("Failed to create booking")

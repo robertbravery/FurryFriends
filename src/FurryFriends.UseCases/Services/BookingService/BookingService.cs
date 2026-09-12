@@ -1,4 +1,4 @@
-﻿
+
 using Ardalis.GuardClauses;
 using Ardalis.Specification;
 using FurryFriends.Core.BookingAggregate;
@@ -30,8 +30,7 @@ public class BookingService : IBookingService
       Guid petWalkerId,
       Guid clientId,
       DateTime startTime,
-      DateTime endTime,
-      decimal price)
+      DateTime endTime)
   {
     var petWalker = await _petWalkerRepository.GetByIdAsync(petWalkerId, CancellationToken.None);
     Guard.Against.NotFound(petWalkerId.ToString(), petWalker, nameof(petWalkerId));
@@ -42,6 +41,8 @@ public class BookingService : IBookingService
     Guard.Against.BookingSchedule(startTime, endTime, petWalker, nameof(startTime));
     Guard.Against.NoOverlappingBookings(startTime, endTime, existingBookings, nameof(startTime));
     Guard.Against.DailyBookingLimit(startTime, petWalker, existingBookings, nameof(startTime));
+
+    var price = CalculatePrice(petWalker, startTime, endTime);
 
     var booking = Booking.Create(
         clientId,
@@ -54,10 +55,32 @@ public class BookingService : IBookingService
     await _bookingRepository.AddAsync(booking, CancellationToken.None);
 
     _logger.LogInformation(
-        "Created booking {BookingId} for pet walker {PetWalkerId} and client {ClientId}",
-        booking.Id, petWalkerId, clientId);
+        "Created booking {BookingId} for pet walker {PetWalkerId} and client {ClientId} priced at {Price}",
+        booking.Id, petWalkerId, clientId, booking.Price);
 
     return booking;
+  }
+
+  /// <summary>
+  /// Booking price = the walker's hourly rate x booked hours, rounded to two decimals to
+  /// match the figure the booking form shows. Derived from the walker rather than taken from
+  /// the request so the client cannot choose the price.
+  /// </summary>
+  private static decimal CalculatePrice(PetWalker petWalker, DateTime startTime, DateTime endTime)
+  {
+    Guard.Against.Null(
+        petWalker.Compensation,
+        nameof(petWalker.Compensation),
+        "The selected pet walker has no compensation configured, so the booking price cannot be calculated.");
+
+    var hourlyRate = petWalker.Compensation.HourlyRate;
+    Guard.Against.NegativeOrZero(
+        hourlyRate,
+        "PetWalker.Compensation.HourlyRate",
+        "The selected pet walker has no hourly rate configured, so the booking price cannot be calculated.");
+
+    var hours = (decimal)(endTime - startTime).TotalHours;
+    return Math.Round(hours * hourlyRate, 2);
   }
 
   public async Task<Booking> GetBookingAsync(Guid bookingId)

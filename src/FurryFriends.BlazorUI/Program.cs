@@ -1,4 +1,4 @@
-﻿using FurryFriends.BlazorUI.Client.Services.Implementation;
+using FurryFriends.BlazorUI.Client.Services.Implementation;
 using FurryFriends.BlazorUI.Client.Services.Interfaces;
 using FurryFriends.BlazorUI.Components;
 using FurryFriends.BlazorUI.Services.Implementation;
@@ -48,7 +48,16 @@ builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ITimeslotService, TimeslotService>();
 builder.Services.AddScoped<IRatingService, RatingService>();
-builder.Services.AddScoped<IClientContextService, ClientContextService>();
+// Client context. Development falls back to a configured client id so bookings can be
+// exercised without authentication; every other environment reports no client.
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddScoped<IClientContextService, ClientContextService>();
+}
+else
+{
+    builder.Services.AddScoped<IClientContextService, NoClientContextService>();
+}
 builder.Services.AddSingleton<IPopupService, PopupService>();
 builder.Services.AddScoped<IPictureService, PictureService>();
 builder.Services.AddScoped<FurryFriends.BlazorUI.Client.Services.Interfaces.IClientLoggingService, ServerClientLoggingService>();

@@ -5,12 +5,16 @@ namespace FurryFriends.UseCases.Services.BookingService;
 
 public interface IBookingService
 {
+    /// <summary>
+    /// Creates a booking. The price is derived server-side from the pet walker's hourly
+    /// rate and the booked duration; it is deliberately not a parameter so that the price
+    /// cannot be supplied (or zeroed) by the caller.
+    /// </summary>
     Task<Booking> CreateBookingAsync(
         Guid petWalkerId,
         Guid clientId,
         DateTime startTime,
-        DateTime endTime,
-        decimal price);
+        DateTime endTime);
 
     Task<Booking> GetBookingAsync(Guid bookingId);
     

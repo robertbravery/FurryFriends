@@ -1,4 +1,4 @@
-﻿using Ardalis.GuardClauses;
+using Ardalis.GuardClauses;
 using FurryFriends.Core.ClientAggregate;
 using FurryFriends.Core.ClientAggregate.Enums;
 using FurryFriends.Core.ClientAggregate.Specifications;
@@ -64,6 +64,17 @@ public class ClientService(IRepository<Client> repository) : IClientService
     }
     return Result.Success(client);
 
+  }
+
+  public async Task<Result<Client>> GetClientByIdAsync(Guid clientId, CancellationToken cancellationToken)
+  {
+    var spec = new ClientByIdWithDetailsSpec(clientId);
+    var client = await _repository.FirstOrDefaultAsync(spec, cancellationToken);
+    if (client == null)
+    {
+      return Result.NotFound("Client not found");
+    }
+    return Result.Success(client);
   }
 
   public async Task<Result<ClientListDto>> ListClientsAsync(ListClientQuery query, CancellationToken cancellationToken)

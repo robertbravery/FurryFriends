@@ -17,6 +17,7 @@
                    class="form-control @(HasDateError ? "is-invalid" : "")"
                    @bind="SelectedDate"
                    @bind:event="oninput"
+                   @bind:after="OnDateChanged"
                    min="@DateTime.Today.ToString("yyyy-MM-dd")"
                    max="@DateTime.Today.AddMonths(3).ToString("yyyy-MM-dd")" />
             @if (HasDateError)
@@ -62,6 +63,14 @@
                         {
                             <div class="error-message">@TimeErrorMessage</div>
                         }
+                    </div>
+                }
+                else if (!walkerHasAvailability)
+                {
+                    <div class="no-slots-message">
+                        <i class="fas fa-user-clock"></i>
+                        <p>This pet walker has not set their availability yet</p>
+                        <small>Please choose a different pet walker</small>
                     </div>
                 }
                 else

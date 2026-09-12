@@ -1,0 +1,277 @@
+@page "/bookings/manage"
+@page "/bookings/manage/{ClientId:guid}"
+@page "/bookings/manage/petwalker/{PetWalkerId:guid}"
+@rendermode InteractiveAuto
+@using FurryFriends.BlazorUI.Client.Components.Common
+@using FurryFriends.BlazorUI.Client.Models.Bookings
+@using FurryFriends.BlazorUI.Client.Models.Bookings.Enums
+@using FurryFriends.BlazorUI.Client.Services.Interfaces
+
+<PageTitle>Booking Management - FurryFriends</PageTitle>
+
+<div class="booking-list-container">
+    <div class="booking-list-header">
+        <div>
+            <h1>Booking Management</h1>
+            <p>Review and progress bookings across all clients and pet walkers.</p>
+        </div>
+        <button class="btn btn-primary new-booking-btn" @onclick="GoToNewBooking">
+            <i class="fa-solid fa-plus"></i> New Booking
+        </button>
+    </div>
+
+    <!-- Context bar: who are we listing bookings for? -->
+    <div class="booking-context-bar">
+        <div class="context-item">
+            <label class="context-label">View by</label>
+            <div class="view-toggle">
+                <button class="btn @(_viewMode == BookingViewMode.Client ? "btn-primary" : "btn-outline-secondary")"
+                        @onclick="() => SetViewModeAsync(BookingViewMode.Client)">
+                    <i class="fa-solid fa-user"></i> Client
+                </button>
+                <button class="btn @(_viewMode == BookingViewMode.PetWalker ? "btn-primary" : "btn-outline-secondary")"
+                        @onclick="() => SetViewModeAsync(BookingViewMode.PetWalker)">
+                    <i class="fa-solid fa-walking"></i> Pet Walker
+                </button>
+            </div>
+        </div>
+
+        <div class="context-item context-item-grow">
+            <label class="context-label" for="identity-select">@IdentityLabel</label>
+            <select id="identity-select" class="form-select" value="@SelectedIdentityId"
+                    @onchange="OnIdentityChangedAsync" disabled="@(!HasIdentities)">
+                <option value="">-- Select a @IdentityLabelLower --</option>
+                @foreach (var identity in _identities)
+                {
+                    <option value="@identity.Id">@identity.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="context-item">
+            <label class="context-label" for="start-date">From</label>
+            <input id="start-date" type="date" class="form-control" value="@_startDate.ToString("yyyy-MM-dd")"
+                   @onchange="OnStartDateChangedAsync" />
+        </div>
+
+        <div class="context-item">
+            <label class="context-label" for="end-date">To</label>
+            <input id="end-date" type="date" class="form-control" value="@_endDate.ToString("yyyy-MM-dd")"
+                   @onchange="OnEndDateChangedAsync" />
+        </div>
+
+        <div class="context-actions">
+            <button class="btn btn-primary" disabled="@(!CanLoad)" @onclick="LoadBookingsAsync">
+                <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    @if (HasInvalidDateRange)
+    {
+        <div class="alert alert-danger">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>The "From" date must be on or before the "To" date.</span>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(_successMessage))
+    {
+        <div class="alert alert-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>@_successMessage</span>
+            <button class="btn-close" aria-label="Dismiss" @onclick="ClearSuccess"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>@_errorMessage</span>
+            @if (SelectedIdentityId != Guid.Empty && !HasInvalidDateRange)
+            {
+                <button class="btn btn-sm btn-outline-danger" @onclick="LoadBookingsAsync">Retry</button>
+            }
+        </div>
+    }
+
+    @if (_isLoading)
+    {
+        <SkeletonLoader Type="SkeletonType.Table" Rows="5" Columns="6" />
+    }
+    else if (SelectedIdentityId == Guid.Empty)
+    {
+        <EmptyState IconClass="fa-solid fa-hand-pointer"
+                    Title="@IdentityPromptTitle"
+                    Description="@IdentityPromptDescription" />
+    }
+    else if (!HasInvalidDateRange && _bookings.Count == 0 && string.IsNullOrEmpty(_errorMessage))
+    {
+        <EmptyState IconClass="fa-solid fa-calendar-xmark"
+                    Title="No Bookings Found"
+                    Description="There are no bookings for this period. Try widening the date range." />
+    }
+    else if (_bookings.Count > 0)
+    {
+        <div class="data-table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Duration</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in _bookings)
+                    {
+                        <tr>
+                            <td>@FormatDate(booking.StartTime)</td>
+                            <td>@FormatTimeRange(booking)</td>
+                            <td>@booking.DurationDisplay</td>
+                            <td>@FormatPrice(booking.Price)</td>
+                            <td>
+                                <span class="status-chip @StatusChipClass(booking.Status)">@booking.Status</span>
+                            </td>
+                            <td class="actions-cell">
+                                @if (CanConfirm(booking.Status))
+                                {
+                                    <IconButton IconClass="fa-solid fa-circle-check" Title="Confirm Booking"
+                                                Color="IconButtonColor.Primary" Size="IconButtonSize.Small"
+                                                Disabled="@IsProcessing(booking.Id)"
+                                                OnClick="() => RequestActionAsync(booking, BookingAction.Confirm)" />
+                                }
+                                @if (CanStart(booking.Status))
+                                {
+                                    <IconButton IconClass="fa-solid fa-person-walking" Title="Start Booking"
+                                                Color="IconButtonColor.Success" Size="IconButtonSize.Small"
+                                                Disabled="@IsProcessing(booking.Id)"
+                                                OnClick="() => RequestActionAsync(booking, BookingAction.Start)" />
+                                }
+                                @if (CanComplete(booking.Status))
+                                {
+                                    <IconButton IconClass="fa-solid fa-flag-checkered" Title="Complete Booking"
+                                                Color="IconButtonColor.Success" Size="IconButtonSize.Small"
+                                                Disabled="@IsProcessing(booking.Id)"
+                                                OnClick="() => RequestActionAsync(booking, BookingAction.Complete)" />
+                                }
+                                @if (CanMarkNoShow(booking.Status))
+                                {
+                                    <IconButton IconClass="fa-solid fa-user-slash" Title="Mark as No-show"
+                                                Color="IconButtonColor.Warning" Size="IconButtonSize.Small"
+                                                Disabled="@IsProcessing(booking.Id)"
+                                                OnClick="() => RequestActionAsync(booking, BookingAction.NoShow)" />
+                                }
+                                @if (CanCancel(booking.Status))
+                                {
+                                    <IconButton IconClass="fa-solid fa-ban" Title="Cancel Booking"
+                                                Color="IconButtonColor.Danger" Size="IconButtonSize.Small"
+                                                Disabled="@IsProcessing(booking.Id)"
+                                                OnClick="() => OpenCancelModal(booking)" />
+                                }
+                                @if (!HasAnyAction(booking.Status))
+                                {
+                                    <span class="no-actions">&mdash;</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <!-- Confirmation modal for lifecycle transitions -->
+    @if (_pendingAction.HasValue && _pendingBooking != null)
+    {
+        <div class="modal-overlay" @onclick="CloseConfirmModal">
+            <div class="modal-content" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <div class="modal-icon @(_pendingAction == BookingAction.NoShow ? "warning" : "primary")">
+                        <i class="fa-solid @ActionIcon(_pendingAction.Value)"></i>
+                    </div>
+                    <h3>@ActionTitle(_pendingAction.Value)</h3>
+                </div>
+                <div class="modal-body">
+                    <p>@ActionQuestion(_pendingAction.Value)</p>
+                    <div class="modal-booking-summary">
+                        <div class="summary-row">
+                            <span class="summary-label">Date</span>
+                            <span class="summary-value">@FormatDate(_pendingBooking.StartTime)</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Time</span>
+                            <span class="summary-value">@FormatTimeRange(_pendingBooking)</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Current status</span>
+                            <span class="summary-value">
+                                <span class="status-chip @StatusChipClass(_pendingBooking.Status)">@_pendingBooking.Status</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" @onclick="CloseConfirmModal">Cancel</button>
+                    <button class="btn @(_pendingAction == BookingAction.NoShow ? "btn-danger" : "btn-primary")"
+                            disabled="@_isSubmitting" @onclick="ExecutePendingActionAsync">
+                        @if (_isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        }
+                        <i class="fa-solid @ActionIcon(_pendingAction.Value)"></i>
+                        @ActionConfirmLabel(_pendingAction.Value)
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Cancellation modal -->
+    @if (_bookingToCancel != null)
+    {
+        <div class="modal-overlay" @onclick="CloseCancelModal">
+            <div class="modal-content" @onclick:stopPropagation="true">
+                <div class="modal-header">
+                    <div class="modal-icon danger">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+                    <h3>Cancel Booking</h3>
+                </div>
+                <div class="modal-body">
+                    <p>@FormatDate(_bookingToCancel.StartTime), @FormatTimeRange(_bookingToCancel)</p>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cancel-reason">Reason *</label>
+                        <select id="cancel-reason" class="form-select" @bind="_cancelReason">
+                            <option value="@CancellationReason.ClientRequest">Client request</option>
+                            <option value="@CancellationReason.PetWalkerRequest">Pet walker request</option>
+                            <option value="@CancellationReason.Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cancel-notes">Additional notes</label>
+                        <textarea id="cancel-notes" class="form-control" rows="3" maxlength="500"
+                                  placeholder="Optional details about the cancellation..."
+                                  @bind="_cancelNotes"></textarea>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" @onclick="CloseCancelModal">Keep Booking</button>
+                    <button class="btn btn-danger" disabled="@_isSubmitting" @onclick="ConfirmCancellationAsync">
+                        @if (_isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        }
+                        <i class="fa-solid fa-ban"></i> Cancel Booking
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

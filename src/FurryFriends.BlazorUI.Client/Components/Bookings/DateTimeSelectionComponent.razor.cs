@@ -23,6 +23,13 @@ public partial class DateTimeSelectionComponent
     private List<AvailableSlotDto> availableSlots = new();
     private AvailableSlotDto? selectedSlot;
     private bool isLoadingSlots = false;
+
+    /// <summary>
+    /// Whether the selected walker has published any availability at all.
+    /// Assumed true until the API says otherwise, so we never wrongly blame the walker.
+    /// </summary>
+    private bool walkerHasAvailability = true;
+
     private bool UseCustomTime = false;
     private TimeOnly? CustomStartTime;
     private TimeOnly? CustomEndTime;
@@ -95,11 +102,16 @@ public partial class DateTimeSelectionComponent
             if (response.Success && response.Data?.AvailableSlots != null)
             {
                 availableSlots = response.Data.AvailableSlots;
-                Logger.LogInformation("Successfully loaded {Count} available slots", availableSlots.Count);
+                walkerHasAvailability = response.Data.HasSchedule;
+
+                Logger.LogInformation(
+                    "Loaded {Count} available slots for {Date:yyyy-MM-dd}. Walker has availability configured: {HasSchedule}",
+                    availableSlots.Count, SelectedDate.Value, walkerHasAvailability);
             }
             else
             {
                 availableSlots = new List<AvailableSlotDto>();
+                walkerHasAvailability = true;
                 Logger.LogWarning("Failed to load available slots: {Error}", response.Message);
             }
         }

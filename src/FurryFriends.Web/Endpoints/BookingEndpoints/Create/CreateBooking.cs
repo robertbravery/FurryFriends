@@ -1,4 +1,4 @@
-﻿using FurryFriends.UseCases.Domain.Bookings.Dto;
+using FurryFriends.UseCases.Domain.Bookings.Dto;
 using FurryFriends.Web.Endpoints.Base;
 
 namespace FurryFriends.Web.Endpoints.BookingEndpoints.Create;
@@ -40,7 +40,7 @@ public class CreateBookingEndpoint : BaseEndpoint<CreateBookingRequest, CreateBo
     await HandleResultAsync(
         ct => _mediator.Send(bookingCommand, ct),
         (BookingDto result, CancellationToken ct) =>
-            Task.FromResult(new CreateBookingResponse(result.Id, result.Start, result.Start)),
+            Task.FromResult(new CreateBookingResponse(result.Id, result.Start, result.End)),
         cancellationToken);
   }
 }
