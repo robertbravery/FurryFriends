@@ -32,23 +32,28 @@ Implement JWT-based authentication for FurryFriends API with role-based access c
 
 **Core Layer** (no dependencies):
 
-- `src/FurryFriends.Core/UserAggregate/User.cs` — User entity with Email, PasswordHash, Role, ProfileId, ProfileType, lockout tracking
-- `src/FurryFriends.Core/UserAggregate/Specifications/UserByEmailSpec.cs` — Email lookup specification
-- `src/FurryFriends.Core/UserAggregate/Events/UserAuthenticatedEvent.cs` — Domain event for successful auth
+- *No authentication identity in Core.* Authentication identity lives in Infrastructure layer using ASP.NET Core Identity.
 
 **UseCases Layer** (depends on Core):
 
 - `src/FurryFriends.UseCases/User/Registration/RegisterCommand.cs` — Registration command DTO
-- `src/FurryFriends.UseCases/User/Registration/RegisterCommandHandler.cs` — Creates User, hashes password, assigns role, links profile
+- `src/FurryFriends.UseCases/User/Registration/RegisterCommandHandler.cs` — Creates ApplicationUser via UserManager, assigns role, links profile via domain factories
 - `src/FurryFriends.UseCases/User/Registration/RegisterCommandValidator.cs` — FluentValidation: email format, password complexity (>8 chars, upper/lower/digit/special)
 - `src/FurryFriends.UseCases/User/Login/LoginQuery.cs` — Login query DTO
-- `src/FurryFriends.UseCases/User/Login/LoginQueryHandler.cs` — Validates credentials, generates JWT via JwtTokenService
+- `src/FurryFriends.UseCases/User/Login/LoginQueryHandler.cs` — Validates credentials via UserManager, generates JWT via JwtTokenService
 - `src/FurryFriends.UseCases/User/Login/LoginQueryValidator.cs` — FluentValidation for login request
+- `src/FurryFriends.UseCases/User/Factories/IClientFactory.cs` — Factory interface for creating Client aggregate
+- `src/FurryFriends.UseCases/User/Factories/IPetWalkerFactory.cs` — Factory interface for creating PetWalker aggregate
+- `src/FurryFriends.UseCases/User/Factories/ClientFactory.cs` — Implementation creating Client aggregate linked to identity
+- `src/FurryFriends.UseCases/User/Factories/PetWalkerFactory.cs` — Implementation creating PetWalker aggregate linked to identity
 
 **Infrastructure Layer** (depends on Core):
 
-- `src/FurryFriends.Infrastructure/Data/Configurations/UserConfiguration.cs` — EF Core mapping for User
+- `src/FurryFriends.Infrastructure/Identity/AppUser.cs` — IdentityUser<Guid> with UserType claim
+- `src/FurryFriends.Infrastructure/Identity/ApplicationIdentityDbContext.cs` — IdentityDbContext wiring (extends AppDbContext)
+- `src/FurryFriends.Infrastructure/Identity/SeedData.cs` — Seed default roles (Admin, Petwalker, Client)
 - `src/FurryFriends.Infrastructure/Services/JwtTokenService.cs` — Generates/validates JWT tokens; reads config from appsettings.json (Issuer, Audience, SigningKey, ExpiryHours)
+- `src/FurryFriends.Infrastructure/Configurations/AuthConfiguration.cs` — AddIdentity, AddJwtBearer, authorization policies
 
 **Web API Layer** (depends on Infrastructure):
 

@@ -1,154 +1,126 @@
-\# FurryFriends Multi‑Agent Code Review Pipeline  
+# FurryFriends Multi‑Agent Code Review Pipeline
 
 Feature‑aware, SpecKit‑integrated, and checklist‑powered.
 
-
-
-This workflow performs a complete multi‑agent code review for the FurryFriends architecture.  
+This workflow performs a complete multi‑agent code review for the FurryFriends architecture.
 
 It automatically detects the active feature folder via `.specify/feature.json`, unless the user manually overrides it.
 
-
-
 ```yaml
-
-name: code\_review\_pipeline
+name: code_review_pipeline
 
 description: Multi-agent review for FurryFriends architecture.
 
-
-
 inputs:
 
-&#x20; code:
+code:
+    type: file
 
-&#x20;   type: file
+    multiple: true
 
-&#x20;   multiple: true
+    required: false
 
-&#x20;   required: false
+changed_files:
+    type: file
 
-&#x20; changed\_files:
+    multiple: true
 
-&#x20;   type: file
+    required: false
 
-&#x20;   multiple: true
+feature_dir:
+    type: text
 
-&#x20;   required: false
+    required: false
 
-&#x20; feature\_dir:
+feature_json:
+    type: file
 
-&#x20;   type: text
+    default: .specify/feature.json
 
-&#x20;   required: false
+constitution:
+    type: file
 
-&#x20; feature\_json:
+    default: constitution.md
 
-&#x20;   type: file
+domain_checklist:
+    type: file
 
-&#x20;   default: .specify/feature.json
-
-&#x20; constitution:
-
-&#x20;   type: file
-
-&#x20;   default: constitution.md
-
-&#x20; domain\_checklist:
-
-&#x20;   type: file
-
-&#x20;   default: .kilocode/docs/domain-modeling-checklist.md
-
-
+    default: .kilocode/docs/domain-modeling-checklist.md
 
 steps:
+    - id: correctness
 
-&#x20; - id: correctness
+      skill: correctness_review
 
-&#x20;   skill: correctness\_review
+      inputs:
+          code: "{{ inputs.code }}"
 
-&#x20;   inputs:
+          changed_files: "{{ inputs.changed_files }}"
 
-&#x20;     code: "{{ inputs.code }}"
+          feature_dir: "{{ inputs.feature_dir }}"
 
-&#x20;     changed\_files: "{{ inputs.changed\_files }}"
+          feature_json: "{{ inputs.feature_json }}"
 
-&#x20;     feature\_dir: "{{ inputs.feature\_dir }}"
+          domain_checklist: "{{ inputs.domain_checklist }}"
 
-&#x20;     feature\_json: "{{ inputs.feature\_json }}"
+      save_as: correctness_report
 
-&#x20;     domain\_checklist: "{{ inputs.domain\_checklist }}"
+    - id: security
 
-&#x20;   save\_as: correctness\_report
+      skill: security_review
 
+      inputs:
+          code: "{{ inputs.code }}"
 
+          changed_files: "{{ inputs.changed_files }}"
 
-&#x20; - id: security
+          feature_dir: "{{ inputs.feature_dir }}"
 
-&#x20;   skill: security\_review
+          feature_json: "{{ inputs.feature_json }}"
 
-&#x20;   inputs:
+          domain_checklist: "{{ inputs.domain_checklist }}"
 
-&#x20;     code: "{{ inputs.code }}"
+      save_as: security_report
 
-&#x20;     changed\_files: "{{ inputs.changed\_files }}"
+    - id: constitution
 
-&#x20;     feature\_dir: "{{ inputs.feature\_dir }}"
+      skill: constitution_review
 
-&#x20;     feature\_json: "{{ inputs.feature\_json }}"
+      inputs:
+          code: "{{ inputs.code }}"
 
-&#x20;     domain\_checklist: "{{ inputs.domain\_checklist }}"
+          changed_files: "{{ inputs.changed_files }}"
 
-&#x20;   save\_as: security\_report
+          feature_dir: "{{ inputs.feature_dir }}"
 
+          feature_json: "{{ inputs.feature_json }}"
 
+          constitution: "{{ inputs.constitution }}"
 
-&#x20; - id: constitution
+          domain_checklist: "{{ inputs.domain_checklist }}"
 
-&#x20;   skill: constitution\_review
+      save_as: constitution_report
 
-&#x20;   inputs:
+    - id: aggregate
 
-&#x20;     code: "{{ inputs.code }}"
+      skill: aggregate_review
 
-&#x20;     changed\_files: "{{ inputs.changed\_files }}"
+      inputs:
+          code: "{{ inputs.code }}"
 
-&#x20;     feature\_dir: "{{ inputs.feature\_dir }}"
+          changed_files: "{{ inputs.changed_files }}"
 
-&#x20;     feature\_json: "{{ inputs.feature\_json }}"
+          feature_dir: "{{ inputs.feature_dir }}"
 
-&#x20;     constitution: "{{ inputs.constitution }}"
+          feature_json: "{{ inputs.feature_json }}"
 
-&#x20;     domain\_checklist: "{{ inputs.domain\_checklist }}"
+          constitution: "{{ inputs.constitution }}"
 
-&#x20;   save\_as: constitution\_report
+          domain_checklist: "{{ inputs.domain_checklist }}"
 
+          correctness_report: "{{ steps.correctness.output }}"
 
+          security_report: "{{ steps.security.output }}"
 
-&#x20; - id: aggregate
-
-&#x20;   skill: aggregate\_review
-
-&#x20;   inputs:
-
-&#x20;     code: "{{ inputs.code }}"
-
-&#x20;     changed\_files: "{{ inputs.changed\_files }}"
-
-&#x20;     feature\_dir: "{{ inputs.feature\_dir }}"
-
-&#x20;     feature\_json: "{{ inputs.feature\_json }}"
-
-&#x20;     constitution: "{{ inputs.constitution }}"
-
-&#x20;     domain\_checklist: "{{ inputs.domain\_checklist }}"
-
-&#x20;     correctness\_report: "{{ steps.correctness.output }}"
-
-&#x20;     security\_report: "{{ steps.security.output }}"
-
-&#x20;     constitution\_report: "{{ steps.constitution.output }}"
-
-
-
+          constitution_report: "{{ steps.constitution.output }}"
+```

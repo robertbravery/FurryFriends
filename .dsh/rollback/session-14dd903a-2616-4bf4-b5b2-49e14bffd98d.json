@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "sessionId": "session-14dd903a-2616-4bf4-b5b2-49e14bffd98d",
+  "cwd": "C:\\Users\\rbrav\\source\\repos\\FurryFriends",
+  "checkpoints": [
+    {
+      "turn": 3,
+      "commit": "4179784f04e8bdcad02d9cc39f722549f147d981",
+      "parent": "e1f658fcfffc33b171bda5dae7269123f7c465d5",
+      "time": 1789206225771,
+      "untracked": [
+        ".claude/skills/security-review/SKILL.md",
+        ".kilo/kilo.jsonc",
+        ".kilo/skills/my-skill/SKILL.md",
+        ".kilocode/agents/dev-agent.json",
+        ".kilocode/kilo.jsonc",
+        ".kilocode/skills/security-review/SKILL.md",
+        ".kilocode/workflows/security-review.md"
+      ],
+      "truncated": false
+    }
+  ],
+  "rolls": [],
+  "updatedAt": 1789206226997
+}

@@ -1,6 +1,7 @@
-name: security_review
-description: >
-  Security review for FurryFriends backend/API. No changes, only suggestions.
+---
+name: security-review
+description: Security review for FurryFriends backend/API. No changes, only suggestions.
+---
 
 inputs:
   code:

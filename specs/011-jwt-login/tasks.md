@@ -2,15 +2,16 @@
 
 ## Dependencies
 
-- Core Layer files must exist before UseCases can reference them.
-- UseCases must be completed before Infrastructure can map entities and provide services.
-- Infrastructure services must be registered before Web API endpoints can use them.
+- Infrastructure Identity files (AppUser, IdentityDbContext) must exist before UseCases can reference them.
+- UseCases (Registration/Login handlers, factories) must be completed before Web API endpoints can use them.
+- Infrastructure services (JwtTokenService, AuthConfiguration) must be registered before Web API endpoints can use them.
 - UI components depend on the Web API endpoints and AuthService.
 - Tests depend on the implementation files they target.
 
 ## Parallelizable Tasks
 
-- Core Layer file creations are independent and can run in parallel.
+- Infrastructure Identity file creations (AppUser, IdentityDbContext, SeedData) are independent and can run in parallel.
+- UseCases factory implementations (ClientFactory, PetWalkerFactory) are independent and can run in parallel.
 - UI page components are independent of each other and can run in parallel.
 - Test files can be authored in parallel after their corresponding implementation files exist.
 - Parallel CI/CD pipeline tasks (build, tests, publish) can run concurrently.
@@ -27,31 +28,34 @@
 
 ## Foundational
 
-- [ ] T003 Create `src/FurryFriends.Core/UserAggregate/User.cs` – define User entity with Email, PasswordHash, Role, ProfileId, ProfileType, and lockout tracking
-- [ ] T004 Create `src/FurryFriends.Core/UserAggregate/Specifications/UserByEmailSpec.cs` – specification for email lookup
-- [ ] T005 Create `src/FurryFriends.Core/UserAggregate/Events/UserAuthenticatedEvent.cs` – domain event for successful authentication
-- [ ] T026 Create `src/FurryFriends.Core/UserAggregate/GuardClauses/UserGuardClauses.cs` – domain guard clauses for user validation.
+- [ ] T003 Create `src/FurryFriends.Infrastructure/Identity/AppUser.cs` — IdentityUser<Guid> with UserType claim
+- [ ] T004 Create `src/FurryFriends.Infrastructure/Identity/ApplicationIdentityDbContext.cs` — IdentityDbContext wiring (extends AppDbContext)
+- [ ] T005 Create `src/FurryFriends.Infrastructure/Identity/SeedData.cs` — seed Admin, Petwalker, Client roles
 
 ---
 
 ## Core Work
 
 - [ ] T006 Create `src/FurryFriends.UseCases/User/Registration/RegisterCommand.cs` – command DTO for user registration.
-- [ ] T007 Create `src/FurryFriends.UseCases/User/Registration/RegisterCommandHandler.cs` – handler that creates User, hashes password, assigns role.
+- [ ] T007 Create `src/FurryFriends.UseCases/User/Registration/RegisterCommandHandler.cs` – handler that creates ApplicationUser via UserManager, assigns role, links profile via domain factories.
 - [ ] T008 Create `src/FurryFriends.UseCases/User/Registration/RegisterCommandValidator.cs` – FluentValidation rules for email format and password complexity.
 - [ ] T009 Create `src/FurryFriends.UseCases/User/Registration/ExtendedUserMetadata.cs` – model for additional client/petwalker details.
 - [ ] T033 Create `src/FurryFriends.UseCases/User/Authentication/LoginCommand.cs` – command DTO for user login.
-- [ ] T034 Create `src/FurryFriends.UseCases/User/Authentication/LoginCommandHandler.cs` – handler that validates credentials and returns JWT.
+- [ ] T034 Create `src/FurryFriends.UseCases/User/Authentication/LoginCommandHandler.cs` – handler that validates credentials via UserManager and returns JWT.
 - [ ] T035 Create `src/FurryFriends.UseCases/User/Authentication/LoginCommandValidator.cs` – FluentValidation rules for login credentials.
 - [ ] T036 Create `src/FurryFriends.UseCases/User/Authentication/JwtResponse.cs` – response model for JWT tokens.
+- [ ] T058 Create `src/FurryFriends.UseCases/User/Factories/IClientFactory.cs` – factory interface for creating Client aggregate.
+- [ ] T059 Create `src/FurryFriends.UseCases/User/Factories/IPetWalkerFactory.cs` – factory interface for creating PetWalker aggregate.
+- [ ] T060 Create `src/FurryFriends.UseCases/User/Factories/ClientFactory.cs` – implementation creating Client aggregate linked to identity.
+- [ ] T061 Create `src/FurryFriends.UseCases/User/Factories/PetWalkerFactory.cs` – implementation creating PetWalker aggregate linked to identity.
 
 ---
 
 ## Infrastructure
 
-- [ ] T010 Create `src/FurryFriends.Infrastructure/Data/Configurations/UserConfiguration.cs` – EF Core mapping for User entity.
-- [ ] T011 Create `src/FurryFriends.Infrastructure/Services/JwtTokenService.cs` – service to generate and validate JWT tokens.
-- [ ] T032 Create `src/FurryFriends.Infrastructure/Configurations/AuthConfiguration.cs` – configuration for authentication services.
+- [ ] T010 Update `AppDbContext` to include Identity tables (or register separate IdentityDbContext).
+- [ ] T011 Create `src/FurryFriends.Infrastructure/Services/JwtTokenService.cs` – service to generate and validate JWT tokens (already exists, verify it works with claims from UserManager).
+- [ ] T032 Create `src/FurryFriends.Infrastructure/Configurations/AuthConfiguration.cs` – configuration for authentication services (AddIdentity, AddJwtBearer, policies).
 - [ ] T037 Create `src/FurryFriends.Infrastructure/Validators/PasswordComplexityValidator.cs` – validator for password complexity requirements.
 
 ---

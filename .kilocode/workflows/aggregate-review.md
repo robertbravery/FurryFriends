@@ -1,132 +1,92 @@
-\# 🐾 FurryFriends Aggregate Review Workflow  
+# 🐾 FurryFriends Aggregate Review Workflow
 
 Feature-aware, constitution-aligned, and rubric-powered.
 
+This workflow performs a **deep aggregate design review** using:
 
+- The FurryFriends Aggregate Design Rubric
 
-This workflow performs a \*\*deep aggregate design review\*\* using:
+- The Domain Modeling Checklist
 
+- Constitution rules
 
+- Feature folder resolution via `.specify/feature.json`
 
-\- The FurryFriends Aggregate Design Rubric  
+- Optional manual `feature_dir` override
 
-\- The Domain Modeling Checklist  
+- Changed-file detection
 
-\- Constitution rules  
+- Multi-file support
 
-\- Feature folder resolution via `.specify/feature.json`  
+It produces a **severity-scored, rubric-based evaluation** of aggregate correctness.
 
-\- Optional manual `feature\_dir` override  
+---
 
-\- Changed-file detection  
-
-\- Multi-file support  
-
-
-
-It produces a \*\*severity-scored, rubric-based evaluation\*\* of aggregate correctness.
-
-
-
-\---
-
-
-
-\## 🧩 Workflow Definition
-
-
+## 🧩 Workflow Definition
 
 ```yaml
-
-name: aggregate\_review\_pipeline
+name: aggregate_review_pipeline
 
 description: Deep aggregate design review using the FurryFriends Aggregate Design Rubric.
-
-
 
 inputs:
 
 code:
+    type: file
 
-  type: file
+    multiple: true
 
-  multiple: true
+    required: false
 
-  required: false
+changed_files:
+    type: file
 
+    multiple: true
 
+    required: false
 
-changed\_files:
+feature_dir:
+    type: text
 
-  type: file
+    required: false
 
-  multiple: true
+feature_json:
+    type: file
 
-  required: false
-
-
-
-feature\_dir:
-
-  type: text
-
-  required: false
-
-
-
-feature\_json:
-
-  type: file
-
-  default: .specify/feature.json
-
-
+    default: .specify/feature.json
 
 constitution:
+    type: file
 
-  type: file
+    default: constitution.md
 
-  default: constitution.md
+domain_checklist:
+    type: file
 
+    default: .kilocode/docs/domain-modeling-checklist.md
 
+aggregate_rubric:
+    type: file
 
-domain\_checklist:
-
-  type: file
-
-  default: .kilocode/docs/domain-modeling-checklist.md
-
-
-
-aggregate\_rubric:
-
-  type: file
-
-  default: .kilocode/docs/aggregate-design-rubric.md
-
-
+    default: .kilocode/docs/aggregate-design-rubric.md
 
 steps:
+    - id: aggregate_review
 
-- id: aggregate\_review
+      skill: aggregate_review
 
-  skill: aggregate\_review
+      inputs:
+          code: "{{ inputs.code }}"
 
-  inputs:
+          changed_files: "{{ inputs.changed_files }}"
 
-    code: "{{ inputs.code }}"
+          feature_dir: "{{ inputs.feature_dir }}"
 
-    changed\_files: "{{ inputs.changed\_files }}"
+          feature_json: "{{ inputs.feature_json }}"
 
-    feature\_dir: "{{ inputs.feature\_dir }}"
+          constitution: "{{ inputs.constitution }}"
 
-    feature\_json: "{{ inputs.feature\_json }}"
+          domain_checklist: "{{ inputs.domain_checklist }}"
 
-    constitution: "{{ inputs.constitution }}"
-
-    domain\_checklist: "{{ inputs.domain\_checklist }}"
-
-    aggregate\_rubric: "{{ inputs.aggregate\_rubric }}"
-
-
-
+          aggregate_rubric: "{{ inputs.aggregate_rubric }}"
+```

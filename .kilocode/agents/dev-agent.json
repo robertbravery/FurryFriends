@@ -1,0 +1,13 @@
+{
+  "worktrees": {},
+  "sessions": {},
+  "tabOrder": {
+    "local": [
+      "pending:558d814f-922d-4ffa-a6fe-b4b20e7c22d4"
+    ]
+  },
+  "sessionsCollapsed": true,
+  "prompt_modules": [
+    "./skills/security-review/SKILL.md"
+  ]
+}

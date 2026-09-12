@@ -62,6 +62,6 @@ commands:
       feature_json:
         default: .specify/feature.json
       constitution:
-        default: constitution.md
+        default: .specify/memory/constitution.md
       domain_checklist:
         default: .kilocode/docs/domain-modeling-checklist.md

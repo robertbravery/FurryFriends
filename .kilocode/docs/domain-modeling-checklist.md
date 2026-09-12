@@ -28,7 +28,7 @@ Domain models must reflect real business concepts used by:
 
 ## 🧩 2. Aggregate Boundaries
 
-Aggregulates must be:
+Aggregates must be:
 
 - Small  
 - Cohesive  

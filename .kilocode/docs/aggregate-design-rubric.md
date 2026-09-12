@@ -1,368 +1,265 @@
-\# 🐾 FurryFriends Aggregate Design Rubric
+# 🐾 FurryFriends Aggregate Design Rubric
 
 A scoring guide for evaluating aggregate correctness, boundaries, invariants, and constitution compliance.
 
-
-
 This rubric ensures that aggregates in the FurryFriends system remain:
 
-\- Cohesive  
+- Cohesive
 
-\- Invariant-protecting  
+- Invariant-protecting
 
-\- Constitution-aligned  
+- Constitution-aligned
 
-\- Behavior-rich  
+- Behavior-rich
 
-\- Persistence-ignorant  
+- Persistence-ignorant
 
-\- CQRS-correct  
+- CQRS-correct
 
-\- Feature-aligned (SpecKit)  
-
-
+- Feature-aligned (SpecKit)
 
 Use this rubric during:
 
-\- Domain modeling  
+- Domain modeling
 
-\- Code reviews  
+- Code reviews
 
-\- Multi-agent reviews  
+- Multi-agent reviews
 
-\- Feature development  
+- Feature development
 
-\- Architecture enforcement  
+- Architecture enforcement
 
+---
 
+## 🧩 1. Aggregate Identity & Purpose (0–10)
 
-\---
+### Questions
 
+- Does the aggregate represent **one cohesive business concept**?
 
+- Does it have **one clear aggregate root**?
 
-\## 🧩 1. Aggregate Identity \& Purpose (0–10)
+- Is the root the **only entry point** for mutations?
 
+- Does the name match the **ubiquitous language**?
 
+### Scoring
 
-\### Questions
+- **0–3**: unclear purpose, multiple concepts mixed
 
-\- Does the aggregate represent \*\*one cohesive business concept\*\*?
+- **4–7**: mostly cohesive, minor leakage
 
-\- Does it have \*\*one clear aggregate root\*\*?
+- **8–10**: perfectly scoped, clear root, domain-aligned
 
-\- Is the root the \*\*only entry point\*\* for mutations?
+---
 
-\- Does the name match the \*\*ubiquitous language\*\*?
+## 🧩 2. Invariant Enforcement (0–10)
 
+### Questions
 
+- Are invariants enforced **immediately** when state changes?
 
-\### Scoring
+- Are invariants enforced **inside the aggregate**, not externally?
 
-\- \*\*0–3\*\*: unclear purpose, multiple concepts mixed  
+- Are invariants **explicit**, not implicit?
 
-\- \*\*4–7\*\*: mostly cohesive, minor leakage  
+- Are invariants **business rules**, not technical rules?
 
-\- \*\*8–10\*\*: perfectly scoped, clear root, domain-aligned  
+### Scoring
 
+- **0–3**: invariants missing or enforced outside
 
+- **4–7**: some invariants enforced, some missing
 
-\---
+- **8–10**: all invariants enforced correctly inside the aggregate
 
+---
 
+## 🧩 3. Behavior-Richness (0–10)
 
-\## 🧩 2. Invariant Enforcement (0–10)
+### Questions
 
+- Does the aggregate expose **behavior**, not just getters/setters?
 
+- Are methods named after **domain actions**?
 
-\### Questions
+- Does the aggregate avoid being a **data container**?
 
-\- Are invariants enforced \*\*immediately\*\* when state changes?
+### Scoring
 
-\- Are invariants enforced \*\*inside the aggregate\*\*, not externally?
+- **0–3**: anemic domain model
 
-\- Are invariants \*\*explicit\*\*, not implicit?
+- **4–7**: mixed behavior/data
 
-\- Are invariants \*\*business rules\*\*, not technical rules?
+- **8–10**: fully behavior-rich domain model
 
+---
 
+## 🧩 4. Child Entities & Collections (0–10)
 
-\### Scoring
+### Questions
 
-\- \*\*0–3\*\*: invariants missing or enforced outside  
+- Are child entities **never mutated directly**?
 
-\- \*\*4–7\*\*: some invariants enforced, some missing  
+- Are collections encapsulated?
 
-\- \*\*8–10\*\*: all invariants enforced correctly inside the aggregate  
+- Are operations on children done through **root methods**?
 
+### Scoring
 
+- **0–3**: direct mutation of children
 
-\---
+- **4–7**: mostly correct, minor leaks
 
+- **8–10**: perfect encapsulation
 
+---
 
-\## 🧩 3. Behavior-Richness (0–10)
+## 🧩 5. Value Object Usage (0–10)
 
+### Questions
 
+- Are domain concepts modeled as **value objects**?
 
-\### Questions
+- Are value objects **self-validating**?
 
-\- Does the aggregate expose \*\*behavior\*\*, not just getters/setters?
+- Are primitives avoided?
 
-\- Are methods named after \*\*domain actions\*\*?
+### Scoring
 
-\- Does the aggregate avoid being a \*\*data container\*\*?
+- **0–3**: primitive obsession
 
+- **4–7**: mixed usage
 
+- **8–10**: excellent value object usage
 
-\### Scoring
+---
 
-\- \*\*0–3\*\*: anemic domain model  
+## 🧩 6. Domain Events (0–10)
 
-\- \*\*4–7\*\*: mixed behavior/data  
+### Questions
 
-\- \*\*8–10\*\*: fully behavior-rich domain model  
+- Are domain events raised for **meaningful business occurrences**?
 
+- Are events raised **inside the aggregate**?
 
+- Are events **pure domain events**, not DTOs?
 
-\---
+### Scoring
 
+- **0–3**: no events or incorrect usage
 
+- **4–7**: some events, inconsistent
 
-\## 🧩 4. Child Entities \& Collections (0–10)
+- **8–10**: excellent event modeling
 
+---
 
+## 🧩 7. Aggregate Size & Cohesion (0–10)
 
-\### Questions
+### Questions
 
-\- Are child entities \*\*never mutated directly\*\*?
+- Is the aggregate **small**?
 
-\- Are collections encapsulated?
+- Does it avoid becoming a “god object”?
 
-\- Are operations on children done through \*\*root methods\*\*?
+- Does every part of the aggregate support the **same invariant**?
 
+### Scoring
 
+- **0–3**: too large, multiple responsibilities
 
-\### Scoring
+- **4–7**: mostly cohesive
 
-\- \*\*0–3\*\*: direct mutation of children  
+- **8–10**: small, tight, cohesive
 
-\- \*\*4–7\*\*: mostly correct, minor leaks  
+---
 
-\- \*\*8–10\*\*: perfect encapsulation  
+## 🧩 8. Persistence Ignorance (0–10)
 
+### Questions
 
+- Does the aggregate avoid EF Core attributes?
 
-\---
+- Does it avoid infrastructure concerns?
 
+- Does it avoid persistence logic?
 
+### Scoring
 
-\## 🧩 5. Value Object Usage (0–10)
+- **0–3**: EF Core leakage
 
+- **4–7**: minor leakage
 
+- **8–10**: fully persistence-ignorant
 
-\### Questions
+---
 
-\- Are domain concepts modeled as \*\*value objects\*\*?
+## 🧩 9. CQRS Alignment (0–10)
 
-\- Are value objects \*\*self-validating\*\*?
+### Questions
 
-\- Are primitives avoided?
+- Are commands the **only** way to mutate aggregates?
 
+- Are queries **never** returning aggregates?
 
+- Are aggregates **never** used in read models?
 
-\### Scoring
+### Scoring
 
-\- \*\*0–3\*\*: primitive obsession  
+- **0–3**: CQRS violations
 
-\- \*\*4–7\*\*: mixed usage  
+- **4–7**: mostly correct
 
-\- \*\*8–10\*\*: excellent value object usage  
+- **8–10**: perfect CQRS alignment
 
+---
 
+## 🧩 10. Constitution Compliance (0–10)
 
-\---
+### Questions
 
+- Does the aggregate follow **all constitution rules**?
 
+- Are boundaries respected?
 
-\## 🧩 6. Domain Events (0–10)
+- Are responsibilities correctly placed?
 
+### Scoring
 
+- **0–3**: major constitution violations
 
-\### Questions
+- **4–7**: minor issues
 
-\- Are domain events raised for \*\*meaningful business occurrences\*\*?
+- **8–10**: fully compliant
 
-\- Are events raised \*\*inside the aggregate\*\*?
+---
 
-\- Are events \*\*pure domain events\*\*, not DTOs?
+## 🧩 11. Feature Folder Alignment (0–10)
 
+### Questions
 
+- Does the aggregate match the active feature’s:
 
-\### Scoring
+- `spec.md`
 
-\- \*\*0–3\*\*: no events or incorrect usage  
+- `plan.md`
 
-\- \*\*4–7\*\*: some events, inconsistent  
+- `tasks.md`
 
-\- \*\*8–10\*\*: excellent event modeling  
+- Does the aggregate implement the **domain responsibilities** described in the feature?
 
+### Scoring
 
+- **0–3**: misaligned with feature
 
-\---
+- **4–7**: partial alignment
 
+- **8–10**: perfect alignment
 
+---
 
-\## 🧩 7. Aggregate Size \& Cohesion (0–10)
-
-
-
-\### Questions
-
-\- Is the aggregate \*\*small\*\*?
-
-\- Does it avoid becoming a “god object”?
-
-\- Does every part of the aggregate support the \*\*same invariant\*\*?
-
-
-
-\### Scoring
-
-\- \*\*0–3\*\*: too large, multiple responsibilities  
-
-\- \*\*4–7\*\*: mostly cohesive  
-
-\- \*\*8–10\*\*: small, tight, cohesive  
-
-
-
-\---
-
-
-
-\## 🧩 8. Persistence Ignorance (0–10)
-
-
-
-\### Questions
-
-\- Does the aggregate avoid EF Core attributes?
-
-\- Does it avoid infrastructure concerns?
-
-\- Does it avoid persistence logic?
-
-
-
-\### Scoring
-
-\- \*\*0–3\*\*: EF Core leakage  
-
-\- \*\*4–7\*\*: minor leakage  
-
-\- \*\*8–10\*\*: fully persistence-ignorant  
-
-
-
-\---
-
-
-
-\## 🧩 9. CQRS Alignment (0–10)
-
-
-
-\### Questions
-
-\- Are commands the \*\*only\*\* way to mutate aggregates?
-
-\- Are queries \*\*never\*\* returning aggregates?
-
-\- Are aggregates \*\*never\*\* used in read models?
-
-
-
-\### Scoring
-
-\- \*\*0–3\*\*: CQRS violations  
-
-\- \*\*4–7\*\*: mostly correct  
-
-\- \*\*8–10\*\*: perfect CQRS alignment  
-
-
-
-\---
-
-
-
-\## 🧩 10. Constitution Compliance (0–10)
-
-
-
-\### Questions
-
-\- Does the aggregate follow \*\*all constitution rules\*\*?
-
-\- Are boundaries respected?
-
-\- Are responsibilities correctly placed?
-
-
-
-\### Scoring
-
-\- \*\*0–3\*\*: major constitution violations  
-
-\- \*\*4–7\*\*: minor issues  
-
-\- \*\*8–10\*\*: fully compliant  
-
-
-
-\---
-
-
-
-\## 🧩 11. Feature Folder Alignment (0–10)
-
-
-
-\### Questions
-
-\- Does the aggregate match the active feature’s:
-
- - `spec.md`
-
- - `plan.md`
-
- - `tasks.md`
-
-\- Does the aggregate implement the \*\*domain responsibilities\*\* described in the feature?
-
-
-
-\### Scoring
-
-\- \*\*0–3\*\*: misaligned with feature  
-
-\- \*\*4–7\*\*: partial alignment  
-
-\- \*\*8–10\*\*: perfect alignment  
-
-
-
-\---
-
-
-
-\## 🧩 12. Overall Aggregate Score
-
-
+## 🧩 12. Overall Aggregate Score
 
 Add all categories:
-
-
-
-
-
